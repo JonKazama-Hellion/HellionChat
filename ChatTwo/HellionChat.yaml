@@ -22,15 +22,30 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
-  **Hellion Chat 1.35.3 — Initial fork release**
+  **Hellion Chat 0.1.0 — Initial fork release**
 
-  - Channel whitelist filter in MessageStore.UpsertMessage
-  - Configuration version bump 6 → 7 with one-shot Privacy-First seed
-  - Settings → Privacy tab with grouped channel checkboxes and presets
-  - Failsafe toggle for unknown ChatTypes
-  - One-shot migration from ChatTwo plugin layout (config + database
-    directory move into pluginConfigs/HellionChat)
-  - Migrate3 idempotency fix: recovers from partial application where
-    ALTER TABLE ran but user_version was never bumped
+  Privacy
+  - Channel whitelist filter in MessageStore.UpsertMessage with a
+    Privacy-First default (own conversations only)
+  - Per-channel retention with a 24-hour idempotent background sweep
+    (default OFF; spec defaults of 365 / 90 / 30 days)
+  - Retroactive cleanup with a Ctrl+Shift confirm and VACUUM
+  - Export to Markdown / JSON / CSV via Dalamud's file dialog
+    (GDPR Art. 15 right of access)
 
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo).
+  Onboarding
+  - First-run wizard with three profiles: Privacy-First / Casual /
+    Full History
+  - Configuration v6 → v7 migration that seeds defaults and shows a
+    notification once on update
+  - One-shot migration from upstream Chat 2's pluginConfigs layout
+    so the fork uses pluginConfigs/HellionChat without losing state
+  - Migrate3 idempotency recovery for half-migrated databases
+
+  Look & feel
+  - Localized UI (English and German) with live language switching
+  - Hellion industrial HUD theme with cyan-teal action accents,
+    slate-violet tabs, amber active highlights and a window-opacity
+    slider for combat-friendly transparency
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).

@@ -1,6 +1,10 @@
 <Project Sdk="Dalamud.NET.Sdk/15.0.0">
     <PropertyGroup>
-        <Version>1.35.3</Version>
+        <!-- Hellion Chat versioning runs separately from upstream Chat 2.
+             0.1.0 is our bootstrap release; the underlying Chat 2 base is
+             called out in the yaml changelog so users can see what it
+             derives from. -->
+        <Version>0.1.0</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <!-- HellionChat fork: assembly is renamed so Dalamud uses
              pluginConfigs/HellionChat instead of pluginConfigs/ChatTwo,
