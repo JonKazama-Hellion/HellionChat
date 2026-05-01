@@ -45,7 +45,7 @@ internal sealed class About : ISettingsTab
 
         ImGui.TextUnformatted(Language.Options_About_Discord);
         ImGui.SameLine();
-        ImGui.TextColored(ImGuiColors.ParsedGold, "@infi");
+        ImGui.TextColored(ImGuiColors.ParsedGold, "@j.j_kazama");
 
         ImGui.TextUnformatted(Language.Options_About_Version);
         ImGui.SameLine();
@@ -53,24 +53,47 @@ internal sealed class About : ISettingsTab
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        ImGui.TextUnformatted(Language.Options_About_Discord_Thread);
-        ImGui.SameLine();
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "discordThread"))
-            Dalamud.Utility.Util.OpenLink("https://canary.discord.com/channels/581875019861328007/1224865018789761126");
-
-        ImGui.Spacing();
-
         ImGui.TextUnformatted(Language.Options_About_Github_Issues);
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "githubIssues"))
-            Dalamud.Utility.Util.OpenLink("https://github.com/Infiziert90/ChatTwo/issues");
+            Dalamud.Utility.Util.OpenLink("https://github.com/JonKazama-Hellion/HellionChat/issues");
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        ImGui.TextUnformatted(Language.Options_About_CrowdIn);
+        // Hellion-specific maintainer / attribution / license / SE-
+        // disclaimer block. Hand-rolled in English here rather than via
+        // HellionStrings — the legal-ish copy stays close to the EUPL-1.2
+        // wording and the SE disclaimer is the same in every locale.
+        ImGui.TextColored(ImGuiColors.ParsedGold, "Maintainer");
+        ImGui.TextUnformatted("Hellion Chat is maintained by Hellion Online Media (Florian Wathling).");
+        ImGui.TextUnformatted("Website:");
         ImGui.SameLine();
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "crowdin"))
-            Dalamud.Utility.Util.OpenLink("https://crowdin.com/project/chattwo");
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "hellionMedia"))
+            Dalamud.Utility.Util.OpenLink("https://hellion-media.de");
+        ImGui.TextUnformatted("For licensing, legal or contact inquiries please reach out via the website above.");
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextColored(ImGuiColors.ParsedGold, "Built on Chat 2");
+        ImGui.TextUnformatted("Hellion Chat is a fork of Chat 2 by Infi and Anna (ascclemens).");
+        ImGui.TextUnformatted("Every chat replacement feature, the IPC integration, the rendering engine and the storage core come from upstream Chat 2.");
+        ImGui.TextUnformatted("Upstream repository:");
+        ImGui.SameLine();
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "chatTwoUpstream"))
+            Dalamud.Utility.Util.OpenLink("https://github.com/Infiziert90/ChatTwo");
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextColored(ImGuiColors.ParsedGold, "License");
+        ImGui.TextUnformatted("Hellion Chat and Chat 2 are licensed under the European Union Public License v1.2 (EUPL-1.2).");
+        ImGui.TextUnformatted("© 2023–2026 the Chat 2 authors (Infi, Anna and the upstream contributors).");
+        ImGui.TextUnformatted("© 2026 Hellion Online Media — for the Hellion Chat additions.");
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextColored(ImGuiColors.DalamudOrange, "FINAL FANTASY XIV disclaimer");
+        ImGui.TextUnformatted("FINAL FANTASY XIV © SQUARE ENIX CO., LTD. All rights reserved.");
+        ImGui.TextUnformatted("Hellion Chat is an unofficial, fan-made plugin and is not affiliated with, endorsed, sponsored or approved by Square Enix.");
 
         ImGui.Spacing();
 
