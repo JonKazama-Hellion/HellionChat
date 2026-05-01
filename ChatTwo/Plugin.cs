@@ -19,7 +19,7 @@ namespace ChatTwo;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class Plugin : IDalamudPlugin
 {
-    public const string PluginName = "Chat 2";
+    public const string PluginName = "Hellion Chat";
 
     [PluginService] public static IPluginLog Log { get; private set; } = null!;
     [PluginService] public static IDalamudPluginInterface Interface { get; private set; } = null!;
@@ -85,6 +85,11 @@ public sealed class Plugin : IDalamudPlugin
         try
         {
             GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
+
+            // Hellion Chat: take over config + database from upstream ChatTwo
+            // before Dalamud loads our plugin config. Idempotent: only acts on
+            // the first start where the legacy paths exist and ours don't.
+            MigrateFromChatTwoLayout();
 
             Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
 
@@ -239,6 +244,37 @@ public sealed class Plugin : IDalamudPlugin
 
         EmoteCache.Dispose();
         ServerCore?.DisposeAsync().AsTask().Wait();
+    }
+
+    private static void MigrateFromChatTwoLayout()
+    {
+        try
+        {
+            var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+            if (pluginConfigsDir is null)
+                return;
+
+            var legacyConfigFile = Path.Combine(pluginConfigsDir, "ChatTwo.json");
+            var legacyConfigDir = Path.Combine(pluginConfigsDir, "ChatTwo");
+            var ourConfigFile = Path.Combine(pluginConfigsDir, "HellionChat.json");
+            var ourConfigDir = Interface.ConfigDirectory.FullName;
+
+            if (!File.Exists(ourConfigFile) && File.Exists(legacyConfigFile))
+            {
+                File.Move(legacyConfigFile, ourConfigFile);
+                Log.Information($"HellionChat: migrated config file {legacyConfigFile} → {ourConfigFile}");
+            }
+
+            if (!Directory.Exists(ourConfigDir) && Directory.Exists(legacyConfigDir))
+            {
+                Directory.Move(legacyConfigDir, ourConfigDir);
+                Log.Information($"HellionChat: migrated config dir {legacyConfigDir} → {ourConfigDir}");
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Error(e, "HellionChat: layout migration failed, continuing with whatever exists");
+        }
     }
 
     private void Draw()

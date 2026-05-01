@@ -2,6 +2,13 @@
     <PropertyGroup>
         <Version>1.35.3</Version>
         <ImplicitUsings>enable</ImplicitUsings>
+        <!-- HellionChat fork: assembly is renamed so Dalamud uses
+             pluginConfigs/HellionChat instead of pluginConfigs/ChatTwo,
+             keeping our state independent from the upstream plugin.
+             Code namespace stays ChatTwo.* so upstream cherry-picks
+             apply cleanly. -->
+        <AssemblyName>HellionChat</AssemblyName>
+        <RootNamespace>ChatTwo</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

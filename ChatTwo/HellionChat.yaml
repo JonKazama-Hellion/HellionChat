@@ -1,0 +1,36 @@
+name: Hellion Chat
+author: JonKazama-Hellion
+punchline: GDPR-compliant, Linux-aware fork of Chat 2
+description: |-
+  Hellion Chat is a privacy-focused, Linux-aware fork of Chat 2.
+
+  Same chat replacement you know from upstream, with extra controls
+  for what actually gets stored:
+
+  - Channel whitelist for database persistence (GDPR Art. 25)
+  - Privacy-First defaults: only your own conversations are kept
+  - Failsafe for unknown ChatTypes (default OFF)
+  - Independent plugin state (own config + database directory)
+
+  Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
+repo_url: https://github.com/JonKazama-Hellion/HellionChat
+accepts_feedback: true
+tags:
+  - Social
+  - UI
+  - Chat
+  - Replacement
+  - Privacy
+changelog: |-
+  **Hellion Chat 1.35.3 — Initial fork release**
+
+  - Channel whitelist filter in MessageStore.UpsertMessage
+  - Configuration version bump 6 → 7 with one-shot Privacy-First seed
+  - Settings → Privacy tab with grouped channel checkboxes and presets
+  - Failsafe toggle for unknown ChatTypes
+  - One-shot migration from ChatTwo plugin layout (config + database
+    directory move into pluginConfigs/HellionChat)
+  - Migrate3 idempotency fix: recovers from partial application where
+    ALTER TABLE ran but user_version was never bumped
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo).
