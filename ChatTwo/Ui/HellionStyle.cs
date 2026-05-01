@@ -13,20 +13,22 @@ namespace ChatTwo.Ui;
 internal static class HellionStyle
 {
     // Palette — kept central so a future theme switch only edits one file.
-    private const uint AccentRgba = 0xFF00B8D4;       // cyan-teal accent
-    private const uint AccentHoverRgba = 0xFF26C6DA;
-    private const uint AccentActiveRgba = 0xFF00838F;
-    private const uint FrameBgRgba = 0xFF102027;      // deep slate
-    private const uint FrameBgHoverRgba = 0xFF1B2C36;
-    private const uint FrameBgActiveRgba = 0xFF263A45;
-    private const uint BorderRgba = 0xFF37474F;       // steel border
-    private const uint HeaderRgba = 0xFF1B2C36;
-    private const uint HeaderHoverRgba = 0xFF263A45;
-    private const uint HeaderActiveRgba = 0xFF324A57;
-    private const uint TitleBgActiveRgba = 0xFF00838F;
-    private const uint CheckMarkRgba = 0xFF00B8D4;
-    private const uint SliderGrabRgba = 0xFF00B8D4;
-    private const uint SliderGrabActiveRgba = 0xFF26C6DA;
+    // Encoded as 0xRRGGBBAA, matching the convention ChatTwo uses elsewhere
+    // (see Settings.cs Ko-fi buttons). RgbaToAbgr handles the byte swap.
+    private const uint AccentRgba = 0x00B8D4FF;       // cyan-teal accent
+    private const uint AccentHoverRgba = 0x26C6DAFF;
+    private const uint AccentActiveRgba = 0x00838FFF;
+    private const uint FrameBgRgba = 0x102027FF;      // deep slate
+    private const uint FrameBgHoverRgba = 0x1B2C36FF;
+    private const uint FrameBgActiveRgba = 0x263A45FF;
+    private const uint BorderRgba = 0x37474FFF;       // steel border
+    private const uint HeaderRgba = 0x1B2C36FF;
+    private const uint HeaderHoverRgba = 0x263A45FF;
+    private const uint HeaderActiveRgba = 0x324A57FF;
+    private const uint TitleBgActiveRgba = 0x00838FFF;
+    private const uint CheckMarkRgba = 0x00B8D4FF;
+    private const uint SliderGrabRgba = 0x00B8D4FF;
+    private const uint SliderGrabActiveRgba = 0x26C6DAFF;
 
     /// <summary>
     /// Push the Hellion color stack. Returns a disposable bundle that pops
