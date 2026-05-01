@@ -37,6 +37,22 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.1.2 — About tab rebrand, DBViewer polish**
+
+  - About tab now shows Hellion-specific maintainer, license, EU/US/JP
+    disclaimer and SQUARE ENIX disclaimer instead of the inherited
+    Chat 2 contact info; original ChatTwo translator credits stay
+    visible under a clearly labelled upstream tree node
+  - Localization clarified: Hellion-specific German strings are
+    maintained by the fork maintainer, the Crowdin contributor list
+    only covers the inherited upstream strings
+  - Cherry-picked DBViewer UI improvements from upstream Chat 2
+    (auto-scroll-reset on page change, tooltips on date reset,
+    folder export, page arrows, localized export-running messages)
+  - README rewritten in the Hellion project style with a tech-stack
+    table, architecture tree, database column list, install guide,
+    upstream-sync workflow notes and project-status checklist
+
   **Hellion Chat 0.1.1 — Packaging and migration fixes**
 
   - Plugin icon now ships inside the bundle, so the Hellion logo

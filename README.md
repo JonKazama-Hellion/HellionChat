@@ -1,88 +1,150 @@
 # Hellion Chat
 
-A GDPR-compliant, Linux-aware fork of [Chat 2](https://github.com/Infiziert90/ChatTwo)
-for FINAL FANTASY XIV / Dalamud.
+**Version 0.1.2** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
-Same chat replacement you know from upstream, with extra controls for what
-actually gets stored:
+Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
-- **Channel whitelist** for database persistence (GDPR Art. 25 — privacy by
-  default). Out-of-the-box only your own conversations are kept: Tells, Party,
-  Free Company, Linkshells, Cross-World Linkshells, Alliance, ExtraChat. Public
-  chat from strangers (Say/Shout/Yell), Novice Network, NPC dialogue, system
-  spam and battle messages stay outside the database unless you opt them in.
-- **Per-channel retention** with a 24-hour idempotent background sweep. Tells
-  default to 365 days, own-conversation channels to 90, the global default to
-  30. Off until you switch it on — the plugin never deletes history without
-  your explicit consent.
-- **Retroactive cleanup** with a Ctrl+Shift confirm. Apply the current
-  whitelist to an existing 800-MB+ database, watch it shrink to MBs, all on a
-  background thread.
-- **Export** to Markdown, JSON or CSV (GDPR Art. 15 right of access). Filter
-  by channel, date range or sender substring; written via Dalamud's file
-  dialog without blocking the UI.
-- **First-run wizard** with three profiles (Privacy-First / Casual / Full
-  History) that maps to concrete configuration sets. Reopenable from the
-  Privacy tab any time.
-- **Independent plugin state.** Config and database live under
-  `pluginConfigs/HellionChat/`, completely separate from upstream Chat 2 — you
-  can run both side by side, or migrate from Chat 2 once and keep going.
-- **Migration recovery.** Heals databases left in a half-applied Migrate3
-  state (columns added, `user_version` never bumped) without needing the
-  backup file upstream creates.
-- **Localized UI (EN + DE).** All Hellion-specific surfaces follow Dalamud's
-  language override and switch live. Translations live in
-  `Resources/HellionStrings.<lang>.resx`.
+Privates Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo während der Bootstrap-Phase.
 
-## Status
+---
 
-Bootstrap (v0.1.x). Used in production on a single user's setup. Not (yet)
-submitted to the official Dalamud plugin repository — distributed as a
-custom-repo / dev-plugin while the architecture stabilises.
+## Tech Stack
 
-## Install (testers)
+| Kategorie       | Technologie                                          |
+| --------------- | ---------------------------------------------------- |
+| Plattform       | Dalamud Plugin (API Level 15)                        |
+| Sprache         | C# 13 / .NET 10 (`net10.0-windows`)                  |
+| Build           | Dalamud.NET.Sdk 15.0.0, DalamudPackager 15.0.0       |
+| UI              | Dear ImGui (Dalamud-Bindings)                        |
+| Datenbank       | SQLite (Microsoft.Data.Sqlite, MessagePack-Storage)  |
+| Lokalisierung   | ResX (HellionStrings.resx, .de.resx) + Crowdin-Sync  |
+| Schriftart      | Exo 2 (SIL Open Font License 1.1, gebündelt)         |
+| Toolchain       | dotnet 10 SDK, VS Code mit C# Dev Kit                |
+| Deployment      | GitHub Releases + Custom-Repo (`repo.json`)          |
 
-Hellion Chat is shipped via a Dalamud **custom repository** during the
-bootstrap phase.
+---
 
-### If you have never used Chat 2
+## Features
 
-1. Open Dalamud settings (`/xlsettings`) → **Experimental**.
-2. Add a new entry under **Custom Plugin Repositories**:
+### Privacy / Compliance
+
+- **Channel-Whitelist** für die Datenbank-Persistenz mit Privacy-First-Default. Out-of-the-box werden nur eigene Konversationen gespeichert (Tells, Gruppe, FC, Linkshells, Cross-World-Linkshells, Allianz, ExtraChat). Öffentlicher Chat, NPC-Dialoge, System-Spam und Battle-Logs werden auf der Storage-Ebene verworfen.
+- **Aufbewahrungsdauer pro Kanal** mit täglicher Background-Bereinigung. Tells 365 Tage, eigene Konversations-Kanäle 90 Tage, globaler Default 30 Tage. Standard ist AUS, das Plugin löscht ohne ausdrückliche Zustimmung nichts.
+- **Retroaktive Säuberung** mit Vorschau und Strg+Umschalt-Bestätigung. Wendet die aktuelle Whitelist auf eine bestehende Datenbank an, läuft im Hintergrund, ruft danach VACUUM auf.
+- **Export** nach Markdown, JSON oder CSV via Dalamud-Datei-Dialog (DSGVO Art. 15 Auskunftsrecht). Filter nach Kanal, Datums-Bereich oder Sender-Substring.
+
+### Onboarding
+
+- **First-Run-Wizard** mit drei Profilen (Privacy-First, Locker, Volle Historie) und DSGVO-Hinweis bei der "Volle Historie"-Option.
+- **Konfigurations-Migration v6→v7** seedet Privacy-Defaults bei Bestand-Usern und zeigt eine Benachrichtigung beim Ersten Plugin-Start nach Update.
+- **Layout-Migration aus Chat 2** verschiebt Konfiguration und Datenbank in `pluginConfigs/HellionChat/` ohne Datenverlust. Robust gegen blockierte Dateien (Warnung beim User wenn Chat 2 noch geladen ist).
+- **Migrate3-Recovery** heilt halb-migrierte Datenbanken aus alten Chat-2-Installationen.
+
+### Look & Feel
+
+- **Bilinguale UI** (Englisch + Deutsch) mit Live-Sprachwechsel. Hellion-spezifische Strings in `HellionStrings.<lang>.resx`.
+- **Hellion-HUD-Theme** mit Cyan-Teal-Akzenten, Slate-Violet-Tabs, Bernstein-Highlights für aktive Zustände.
+- **Fenster-Deckkraft-Slider** für Kampf-freundliche Transparenz.
+- **Mitgelieferte Hellion-Schrift** (Exo 2, OFL-1.1) als optionaler Default statt System-Font.
+- **Hellion-Logo** im Plugin-Bundle und in der Dalamud-Plugin-Liste.
+
+### Stability
+
+- BetterTTV-Cache-Crash-Fix (Null-Key-Handling).
+- Font-Atlas-Build-Fallback bei nicht-installierten System-Fonts.
+- Defensive Wrapping aller Migrations-Operationen.
+
+---
+
+## Architektur
+
+```
+ChatTwo/
+├── Privacy/
+│   └── PrivacyDefaults.cs       # Whitelist-Sets, Spec-Retention-Tabelle
+├── Export/
+│   └── MessageExporter.cs       # Markdown / JSON / CSV Serializer
+├── Resources/
+│   ├── HellionStrings.resx      # Hellion-eigene UI-Strings (EN)
+│   ├── HellionStrings.de.resx   # Deutsche Übersetzung
+│   ├── HellionStrings.Designer.cs # Hand-maintained Accessor
+│   ├── HellionFont.ttf          # Exo 2 Variable Font
+│   ├── HellionFont-OFL.txt      # OFL-1.1 Lizenztext (mit Font gebundelt)
+│   └── Language*.resx           # Upstream-Lokalisierung (Crowdin)
+├── Ui/
+│   ├── FirstRunWizard.cs        # Drei-Profile-Onboarding
+│   ├── HellionStyle.cs          # ImGui-Theme-Push (lokal + global)
+│   └── SettingsTabs/
+│       └── Privacy.cs           # Datenschutz-Tab (Filter, Retention, Cleanup, Export)
+├── images/
+│   └── icon.png                 # Hellion-Logo (256×256)
+├── DalamudPackager.targets      # Override für ImagesPath / HandleImages
+└── HellionChat.yaml             # Plugin-Manifest (DalamudPackager-Source)
+```
+
+### Regeln
+
+- **Code-Namespace bleibt `ChatTwo.*`** — Cherry-Picks von Upstream-Bugfixes bleiben damit konfliktarm.
+- **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigene Datei-Manifest, kein Shared State mit Chat 2.
+- **Hellion-eigene Strings nur in `HellionStrings.*.resx`** — die Upstream-`Language.*.resx` bleiben unverändert für sauberen Crowdin-Sync.
+- **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager` — Font-Fallback und Hellion-Font laufen zentral.
+
+---
+
+## Datenbank
+
+SQLite, Schema von Upstream Chat 2 übernommen (Migration-Stand v3). Hellion-Erweiterungen sind in `Configuration` als Felder, nicht im DB-Schema:
+
+| Spalte           | Typ      | Beschreibung                                  |
+| ---------------- | -------- | --------------------------------------------- |
+| Id               | BLOB     | Guid                                          |
+| Receiver         | INTEGER  | Empfänger-ContentId                           |
+| ContentId        | INTEGER  | Sender-ContentId                              |
+| Date             | INTEGER  | Unix-Timestamp (ms)                           |
+| ChatType         | INTEGER  | XivChatType / LogKind                         |
+| SourceKind       | INTEGER  | Player / NPC / Server / etc.                  |
+| TargetKind       | INTEGER  | Player / NPC / Server / etc.                  |
+| Sender           | BLOB     | MessagePack `List<Chunk>`                     |
+| Content          | BLOB     | MessagePack `List<Chunk>`                     |
+| SenderSource     | BLOB     | MessagePack `SeString`                        |
+| ContentSource    | BLOB     | MessagePack `SeString`                        |
+| ExtraChatChannel | BLOB     | Guid                                          |
+| Deleted          | BOOLEAN  | Soft-Delete-Marker                            |
+
+Pfad: `pluginConfigs/HellionChat/chat-sqlite.db`. WAL-Modus, Synchronous=NORMAL.
+
+---
+
+## Installation (Tester)
+
+Hellion Chat wird während der Bootstrap-Phase über ein Dalamud-**Custom-Repository** verteilt.
+
+### Frische Installation (kein Chat 2 vorher)
+
+1. Dalamud-Settings (`/xlsettings`) → **Experimental** öffnen.
+2. Neuen Eintrag unter **Custom Plugin Repositories** anlegen:
    ```
    https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json
    ```
-3. Click **Save**, then back in `/xlplugins` hit **All Plugins** and refresh.
-4. **Hellion Chat** now appears in the list — install it.
+3. **Save**, dann in `/xlplugins` → **All Plugins** → Refresh.
+4. **Hellion Chat** taucht in der Liste auf — installieren.
 
-### If you are migrating from Chat 2 (and want to keep your history)
+### Migration aus Chat 2 (mit bestehendem Verlauf)
 
-The two plugins share `pluginConfigs/ChatTwo/` (database) and
-`pluginConfigs/ChatTwo.json` (settings). Hellion Chat moves both into
-`pluginConfigs/HellionChat/` on first start, but only if the upstream
-plugin isn't holding the database file open. Order matters:
+Chat 2 und Hellion Chat teilen sich die Datenbank-Datei, bis Hellion Chat sie beim ersten Start in den eigenen Pfad verschiebt. Die Reihenfolge ist wichtig:
 
-1. **Disable Chat 2** in `/xlplugins` (don't uninstall, just disable).
-2. **Close FFXIV completely** so SQLite releases its file lock — a plain
-   plugin reload is not enough.
-3. Re-launch the game.
-4. Add the custom repo URL as in the previous section.
-5. Install Hellion Chat. On its first start it migrates the Chat 2 config
-   file and the entire database directory into the HellionChat layout
-   without losing data.
-6. Verify in **Settings → Privacy → Apply filter to existing database →
-   Refresh preview** that the message count is what you expect (millions
-   of rows if you used Chat 2 for a while).
-
-If the message count comes back as zero, the migration was blocked
-(usually because Chat 2 was still active or the previous game session
-hadn't fully closed). See the troubleshooting section below.
+1. **Chat 2 deaktivieren** in `/xlplugins` (nicht deinstallieren, nur deaktivieren).
+2. **FFXIV komplett schließen**, damit SQLite die Datei-Sperre freigibt. Plugin-Reload allein reicht nicht.
+3. Spiel neu starten.
+4. Custom-Repo wie oben hinzufügen.
+5. Hellion Chat installieren. Beim ersten Start wandert die Konfigurations-Datei und das gesamte Datenbank-Verzeichnis in das HellionChat-Layout.
+6. **Verifizieren** unter Einstellungen → Datenschutz → Vorschau aktualisieren, dass die Nachrichten-Anzahl plausibel ist.
 
 ### Troubleshooting
 
-**Hellion Chat shows zero messages but I had Chat 2 history:**
-The migration either didn't run or hit a locked file. Close the game,
-then move the data manually:
+**Hellion Chat zeigt 0 Nachrichten, obwohl Chat 2 vorher aktiv war:**
+
+Migration wurde durch eine gesperrte Datei blockiert. Spiel schließen und manuell verschieben:
 
 Linux / XIVLauncher Core:
 ```bash
@@ -93,66 +155,126 @@ mv ~/.xlcore/pluginConfigs/ChatTwo/chat-sqlite.db \
      ~/.xlcore/pluginConfigs/HellionChat/
 ```
 
-Windows / standard XIVLauncher:
+Windows / XIVLauncher:
 ```powershell
 Move-Item "$env:AppData\XIVLauncher\pluginConfigs\ChatTwo\chat-sqlite.db" `
           "$env:AppData\XIVLauncher\pluginConfigs\HellionChat\chat-sqlite.db" -Force
 ```
 
-Then start the game and Hellion Chat — your full history is back.
+Spiel starten, Hellion Chat aktivieren, Verlauf ist zurück.
 
 ### Updates
 
-Updates land in the same plugin list once the maintainer pushes a new
-`v0.1.x` tag and re-publishes the GitHub release. No re-installation
-needed.
+Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `v0.1.x`-Tag mit GitHub-Release publiziert ist. Keine Neu-Installation nötig.
 
-## Why a fork
+---
 
-The upstream maintainer has left filtering-related issues open since 2024
-([#84](https://github.com/Infiziert90/ChatTwo/issues/84),
-[#173](https://github.com/Infiziert90/ChatTwo/issues/173),
-[#174](https://github.com/Infiziert90/ChatTwo/issues/174)). The original
-design treats the database as an unlimited searchable archive of *everything*
-the chat window sees, which is fine in the US-/JP-shaped privacy mindset but
-hard to reconcile with EU GDPR data minimization rules when the archive
-contains messages from third parties.
+## Entwicklung
 
-Forking under EUPL-1.2 is explicitly permitted, the upstream stays
-authoritative for the chat-replacement engine, and we cherry-pick relevant
-upstream bugfixes from `Infiziert90/ChatTwo` periodically.
+### Voraussetzungen
 
-## Build
+- .NET 10 SDK (`10.0.104+`) und .NET 9 SDK (`9.0.115+` parallel)
+- Dalamud-Hooks im XIVLauncher-`addon`-Verzeichnis
+- VS Code mit C# Dev Kit (oder Rider, JetBrains)
+- Linux: WireGuard-Mount für Test-Spiel-Setup falls Remote-DB
+
+### Setup
 
 ```bash
-# Linux with XIVLauncher Core
+git clone --recurse-submodules https://github.com/JonKazama-Hellion/HellionChat.git
+cd HellionChat
+git remote add upstream https://github.com/Infiziert90/ChatTwo.git
+
+# Linux: DALAMUD_HOME exportieren falls Hooks nicht im Standardpfad
 cp .env.example .env
-# adjust DALAMUD_HOME if your hooks live somewhere else
 set -a; source .env; set +a
+
 dotnet build ChatTwo/ChatTwo.csproj
 ```
 
-The output assembly is `ChatTwo/bin/Debug/HellionChat.dll`. Add the parent
-directory as a Dev Plugin Location in Dalamud's experimental settings.
+Output: `ChatTwo/bin/Debug/HellionChat.dll`. Den Ordner `ChatTwo/bin/Debug` in Dalamud unter Experimental → Dev Plugin Locations eintragen.
 
-## Branding assets
+### Build-Konfigurationen
 
-`ChatTwo/images/icon.png` is the upstream Chat 2 icon and stays in place
-until a hand-drawn Hellion logo replaces it. **No AI-generated artwork —
-ever.**
+| Configuration | Output                                                | Zweck                            |
+| ------------- | ----------------------------------------------------- | -------------------------------- |
+| Debug         | `bin/Debug/HellionChat.dll`                           | Dev-Plugin-Loading               |
+| Release       | `bin/Release/HellionChat/latest.zip` + Manifest       | Custom-Repo / GitHub Release     |
 
-## License
+### Upstream-Sync
 
-EUPL-1.2 (same as upstream Chat 2). See `LICENCE`.
+```bash
+git fetch upstream
+git log --oneline HEAD..upstream/main          # Welche Commits gibt es?
+git cherry-pick -x <commit>                    # Selektiv übernehmen
+```
 
-## Acknowledgments
+Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig vor weil Crowdin sie regelmäßig anfasst. Pragmatisch mit `git checkout --theirs` auflösen, da wir sie selbst nicht editieren.
 
-- **Infi & Anna (ascclemens)** — original Chat 2 engine, filtering, IPC, all
-  the heavy lifting before this fork existed.
-- **Dalamud team** — the plugin framework underneath everything.
-- **JonKazama-Hellion** — fork maintenance, privacy/retention/export
-  features, German localization.
+---
 
-## AI assistance disclosure
+## Distribution
 
-See `AI_DISCLOSURE.md`.
+| Phase           | Version       | Distribution                                       |
+| --------------- | ------------- | -------------------------------------------------- |
+| Bootstrap       | v0.1.x        | Eigenes Custom-Repo (`repo.json` im Repo-Root)     |
+| Stable          | v1.0          | Eigenes Custom-Repo                                |
+| Optional        | v1.1+         | Submission ans Dalamud-Main-Plugin-Repo (zusätzlich) |
+
+`repo.json` wird beim Versions-Bump per Hand aus dem generierten `HellionChat.json` plus den GitHub-Release-Download-Links zusammengebaut. Skript-Automatisierung via GitHub Actions ist geplant aber noch nicht eingerichtet.
+
+---
+
+## Projektstatus
+
+**Version 0.1.2** | Stand: Mai 2026
+
+Alle Bootstrap-Phasen abgeschlossen:
+
+- [x] Privacy-Filter (Whitelist + Retention + Cleanup + Export)
+- [x] First-Run-Wizard mit drei Profilen
+- [x] Plugin-Identity (eigener Slot, Layout-Migration, Recovery)
+- [x] Bilinguale UI (EN + DE) mit Live-Sprachwechsel
+- [x] Hellion-Theme + Hellion-Logo + gebündelter Exo-2-Font
+- [x] Custom-Repo-Pipeline mit GitHub-Release-Distribution
+- [x] About-Tab im Hellion-Branding mit License + Disclaimer
+- [x] AI-Disclosure dokumentiert (Pair-Klassifikation)
+
+Phase 2 (offen, kein festes Datum):
+
+- [ ] MySQL/MariaDB-Backend mit Drei-Stufen-Bestätigung
+- [ ] PostgreSQL-Backend
+- [ ] Encryption für sensible Channels (AES-256, lokaler Key)
+- [ ] WireGuard-Network-Detection (optionaler Filter)
+- [ ] libnotify-Integration (native Linux-Toasts)
+- [ ] XDG-Compliance (komplex unter Wine)
+- [ ] Hand-gezeichnetes Hellion-Logo (Platzhalter aus Hellion-Online-Media-Brand-Repo)
+- [ ] GitHub-Actions für reproduzierbaren Build und automatischen `repo.json`-Sync
+- [ ] Submission ans Dalamud-Main-Plugin-Repo
+
+---
+
+## Lizenz
+
+EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Siehe `LICENCE`.
+
+© 2023–2026 die Chat-2-Autoren (Infi, Anna und die Upstream-Contributors) für die Engine, IPC und Storage-Schicht.
+© 2026 Hellion Online Media für die Hellion-Chat-Erweiterungen.
+
+### Acknowledgments
+
+- **Infi & Anna (ascclemens)** — die Chat-2-Engine, ohne die dieser Fork nicht existieren würde.
+- **Dalamud-Team** — das Plugin-Framework.
+- **Chat-2-Crowdin-Community** — Übersetzungen der Upstream-Strings (siehe Settings → Info → "Chat 2 community translators").
+
+### FFXIV-Disclaimer
+
+FINAL FANTASY XIV © SQUARE ENIX CO., LTD. Alle Rechte vorbehalten. Hellion Chat ist ein inoffizielles, von Fans erstelltes Plugin und ist weder mit Square Enix verbunden noch von ihnen unterstützt, gesponsert oder genehmigt.
+
+### KI-Unterstützung
+
+Siehe [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) für die Pair-Level-Disclosure.
+
+---
+
+**Hellion Online Media** | Bad Harzburg | [hellion-media.de](https://hellion-media.de)
