@@ -16,8 +16,6 @@ internal static class PrivacyDefaults
         ChatType.CrossParty,
         ChatType.Alliance,
         ChatType.FreeCompany,
-        ChatType.FreeCompanyAnnouncement,
-        ChatType.FreeCompanyLoginLogout,
         ChatType.Linkshell1,
         ChatType.Linkshell2,
         ChatType.Linkshell3,
