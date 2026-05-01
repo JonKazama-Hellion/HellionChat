@@ -49,6 +49,27 @@ public class FontManager
         }
     }
 
+    /// <summary>
+    /// Backing bytes for the bundled Hellion font (Exo 2, OFL-1.1). Lazily
+    /// extracted from the assembly's manifest resources on first use; the
+    /// load happens inside the font atlas build callback so we keep the
+    /// allocation off the plugin constructor's hot path.
+    /// </summary>
+    private static byte[]? HellionFontBytes;
+
+    private static byte[] GetHellionFontBytes()
+    {
+        if (HellionFontBytes is not null)
+            return HellionFontBytes;
+
+        using var stream = typeof(FontManager).Assembly.GetManifestResourceStream("HellionFont.ttf")
+            ?? throw new FileNotFoundException("Hellion font resource not embedded in the assembly");
+        using var ms = new MemoryStream();
+        stream.CopyTo(ms);
+        HellionFontBytes = ms.ToArray();
+        return HellionFontBytes;
+    }
+
     private unsafe void SetUpRanges()
     {
         ushort[] BuildRange(IReadOnlyList<ushort>? chars, params nint[] ranges)
@@ -121,7 +142,9 @@ public class FontManager
                 tk =>
                 {
                     var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
-                    config.MergeFont = AddFontWithFallback(tk, Plugin.Config.GlobalFontV2.FontId, config, "global");
+                    config.MergeFont = Plugin.Config.UseHellionFont
+                        ? tk.AddFontFromMemory(GetHellionFontBytes(), config, "Hellion-Exo2")
+                        : AddFontWithFallback(tk, Plugin.Config.GlobalFontV2.FontId, config, "global");
 
                     config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
                     config.GlyphRanges = JpRange;

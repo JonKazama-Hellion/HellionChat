@@ -279,4 +279,10 @@
   <data name="Theme_WindowOpacity_Help" xml:space="preserve">
     <value>Wie deckend die Plugin-Fenster sind. Niedrigere Werte lassen das Spiel durchscheinen, Form-Felder und Dialoge bleiben oben drauf deckend und gut lesbar.</value>
   </data>
+  <data name="Theme_UseHellionFont_Name" xml:space="preserve">
+    <value>Mitgelieferte Hellion-Schrift (Exo 2) verwenden</value>
+  </data>
+  <data name="Theme_UseHellionFont_Description" xml:space="preserve">
+    <value>Rendert Chat und UI in Exo 2 (SIL Open Font License 1.1), die mit dem Plugin ausgeliefert wird. Deaktivieren, um auf die unter Einstellungen → Schrift gewählte Schriftart zurückzufallen.</value>
+  </data>
 </root>

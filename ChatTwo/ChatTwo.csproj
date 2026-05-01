@@ -43,6 +43,20 @@
          + HellionStrings.<lang>.resx) is picked up automatically by the SDK
          default include. Designer.cs is hand-maintained, no auto-gen needed. -->
 
+    <!-- Bundled Hellion font (Exo 2, OFL-1.1). Embedded as a manifest
+         resource with a fixed LogicalName so FontManager can pull the
+         bytes back at runtime via AddFontFromMemory. The OFL license
+         text travels with it inside the assembly to satisfy the
+         "license must be distributed with the font" clause. -->
+    <ItemGroup>
+        <EmbeddedResource Include="Resources\HellionFont.ttf">
+            <LogicalName>HellionFont.ttf</LogicalName>
+        </EmbeddedResource>
+        <EmbeddedResource Include="Resources\HellionFont-OFL.txt">
+            <LogicalName>HellionFont-OFL.txt</LogicalName>
+        </EmbeddedResource>
+    </ItemGroup>
+
 
     <ItemGroup>
       <Folder Include="images\" />

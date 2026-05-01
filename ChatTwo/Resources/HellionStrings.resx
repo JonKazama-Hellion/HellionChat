@@ -279,4 +279,10 @@
   <data name="Theme_WindowOpacity_Help" xml:space="preserve">
     <value>How opaque the plugin panes are. Lower values let the game shine through; form fields and dialogs stay opaque on top so they remain readable.</value>
   </data>
+  <data name="Theme_UseHellionFont_Name" xml:space="preserve">
+    <value>Use the bundled Hellion font (Exo 2)</value>
+  </data>
+  <data name="Theme_UseHellionFont_Description" xml:space="preserve">
+    <value>Renders chat and UI in Exo 2 (SIL Open Font License 1.1) which ships with the plugin. Disable to fall back to whatever font you picked under Settings → Fonts.</value>
+  </data>
 </root>

@@ -86,6 +86,13 @@ internal sealed class Privacy : ISettingsTab
                     Mutable.HellionThemeWindowOpacity = Math.Clamp(opacity, 0.5f, 1.0f);
                 ImGuiUtil.HelpText(HellionStrings.Theme_WindowOpacity_Help);
             }
+
+            ImGui.Spacing();
+
+            ImGuiUtil.OptionCheckbox(
+                ref Mutable.UseHellionFont,
+                HellionStrings.Theme_UseHellionFont_Name,
+                HellionStrings.Theme_UseHellionFont_Description);
         }
 
         ImGui.Spacing();

@@ -75,6 +75,12 @@ public class Configuration : IPluginConfiguration
     // panes more glass-like so the game shines through. Default ~92%.
     public float HellionThemeWindowOpacity = 0.92f;
 
+    // Use the bundled Exo 2 font (OFL-1.1) for the regular plugin font
+    // instead of whatever GlobalFontV2.FontId points at. Default ON so a
+    // fresh install gets the Hellion typography out-of-the-box; flip OFF
+    // to fall back to the user's chosen system or Dalamud font.
+    public bool UseHellionFont = true;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -255,6 +261,7 @@ public class Configuration : IPluginConfiguration
         FirstRunCompleted = other.FirstRunCompleted;
         HellionThemeEnabled = other.HellionThemeEnabled;
         HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
+        UseHellionFont = other.UseHellionFont;
     }
 }
 
