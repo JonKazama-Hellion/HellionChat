@@ -40,6 +40,25 @@ Bootstrap (v0.1.x). Used in production on a single user's setup. Not (yet)
 submitted to the official Dalamud plugin repository — distributed as a
 custom-repo / dev-plugin while the architecture stabilises.
 
+## Install (testers)
+
+Hellion Chat is shipped via a Dalamud **custom repository** during the
+bootstrap phase. To install:
+
+1. Open Dalamud settings (`/xlsettings`) → **Experimental**.
+2. Add a new entry under **Custom Plugin Repositories**:
+   ```
+   https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json
+   ```
+3. Click **Save**, then back in `/xlplugins` hit **All Plugins** and refresh.
+4. **Hellion Chat** now appears in the list — install it from there.
+5. If you previously had **Chat 2** installed, disable it first. The two
+   share their database and config dir until Hellion Chat's first launch
+   migrates everything into `pluginConfigs/HellionChat/`.
+
+Updates land in the same plugin list once the maintainer pushes a new
+`v0.1.x` tag.
+
 ## Why a fork
 
 The upstream maintainer has left filtering-related issues open since 2024

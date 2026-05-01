@@ -1,0 +1,38 @@
+[
+  {
+    "Author": "JonKazama-Hellion",
+    "Name": "Hellion Chat",
+    "InternalName": "HellionChat",
+    "AssemblyVersion": "0.1.0.0",
+    "Description": "Hellion Chat is a privacy-focused, Linux-aware fork of Chat 2.\n\nSame chat replacement you know from upstream, with extra controls\nfor what actually gets stored:\n\n- Channel whitelist for database persistence (GDPR Art. 25)\n- Privacy-First defaults: only your own conversations are kept\n- Failsafe for unknown ChatTypes (default OFF)\n- Independent plugin state (own config + database directory)\n\nBased on Chat 2 by Infi and Anna, licensed under EUPL-1.2.",
+    "ApplicableVersion": "any",
+    "RepoUrl": "https://github.com/JonKazama-Hellion/HellionChat",
+    "Tags": [
+      "Social",
+      "UI",
+      "Chat",
+      "Replacement",
+      "Privacy"
+    ],
+    "DalamudApiLevel": 15,
+    "LoadRequiredState": 0,
+    "LoadSync": false,
+    "CanUnloadAsync": false,
+    "LoadPriority": 0,
+    "Punchline": "GDPR-compliant, Linux-aware fork of Chat 2",
+    "Changelog": "**Hellion Chat 0.1.0 — Initial fork release**\n\nPrivacy\n- Channel whitelist filter in MessageStore.UpsertMessage with a\n  Privacy-First default (own conversations only)\n- Per-channel retention with a 24-hour idempotent background sweep\n  (default OFF; spec defaults of 365 / 90 / 30 days)\n- Retroactive cleanup with a Ctrl+Shift confirm and VACUUM\n- Export to Markdown / JSON / CSV via Dalamud's file dialog\n  (GDPR Art. 15 right of access)\n\nOnboarding\n- First-run wizard with three profiles: Privacy-First / Casual /\n  Full History\n- Configuration v6 → v7 migration that seeds defaults and shows a\n  notification once on update\n- One-shot migration from upstream Chat 2's pluginConfigs layout\n  so the fork uses pluginConfigs/HellionChat without losing state\n- Migrate3 idempotency recovery for half-migrated databases\n\nLook & feel\n- Localized UI (English and German) with live language switching\n- Hellion industrial HUD theme with cyan-teal action accents,\n  slate-violet tabs, amber active highlights and a window-opacity\n  slider for combat-friendly transparency\n\nBased on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).",
+    "AcceptsFeedback": true,
+    "DownloadLinkInstall": "https://github.com/JonKazama-Hellion/HellionChat/releases/download/v0.1.0/latest.zip",
+    "DownloadLinkUpdate": "https://github.com/JonKazama-Hellion/HellionChat/releases/download/v0.1.0/latest.zip",
+    "DownloadLinkTesting": "https://github.com/JonKazama-Hellion/HellionChat/releases/download/v0.1.0/latest.zip",
+    "TestingAssemblyVersion": "0.1.0.0",
+    "IconUrl": "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/icon.png",
+    "ImageUrls": [],
+    "DownloadCount": 0,
+    "IsHide": false,
+    "IsTestingExclusive": false,
+    "CategoryTags": [
+      "social"
+    ]
+  }
+]
