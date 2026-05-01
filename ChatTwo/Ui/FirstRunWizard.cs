@@ -41,6 +41,8 @@ public sealed class FirstRunWizard : Window
 
     public override void Draw()
     {
+        using var _style = HellionStyle.Push();
+
         ImGui.TextWrapped(HellionStrings.Wizard_Intro);
         ImGui.Spacing();
         ImGui.Separator();

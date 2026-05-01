@@ -66,6 +66,8 @@ internal sealed class Privacy : ISettingsTab
 
     public void Draw(bool changed)
     {
+        using var _style = HellionStyle.Push();
+
         if (ImGui.Button(HellionStrings.Wizard_Reopen_Button))
             Plugin.FirstRunWizard.IsOpen = true;
         ImGui.Spacing();
