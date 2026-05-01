@@ -33,9 +33,26 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 6;
+    private const int LatestVersion = 7;
 
     public int Version { get; set; } = LatestVersion;
+
+    // Hellion Chat — Privacy filter (DSGVO Art. 25 Privacy by Default).
+    // Master-switch defaults to true; set false to restore upstream behavior.
+    public bool PrivacyFilterEnabled = true;
+    // Empty set means the migration has not run yet — see Plugin.cs v6→v7.
+    public HashSet<ChatType> PrivacyPersistChannels = [];
+    // Failsafe for ChatTypes added by future FFXIV patches we don't know about.
+    public bool PrivacyPersistUnknownChannels;
+
+    public bool IsAllowedForStorage(ChatType type)
+    {
+        if (!PrivacyFilterEnabled)
+            return true;
+        if (PrivacyPersistChannels.Contains(type))
+            return true;
+        return PrivacyPersistUnknownChannels;
+    }
 
     public bool HideChat = true;
     public bool HideDuringCutscenes = true;
@@ -195,6 +212,10 @@ public class Configuration : IPluginConfiguration
         WebinterfacePassword = other.WebinterfacePassword;
         WebinterfacePort = other.WebinterfacePort;
         WebinterfaceMaxLinesToSend = other.WebinterfaceMaxLinesToSend;
+
+        PrivacyFilterEnabled = other.PrivacyFilterEnabled;
+        PrivacyPersistChannels = [..other.PrivacyPersistChannels];
+        PrivacyPersistUnknownChannels = other.PrivacyPersistUnknownChannels;
     }
 }
 

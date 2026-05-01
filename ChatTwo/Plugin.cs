@@ -113,6 +113,24 @@ public sealed class Plugin : IDalamudPlugin
             }
 #pragma warning restore CS0618 // Type or member is obsolete
 
+            // Hellion Chat v6→v7: seed Privacy-First defaults.
+            if (Config.Version <= 6)
+            {
+                Config.PrivacyFilterEnabled = true;
+                Config.PrivacyPersistChannels = [..Privacy.PrivacyDefaults.PrivacyFirstWhitelist];
+                Config.PrivacyPersistUnknownChannels = false;
+                Config.Version = 7;
+                SaveConfig();
+
+                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                {
+                    Title = "Hellion Chat",
+                    Content = "Privacy filter activated by default. Settings → Privacy to adjust.",
+                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                    InitialDuration = TimeSpan.FromSeconds(15),
+                });
+            }
+
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
 

@@ -332,6 +332,15 @@ internal class MessageStore : IDisposable
 
     internal void UpsertMessage(Message message)
     {
+        // Hellion Chat privacy filter — drop disallowed ChatTypes before
+        // they reach the storage layer (single source of truth, also
+        // covers any future write paths e.g. webinterface backfill).
+        if (!Plugin.Config.IsAllowedForStorage(message.Code.Type))
+        {
+            Plugin.Log.Debug($"Privacy filter dropped message: ChatType={message.Code.Type}");
+            return;
+        }
+
         using var cmd = Connection.CreateCommand();
         cmd.CommandText = @"
             INSERT INTO messages (

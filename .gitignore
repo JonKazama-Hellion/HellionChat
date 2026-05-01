@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Local development environment (HellionChat fork)
+.env
+.env.bak*
+.envrc
+!.env.example
+.vscode/
+scripts/
+
 # Packaging
 pack/
 
