@@ -66,6 +66,8 @@ public class Configuration : IPluginConfiguration
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
             return userOverride;
+        if (Privacy.PrivacyDefaults.DefaultRetentionDays.TryGetValue(type, out var specDefault))
+            return specDefault;
         return RetentionDefaultDays;
     }
 

@@ -318,7 +318,12 @@ public sealed class Plugin : IDalamudPlugin
             return;
 
         // Snapshot the policy so the user can edit settings while we run.
-        var policy = Config.RetentionPerChannelDays.ToDictionary(p => (int)(ushort)p.Key, p => p.Value);
+        // Spec defaults form the baseline; explicit user overrides win.
+        var policy = new Dictionary<int, int>();
+        foreach (var (type, days) in Privacy.PrivacyDefaults.DefaultRetentionDays)
+            policy[(int)(ushort)type] = days;
+        foreach (var (type, days) in Config.RetentionPerChannelDays)
+            policy[(int)(ushort)type] = days;
         var defaultDays = Config.RetentionDefaultDays;
 
         new Thread(() =>

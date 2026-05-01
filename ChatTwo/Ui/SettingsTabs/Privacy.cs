@@ -190,10 +190,16 @@ internal sealed class Privacy : ISettingsTab
                             foreach (var type in types)
                             {
                                 var hasOverride = Mutable.RetentionPerChannelDays.TryGetValue(type, out var days);
+                                var hasSpecDefault = PrivacyDefaults.DefaultRetentionDays.TryGetValue(type, out var specDays);
                                 if (!hasOverride)
-                                    days = Mutable.RetentionDefaultDays;
+                                    days = hasSpecDefault ? specDays : Mutable.RetentionDefaultDays;
 
-                                if (ImGui.InputInt($"{type}##retention-{(int)type}", ref days))
+                                var tag = hasOverride
+                                    ? "[override]"
+                                    : hasSpecDefault
+                                        ? "[spec]"
+                                        : "[global]";
+                                if (ImGui.InputInt($"{type} {tag}##retention-{(int)type}", ref days))
                                 {
                                     days = Math.Max(0, days);
                                     Mutable.RetentionPerChannelDays[type] = days;
