@@ -78,7 +78,7 @@ public static class EmoteCache
             var globalList = await global.Content.ReadAsStringAsync();
 
             foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalList)!)
-                if (!NotWorking.Contains(emote.Code))
+                if (!string.IsNullOrEmpty(emote.Code) && !NotWorking.Contains(emote.Code))
                     Cache.TryAdd(emote.Code, emote);
 
             var lastId = string.Empty;
@@ -88,8 +88,13 @@ public static class EmoteCache
                 var topList = await top.Content.ReadAsStringAsync();
 
                 var jsonList = JsonSerializer.Deserialize<List<Top100>>(topList)!;
+                // BetterTTV occasionally returns entries with a null Code; the
+                // upstream code passed those straight into Dictionary.TryAdd
+                // and tripped ArgumentNullException, killing the whole emote
+                // load. Skip them defensively so a single bad row no longer
+                // breaks the cache for everyone else.
                 foreach (var emote in jsonList)
-                    if (!NotWorking.Contains(emote.Emote.Code))
+                    if (!string.IsNullOrEmpty(emote.Emote.Code) && !NotWorking.Contains(emote.Emote.Code))
                         Cache.TryAdd(emote.Emote.Code, emote.Emote);
 
                 lastId = jsonList.Last().Id;

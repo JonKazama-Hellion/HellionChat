@@ -1,4 +1,6 @@
-﻿using Dalamud.Interface;
+﻿using Dalamud;
+using Dalamud.Interface;
+using Dalamud.Interface.FontIdentifier;
 using Dalamud.Interface.GameFonts;
 using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
@@ -119,11 +121,11 @@ public class FontManager
                 tk =>
                 {
                     var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
-                    config.MergeFont = Plugin.Config.GlobalFontV2.FontId.AddToBuildToolkit(tk, config);
+                    config.MergeFont = AddFontWithFallback(tk, Plugin.Config.GlobalFontV2.FontId, config, "global");
 
                     config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
                     config.GlyphRanges = JpRange;
-                    Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
+                    AddFontWithFallback(tk, Plugin.Config.JapaneseFontV2.FontId, config, "japanese");
 
                     config.SizePt = Plugin.Config.SymbolsFontSizeV2;
                     tk.AddGameSymbol(config);
@@ -139,11 +141,11 @@ public class FontManager
                     tk =>
                     {
                         var config = new SafeFontConfig {SizePt = Plugin.Config.ItalicFontV2.SizePt, GlyphRanges = Ranges};
-                        config.MergeFont = Plugin.Config.ItalicFontV2.FontId.AddToBuildToolkit(tk, config);
+                        config.MergeFont = AddFontWithFallback(tk, Plugin.Config.ItalicFontV2.FontId, config, "italic");
 
                         config.SizePt = Plugin.Config.JapaneseFontV2.SizePt;
                         config.GlyphRanges = JpRange;
-                        Plugin.Config.JapaneseFontV2.FontId.AddToBuildToolkit(tk, config);
+                        AddFontWithFallback(tk, Plugin.Config.JapaneseFontV2.FontId, config, "japanese");
 
                         config.SizePt = Plugin.Config.SymbolsFontSizeV2;
                         tk.AddGameSymbol(config);
@@ -155,6 +157,27 @@ public class FontManager
         else
         {
             ItalicFont = null;
+        }
+    }
+
+    /// <summary>
+    /// Try to add a user-configured font to the build toolkit, falling back to
+    /// the bundled NotoSansCjkRegular asset if the configured font isn't
+    /// available on the system. Without this guard a stale SystemFontId
+    /// pointing at a font the user uninstalled or that never existed on
+    /// Linux (e.g. "Crimson Text") tears down the entire font atlas build.
+    /// </summary>
+    private static ImFontPtr AddFontWithFallback(IFontAtlasBuildToolkitPreBuild tk, IFontId fontId, SafeFontConfig config, string slot)
+    {
+        try
+        {
+            return fontId.AddToBuildToolkit(tk, config);
+        }
+        catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException or IOException)
+        {
+            Plugin.Log.Warning(e, $"Configured {slot} font unavailable, falling back to NotoSansCjkRegular");
+            var fallback = new DalamudAssetFontAndFamilyId(DalamudAsset.NotoSansCjkRegular);
+            return fallback.AddToBuildToolkit(tk, config);
         }
     }
 
