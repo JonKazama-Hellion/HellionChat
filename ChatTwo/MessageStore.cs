@@ -237,9 +237,33 @@ internal class MessageStore : IDisposable
         SetMigrationVersion(2);
     }
 
+    private bool ColumnExists(string table, string column)
+    {
+        using var cmd = Connection.CreateCommand();
+        cmd.CommandText = $"PRAGMA table_info({table});";
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            if (reader.GetString(1) == column)
+                return true;
+        }
+        return false;
+    }
+
     private void Migrate3()
     {
         Plugin.Log.Information("Running migration 3: Fix log kinds to fit the new format");
+
+        // Recovery for partially-applied Migrate3: if the schema is already
+        // in its target shape (new columns exist, old Code column gone) but
+        // user_version was never bumped, just record the version and exit.
+        if (ColumnExists("messages", "ChatType") && !ColumnExists("messages", "Code"))
+        {
+            Plugin.Log.Information("Migration 3: schema already migrated, only bumping user_version");
+            SetMigrationVersion(3);
+            return;
+        }
+
         Connection.Execute(@"
             -- Migration 3: Fix log kinds to fit the new format
             -- Add new ChatType, SourceKind, TargetKind (byte), SortCodeV2
