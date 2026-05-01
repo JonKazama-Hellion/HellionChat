@@ -35,6 +35,11 @@
         </EmbeddedResource>
     </ItemGroup>
 
+    <!-- HellionChat — Hellion-specific resource bundle (HellionStrings.resx
+         + HellionStrings.<lang>.resx) is picked up automatically by the SDK
+         default include. Designer.cs is hand-maintained, no auto-gen needed. -->
+
+
     <ItemGroup>
       <Folder Include="images\" />
     </ItemGroup>

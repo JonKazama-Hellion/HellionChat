@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Privacy_Tab_Title" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Name" xml:space="preserve">
+    <value>Enable privacy filter</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Description" xml:space="preserve">
+    <value>When enabled, only messages from whitelisted channels are persisted to the database. Disabling restores upstream ChatTwo behavior (everything except battle messages is stored).</value>
+  </data>
+  <data name="Privacy_Whitelist_Help" xml:space="preserve">
+    <value>Pick which channels are stored in the local database. Privacy-First default: only your own conversations. Use the buttons below to apply a preset.</value>
+  </data>
+  <data name="Privacy_Preset_PrivacyFirst" xml:space="preserve">
+    <value>Privacy-First (recommended)</value>
+  </data>
+  <data name="Privacy_Preset_ClearAll" xml:space="preserve">
+    <value>Clear all</value>
+  </data>
+  <data name="Privacy_Preset_SelectAll" xml:space="preserve">
+    <value>Select all</value>
+  </data>
+  <data name="Privacy_Group_DirectMessages" xml:space="preserve">
+    <value>Direct Messages</value>
+  </data>
+  <data name="Privacy_Group_PartyAlliance" xml:space="preserve">
+    <value>Party &amp; Alliance</value>
+  </data>
+  <data name="Privacy_Group_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Privacy_Group_Linkshells" xml:space="preserve">
+    <value>Linkshells</value>
+  </data>
+  <data name="Privacy_Group_CrossLinkshells" xml:space="preserve">
+    <value>Cross-World Linkshells</value>
+  </data>
+  <data name="Privacy_Group_ExtraChat" xml:space="preserve">
+    <value>ExtraChat (Encrypted)</value>
+  </data>
+  <data name="Privacy_Group_PublicChat" xml:space="preserve">
+    <value>Public Chat (third-party data)</value>
+  </data>
+  <data name="Privacy_Group_SystemLogs" xml:space="preserve">
+    <value>System &amp; Game Logs</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Name" xml:space="preserve">
+    <value>Persist unknown channel types</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Description" xml:space="preserve">
+    <value>Failsafe for ChatTypes added by future FFXIV patches that this plugin does not yet know about. Default OFF (Privacy-First). Turn ON if you want a complete log including future channels.</value>
+  </data>
+  <data name="Cleanup_Heading" xml:space="preserve">
+    <value>Apply filter to existing database</value>
+  </data>
+  <data name="Cleanup_Help_Intro" xml:space="preserve">
+    <value>The privacy filter only applies to new messages. Use the cleanup below to retroactively remove already-stored messages that don't match your saved whitelist.</value>
+  </data>
+  <data name="Cleanup_Help_SavedNote" xml:space="preserve">
+    <value>Cleanup uses your SAVED whitelist (Plugin.Config), not unsaved edits above. Click Save first if you want to apply your current edits.</value>
+  </data>
+  <data name="Cleanup_RefreshPreview" xml:space="preserve">
+    <value>Refresh preview</value>
+  </data>
+  <data name="Cleanup_NoPreview" xml:space="preserve">
+    <value>No preview yet. Click Refresh to compute the impact.</value>
+  </data>
+  <data name="Cleanup_TotalStored" xml:space="preserve">
+    <value>Total stored messages: {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillKeep" xml:space="preserve">
+    <value>Will keep:    {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillDelete" xml:space="preserve">
+    <value>Will delete:  {0:N0}</value>
+  </data>
+  <data name="Cleanup_Breakdown" xml:space="preserve">
+    <value>Per-channel breakdown</value>
+  </data>
+  <data name="Cleanup_Marker_Keep" xml:space="preserve">
+    <value>[KEEP]  </value>
+  </data>
+  <data name="Cleanup_Marker_Delete" xml:space="preserve">
+    <value>[DELETE]</value>
+  </data>
+  <data name="Cleanup_Apply_Label" xml:space="preserve">
+    <value>Apply current filter to database</value>
+  </data>
+  <data name="Cleanup_Apply_Tooltip" xml:space="preserve">
+    <value>Ctrl+Shift: Hard-deletes {0:N0} messages, then runs VACUUM. Cannot be undone.</value>
+  </data>
+  <data name="Cleanup_Running" xml:space="preserve">
+    <value>Cleanup running in background…</value>
+  </data>
+  <data name="Cleanup_PreviewError" xml:space="preserve">
+    <value>Failed to compute cleanup preview, see /xllog</value>
+  </data>
+  <data name="Cleanup_Success" xml:space="preserve">
+    <value>Privacy cleanup complete: {0:N0} messages removed.</value>
+  </data>
+  <data name="Cleanup_Error" xml:space="preserve">
+    <value>Privacy cleanup failed, see /xllog</value>
+  </data>
+  <data name="Retention_Heading" xml:space="preserve">
+    <value>Message retention</value>
+  </data>
+  <data name="Retention_Enabled_Name" xml:space="preserve">
+    <value>Auto-delete messages after a per-channel retention window</value>
+  </data>
+  <data name="Retention_Enabled_Description" xml:space="preserve">
+    <value>When enabled, messages older than the configured window are deleted on every plugin start (at most once per 24 hours). Off by default — the plugin never deletes history without your explicit consent.</value>
+  </data>
+  <data name="Retention_Default_Label" xml:space="preserve">
+    <value>Default retention (days, 0 = never)</value>
+  </data>
+  <data name="Retention_Default_Help" xml:space="preserve">
+    <value>Applies to channels without an explicit override below.</value>
+  </data>
+  <data name="Retention_Reset_Spec" xml:space="preserve">
+    <value>Reset overrides to spec defaults</value>
+  </data>
+  <data name="Retention_Clear_Overrides" xml:space="preserve">
+    <value>Clear all overrides</value>
+  </data>
+  <data name="Retention_Tree_Heading" xml:space="preserve">
+    <value>Per-channel retention overrides</value>
+  </data>
+  <data name="Retention_Tag_Override" xml:space="preserve">
+    <value>[override]</value>
+  </data>
+  <data name="Retention_Tag_Spec" xml:space="preserve">
+    <value>[spec]</value>
+  </data>
+  <data name="Retention_Tag_Global" xml:space="preserve">
+    <value>[global]</value>
+  </data>
+  <data name="Retention_Reset_Button" xml:space="preserve">
+    <value>reset</value>
+  </data>
+  <data name="Retention_Apply_Label" xml:space="preserve">
+    <value>Apply retention policy now</value>
+  </data>
+  <data name="Retention_Apply_Tooltip" xml:space="preserve">
+    <value>Ctrl+Shift: runs the retention sweep immediately using the SAVED policy. Save your changes first.</value>
+  </data>
+  <data name="Retention_Running" xml:space="preserve">
+    <value>Retention sweep running in background…</value>
+  </data>
+  <data name="Retention_LastRun_Never" xml:space="preserve">
+    <value>Last run: never</value>
+  </data>
+  <data name="Retention_LastRun_At" xml:space="preserve">
+    <value>Last run: {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Retention_Success" xml:space="preserve">
+    <value>Retention sweep complete: {0:N0} messages removed.</value>
+  </data>
+  <data name="Retention_Error" xml:space="preserve">
+    <value>Retention sweep failed, see /xllog</value>
+  </data>
+  <data name="Migration_Notification_Title" xml:space="preserve">
+    <value>Hellion Chat</value>
+  </data>
+  <data name="Migration_Notification_Content" xml:space="preserve">
+    <value>Privacy filter activated by default. Settings → Privacy to adjust.</value>
+  </data>
+</root>

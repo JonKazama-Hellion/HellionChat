@@ -129,8 +129,8 @@ public sealed class Plugin : IDalamudPlugin
 
                 Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
                 {
-                    Title = "Hellion Chat",
-                    Content = "Privacy filter activated by default. Settings → Privacy to adjust.",
+                    Title = HellionStrings.Migration_Notification_Title,
+                    Content = HellionStrings.Migration_Notification_Content,
                     Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
                     InitialDuration = TimeSpan.FromSeconds(15),
                 });
@@ -392,6 +392,7 @@ public sealed class Plugin : IDalamudPlugin
             : new CultureInfo(Config.LanguageOverride.Code());
 
         Language.Culture = info;
+        HellionStrings.Culture = info;
     }
 
     private static readonly string[] ChatAddonNames =

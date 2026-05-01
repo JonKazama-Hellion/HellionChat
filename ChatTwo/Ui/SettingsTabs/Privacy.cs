@@ -1,5 +1,6 @@
 using ChatTwo.Code;
 using ChatTwo.Privacy;
+using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
@@ -12,7 +13,7 @@ internal sealed class Privacy : ISettingsTab
     private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
-    public string Name => "Privacy###tabs-privacy";
+    public string Name => HellionStrings.Privacy_Tab_Title + "###tabs-privacy";
 
     internal Privacy(Plugin plugin, Configuration mutable)
     {
@@ -20,26 +21,27 @@ internal sealed class Privacy : ISettingsTab
         Mutable = mutable;
     }
 
-    // Channels grouped for the UI. Order = display order.
-    private static readonly (string Heading, ChatType[] Types)[] Groups =
+    // (HeadingKey lookup, ChatType list). Heading is resolved per-frame so
+    // a runtime LanguageChanged call updates the labels immediately.
+    private static readonly (Func<string> Heading, ChatType[] Types)[] Groups =
     [
-        ("Direct Messages", [ChatType.TellIncoming, ChatType.TellOutgoing]),
-        ("Party & Alliance", [ChatType.Party, ChatType.CrossParty, ChatType.Alliance, ChatType.PvpTeam]),
-        ("Free Company", [ChatType.FreeCompany, ChatType.FreeCompanyAnnouncement, ChatType.FreeCompanyLoginLogout]),
-        ("Linkshells", [
+        (() => HellionStrings.Privacy_Group_DirectMessages, [ChatType.TellIncoming, ChatType.TellOutgoing]),
+        (() => HellionStrings.Privacy_Group_PartyAlliance, [ChatType.Party, ChatType.CrossParty, ChatType.Alliance, ChatType.PvpTeam]),
+        (() => HellionStrings.Privacy_Group_FreeCompany, [ChatType.FreeCompany, ChatType.FreeCompanyAnnouncement, ChatType.FreeCompanyLoginLogout]),
+        (() => HellionStrings.Privacy_Group_Linkshells, [
             ChatType.Linkshell1, ChatType.Linkshell2, ChatType.Linkshell3, ChatType.Linkshell4,
             ChatType.Linkshell5, ChatType.Linkshell6, ChatType.Linkshell7, ChatType.Linkshell8,
         ]),
-        ("Cross-World Linkshells", [
+        (() => HellionStrings.Privacy_Group_CrossLinkshells, [
             ChatType.CrossLinkshell1, ChatType.CrossLinkshell2, ChatType.CrossLinkshell3, ChatType.CrossLinkshell4,
             ChatType.CrossLinkshell5, ChatType.CrossLinkshell6, ChatType.CrossLinkshell7, ChatType.CrossLinkshell8,
         ]),
-        ("ExtraChat (Encrypted)", [
+        (() => HellionStrings.Privacy_Group_ExtraChat, [
             ChatType.ExtraChatLinkshell1, ChatType.ExtraChatLinkshell2, ChatType.ExtraChatLinkshell3, ChatType.ExtraChatLinkshell4,
             ChatType.ExtraChatLinkshell5, ChatType.ExtraChatLinkshell6, ChatType.ExtraChatLinkshell7, ChatType.ExtraChatLinkshell8,
         ]),
-        ("Public Chat (third-party data)", [ChatType.Say, ChatType.Shout, ChatType.Yell, ChatType.NoviceNetwork, ChatType.CustomEmote, ChatType.StandardEmote]),
-        ("System & Game Logs", [
+        (() => HellionStrings.Privacy_Group_PublicChat, [ChatType.Say, ChatType.Shout, ChatType.Yell, ChatType.NoviceNetwork, ChatType.CustomEmote, ChatType.StandardEmote]),
+        (() => HellionStrings.Privacy_Group_SystemLogs, [
             ChatType.System, ChatType.Notice, ChatType.Urgent, ChatType.Echo,
             ChatType.NpcDialogue, ChatType.NpcAnnouncement,
             ChatType.LootNotice, ChatType.LootRoll, ChatType.RetainerSale,
@@ -47,9 +49,6 @@ internal sealed class Privacy : ISettingsTab
         ]),
     ];
 
-    // Cleanup preview state. Held in the tab so the user can refresh and
-    // inspect before confirming. Resets when the tab is reopened (acceptable —
-    // a stale preview against a freshly-edited whitelist would be misleading).
     private Dictionary<int, long>? CleanupCounts;
     private long CleanupKeepCount;
     private long CleanupDeleteCount;
@@ -61,9 +60,8 @@ internal sealed class Privacy : ISettingsTab
     {
         ImGuiUtil.OptionCheckbox(
             ref Mutable.PrivacyFilterEnabled,
-            "Enable privacy filter",
-            "When enabled, only messages from whitelisted channels are persisted to the database. " +
-            "Disabling restores upstream ChatTwo behavior (everything except battle messages is stored).");
+            HellionStrings.Privacy_FilterEnabled_Name,
+            HellionStrings.Privacy_FilterEnabled_Description);
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -71,22 +69,19 @@ internal sealed class Privacy : ISettingsTab
 
         using (ImRaii.Disabled(!Mutable.PrivacyFilterEnabled))
         {
-            ImGuiUtil.HelpText(
-                "Pick which channels are stored in the local database. " +
-                "Privacy-First default: only your own conversations. " +
-                "Use the buttons below to apply a preset.");
+            ImGuiUtil.HelpText(HellionStrings.Privacy_Whitelist_Help);
 
             ImGui.Spacing();
 
-            if (ImGui.Button("Privacy-First (recommended)"))
+            if (ImGui.Button(HellionStrings.Privacy_Preset_PrivacyFirst))
                 Mutable.PrivacyPersistChannels = [..PrivacyDefaults.PrivacyFirstWhitelist];
 
             ImGui.SameLine();
-            if (ImGui.Button("Clear all"))
+            if (ImGui.Button(HellionStrings.Privacy_Preset_ClearAll))
                 Mutable.PrivacyPersistChannels.Clear();
 
             ImGui.SameLine();
-            if (ImGui.Button("Select all"))
+            if (ImGui.Button(HellionStrings.Privacy_Preset_SelectAll))
                 foreach (var group in Groups)
                 foreach (var t in group.Types)
                     Mutable.PrivacyPersistChannels.Add(t);
@@ -97,7 +92,7 @@ internal sealed class Privacy : ISettingsTab
 
             foreach (var (heading, types) in Groups)
             {
-                using var tree = ImRaii.TreeNode(heading);
+                using var tree = ImRaii.TreeNode(heading());
                 if (!tree.Success)
                     continue;
 
@@ -124,9 +119,8 @@ internal sealed class Privacy : ISettingsTab
 
             ImGuiUtil.OptionCheckbox(
                 ref Mutable.PrivacyPersistUnknownChannels,
-                "Persist unknown channel types",
-                "Failsafe for ChatTypes added by future FFXIV patches that this plugin does not yet know about. " +
-                "Default OFF (Privacy-First). Turn ON if you want a complete log including future channels.");
+                HellionStrings.Privacy_PersistUnknown_Name,
+                HellionStrings.Privacy_PersistUnknown_Description);
         }
 
         ImGui.Spacing();
@@ -144,45 +138,44 @@ internal sealed class Privacy : ISettingsTab
 
     private void DrawRetentionSection()
     {
-        ImGui.TextUnformatted("Message retention");
+        ImGui.TextUnformatted(HellionStrings.Retention_Heading);
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
             ImGuiUtil.OptionCheckbox(
                 ref Mutable.RetentionEnabled,
-                "Auto-delete messages after a per-channel retention window",
-                "When enabled, messages older than the configured window are deleted on every plugin start (at most once per 24 hours). " +
-                "Off by default — the plugin never deletes history without your explicit consent.");
+                HellionStrings.Retention_Enabled_Name,
+                HellionStrings.Retention_Enabled_Description);
 
             using (ImRaii.Disabled(!Mutable.RetentionEnabled))
             {
                 ImGui.Spacing();
 
                 var defaultDays = Mutable.RetentionDefaultDays;
-                if (ImGui.InputInt("Default retention (days, 0 = never)", ref defaultDays))
+                if (ImGui.InputInt(HellionStrings.Retention_Default_Label, ref defaultDays))
                     Mutable.RetentionDefaultDays = Math.Max(0, defaultDays);
-                ImGuiUtil.HelpText("Applies to channels without an explicit override below.");
+                ImGuiUtil.HelpText(HellionStrings.Retention_Default_Help);
 
                 ImGui.Spacing();
 
-                if (ImGui.Button("Reset overrides to spec defaults"))
+                if (ImGui.Button(HellionStrings.Retention_Reset_Spec))
                 {
                     Mutable.RetentionPerChannelDays =
                         PrivacyDefaults.DefaultRetentionDays.ToDictionary(p => p.Key, p => p.Value);
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Clear all overrides"))
+                if (ImGui.Button(HellionStrings.Retention_Clear_Overrides))
                     Mutable.RetentionPerChannelDays.Clear();
 
                 ImGui.Spacing();
 
-                using (var tree = ImRaii.TreeNode("Per-channel retention overrides"))
+                using (var tree = ImRaii.TreeNode(HellionStrings.Retention_Tree_Heading))
                 {
                     if (tree.Success)
                     {
                         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
                         foreach (var (heading, types) in Groups)
                         {
-                            using var subTree = ImRaii.TreeNode(heading);
+                            using var subTree = ImRaii.TreeNode(heading());
                             if (!subTree.Success)
                                 continue;
 
@@ -195,10 +188,10 @@ internal sealed class Privacy : ISettingsTab
                                     days = hasSpecDefault ? specDays : Mutable.RetentionDefaultDays;
 
                                 var tag = hasOverride
-                                    ? "[override]"
+                                    ? HellionStrings.Retention_Tag_Override
                                     : hasSpecDefault
-                                        ? "[spec]"
-                                        : "[global]";
+                                        ? HellionStrings.Retention_Tag_Spec
+                                        : HellionStrings.Retention_Tag_Global;
                                 if (ImGui.InputInt($"{type} {tag}##retention-{(int)type}", ref days))
                                 {
                                     days = Math.Max(0, days);
@@ -208,7 +201,7 @@ internal sealed class Privacy : ISettingsTab
                                 if (hasOverride)
                                 {
                                     ImGui.SameLine();
-                                    if (ImGui.Button($"reset##retention-reset-{(int)type}"))
+                                    if (ImGui.Button($"{HellionStrings.Retention_Reset_Button}##retention-reset-{(int)type}"))
                                         Mutable.RetentionPerChannelDays.Remove(type);
                                 }
                             }
@@ -220,19 +213,18 @@ internal sealed class Privacy : ISettingsTab
 
                 using (ImRaii.Disabled(RetentionRunning))
                 {
-                    if (ImGuiUtil.CtrlShiftButton("Apply retention policy now",
-                            "Ctrl+Shift: runs the retention sweep immediately using the SAVED policy. Save your changes first."))
+                    if (ImGuiUtil.CtrlShiftButton(HellionStrings.Retention_Apply_Label, HellionStrings.Retention_Apply_Tooltip))
                         StartRetentionRun();
                 }
 
                 if (RetentionRunning)
-                    ImGuiUtil.HelpText("Retention sweep running in background…");
+                    ImGuiUtil.HelpText(HellionStrings.Retention_Running);
 
                 ImGui.Spacing();
                 var lastRun = Plugin.Config.RetentionLastRunAt;
                 ImGuiUtil.HelpText(lastRun == DateTimeOffset.MinValue
-                    ? "Last run: never"
-                    : $"Last run: {lastRun.ToLocalTime():yyyy-MM-dd HH:mm}");
+                    ? HellionStrings.Retention_LastRun_Never
+                    : string.Format(HellionStrings.Retention_LastRun_At, lastRun.ToLocalTime()));
             }
         }
     }
@@ -265,12 +257,12 @@ internal sealed class Privacy : ISettingsTab
                     }).Wait();
                 }
 
-                WrapperUtil.AddNotification($"Retention sweep complete: {deleted:N0} messages removed.", NotificationType.Success);
+                WrapperUtil.AddNotification(string.Format(HellionStrings.Retention_Success, deleted), NotificationType.Success);
             }
             catch (Exception e)
             {
                 Plugin.Log.Error(e, "Manual retention run failed");
-                WrapperUtil.AddNotification("Retention sweep failed, see /xllog", NotificationType.Error);
+                WrapperUtil.AddNotification(HellionStrings.Retention_Error, NotificationType.Error);
             }
             finally
             {
@@ -281,37 +273,32 @@ internal sealed class Privacy : ISettingsTab
 
     private void DrawCleanupSection()
     {
-        ImGui.TextUnformatted("Apply filter to existing database");
+        ImGui.TextUnformatted(HellionStrings.Cleanup_Heading);
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            ImGuiUtil.HelpText(
-                "The privacy filter only applies to new messages. " +
-                "Use the cleanup below to retroactively remove already-stored messages " +
-                "that don't match your saved whitelist.");
-            ImGuiUtil.HelpText(
-                "Cleanup uses your SAVED whitelist (Plugin.Config), not unsaved edits above. " +
-                "Click Save first if you want to apply your current edits.");
+            ImGuiUtil.HelpText(HellionStrings.Cleanup_Help_Intro);
+            ImGuiUtil.HelpText(HellionStrings.Cleanup_Help_SavedNote);
 
             ImGui.Spacing();
 
             using (ImRaii.Disabled(CleanupRunning))
             {
-                if (ImGui.Button("Refresh preview"))
+                if (ImGui.Button(HellionStrings.Cleanup_RefreshPreview))
                     RefreshCleanupPreview();
             }
 
             if (CleanupCounts is null)
             {
-                ImGuiUtil.HelpText("No preview yet. Click Refresh to compute the impact.");
+                ImGuiUtil.HelpText(HellionStrings.Cleanup_NoPreview);
                 return;
             }
 
             ImGui.Spacing();
-            ImGuiUtil.HelpText($"Total stored messages: {CleanupKeepCount + CleanupDeleteCount:N0}");
-            ImGuiUtil.HelpText($"Will keep:    {CleanupKeepCount:N0}");
-            ImGuiUtil.HelpText($"Will delete:  {CleanupDeleteCount:N0}");
+            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_TotalStored, CleanupKeepCount + CleanupDeleteCount));
+            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillKeep, CleanupKeepCount));
+            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillDelete, CleanupDeleteCount));
 
-            using (var tree = ImRaii.TreeNode("Per-channel breakdown"))
+            using (var tree = ImRaii.TreeNode(HellionStrings.Cleanup_Breakdown))
             {
                 if (tree.Success)
                 {
@@ -322,7 +309,7 @@ internal sealed class Privacy : ISettingsTab
                             ? ((ChatType)(ushort)chatType).ToString()
                             : $"Unknown({chatType})";
                         var keeps = WouldBeKept(chatType);
-                        var marker = keeps ? "[KEEP]  " : "[DELETE]";
+                        var marker = keeps ? HellionStrings.Cleanup_Marker_Keep : HellionStrings.Cleanup_Marker_Delete;
                         ImGuiUtil.HelpText($"{marker} {name} — {count:N0}");
                     }
                 }
@@ -332,13 +319,13 @@ internal sealed class Privacy : ISettingsTab
 
             using (ImRaii.Disabled(CleanupRunning || CleanupDeleteCount == 0))
             {
-                if (ImGuiUtil.CtrlShiftButton("Apply current filter to database",
-                        $"Ctrl+Shift: Hard-deletes {CleanupDeleteCount:N0} messages, then runs VACUUM. Cannot be undone."))
+                if (ImGuiUtil.CtrlShiftButton(HellionStrings.Cleanup_Apply_Label,
+                        string.Format(HellionStrings.Cleanup_Apply_Tooltip, CleanupDeleteCount)))
                     StartCleanup();
             }
 
             if (CleanupRunning)
-                ImGuiUtil.HelpText("Cleanup running in background…");
+                ImGuiUtil.HelpText(HellionStrings.Cleanup_Running);
         }
     }
 
@@ -369,7 +356,7 @@ internal sealed class Privacy : ISettingsTab
         catch (Exception e)
         {
             Plugin.Log.Error(e, "Failed to compute cleanup preview");
-            WrapperUtil.AddNotification("Failed to compute cleanup preview, see /xllog", NotificationType.Error);
+            WrapperUtil.AddNotification(HellionStrings.Cleanup_PreviewError, NotificationType.Error);
         }
     }
 
@@ -394,12 +381,12 @@ internal sealed class Privacy : ISettingsTab
                     Plugin.MessageManager.FilterAllTabsAsync();
                 }).Wait();
 
-                WrapperUtil.AddNotification($"Privacy cleanup complete: {deleted:N0} messages removed.", NotificationType.Success);
+                WrapperUtil.AddNotification(string.Format(HellionStrings.Cleanup_Success, deleted), NotificationType.Success);
             }
             catch (Exception e)
             {
                 Plugin.Log.Error(e, "Privacy cleanup failed");
-                WrapperUtil.AddNotification("Privacy cleanup failed, see /xllog", NotificationType.Error);
+                WrapperUtil.AddNotification(HellionStrings.Cleanup_Error, NotificationType.Error);
             }
             finally
             {

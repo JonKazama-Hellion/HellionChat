@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Privacy_Tab_Title" xml:space="preserve">
+    <value>Datenschutz</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Name" xml:space="preserve">
+    <value>Datenschutz-Filter aktivieren</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Description" xml:space="preserve">
+    <value>Wenn aktiviert, werden nur Nachrichten aus den erlaubten Kanälen in die Datenbank gespeichert. Beim Deaktivieren gilt wieder das Standard-Verhalten von ChatTwo, also alles außer Battle-Logs wird gespeichert.</value>
+  </data>
+  <data name="Privacy_Whitelist_Help" xml:space="preserve">
+    <value>Wähle aus, welche Kanäle in die lokale Datenbank gespeichert werden. Standard nach Datensparsamkeit: nur deine eigenen Konversationen. Über die Buttons unten kannst du eine Voreinstellung anwenden.</value>
+  </data>
+  <data name="Privacy_Preset_PrivacyFirst" xml:space="preserve">
+    <value>Datensparsamkeit (empfohlen)</value>
+  </data>
+  <data name="Privacy_Preset_ClearAll" xml:space="preserve">
+    <value>Alle abwählen</value>
+  </data>
+  <data name="Privacy_Preset_SelectAll" xml:space="preserve">
+    <value>Alle auswählen</value>
+  </data>
+  <data name="Privacy_Group_DirectMessages" xml:space="preserve">
+    <value>Direktnachrichten</value>
+  </data>
+  <data name="Privacy_Group_PartyAlliance" xml:space="preserve">
+    <value>Gruppe &amp; Allianz</value>
+  </data>
+  <data name="Privacy_Group_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Privacy_Group_Linkshells" xml:space="preserve">
+    <value>Linkshells</value>
+  </data>
+  <data name="Privacy_Group_CrossLinkshells" xml:space="preserve">
+    <value>Cross-World-Linkshells</value>
+  </data>
+  <data name="Privacy_Group_ExtraChat" xml:space="preserve">
+    <value>ExtraChat (verschlüsselt)</value>
+  </data>
+  <data name="Privacy_Group_PublicChat" xml:space="preserve">
+    <value>Öffentlicher Chat (Daten Dritter)</value>
+  </data>
+  <data name="Privacy_Group_SystemLogs" xml:space="preserve">
+    <value>System &amp; Spiel-Logs</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Name" xml:space="preserve">
+    <value>Unbekannte Kanal-Typen speichern</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Description" xml:space="preserve">
+    <value>Sicherheitsnetz für ChatTypes, die durch zukünftige FFXIV-Patches dazukommen und dem Plugin noch nicht bekannt sind. Standard ist AUS (Datensparsamkeit). Aktivieren, wenn du auch zukünftige Kanäle vollständig mitloggen willst.</value>
+  </data>
+  <data name="Cleanup_Heading" xml:space="preserve">
+    <value>Filter auf bestehende Datenbank anwenden</value>
+  </data>
+  <data name="Cleanup_Help_Intro" xml:space="preserve">
+    <value>Der Datenschutz-Filter wirkt nur auf neue Nachrichten. Über das Aufräumen unten kannst du bereits gespeicherte Nachrichten nachträglich entfernen, die nicht zu deiner gespeicherten Whitelist passen.</value>
+  </data>
+  <data name="Cleanup_Help_SavedNote" xml:space="preserve">
+    <value>Das Aufräumen nutzt deine GESPEICHERTE Whitelist (Plugin.Config), nicht ungespeicherte Änderungen oben. Klicke zuerst Speichern, wenn du deine aktuellen Änderungen anwenden willst.</value>
+  </data>
+  <data name="Cleanup_RefreshPreview" xml:space="preserve">
+    <value>Vorschau aktualisieren</value>
+  </data>
+  <data name="Cleanup_NoPreview" xml:space="preserve">
+    <value>Noch keine Vorschau. Klicke Aktualisieren, um die Auswirkung zu berechnen.</value>
+  </data>
+  <data name="Cleanup_TotalStored" xml:space="preserve">
+    <value>Gespeicherte Nachrichten gesamt: {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillKeep" xml:space="preserve">
+    <value>Behalten:    {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillDelete" xml:space="preserve">
+    <value>Löschen:     {0:N0}</value>
+  </data>
+  <data name="Cleanup_Breakdown" xml:space="preserve">
+    <value>Aufschlüsselung pro Kanal</value>
+  </data>
+  <data name="Cleanup_Marker_Keep" xml:space="preserve">
+    <value>[BEHALTEN]</value>
+  </data>
+  <data name="Cleanup_Marker_Delete" xml:space="preserve">
+    <value>[LÖSCHEN] </value>
+  </data>
+  <data name="Cleanup_Apply_Label" xml:space="preserve">
+    <value>Aktuellen Filter auf Datenbank anwenden</value>
+  </data>
+  <data name="Cleanup_Apply_Tooltip" xml:space="preserve">
+    <value>Strg+Umschalt: Löscht {0:N0} Nachrichten unwiderruflich und führt danach VACUUM aus. Nicht rückgängig zu machen.</value>
+  </data>
+  <data name="Cleanup_Running" xml:space="preserve">
+    <value>Aufräumen läuft im Hintergrund…</value>
+  </data>
+  <data name="Cleanup_PreviewError" xml:space="preserve">
+    <value>Vorschau konnte nicht berechnet werden, siehe /xllog</value>
+  </data>
+  <data name="Cleanup_Success" xml:space="preserve">
+    <value>Aufräumen abgeschlossen, {0:N0} Nachrichten entfernt.</value>
+  </data>
+  <data name="Cleanup_Error" xml:space="preserve">
+    <value>Aufräumen fehlgeschlagen, siehe /xllog</value>
+  </data>
+  <data name="Retention_Heading" xml:space="preserve">
+    <value>Aufbewahrung von Nachrichten</value>
+  </data>
+  <data name="Retention_Enabled_Name" xml:space="preserve">
+    <value>Nachrichten nach Kanal-Aufbewahrung automatisch löschen</value>
+  </data>
+  <data name="Retention_Enabled_Description" xml:space="preserve">
+    <value>Wenn aktiviert, werden Nachrichten älter als das eingestellte Fenster bei jedem Plugin-Start gelöscht (höchstens einmal pro 24 Stunden). Standard ist AUS, das Plugin löscht ohne deine ausdrückliche Zustimmung nichts.</value>
+  </data>
+  <data name="Retention_Default_Label" xml:space="preserve">
+    <value>Standard-Aufbewahrung (Tage, 0 = nie)</value>
+  </data>
+  <data name="Retention_Default_Help" xml:space="preserve">
+    <value>Gilt für Kanäle, die unten keine eigene Vorgabe haben.</value>
+  </data>
+  <data name="Retention_Reset_Spec" xml:space="preserve">
+    <value>Vorgaben auf Spec-Defaults setzen</value>
+  </data>
+  <data name="Retention_Clear_Overrides" xml:space="preserve">
+    <value>Alle Vorgaben entfernen</value>
+  </data>
+  <data name="Retention_Tree_Heading" xml:space="preserve">
+    <value>Aufbewahrung pro Kanal</value>
+  </data>
+  <data name="Retention_Tag_Override" xml:space="preserve">
+    <value>[eigen]</value>
+  </data>
+  <data name="Retention_Tag_Spec" xml:space="preserve">
+    <value>[spec]</value>
+  </data>
+  <data name="Retention_Tag_Global" xml:space="preserve">
+    <value>[global]</value>
+  </data>
+  <data name="Retention_Reset_Button" xml:space="preserve">
+    <value>zurück</value>
+  </data>
+  <data name="Retention_Apply_Label" xml:space="preserve">
+    <value>Aufbewahrung jetzt anwenden</value>
+  </data>
+  <data name="Retention_Apply_Tooltip" xml:space="preserve">
+    <value>Strg+Umschalt: Führt die Aufbewahrungs-Bereinigung sofort mit der GESPEICHERTEN Vorgabe aus. Speichere deine Änderungen vorher.</value>
+  </data>
+  <data name="Retention_Running" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung läuft im Hintergrund…</value>
+  </data>
+  <data name="Retention_LastRun_Never" xml:space="preserve">
+    <value>Letzter Lauf: nie</value>
+  </data>
+  <data name="Retention_LastRun_At" xml:space="preserve">
+    <value>Letzter Lauf: {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Retention_Success" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung abgeschlossen, {0:N0} Nachrichten entfernt.</value>
+  </data>
+  <data name="Retention_Error" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung fehlgeschlagen, siehe /xllog</value>
+  </data>
+  <data name="Migration_Notification_Title" xml:space="preserve">
+    <value>Hellion Chat</value>
+  </data>
+  <data name="Migration_Notification_Content" xml:space="preserve">
+    <value>Datenschutz-Filter ist standardmäßig aktiviert. Einstellungen → Datenschutz zum Anpassen.</value>
+  </data>
+</root>
