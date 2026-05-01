@@ -204,6 +204,11 @@ public sealed class Plugin : IDalamudPlugin
             Framework.Update += FrameworkUpdate;
             Interface.UiBuilder.Draw += Draw;
             Interface.LanguageChanged += LanguageChanged;
+            // Hellion Chat — surface a "main UI" entry point so Dalamud's
+            // plugin list shows the Open-Plugin button. Settings is the
+            // most useful landing place; OpenConfigUi is already wired to
+            // the same toggle inside SettingsWindow.
+            Interface.UiBuilder.OpenMainUi += OpenMainUi;
 
             if (Config.ShowEmotes)
                 Task.Run(EmoteCache.LoadData);
@@ -240,6 +245,7 @@ public sealed class Plugin : IDalamudPlugin
     [SuppressMessage("ReSharper", "ConditionalAccessQualifierIsNonNullableAccordingToAPIContract")]
     public void Dispose()
     {
+        Interface.UiBuilder.OpenMainUi -= OpenMainUi;
         Interface.LanguageChanged -= LanguageChanged;
         Interface.UiBuilder.Draw -= Draw;
         Framework.Update -= FrameworkUpdate;
@@ -321,6 +327,15 @@ public sealed class Plugin : IDalamudPlugin
         {
             Log.Error(e, "HellionChat: layout migration failed, continuing with whatever exists");
         }
+    }
+
+    private void OpenMainUi()
+    {
+        // Settings is the most useful landing surface — same target as the
+        // Configure button. SettingsWindow.Toggle is internal and already
+        // wired to OpenConfigUi, so re-using IsOpen keeps both entry points
+        // behaviourally identical.
+        SettingsWindow.IsOpen = !SettingsWindow.IsOpen;
     }
 
     private void RunRetentionSweepIfDue()
