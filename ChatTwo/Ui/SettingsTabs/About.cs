@@ -97,12 +97,19 @@ internal sealed class About : ISettingsTab
 
         ImGui.Spacing();
 
+        ImGui.TextColored(ImGuiColors.ParsedGold, "Localization");
+        ImGui.TextUnformatted("German translations of Hellion-specific UI strings (HellionStrings.de.resx) are written by the Hellion Online Media maintainer.");
+        ImGui.TextUnformatted("All other locales for Hellion-specific strings are not currently provided.");
+        ImGui.TextUnformatted("The translator list below covers the upstream Chat 2 community translators on Crowdin — their work covers the inherited Chat 2 strings, not the Hellion additions.");
+
+        ImGui.Spacing();
+
         var height = ImGui.GetContentRegionAvail().Y - ImGui.CalcTextSize("A").Y - ImGui.GetStyle().ItemSpacing.Y * 2;
         using (var aboutChild = ImRaii.Child("about", new Vector2(-1, height)))
         {
             if (aboutChild)
             {
-                using var treeNode = ImRaii.TreeNode(Language.Options_About_Translators);
+                using var treeNode = ImRaii.TreeNode("Chat 2 community translators (upstream)");
                 if (treeNode)
                 {
                     using var translatorChild = ImRaii.Child("translators");
