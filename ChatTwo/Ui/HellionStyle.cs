@@ -115,11 +115,14 @@ internal static class HellionStyle
     {
         var stack = new StackHandle();
 
-        // Mix the configured opacity into the window background color.
-        // Other surface layers (ChildBg, FrameBg, popups) stay opaque so
-        // form fields and dialogs remain easy to read on top.
+        // Mix the configured opacity into both the outer window and the
+        // inner content child backgrounds — without ChildBg following the
+        // slider the chat log stays opaque inside even when the user
+        // wants to see the game behind it during combat. Form fields and
+        // popups (FrameBg, PopupBg) still stay opaque so input is readable.
         var alphaByte = (uint)Math.Clamp((int)(windowOpacity * 255f), 0x55, 0xFF);
         var windowBgWithAlpha = (WindowBgRgba & 0xFFFFFF00u) | alphaByte;
+        var childBgWithAlpha = (ChildBgRgba & 0xFFFFFF00u) | alphaByte;
 
         // Layout — geometric edges, modest rounding, single-pixel borders.
         stack.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
@@ -134,7 +137,7 @@ internal static class HellionStyle
 
         // Surfaces.
         stack.PushColor(ImGuiCol.WindowBg, windowBgWithAlpha);
-        stack.PushColor(ImGuiCol.ChildBg, ChildBgRgba);
+        stack.PushColor(ImGuiCol.ChildBg, childBgWithAlpha);
         stack.PushColor(ImGuiCol.PopupBg, PopupBgRgba);
         stack.PushColor(ImGuiCol.Border, BorderRgba);
         stack.PushColor(ImGuiCol.BorderShadow, BorderShadowRgba);
