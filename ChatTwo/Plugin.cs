@@ -272,60 +272,107 @@ public sealed class Plugin : IDalamudPlugin
 
     private static void MigrateFromChatTwoLayout()
     {
+        var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+        if (pluginConfigsDir is null)
+            return;
+
+        var legacyConfigFile = Path.Combine(pluginConfigsDir, "ChatTwo.json");
+        var legacyConfigDir = Path.Combine(pluginConfigsDir, "ChatTwo");
+        var ourConfigFile = Path.Combine(pluginConfigsDir, "HellionChat.json");
+        var ourConfigDir = Interface.ConfigDirectory.FullName;
+
+        // Track whether anything legitimately blocked us. The most common
+        // cause is upstream Chat 2 still being loaded — its SQLite handle
+        // keeps chat-sqlite.db locked and File.Move throws IOException.
+        var lockedBlocker = false;
+
         try
         {
-            var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
-            if (pluginConfigsDir is null)
-                return;
-
-            var legacyConfigFile = Path.Combine(pluginConfigsDir, "ChatTwo.json");
-            var legacyConfigDir = Path.Combine(pluginConfigsDir, "ChatTwo");
-            var ourConfigFile = Path.Combine(pluginConfigsDir, "HellionChat.json");
-            var ourConfigDir = Interface.ConfigDirectory.FullName;
-
             if (!File.Exists(ourConfigFile) && File.Exists(legacyConfigFile))
             {
                 File.Move(legacyConfigFile, ourConfigFile);
                 Log.Information($"HellionChat: migrated config file {legacyConfigFile} → {ourConfigFile}");
             }
+        }
+        catch (IOException e)
+        {
+            Log.Warning(e, $"HellionChat: config file move blocked, leaving {legacyConfigFile} in place");
+            lockedBlocker = true;
+        }
 
-            // The plugin's ConfigDirectory may already exist on first load
-            // (Dalamud creates it), so check at the file level instead of
-            // skipping when the directory is present. Move every legacy
-            // entry whose target name is not occupied yet, then remove the
-            // source dir if it ends up empty.
-            if (Directory.Exists(legacyConfigDir))
+        // The plugin's ConfigDirectory may already exist on first load
+        // (Dalamud creates it), so check at the file level instead of
+        // skipping when the directory is present. Move every legacy
+        // entry whose target name is not occupied yet, then remove the
+        // source dir if it ends up empty. Each move is wrapped on its
+        // own so a single locked file (the SQLite db while ChatTwo still
+        // runs) does not abandon the rest of the migration.
+        if (!Directory.Exists(legacyConfigDir))
+            return;
+
+        try
+        {
+            Directory.CreateDirectory(ourConfigDir);
+
+            foreach (var file in Directory.EnumerateFiles(legacyConfigDir))
             {
-                Directory.CreateDirectory(ourConfigDir);
-
-                foreach (var file in Directory.EnumerateFiles(legacyConfigDir))
+                var target = Path.Combine(ourConfigDir, Path.GetFileName(file));
+                if (File.Exists(target))
+                    continue;
+                try
                 {
-                    var target = Path.Combine(ourConfigDir, Path.GetFileName(file));
-                    if (File.Exists(target))
-                        continue;
                     File.Move(file, target);
                     Log.Information($"HellionChat: migrated file {file} → {target}");
                 }
-
-                foreach (var dir in Directory.EnumerateDirectories(legacyConfigDir))
+                catch (IOException e)
                 {
-                    var target = Path.Combine(ourConfigDir, Path.GetFileName(dir));
-                    if (Directory.Exists(target))
-                        continue;
+                    Log.Warning(e, $"HellionChat: file move blocked for {file}, will retry on next load");
+                    lockedBlocker = true;
+                }
+            }
+
+            foreach (var dir in Directory.EnumerateDirectories(legacyConfigDir))
+            {
+                var target = Path.Combine(ourConfigDir, Path.GetFileName(dir));
+                if (Directory.Exists(target))
+                    continue;
+                try
+                {
                     Directory.Move(dir, target);
                     Log.Information($"HellionChat: migrated subdir {dir} → {target}");
                 }
-
-                if (!Directory.EnumerateFileSystemEntries(legacyConfigDir).Any())
+                catch (IOException e)
                 {
-                    Directory.Delete(legacyConfigDir);
-                    Log.Information($"HellionChat: removed empty legacy dir {legacyConfigDir}");
+                    Log.Warning(e, $"HellionChat: subdir move blocked for {dir}, will retry on next load");
+                    lockedBlocker = true;
                 }
+            }
+
+            if (!Directory.EnumerateFileSystemEntries(legacyConfigDir).Any())
+            {
+                Directory.Delete(legacyConfigDir);
+                Log.Information($"HellionChat: removed empty legacy dir {legacyConfigDir}");
             }
         }
         catch (Exception e)
         {
             Log.Error(e, "HellionChat: layout migration failed, continuing with whatever exists");
+        }
+
+        if (lockedBlocker)
+        {
+            // Surface the most common cause to the user as a notification
+            // so they don't think Hellion Chat lost their history when in
+            // fact upstream Chat 2 was still holding the database file.
+            Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+            {
+                Title = "Hellion Chat",
+                Content = "Could not migrate the Chat 2 database — the file appears to be in use. " +
+                          "Disable Chat 2, fully close the game, then start it again. " +
+                          "See the README troubleshooting section if the issue persists.",
+                Type = Dalamud.Interface.ImGuiNotification.NotificationType.Warning,
+                InitialDuration = TimeSpan.FromSeconds(30),
+            });
         }
     }
 

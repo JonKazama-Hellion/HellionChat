@@ -43,7 +43,9 @@ custom-repo / dev-plugin while the architecture stabilises.
 ## Install (testers)
 
 Hellion Chat is shipped via a Dalamud **custom repository** during the
-bootstrap phase. To install:
+bootstrap phase.
+
+### If you have never used Chat 2
 
 1. Open Dalamud settings (`/xlsettings`) → **Experimental**.
 2. Add a new entry under **Custom Plugin Repositories**:
@@ -51,13 +53,59 @@ bootstrap phase. To install:
    https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json
    ```
 3. Click **Save**, then back in `/xlplugins` hit **All Plugins** and refresh.
-4. **Hellion Chat** now appears in the list — install it from there.
-5. If you previously had **Chat 2** installed, disable it first. The two
-   share their database and config dir until Hellion Chat's first launch
-   migrates everything into `pluginConfigs/HellionChat/`.
+4. **Hellion Chat** now appears in the list — install it.
+
+### If you are migrating from Chat 2 (and want to keep your history)
+
+The two plugins share `pluginConfigs/ChatTwo/` (database) and
+`pluginConfigs/ChatTwo.json` (settings). Hellion Chat moves both into
+`pluginConfigs/HellionChat/` on first start, but only if the upstream
+plugin isn't holding the database file open. Order matters:
+
+1. **Disable Chat 2** in `/xlplugins` (don't uninstall, just disable).
+2. **Close FFXIV completely** so SQLite releases its file lock — a plain
+   plugin reload is not enough.
+3. Re-launch the game.
+4. Add the custom repo URL as in the previous section.
+5. Install Hellion Chat. On its first start it migrates the Chat 2 config
+   file and the entire database directory into the HellionChat layout
+   without losing data.
+6. Verify in **Settings → Privacy → Apply filter to existing database →
+   Refresh preview** that the message count is what you expect (millions
+   of rows if you used Chat 2 for a while).
+
+If the message count comes back as zero, the migration was blocked
+(usually because Chat 2 was still active or the previous game session
+hadn't fully closed). See the troubleshooting section below.
+
+### Troubleshooting
+
+**Hellion Chat shows zero messages but I had Chat 2 history:**
+The migration either didn't run or hit a locked file. Close the game,
+then move the data manually:
+
+Linux / XIVLauncher Core:
+```bash
+mv ~/.xlcore/pluginConfigs/ChatTwo/chat-sqlite.db \
+   ~/.xlcore/pluginConfigs/HellionChat/chat-sqlite.db
+[ -d ~/.xlcore/pluginConfigs/ChatTwo/EmoteCacheV1 ] && \
+  mv ~/.xlcore/pluginConfigs/ChatTwo/EmoteCacheV1 \
+     ~/.xlcore/pluginConfigs/HellionChat/
+```
+
+Windows / standard XIVLauncher:
+```powershell
+Move-Item "$env:AppData\XIVLauncher\pluginConfigs\ChatTwo\chat-sqlite.db" `
+          "$env:AppData\XIVLauncher\pluginConfigs\HellionChat\chat-sqlite.db" -Force
+```
+
+Then start the game and Hellion Chat — your full history is back.
+
+### Updates
 
 Updates land in the same plugin list once the maintainer pushes a new
-`v0.1.x` tag.
+`v0.1.x` tag and re-publishes the GitHub release. No re-installation
+needed.
 
 ## Why a fork
 
