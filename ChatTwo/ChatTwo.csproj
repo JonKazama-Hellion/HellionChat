@@ -62,6 +62,17 @@
       <Folder Include="images\" />
     </ItemGroup>
 
+    <!-- Copy images/icon.png next to the built DLL so Dalamud's local
+         plugin loader finds it at <plugindir>/images/icon.png. The
+         DalamudPackager.targets file in this directory then includes
+         the same path inside the release ZIP — see that file for the
+         full packaging override. -->
+    <ItemGroup>
+        <None Include="images\icon.png">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
     <!--This doesn't work until Plogon is updated to include NodeJS-->
     <!--    <Target Name="NodeJS Compile" BeforeTargets="BeforeCompile">-->
     <!--        <Exec Command="npm install" WorkingDirectory="Http\Frontend"/>-->
