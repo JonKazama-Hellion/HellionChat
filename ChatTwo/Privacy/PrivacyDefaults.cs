@@ -84,4 +84,28 @@ internal static class PrivacyDefaults
         [ChatType.ExtraChatLinkshell7] = 90,
         [ChatType.ExtraChatLinkshell8] = 90,
     };
+
+    // Casual profile = Privacy-First plus public chat (Say/Shout/Yell, both
+    // emote types, Novice Network), kept for a short 24-hour window so the
+    // last RP scene or shout trade is still searchable but third-party data
+    // doesn't accumulate forever.
+    internal static readonly IReadOnlySet<ChatType> CasualWhitelist = new HashSet<ChatType>(PrivacyFirstWhitelist)
+    {
+        ChatType.Say,
+        ChatType.Shout,
+        ChatType.Yell,
+        ChatType.CustomEmote,
+        ChatType.StandardEmote,
+        ChatType.NoviceNetwork,
+    };
+
+    internal static readonly IReadOnlyDictionary<ChatType, int> CasualRetentionOverrides = new Dictionary<ChatType, int>
+    {
+        [ChatType.Say] = 1,
+        [ChatType.Shout] = 1,
+        [ChatType.Yell] = 1,
+        [ChatType.CustomEmote] = 1,
+        [ChatType.StandardEmote] = 1,
+        [ChatType.NoviceNetwork] = 1,
+    };
 }

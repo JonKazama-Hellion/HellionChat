@@ -99,4 +99,18 @@ internal class HellionStrings
 
     internal static string Migration_Notification_Title => Get(nameof(Migration_Notification_Title));
     internal static string Migration_Notification_Content => Get(nameof(Migration_Notification_Content));
+
+    internal static string Wizard_Title => Get(nameof(Wizard_Title));
+    internal static string Wizard_Intro => Get(nameof(Wizard_Intro));
+    internal static string Wizard_Profile_PrivacyFirst_Heading => Get(nameof(Wizard_Profile_PrivacyFirst_Heading));
+    internal static string Wizard_Profile_PrivacyFirst_Description => Get(nameof(Wizard_Profile_PrivacyFirst_Description));
+    internal static string Wizard_Profile_PrivacyFirst_Apply => Get(nameof(Wizard_Profile_PrivacyFirst_Apply));
+    internal static string Wizard_Profile_Casual_Heading => Get(nameof(Wizard_Profile_Casual_Heading));
+    internal static string Wizard_Profile_Casual_Description => Get(nameof(Wizard_Profile_Casual_Description));
+    internal static string Wizard_Profile_Casual_Apply => Get(nameof(Wizard_Profile_Casual_Apply));
+    internal static string Wizard_Profile_FullHistory_Heading => Get(nameof(Wizard_Profile_FullHistory_Heading));
+    internal static string Wizard_Profile_FullHistory_Description => Get(nameof(Wizard_Profile_FullHistory_Description));
+    internal static string Wizard_Profile_FullHistory_GdprWarning => Get(nameof(Wizard_Profile_FullHistory_GdprWarning));
+    internal static string Wizard_Profile_FullHistory_Apply => Get(nameof(Wizard_Profile_FullHistory_Apply));
+    internal static string Wizard_Reopen_Button => Get(nameof(Wizard_Reopen_Button));
 }

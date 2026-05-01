@@ -58,6 +58,10 @@ internal sealed class Privacy : ISettingsTab
 
     public void Draw(bool changed)
     {
+        if (ImGui.Button(HellionStrings.Wizard_Reopen_Button))
+            Plugin.FirstRunWizard.IsOpen = true;
+        ImGui.Spacing();
+
         ImGuiUtil.OptionCheckbox(
             ref Mutable.PrivacyFilterEnabled,
             HellionStrings.Privacy_FilterEnabled_Name,

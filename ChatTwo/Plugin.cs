@@ -52,6 +52,7 @@ public sealed class Plugin : IDalamudPlugin
     public InputPreview InputPreview { get; }
     public CommandHelpWindow CommandHelpWindow { get; }
     public SeStringDebugger SeStringDebugger { get; }
+    public FirstRunWizard FirstRunWizard { get; }
     public DebuggerWindow DebuggerWindow { get; }
 
     internal Commands Commands { get; }
@@ -124,6 +125,11 @@ public sealed class Plugin : IDalamudPlugin
                 Config.PrivacyFilterEnabled = true;
                 Config.PrivacyPersistChannels = [..Privacy.PrivacyDefaults.PrivacyFirstWhitelist];
                 Config.PrivacyPersistUnknownChannels = false;
+                // Existing ChatTwo users skip the first-run wizard — the
+                // migration toast already explains what changed and they
+                // can reopen the wizard from Settings → Privacy if they
+                // want to pick a different profile.
+                Config.FirstRunCompleted = true;
                 Config.Version = 7;
                 SaveConfig();
 
@@ -168,6 +174,7 @@ public sealed class Plugin : IDalamudPlugin
             CommandHelpWindow = new CommandHelpWindow(ChatLogWindow);
             SeStringDebugger = new SeStringDebugger(this);
             DebuggerWindow = new DebuggerWindow(this);
+            FirstRunWizard = new FirstRunWizard(this);
 
             WindowSystem.AddWindow(ChatLogWindow);
             WindowSystem.AddWindow(SettingsWindow);
@@ -176,6 +183,12 @@ public sealed class Plugin : IDalamudPlugin
             WindowSystem.AddWindow(CommandHelpWindow);
             WindowSystem.AddWindow(SeStringDebugger);
             WindowSystem.AddWindow(DebuggerWindow);
+            WindowSystem.AddWindow(FirstRunWizard);
+
+            // Open the wizard on a fresh install. Existing ChatTwo users have
+            // FirstRunCompleted set to true by the v6→v7 migration above.
+            if (!Config.FirstRunCompleted)
+                FirstRunWizard.IsOpen = true;
 
             FontManager.BuildFonts();
 

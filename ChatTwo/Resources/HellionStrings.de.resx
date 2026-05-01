@@ -177,4 +177,43 @@
   <data name="Migration_Notification_Content" xml:space="preserve">
     <value>Datenschutz-Filter ist standardmäßig aktiviert. Einstellungen → Datenschutz zum Anpassen.</value>
   </data>
+  <data name="Wizard_Title" xml:space="preserve">
+    <value>Hellion Chat — Willkommen</value>
+  </data>
+  <data name="Wizard_Intro" xml:space="preserve">
+    <value>Wähle ein Start-Profil. Du kannst später alles unter Einstellungen → Datenschutz anpassen.</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Heading" xml:space="preserve">
+    <value>Datensparsamkeit (empfohlen)</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Description" xml:space="preserve">
+    <value>Es werden nur deine eigenen Konversationen gespeichert: Tells, Gruppe, FC, Linkshells, Cross-World-Linkshells, Allianz und ExtraChat. Öffentlicher Chat, NPC-Dialoge und System-Spam werden auf der Storage-Ebene verworfen. Aufbewahrung nach Spec-Defaults (Tells 365 Tage, eigene Konversations-Kanäle 90 Tage).</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Apply" xml:space="preserve">
+    <value>Datensparsamkeit übernehmen</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Heading" xml:space="preserve">
+    <value>Locker</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Description" xml:space="preserve">
+    <value>Datensparsamkeit plus ein 24-Stunden-Fenster für öffentlichen Chat (Sagen, Schreien, Rufen, beide Emote-Typen, Anfänger-Netzwerk). Für RP-Spieler, die die letzte Szene nochmal nachlesen wollen, ohne öffentlichen Chat ewig zu behalten.</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Apply" xml:space="preserve">
+    <value>Locker übernehmen</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Heading" xml:space="preserve">
+    <value>Volle Historie</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Description" xml:space="preserve">
+    <value>Deaktiviert den Datenschutz-Filter komplett. Speichert alles außer Battle-Logs, wie das Original-Chat 2. Aufbewahrung ist AUS, die Historie wächst dauerhaft.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_GdprWarning" xml:space="preserve">
+    <value>DSGVO-Hinweis: Wenn du Nachrichten Dritter (Sagen/Schreien/Rufen fremder Spieler, NPC-Dialoge mit Spielernamen usw.) zeitlich unbegrenzt speicherst, kann das die Ausnahme für rein persönliche oder familiäre Tätigkeiten (Art. 2 Abs. 2 Buchst. c) sprengen. Nutze dieses Profil nur, wenn du einen klaren Grund hast, das volle Archiv zu behalten.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Apply" xml:space="preserve">
+    <value>Volle Historie übernehmen</value>
+  </data>
+  <data name="Wizard_Reopen_Button" xml:space="preserve">
+    <value>Wizard erneut zeigen</value>
+  </data>
 </root>

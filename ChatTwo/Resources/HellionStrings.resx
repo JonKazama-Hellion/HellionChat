@@ -177,4 +177,43 @@
   <data name="Migration_Notification_Content" xml:space="preserve">
     <value>Privacy filter activated by default. Settings → Privacy to adjust.</value>
   </data>
+  <data name="Wizard_Title" xml:space="preserve">
+    <value>Hellion Chat — Welcome</value>
+  </data>
+  <data name="Wizard_Intro" xml:space="preserve">
+    <value>Pick a starting profile. You can change anything later under Settings → Privacy.</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Heading" xml:space="preserve">
+    <value>Privacy-First (recommended)</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Description" xml:space="preserve">
+    <value>Only your own conversations are stored: Tells, Party, FC, Linkshells, Cross-World Linkshells, Alliance and ExtraChat. Public chat, NPC dialogue and system spam are dropped at the storage layer. Retention follows the spec defaults (Tells 365 days, own-conversation channels 90 days).</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Apply" xml:space="preserve">
+    <value>Use Privacy-First</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Heading" xml:space="preserve">
+    <value>Casual</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Description" xml:space="preserve">
+    <value>Privacy-First plus a 24-hour window for public chat (Say, Shout, Yell, both emote types, Novice Network). For RP players who want to look up the last scene without keeping public chat forever.</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Apply" xml:space="preserve">
+    <value>Use Casual</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Heading" xml:space="preserve">
+    <value>Full History</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Description" xml:space="preserve">
+    <value>Disables the privacy filter entirely. Stores everything except battle logs, just like upstream Chat 2. Retention is OFF, history grows forever.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_GdprWarning" xml:space="preserve">
+    <value>GDPR notice: storing third-party messages (Say/Shout/Yell of strangers, NPC dialogue with player names, etc.) for an unlimited time may exceed the personal/household exemption (Art. 2(2)(c)). Use this profile only if you have a clear reason to keep the full archive.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Apply" xml:space="preserve">
+    <value>Use Full History</value>
+  </data>
+  <data name="Wizard_Reopen_Button" xml:space="preserve">
+    <value>Show wizard again</value>
+  </data>
 </root>

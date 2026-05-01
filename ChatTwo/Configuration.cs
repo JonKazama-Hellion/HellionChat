@@ -62,6 +62,10 @@ public class Configuration : IPluginConfiguration
     public Dictionary<ChatType, int> RetentionPerChannelDays = [];
     public DateTimeOffset RetentionLastRunAt = DateTimeOffset.MinValue;
 
+    // Hellion Chat first-run wizard — opens once on a fresh install. Existing
+    // ChatTwo users skip it because the v6→v7 migration sets the flag.
+    public bool FirstRunCompleted;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -238,6 +242,8 @@ public class Configuration : IPluginConfiguration
         RetentionDefaultDays = other.RetentionDefaultDays;
         RetentionPerChannelDays = other.RetentionPerChannelDays.ToDictionary(p => p.Key, p => p.Value);
         RetentionLastRunAt = other.RetentionLastRunAt;
+
+        FirstRunCompleted = other.FirstRunCompleted;
     }
 }
 
