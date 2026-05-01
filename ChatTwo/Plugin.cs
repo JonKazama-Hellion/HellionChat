@@ -265,10 +265,38 @@ public sealed class Plugin : IDalamudPlugin
                 Log.Information($"HellionChat: migrated config file {legacyConfigFile} → {ourConfigFile}");
             }
 
-            if (!Directory.Exists(ourConfigDir) && Directory.Exists(legacyConfigDir))
+            // The plugin's ConfigDirectory may already exist on first load
+            // (Dalamud creates it), so check at the file level instead of
+            // skipping when the directory is present. Move every legacy
+            // entry whose target name is not occupied yet, then remove the
+            // source dir if it ends up empty.
+            if (Directory.Exists(legacyConfigDir))
             {
-                Directory.Move(legacyConfigDir, ourConfigDir);
-                Log.Information($"HellionChat: migrated config dir {legacyConfigDir} → {ourConfigDir}");
+                Directory.CreateDirectory(ourConfigDir);
+
+                foreach (var file in Directory.EnumerateFiles(legacyConfigDir))
+                {
+                    var target = Path.Combine(ourConfigDir, Path.GetFileName(file));
+                    if (File.Exists(target))
+                        continue;
+                    File.Move(file, target);
+                    Log.Information($"HellionChat: migrated file {file} → {target}");
+                }
+
+                foreach (var dir in Directory.EnumerateDirectories(legacyConfigDir))
+                {
+                    var target = Path.Combine(ourConfigDir, Path.GetFileName(dir));
+                    if (Directory.Exists(target))
+                        continue;
+                    Directory.Move(dir, target);
+                    Log.Information($"HellionChat: migrated subdir {dir} → {target}");
+                }
+
+                if (!Directory.EnumerateFileSystemEntries(legacyConfigDir).Any())
+                {
+                    Directory.Delete(legacyConfigDir);
+                    Log.Information($"HellionChat: removed empty legacy dir {legacyConfigDir}");
+                }
             }
         }
         catch (Exception e)
