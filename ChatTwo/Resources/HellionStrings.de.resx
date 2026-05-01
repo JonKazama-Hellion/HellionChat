@@ -264,4 +264,13 @@
   <data name="Export_Error" xml:space="preserve">
     <value>Export fehlgeschlagen, siehe /xllog</value>
   </data>
+  <data name="Theme_Heading" xml:space="preserve">
+    <value>Erscheinungsbild</value>
+  </data>
+  <data name="Theme_Enabled_Name" xml:space="preserve">
+    <value>Hellion-Theme für alle Plugin-Fenster verwenden</value>
+  </data>
+  <data name="Theme_Enabled_Description" xml:space="preserve">
+    <value>Industrielle HUD-Palette mit cyan-blauen Aktionsfarben, schiefer-violetten Tabs und Bernstein-Akzenten für aktive Zustände, global angewendet auf Chat-Fenster, Einstellungen, Viewer und Wizard. Deaktivieren, um das Standard-Dalamud-Erscheinungsbild zu nutzen.</value>
+  </data>
 </root>

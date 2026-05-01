@@ -66,10 +66,21 @@ internal sealed class Privacy : ISettingsTab
 
     public void Draw(bool changed)
     {
-        using var _style = HellionStyle.Push();
-
         if (ImGui.Button(HellionStrings.Wizard_Reopen_Button))
             Plugin.FirstRunWizard.IsOpen = true;
+        ImGui.Spacing();
+
+        ImGui.TextUnformatted(HellionStrings.Theme_Heading);
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGuiUtil.OptionCheckbox(
+                ref Mutable.HellionThemeEnabled,
+                HellionStrings.Theme_Enabled_Name,
+                HellionStrings.Theme_Enabled_Description);
+        }
+
+        ImGui.Spacing();
+        ImGui.Separator();
         ImGui.Spacing();
 
         ImGuiUtil.OptionCheckbox(

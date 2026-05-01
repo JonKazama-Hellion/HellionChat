@@ -130,4 +130,8 @@ internal class HellionStrings
     internal static string Export_Success => Get(nameof(Export_Success));
     internal static string Export_Empty => Get(nameof(Export_Empty));
     internal static string Export_Error => Get(nameof(Export_Error));
+
+    internal static string Theme_Heading => Get(nameof(Theme_Heading));
+    internal static string Theme_Enabled_Name => Get(nameof(Theme_Enabled_Name));
+    internal static string Theme_Enabled_Description => Get(nameof(Theme_Enabled_Description));
 }

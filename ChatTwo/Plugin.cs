@@ -385,6 +385,12 @@ public sealed class Plugin : IDalamudPlugin
 
     private void Draw()
     {
+        // Hellion theme is pushed once per frame here so every plugin window
+        // (chat log, settings, viewers, wizard, file dialog) renders with
+        // the same palette. Skipping the push leaves the upstream Dalamud
+        // look untouched for users who flipped the toggle off.
+        using IDisposable? _style = Config.HellionThemeEnabled ? HellionStyle.PushGlobal() : null;
+
         ChatLogWindow.BeginFrame();
 
         if (Config.HideInLoadingScreens && Condition[ConditionFlag.BetweenAreas])

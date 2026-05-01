@@ -66,6 +66,11 @@ public class Configuration : IPluginConfiguration
     // ChatTwo users skip it because the v6→v7 migration sets the flag.
     public bool FirstRunCompleted;
 
+    // Hellion Chat global ImGui theme — applied to every plugin window in
+    // Plugin.Draw. Default ON; users who prefer the upstream Dalamud look
+    // can flip this off in the Privacy tab.
+    public bool HellionThemeEnabled = true;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -244,6 +249,7 @@ public class Configuration : IPluginConfiguration
         RetentionLastRunAt = other.RetentionLastRunAt;
 
         FirstRunCompleted = other.FirstRunCompleted;
+        HellionThemeEnabled = other.HellionThemeEnabled;
     }
 }
 

@@ -264,4 +264,13 @@
   <data name="Export_Error" xml:space="preserve">
     <value>Export failed, see /xllog</value>
   </data>
+  <data name="Theme_Heading" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Theme_Enabled_Name" xml:space="preserve">
+    <value>Use the Hellion theme across all plugin windows</value>
+  </data>
+  <data name="Theme_Enabled_Description" xml:space="preserve">
+    <value>Industrial HUD palette with cyan-teal action accents, slate-violet tabs and amber active highlights, applied globally to chat log, settings, viewers and the wizard. Disable to fall back to the default Dalamud look.</value>
+  </data>
 </root>
