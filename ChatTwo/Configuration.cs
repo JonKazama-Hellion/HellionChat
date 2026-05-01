@@ -71,6 +71,10 @@ public class Configuration : IPluginConfiguration
     // can flip this off in the Privacy tab.
     public bool HellionThemeEnabled = true;
 
+    // Window background opacity, 0.5–1.0. Lower values make the plugin
+    // panes more glass-like so the game shines through. Default ~92%.
+    public float HellionThemeWindowOpacity = 0.92f;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -250,6 +254,7 @@ public class Configuration : IPluginConfiguration
 
         FirstRunCompleted = other.FirstRunCompleted;
         HellionThemeEnabled = other.HellionThemeEnabled;
+        HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
     }
 }
 

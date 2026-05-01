@@ -77,6 +77,15 @@ internal sealed class Privacy : ISettingsTab
                 ref Mutable.HellionThemeEnabled,
                 HellionStrings.Theme_Enabled_Name,
                 HellionStrings.Theme_Enabled_Description);
+
+            using (ImRaii.Disabled(!Mutable.HellionThemeEnabled))
+            {
+                ImGui.Spacing();
+                var opacity = Mutable.HellionThemeWindowOpacity;
+                if (ImGui.SliderFloat($"{HellionStrings.Theme_WindowOpacity_Label}##theme-opacity", ref opacity, 0.5f, 1.0f, "%.2f"))
+                    Mutable.HellionThemeWindowOpacity = Math.Clamp(opacity, 0.5f, 1.0f);
+                ImGuiUtil.HelpText(HellionStrings.Theme_WindowOpacity_Help);
+            }
         }
 
         ImGui.Spacing();

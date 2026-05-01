@@ -273,4 +273,10 @@
   <data name="Theme_Enabled_Description" xml:space="preserve">
     <value>Industrielle HUD-Palette mit cyan-blauen Aktionsfarben, schiefer-violetten Tabs und Bernstein-Akzenten für aktive Zustände, global angewendet auf Chat-Fenster, Einstellungen, Viewer und Wizard. Deaktivieren, um das Standard-Dalamud-Erscheinungsbild zu nutzen.</value>
   </data>
+  <data name="Theme_WindowOpacity_Label" xml:space="preserve">
+    <value>Fenster-Deckkraft</value>
+  </data>
+  <data name="Theme_WindowOpacity_Help" xml:space="preserve">
+    <value>Wie deckend die Plugin-Fenster sind. Niedrigere Werte lassen das Spiel durchscheinen, Form-Felder und Dialoge bleiben oben drauf deckend und gut lesbar.</value>
+  </data>
 </root>

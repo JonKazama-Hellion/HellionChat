@@ -273,4 +273,10 @@
   <data name="Theme_Enabled_Description" xml:space="preserve">
     <value>Industrial HUD palette with cyan-teal action accents, slate-violet tabs and amber active highlights, applied globally to chat log, settings, viewers and the wizard. Disable to fall back to the default Dalamud look.</value>
   </data>
+  <data name="Theme_WindowOpacity_Label" xml:space="preserve">
+    <value>Window opacity</value>
+  </data>
+  <data name="Theme_WindowOpacity_Help" xml:space="preserve">
+    <value>How opaque the plugin panes are. Lower values let the game shine through; form fields and dialogs stay opaque on top so they remain readable.</value>
+  </data>
 </root>

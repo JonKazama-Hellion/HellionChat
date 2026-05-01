@@ -389,7 +389,9 @@ public sealed class Plugin : IDalamudPlugin
         // (chat log, settings, viewers, wizard, file dialog) renders with
         // the same palette. Skipping the push leaves the upstream Dalamud
         // look untouched for users who flipped the toggle off.
-        using IDisposable? _style = Config.HellionThemeEnabled ? HellionStyle.PushGlobal() : null;
+        using IDisposable? _style = Config.HellionThemeEnabled
+            ? HellionStyle.PushGlobal(Config.HellionThemeWindowOpacity)
+            : null;
 
         ChatLogWindow.BeginFrame();
 

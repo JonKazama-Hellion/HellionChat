@@ -134,4 +134,6 @@ internal class HellionStrings
     internal static string Theme_Heading => Get(nameof(Theme_Heading));
     internal static string Theme_Enabled_Name => Get(nameof(Theme_Enabled_Name));
     internal static string Theme_Enabled_Description => Get(nameof(Theme_Enabled_Description));
+    internal static string Theme_WindowOpacity_Label => Get(nameof(Theme_WindowOpacity_Label));
+    internal static string Theme_WindowOpacity_Help => Get(nameof(Theme_WindowOpacity_Help));
 }

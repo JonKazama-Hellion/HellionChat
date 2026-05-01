@@ -109,9 +109,17 @@ internal static class HellionStyle
     /// Plugin.Draw. Covers every ImGui surface the plugin renders so the
     /// Hellion look is consistent across upstream and Hellion tabs.
     /// </summary>
-    internal static IDisposable PushGlobal()
+    /// <param name="windowOpacity">Window background alpha (0.5–1.0). Lower
+    /// values let the game shine through the plugin panes.</param>
+    internal static IDisposable PushGlobal(float windowOpacity = 1.0f)
     {
         var stack = new StackHandle();
+
+        // Mix the configured opacity into the window background color.
+        // Other surface layers (ChildBg, FrameBg, popups) stay opaque so
+        // form fields and dialogs remain easy to read on top.
+        var alphaByte = (uint)Math.Clamp((int)(windowOpacity * 255f), 0x55, 0xFF);
+        var windowBgWithAlpha = (WindowBgRgba & 0xFFFFFF00u) | alphaByte;
 
         // Layout — geometric edges, modest rounding, single-pixel borders.
         stack.PushStyleVar(ImGuiStyleVar.WindowRounding, 4f);
@@ -125,7 +133,7 @@ internal static class HellionStyle
         stack.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
 
         // Surfaces.
-        stack.PushColor(ImGuiCol.WindowBg, WindowBgRgba);
+        stack.PushColor(ImGuiCol.WindowBg, windowBgWithAlpha);
         stack.PushColor(ImGuiCol.ChildBg, ChildBgRgba);
         stack.PushColor(ImGuiCol.PopupBg, PopupBgRgba);
         stack.PushColor(ImGuiCol.Border, BorderRgba);
