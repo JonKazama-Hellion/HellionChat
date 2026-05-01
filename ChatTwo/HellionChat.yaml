@@ -1,16 +1,31 @@
 name: Hellion Chat
 author: JonKazama-Hellion
-punchline: GDPR-compliant, Linux-aware fork of Chat 2
+punchline: Chat 2 with privacy controls aligned to EU, US and JP rules
 description: |-
-  Hellion Chat is a privacy-focused, Linux-aware fork of Chat 2.
+  Hellion Chat is built on top of Chat 2 — every Chat 2 feature, command
+  and shortcut you already know works the same. The /chat2 command, tabs,
+  channel filters, RGB colours, emotes, screenshot mode, IPC integration
+  and the chat replacement window itself are all unchanged.
 
-  Same chat replacement you know from upstream, with extra controls
-  for what actually gets stored:
+  On top of that, Hellion Chat adds privacy and data-handling controls
+  designed to align with the modern data protection rules that apply
+  across the EU, the United States and Japan. By default only your own
+  conversations are stored; messages from strangers, NPCs and system
+  spam stay out of the database. Retention windows are configurable per
+  channel, history can be wiped retroactively, and stored data can be
+  exported on demand.
 
-  - Channel whitelist for database persistence (GDPR Art. 25)
-  - Privacy-First defaults: only your own conversations are kept
-  - Failsafe for unknown ChatTypes (default OFF)
-  - Independent plugin state (own config + database directory)
+  Key additions on top of Chat 2:
+
+  - Channel whitelist with a Privacy-First default
+  - Per-channel retention with a daily background sweep
+  - Retroactive cleanup with a Ctrl+Shift confirm
+  - Export to Markdown, JSON or CSV
+  - First-run wizard with three preset profiles (Privacy-First, Casual,
+    Full History)
+  - Bilingual UI (English and German) with live language switching
+  - Independent plugin state — own config file and database directory,
+    so Hellion Chat does not share state with the upstream plugin
 
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 repo_url: https://github.com/JonKazama-Hellion/HellionChat
@@ -22,30 +37,41 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.1.1 — Packaging and migration fixes**
+
+  - Plugin icon now ships inside the bundle, so the Hellion logo
+    renders locally in the Dalamud plugin list once installed (the
+    previous release relied only on the remote IconUrl)
+  - Plugin icon downsampled from 1024×1024 to 256×256 to match the
+    rendered size; loads faster and caches better
+  - Migration from upstream Chat 2 is more robust: each file move is
+    wrapped individually, a locked SQLite database no longer aborts
+    the rest of the migration, and a warning notification fires when
+    any file is held open (with a hint to disable Chat 2 and restart
+    the game)
+  - README ships a step-by-step migration guide (fresh install versus
+    coming from Chat 2) and a troubleshooting section with manual
+    recovery commands for Linux and Windows
+
   **Hellion Chat 0.1.0 — Initial fork release**
 
   Privacy
   - Channel whitelist filter in MessageStore.UpsertMessage with a
     Privacy-First default (own conversations only)
   - Per-channel retention with a 24-hour idempotent background sweep
-    (default OFF; spec defaults of 365 / 90 / 30 days)
   - Retroactive cleanup with a Ctrl+Shift confirm and VACUUM
   - Export to Markdown / JSON / CSV via Dalamud's file dialog
-    (GDPR Art. 15 right of access)
 
   Onboarding
   - First-run wizard with three profiles: Privacy-First / Casual /
     Full History
-  - Configuration v6 → v7 migration that seeds defaults and shows a
-    notification once on update
+  - Configuration migration that seeds defaults on update
   - One-shot migration from upstream Chat 2's pluginConfigs layout
-    so the fork uses pluginConfigs/HellionChat without losing state
   - Migrate3 idempotency recovery for half-migrated databases
 
   Look & feel
   - Localized UI (English and German) with live language switching
-  - Hellion industrial HUD theme with cyan-teal action accents,
-    slate-violet tabs, amber active highlights and a window-opacity
-    slider for combat-friendly transparency
+  - Industrial HUD theme with cyan-teal action accents, slate-violet
+    tabs, amber active highlights and a window-opacity slider
 
   Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
