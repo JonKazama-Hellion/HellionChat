@@ -501,6 +501,54 @@ internal class MessageStore : IDisposable
     }
 
     /// <summary>
+    /// Streams messages for export. Optional filters:
+    /// - <paramref name="chatTypes"/>: limit to these ChatTypes
+    /// - <paramref name="from"/> / <paramref name="to"/>: inclusive date range
+    /// Result is sorted ascending by Date and excludes soft-deleted rows.
+    /// Caller is responsible for disposing the enumerator.
+    /// </summary>
+    internal MessageEnumerator StreamForExport(
+        IReadOnlyCollection<int>? chatTypes,
+        DateTimeOffset? from,
+        DateTimeOffset? to)
+    {
+        var clauses = new List<string> { "deleted = false" };
+        if (chatTypes is { Count: > 0 })
+            clauses.Add($"ChatType IN ({string.Join(",", chatTypes)})");
+        if (from is not null)
+            clauses.Add("Date >= $From");
+        if (to is not null)
+            clauses.Add("Date <= $To");
+
+        var cmd = Connection.CreateCommand();
+        cmd.CommandText = @"
+            SELECT
+                Id,
+                Receiver,
+                ContentId,
+                Date,
+                ChatType,
+                SourceKind,
+                TargetKind,
+                Sender,
+                Content,
+                SenderSource,
+                ContentSource,
+                ExtraChatChannel
+            FROM messages
+            WHERE " + string.Join(" AND ", clauses) + @"
+            ORDER BY Date ASC;";
+        cmd.CommandTimeout = 600;
+
+        if (from is not null)
+            cmd.Parameters.AddWithValue("$From", from.Value.ToUnixTimeMilliseconds());
+        if (to is not null)
+            cmd.Parameters.AddWithValue("$To", to.Value.ToUnixTimeMilliseconds());
+
+        return new MessageEnumerator(cmd.ExecuteReader());
+    }
+
+    /// <summary>
     /// Get the most recent messages.
     /// </summary>
     /// <param name="receiver">The receiver content ID to filter by. If null, no filtering is performed.</param>

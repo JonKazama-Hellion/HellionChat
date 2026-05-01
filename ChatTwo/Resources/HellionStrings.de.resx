@@ -216,4 +216,52 @@
   <data name="Wizard_Reopen_Button" xml:space="preserve">
     <value>Wizard erneut zeigen</value>
   </data>
+  <data name="Export_Heading" xml:space="preserve">
+    <value>Export (DSGVO Art. 15 — Auskunftsrecht)</value>
+  </data>
+  <data name="Export_Help" xml:space="preserve">
+    <value>Gespeicherte Nachrichten als Markdown, JSON oder CSV exportieren. Damit kannst du einer Auskunftsanfrage einer Person nachkommen, deren Nachrichten du gespeichert hast, oder deine eigene Historie mitnehmen.</value>
+  </data>
+  <data name="Export_Range_Label" xml:space="preserve">
+    <value>Letzte X Tage (0 = ohne Zeitlimit)</value>
+  </data>
+  <data name="Export_Sender_Label" xml:space="preserve">
+    <value>Sender enthält (optional, Groß-/Kleinschreibung egal)</value>
+  </data>
+  <data name="Export_Channels_Heading" xml:space="preserve">
+    <value>Auf Kanäle einschränken</value>
+  </data>
+  <data name="Export_Channels_AllOff" xml:space="preserve">
+    <value>(nichts ausgewählt = alle gespeicherten Kanäle)</value>
+  </data>
+  <data name="Export_Format_Label" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Export_Format_Markdown" xml:space="preserve">
+    <value>Markdown</value>
+  </data>
+  <data name="Export_Format_Json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="Export_Format_Csv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="Export_Button" xml:space="preserve">
+    <value>In Datei exportieren…</value>
+  </data>
+  <data name="Export_Dialog_Title" xml:space="preserve">
+    <value>Export speichern</value>
+  </data>
+  <data name="Export_Running" xml:space="preserve">
+    <value>Export läuft im Hintergrund…</value>
+  </data>
+  <data name="Export_Success" xml:space="preserve">
+    <value>Export abgeschlossen, {0:N0} Nachrichten in {1} geschrieben</value>
+  </data>
+  <data name="Export_Empty" xml:space="preserve">
+    <value>Export abgeschlossen, keine Nachricht passte zum Filter.</value>
+  </data>
+  <data name="Export_Error" xml:space="preserve">
+    <value>Export fehlgeschlagen, siehe /xllog</value>
+  </data>
 </root>

@@ -113,4 +113,21 @@ internal class HellionStrings
     internal static string Wizard_Profile_FullHistory_GdprWarning => Get(nameof(Wizard_Profile_FullHistory_GdprWarning));
     internal static string Wizard_Profile_FullHistory_Apply => Get(nameof(Wizard_Profile_FullHistory_Apply));
     internal static string Wizard_Reopen_Button => Get(nameof(Wizard_Reopen_Button));
+
+    internal static string Export_Heading => Get(nameof(Export_Heading));
+    internal static string Export_Help => Get(nameof(Export_Help));
+    internal static string Export_Range_Label => Get(nameof(Export_Range_Label));
+    internal static string Export_Sender_Label => Get(nameof(Export_Sender_Label));
+    internal static string Export_Channels_Heading => Get(nameof(Export_Channels_Heading));
+    internal static string Export_Channels_AllOff => Get(nameof(Export_Channels_AllOff));
+    internal static string Export_Format_Label => Get(nameof(Export_Format_Label));
+    internal static string Export_Format_Markdown => Get(nameof(Export_Format_Markdown));
+    internal static string Export_Format_Json => Get(nameof(Export_Format_Json));
+    internal static string Export_Format_Csv => Get(nameof(Export_Format_Csv));
+    internal static string Export_Button => Get(nameof(Export_Button));
+    internal static string Export_Dialog_Title => Get(nameof(Export_Dialog_Title));
+    internal static string Export_Running => Get(nameof(Export_Running));
+    internal static string Export_Success => Get(nameof(Export_Success));
+    internal static string Export_Empty => Get(nameof(Export_Empty));
+    internal static string Export_Error => Get(nameof(Export_Error));
 }

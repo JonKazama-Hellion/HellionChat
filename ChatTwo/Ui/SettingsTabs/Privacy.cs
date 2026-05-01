@@ -1,4 +1,5 @@
 using ChatTwo.Code;
+using ChatTwo.Export;
 using ChatTwo.Privacy;
 using ChatTwo.Resources;
 using ChatTwo.Util;
@@ -55,6 +56,13 @@ internal sealed class Privacy : ISettingsTab
     private bool CleanupRunning;
 
     private bool RetentionRunning;
+
+    // Export form state
+    private int ExportRangeDays = 30;
+    private string ExportSenderSubstring = string.Empty;
+    private readonly HashSet<ChatType> ExportSelectedChannels = [];
+    private ExportFormat ExportFormat = ExportFormat.Markdown;
+    private bool ExportRunning;
 
     public void Draw(bool changed)
     {
@@ -138,6 +146,142 @@ internal sealed class Privacy : ISettingsTab
         ImGui.Spacing();
 
         DrawCleanupSection();
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        DrawExportSection();
+    }
+
+    private void DrawExportSection()
+    {
+        ImGui.TextUnformatted(HellionStrings.Export_Heading);
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGuiUtil.HelpText(HellionStrings.Export_Help);
+
+            ImGui.Spacing();
+
+            if (ImGui.InputInt(HellionStrings.Export_Range_Label, ref ExportRangeDays))
+                ExportRangeDays = Math.Max(0, ExportRangeDays);
+
+            ImGui.InputText(HellionStrings.Export_Sender_Label, ref ExportSenderSubstring, 256);
+
+            using (var tree = ImRaii.TreeNode(HellionStrings.Export_Channels_Heading))
+            {
+                if (tree.Success)
+                {
+                    using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                    {
+                        ImGuiUtil.HelpText(HellionStrings.Export_Channels_AllOff);
+                        foreach (var (heading, types) in Groups)
+                        {
+                            using var subTree = ImRaii.TreeNode($"{heading()}##export-group-{heading()}");
+                            if (!subTree.Success)
+                                continue;
+
+                            using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                            foreach (var type in types)
+                            {
+                                var enabled = ExportSelectedChannels.Contains(type);
+                                if (ImGui.Checkbox($"{type}##export-{(int)type}", ref enabled))
+                                {
+                                    if (enabled)
+                                        ExportSelectedChannels.Add(type);
+                                    else
+                                        ExportSelectedChannels.Remove(type);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            ImGui.Spacing();
+            ImGui.TextUnformatted(HellionStrings.Export_Format_Label);
+            ImGui.SameLine();
+            var fmt = (int)ExportFormat;
+            if (ImGui.RadioButton(HellionStrings.Export_Format_Markdown, ref fmt, (int)ExportFormat.Markdown))
+                ExportFormat = ExportFormat.Markdown;
+            ImGui.SameLine();
+            if (ImGui.RadioButton(HellionStrings.Export_Format_Json, ref fmt, (int)ExportFormat.Json))
+                ExportFormat = ExportFormat.Json;
+            ImGui.SameLine();
+            if (ImGui.RadioButton(HellionStrings.Export_Format_Csv, ref fmt, (int)ExportFormat.Csv))
+                ExportFormat = ExportFormat.Csv;
+
+            ImGui.Spacing();
+
+            using (ImRaii.Disabled(ExportRunning))
+            {
+                if (ImGui.Button(HellionStrings.Export_Button))
+                    PromptExport();
+            }
+
+            if (ExportRunning)
+                ImGuiUtil.HelpText(HellionStrings.Export_Running);
+        }
+    }
+
+    private void PromptExport()
+    {
+        var defaultName = $"hellion-chat-export-{DateTimeOffset.Now:yyyyMMdd-HHmm}";
+        var ext = ExportFormat.Extension();
+
+        Plugin.FileDialogManager.SaveFileDialog(
+            HellionStrings.Export_Dialog_Title,
+            ExportFormat.Filter(),
+            defaultName,
+            ext,
+            (success, path) =>
+            {
+                if (!success || string.IsNullOrWhiteSpace(path))
+                    return;
+                StartExport(path);
+            });
+    }
+
+    private void StartExport(string path)
+    {
+        if (ExportRunning)
+            return;
+        ExportRunning = true;
+
+        var types = ExportSelectedChannels.Count > 0
+            ? ExportSelectedChannels.Select(t => (int)(ushort)t).ToList()
+            : null;
+
+        DateTimeOffset? from = ExportRangeDays > 0
+            ? DateTimeOffset.UtcNow.AddDays(-ExportRangeDays)
+            : null;
+
+        var senderSubstring = string.IsNullOrWhiteSpace(ExportSenderSubstring) ? null : ExportSenderSubstring.Trim();
+        var format = ExportFormat;
+        var filterDesc = new MessageExporter.FilterDescription(types, from, null, senderSubstring);
+
+        new Thread(() =>
+        {
+            try
+            {
+                using var enumerator = Plugin.MessageManager.Store.StreamForExport(types, from, null);
+                var written = MessageExporter.ExportToFile(path, format, enumerator, filterDesc);
+
+                if (written > 0)
+                    WrapperUtil.AddNotification(string.Format(HellionStrings.Export_Success, written, path), NotificationType.Success);
+                else
+                    WrapperUtil.AddNotification(HellionStrings.Export_Empty, NotificationType.Info);
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.Error(e, "Export failed");
+                WrapperUtil.AddNotification(HellionStrings.Export_Error, NotificationType.Error);
+            }
+            finally
+            {
+                ExportRunning = false;
+            }
+        }) { IsBackground = true }.Start();
     }
 
     private void DrawRetentionSection()
