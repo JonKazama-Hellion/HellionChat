@@ -55,6 +55,8 @@ internal sealed class Privacy : ISettingsTab
     private long CleanupDeleteCount;
     private bool CleanupRunning;
 
+    private bool RetentionRunning;
+
     public void Draw(bool changed)
     {
         ImGuiUtil.OptionCheckbox(
@@ -131,7 +133,144 @@ internal sealed class Privacy : ISettingsTab
         ImGui.Separator();
         ImGui.Spacing();
 
+        DrawRetentionSection();
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
         DrawCleanupSection();
+    }
+
+    private void DrawRetentionSection()
+    {
+        ImGui.TextUnformatted("Message retention");
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGuiUtil.OptionCheckbox(
+                ref Mutable.RetentionEnabled,
+                "Auto-delete messages after a per-channel retention window",
+                "When enabled, messages older than the configured window are deleted on every plugin start (at most once per 24 hours). " +
+                "Off by default — the plugin never deletes history without your explicit consent.");
+
+            using (ImRaii.Disabled(!Mutable.RetentionEnabled))
+            {
+                ImGui.Spacing();
+
+                var defaultDays = Mutable.RetentionDefaultDays;
+                if (ImGui.InputInt("Default retention (days, 0 = never)", ref defaultDays))
+                    Mutable.RetentionDefaultDays = Math.Max(0, defaultDays);
+                ImGuiUtil.HelpText("Applies to channels without an explicit override below.");
+
+                ImGui.Spacing();
+
+                if (ImGui.Button("Reset overrides to spec defaults"))
+                {
+                    Mutable.RetentionPerChannelDays =
+                        PrivacyDefaults.DefaultRetentionDays.ToDictionary(p => p.Key, p => p.Value);
+                }
+                ImGui.SameLine();
+                if (ImGui.Button("Clear all overrides"))
+                    Mutable.RetentionPerChannelDays.Clear();
+
+                ImGui.Spacing();
+
+                using (var tree = ImRaii.TreeNode("Per-channel retention overrides"))
+                {
+                    if (tree.Success)
+                    {
+                        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                        foreach (var (heading, types) in Groups)
+                        {
+                            using var subTree = ImRaii.TreeNode(heading);
+                            if (!subTree.Success)
+                                continue;
+
+                            using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                            foreach (var type in types)
+                            {
+                                var hasOverride = Mutable.RetentionPerChannelDays.TryGetValue(type, out var days);
+                                if (!hasOverride)
+                                    days = Mutable.RetentionDefaultDays;
+
+                                if (ImGui.InputInt($"{type}##retention-{(int)type}", ref days))
+                                {
+                                    days = Math.Max(0, days);
+                                    Mutable.RetentionPerChannelDays[type] = days;
+                                }
+
+                                if (hasOverride)
+                                {
+                                    ImGui.SameLine();
+                                    if (ImGui.Button($"reset##retention-reset-{(int)type}"))
+                                        Mutable.RetentionPerChannelDays.Remove(type);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                ImGui.Spacing();
+
+                using (ImRaii.Disabled(RetentionRunning))
+                {
+                    if (ImGuiUtil.CtrlShiftButton("Apply retention policy now",
+                            "Ctrl+Shift: runs the retention sweep immediately using the SAVED policy. Save your changes first."))
+                        StartRetentionRun();
+                }
+
+                if (RetentionRunning)
+                    ImGuiUtil.HelpText("Retention sweep running in background…");
+
+                ImGui.Spacing();
+                var lastRun = Plugin.Config.RetentionLastRunAt;
+                ImGuiUtil.HelpText(lastRun == DateTimeOffset.MinValue
+                    ? "Last run: never"
+                    : $"Last run: {lastRun.ToLocalTime():yyyy-MM-dd HH:mm}");
+            }
+        }
+    }
+
+    private void StartRetentionRun()
+    {
+        if (RetentionRunning)
+            return;
+
+        RetentionRunning = true;
+        var policy = Plugin.Config.RetentionPerChannelDays.ToDictionary(p => (int)(ushort)p.Key, p => p.Value);
+        var defaultDays = Plugin.Config.RetentionDefaultDays;
+
+        new Thread(() =>
+        {
+            try
+            {
+                var deleted = Plugin.MessageManager.Store.DeleteByRetentionPolicy(policy, defaultDays);
+                Plugin.Config.RetentionLastRunAt = DateTimeOffset.UtcNow;
+                Plugin.SaveConfig();
+
+                Plugin.Log.Information($"Manual retention run deleted {deleted} expired messages.");
+
+                if (deleted > 0)
+                {
+                    Plugin.Framework.Run(() =>
+                    {
+                        Plugin.MessageManager.ClearAllTabs();
+                        Plugin.MessageManager.FilterAllTabsAsync();
+                    }).Wait();
+                }
+
+                WrapperUtil.AddNotification($"Retention sweep complete: {deleted:N0} messages removed.", NotificationType.Success);
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.Error(e, "Manual retention run failed");
+                WrapperUtil.AddNotification("Retention sweep failed, see /xllog", NotificationType.Error);
+            }
+            finally
+            {
+                RetentionRunning = false;
+            }
+        }) { IsBackground = true }.Start();
     }
 
     private void DrawCleanupSection()

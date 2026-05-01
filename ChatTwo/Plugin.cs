@@ -156,6 +156,11 @@ public sealed class Plugin : IDalamudPlugin
 
             MessageManager = new MessageManager(this); // Does it require UI?
 
+            // Hellion Chat — daily retention sweep, off-thread so it never
+            // blocks plugin load. Skips itself when disabled or already ran
+            // within the past 24 hours.
+            RunRetentionSweepIfDue();
+
             ChatLogWindow = new ChatLogWindow(this);
             SettingsWindow = new SettingsWindow(this);
             DbViewer = new DbViewer(this);
@@ -303,6 +308,46 @@ public sealed class Plugin : IDalamudPlugin
         {
             Log.Error(e, "HellionChat: layout migration failed, continuing with whatever exists");
         }
+    }
+
+    private void RunRetentionSweepIfDue()
+    {
+        if (!Config.RetentionEnabled)
+            return;
+        if (DateTimeOffset.UtcNow - Config.RetentionLastRunAt < TimeSpan.FromHours(24))
+            return;
+
+        // Snapshot the policy so the user can edit settings while we run.
+        var policy = Config.RetentionPerChannelDays.ToDictionary(p => (int)(ushort)p.Key, p => p.Value);
+        var defaultDays = Config.RetentionDefaultDays;
+
+        new Thread(() =>
+        {
+            try
+            {
+                var deleted = MessageManager.Store.DeleteByRetentionPolicy(policy, defaultDays);
+                Config.RetentionLastRunAt = DateTimeOffset.UtcNow;
+                SaveConfig();
+
+                if (deleted > 0)
+                {
+                    Log.Information($"Retention sweep deleted {deleted} expired messages.");
+                    Framework.Run(() =>
+                    {
+                        MessageManager.ClearAllTabs();
+                        MessageManager.FilterAllTabsAsync();
+                    }).Wait();
+                }
+                else
+                {
+                    Log.Information("Retention sweep ran, nothing expired.");
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Retention sweep failed");
+            }
+        }) { IsBackground = true }.Start();
     }
 
     private void Draw()

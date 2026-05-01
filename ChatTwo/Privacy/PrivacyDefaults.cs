@@ -41,4 +41,47 @@ internal static class PrivacyDefaults
         ChatType.ExtraChatLinkshell7,
         ChatType.ExtraChatLinkshell8,
     };
+
+    // Default retention windows per channel (in days). Channels not listed
+    // here fall back to Configuration.RetentionDefaultDays. Reflects the
+    // design spec: Tells 365, own-conversation channels 90, everything else
+    // shorter via the global default.
+    internal static readonly IReadOnlyDictionary<ChatType, int> DefaultRetentionDays = new Dictionary<ChatType, int>
+    {
+        [ChatType.TellIncoming] = 365,
+        [ChatType.TellOutgoing] = 365,
+
+        [ChatType.Party] = 90,
+        [ChatType.CrossParty] = 90,
+        [ChatType.Alliance] = 90,
+        [ChatType.PvpTeam] = 90,
+        [ChatType.FreeCompany] = 90,
+
+        [ChatType.Linkshell1] = 90,
+        [ChatType.Linkshell2] = 90,
+        [ChatType.Linkshell3] = 90,
+        [ChatType.Linkshell4] = 90,
+        [ChatType.Linkshell5] = 90,
+        [ChatType.Linkshell6] = 90,
+        [ChatType.Linkshell7] = 90,
+        [ChatType.Linkshell8] = 90,
+
+        [ChatType.CrossLinkshell1] = 90,
+        [ChatType.CrossLinkshell2] = 90,
+        [ChatType.CrossLinkshell3] = 90,
+        [ChatType.CrossLinkshell4] = 90,
+        [ChatType.CrossLinkshell5] = 90,
+        [ChatType.CrossLinkshell6] = 90,
+        [ChatType.CrossLinkshell7] = 90,
+        [ChatType.CrossLinkshell8] = 90,
+
+        [ChatType.ExtraChatLinkshell1] = 90,
+        [ChatType.ExtraChatLinkshell2] = 90,
+        [ChatType.ExtraChatLinkshell3] = 90,
+        [ChatType.ExtraChatLinkshell4] = 90,
+        [ChatType.ExtraChatLinkshell5] = 90,
+        [ChatType.ExtraChatLinkshell6] = 90,
+        [ChatType.ExtraChatLinkshell7] = 90,
+        [ChatType.ExtraChatLinkshell8] = 90,
+    };
 }

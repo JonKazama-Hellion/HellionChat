@@ -332,6 +332,56 @@ internal class MessageStore : IDisposable
     }
 
     /// <summary>
+    /// Deletes messages older than the per-channel retention window, with a
+    /// global default for channels not listed explicitly. Cutoffs are
+    /// computed from "now" at call time. Runs VACUUM only if anything was
+    /// removed. Returns the number of rows deleted.
+    /// </summary>
+    internal long DeleteByRetentionPolicy(IReadOnlyDictionary<int, int> chatTypeDaysMap, int defaultDays)
+    {
+        if (defaultDays < 0)
+            throw new ArgumentOutOfRangeException(nameof(defaultDays), "Negative retention is not allowed.");
+        foreach (var (_, days) in chatTypeDaysMap)
+            if (days < 0)
+                throw new ArgumentOutOfRangeException(nameof(chatTypeDaysMap), "Negative retention is not allowed.");
+
+        var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+        var clauses = new List<string>();
+        foreach (var (type, days) in chatTypeDaysMap)
+        {
+            var cutoff = nowMs - days * 86400000L;
+            clauses.Add($"(ChatType = {type} AND Date < {cutoff})");
+        }
+
+        // Catch-all for channels without an explicit override. "0" is treated
+        // as "do not delete by default" — without an explicit user override,
+        // unmapped channels stay forever instead of getting wiped immediately.
+        if (defaultDays > 0)
+        {
+            var cutoff = nowMs - defaultDays * 86400000L;
+            var explicitTypes = chatTypeDaysMap.Count > 0
+                ? string.Join(",", chatTypeDaysMap.Keys)
+                : "-1"; // empty list would produce invalid SQL
+            clauses.Add($"(ChatType NOT IN ({explicitTypes}) AND Date < {cutoff})");
+        }
+
+        if (clauses.Count == 0)
+            return 0;
+
+        long deleted;
+        using (var cmd = Connection.CreateCommand())
+        {
+            cmd.CommandText = $"DELETE FROM messages WHERE {string.Join(" OR ", clauses)};";
+            cmd.CommandTimeout = 600;
+            deleted = cmd.ExecuteNonQuery();
+        }
+
+        if (deleted > 0)
+            PerformMaintenance();
+        return deleted;
+    }
+
+    /// <summary>
     /// Hard-deletes every message whose ChatType is not in the supplied
     /// allowlist, then VACUUMs the database to reclaim disk space.
     /// Returns the number of rows deleted.

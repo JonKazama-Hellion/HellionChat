@@ -54,6 +54,21 @@ public class Configuration : IPluginConfiguration
         return PrivacyPersistUnknownChannels;
     }
 
+    // Hellion Chat — Message retention (GDPR data minimization, time axis).
+    // Master switch defaults to false; the plugin will not delete history
+    // until the user explicitly opts in.
+    public bool RetentionEnabled;
+    public int RetentionDefaultDays = 30;
+    public Dictionary<ChatType, int> RetentionPerChannelDays = [];
+    public DateTimeOffset RetentionLastRunAt = DateTimeOffset.MinValue;
+
+    public int GetRetentionDays(ChatType type)
+    {
+        if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
+            return userOverride;
+        return RetentionDefaultDays;
+    }
+
     public bool HideChat = true;
     public bool HideDuringCutscenes = true;
     public bool HideWhenNotLoggedIn = true;
@@ -216,6 +231,11 @@ public class Configuration : IPluginConfiguration
         PrivacyFilterEnabled = other.PrivacyFilterEnabled;
         PrivacyPersistChannels = [..other.PrivacyPersistChannels];
         PrivacyPersistUnknownChannels = other.PrivacyPersistUnknownChannels;
+
+        RetentionEnabled = other.RetentionEnabled;
+        RetentionDefaultDays = other.RetentionDefaultDays;
+        RetentionPerChannelDays = other.RetentionPerChannelDays.ToDictionary(p => p.Key, p => p.Value);
+        RetentionLastRunAt = other.RetentionLastRunAt;
     }
 }
 
