@@ -1,6 +1,7 @@
 using ChatTwo.Code;
 using ChatTwo.Privacy;
 using ChatTwo.Util;
+using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
@@ -8,12 +9,14 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Privacy : ISettingsTab
 {
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => "Privacy###tabs-privacy";
 
-    internal Privacy(Configuration mutable)
+    internal Privacy(Plugin plugin, Configuration mutable)
     {
+        Plugin = plugin;
         Mutable = mutable;
     }
 
@@ -43,6 +46,14 @@ internal sealed class Privacy : ISettingsTab
             ChatType.Crafting, ChatType.Gathering, ChatType.Sign, ChatType.RandomNumber,
         ]),
     ];
+
+    // Cleanup preview state. Held in the tab so the user can refresh and
+    // inspect before confirming. Resets when the tab is reopened (acceptable —
+    // a stale preview against a freshly-edited whitelist would be misleading).
+    private Dictionary<int, long>? CleanupCounts;
+    private long CleanupKeepCount;
+    private long CleanupDeleteCount;
+    private bool CleanupRunning;
 
     public void Draw(bool changed)
     {
@@ -115,5 +126,141 @@ internal sealed class Privacy : ISettingsTab
                 "Failsafe for ChatTypes added by future FFXIV patches that this plugin does not yet know about. " +
                 "Default OFF (Privacy-First). Turn ON if you want a complete log including future channels.");
         }
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        DrawCleanupSection();
+    }
+
+    private void DrawCleanupSection()
+    {
+        ImGui.TextUnformatted("Apply filter to existing database");
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGuiUtil.HelpText(
+                "The privacy filter only applies to new messages. " +
+                "Use the cleanup below to retroactively remove already-stored messages " +
+                "that don't match your saved whitelist.");
+            ImGuiUtil.HelpText(
+                "Cleanup uses your SAVED whitelist (Plugin.Config), not unsaved edits above. " +
+                "Click Save first if you want to apply your current edits.");
+
+            ImGui.Spacing();
+
+            using (ImRaii.Disabled(CleanupRunning))
+            {
+                if (ImGui.Button("Refresh preview"))
+                    RefreshCleanupPreview();
+            }
+
+            if (CleanupCounts is null)
+            {
+                ImGuiUtil.HelpText("No preview yet. Click Refresh to compute the impact.");
+                return;
+            }
+
+            ImGui.Spacing();
+            ImGuiUtil.HelpText($"Total stored messages: {CleanupKeepCount + CleanupDeleteCount:N0}");
+            ImGuiUtil.HelpText($"Will keep:    {CleanupKeepCount:N0}");
+            ImGuiUtil.HelpText($"Will delete:  {CleanupDeleteCount:N0}");
+
+            using (var tree = ImRaii.TreeNode("Per-channel breakdown"))
+            {
+                if (tree.Success)
+                {
+                    using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                    foreach (var (chatType, count) in CleanupCounts.OrderByDescending(p => p.Value))
+                    {
+                        var name = Enum.IsDefined(typeof(ChatType), (ushort)chatType)
+                            ? ((ChatType)(ushort)chatType).ToString()
+                            : $"Unknown({chatType})";
+                        var keeps = WouldBeKept(chatType);
+                        var marker = keeps ? "[KEEP]  " : "[DELETE]";
+                        ImGuiUtil.HelpText($"{marker} {name} — {count:N0}");
+                    }
+                }
+            }
+
+            ImGui.Spacing();
+
+            using (ImRaii.Disabled(CleanupRunning || CleanupDeleteCount == 0))
+            {
+                if (ImGuiUtil.CtrlShiftButton("Apply current filter to database",
+                        $"Ctrl+Shift: Hard-deletes {CleanupDeleteCount:N0} messages, then runs VACUUM. Cannot be undone."))
+                    StartCleanup();
+            }
+
+            if (CleanupRunning)
+                ImGuiUtil.HelpText("Cleanup running in background…");
+        }
+    }
+
+    private bool WouldBeKept(int chatType)
+    {
+        if (!Plugin.Config.PrivacyFilterEnabled)
+            return true;
+        if (Plugin.Config.PrivacyPersistChannels.Contains((ChatType)(ushort)chatType))
+            return true;
+        return Plugin.Config.PrivacyPersistUnknownChannels;
+    }
+
+    private void RefreshCleanupPreview()
+    {
+        try
+        {
+            CleanupCounts = Plugin.MessageManager.Store.GetMessageCountsByChatType();
+            CleanupKeepCount = 0;
+            CleanupDeleteCount = 0;
+            foreach (var (chatType, count) in CleanupCounts)
+            {
+                if (WouldBeKept(chatType))
+                    CleanupKeepCount += count;
+                else
+                    CleanupDeleteCount += count;
+            }
+        }
+        catch (Exception e)
+        {
+            Plugin.Log.Error(e, "Failed to compute cleanup preview");
+            WrapperUtil.AddNotification("Failed to compute cleanup preview, see /xllog", NotificationType.Error);
+        }
+    }
+
+    private void StartCleanup()
+    {
+        if (CleanupRunning)
+            return;
+
+        CleanupRunning = true;
+        var allowed = Plugin.Config.PrivacyPersistChannels.Select(t => (int)(ushort)t).ToList();
+
+        new Thread(() =>
+        {
+            try
+            {
+                var deleted = Plugin.MessageManager.Store.CleanupRetainOnly(allowed);
+                Plugin.Log.Information($"Privacy cleanup: deleted {deleted} messages");
+
+                Plugin.Framework.Run(() =>
+                {
+                    Plugin.MessageManager.ClearAllTabs();
+                    Plugin.MessageManager.FilterAllTabsAsync();
+                }).Wait();
+
+                WrapperUtil.AddNotification($"Privacy cleanup complete: {deleted:N0} messages removed.", NotificationType.Success);
+            }
+            catch (Exception e)
+            {
+                Plugin.Log.Error(e, "Privacy cleanup failed");
+                WrapperUtil.AddNotification("Privacy cleanup failed, see /xllog", NotificationType.Error);
+            }
+            finally
+            {
+                CleanupRunning = false;
+                CleanupCounts = null;
+            }
+        }).Start();
     }
 }

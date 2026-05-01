@@ -40,7 +40,7 @@ public sealed class SettingsWindow : Window
             new Fonts(Mutable),
             new ChatColours(Plugin, Mutable),
             new Tabs(Plugin, Mutable),
-            new SettingsTabs.Privacy(Mutable),
+            new SettingsTabs.Privacy(Plugin, Mutable),
             new Database(Plugin, Mutable),
             new Webinterface(Plugin, Mutable),
             new Miscellaneous(Mutable),

@@ -310,6 +310,53 @@ internal class MessageStore : IDisposable
         PerformMaintenance();
     }
 
+    /// <summary>
+    /// Returns a (ChatType, count) snapshot over non-deleted messages.
+    /// Used by the Privacy tab to preview the impact of a retroactive
+    /// cleanup before the user confirms.
+    /// </summary>
+    internal Dictionary<int, long> GetMessageCountsByChatType()
+    {
+        var result = new Dictionary<int, long>();
+        using var cmd = Connection.CreateCommand();
+        cmd.CommandText = "SELECT ChatType, COUNT(*) FROM messages WHERE deleted = false GROUP BY ChatType;";
+        cmd.CommandTimeout = 120;
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            var chatType = reader.GetInt32(0);
+            var count = reader.GetInt64(1);
+            result[chatType] = count;
+        }
+        return result;
+    }
+
+    /// <summary>
+    /// Hard-deletes every message whose ChatType is not in the supplied
+    /// allowlist, then VACUUMs the database to reclaim disk space.
+    /// Returns the number of rows deleted.
+    /// </summary>
+    internal long CleanupRetainOnly(IReadOnlyCollection<int> allowedTypes)
+    {
+        if (allowedTypes.Count == 0)
+        {
+            // Defensive: refuse a "delete everything" disguised as a filter.
+            // Use ClearMessages() if a full wipe is actually intended.
+            throw new InvalidOperationException("CleanupRetainOnly requires at least one allowed ChatType. Use ClearMessages for a full wipe.");
+        }
+
+        var inList = string.Join(",", allowedTypes);
+        long deleted;
+        using (var cmd = Connection.CreateCommand())
+        {
+            cmd.CommandText = $"DELETE FROM messages WHERE ChatType NOT IN ({inList});";
+            cmd.CommandTimeout = 600;
+            deleted = cmd.ExecuteNonQuery();
+        }
+        PerformMaintenance();
+        return deleted;
+    }
+
     internal void PerformMaintenance()
     {
         Connection.Execute(@"
