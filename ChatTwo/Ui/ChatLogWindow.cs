@@ -99,8 +99,8 @@ public sealed class ChatLogWindow : Window
         SetUpTextCommandChannels();
         SetUpAllCommands();
 
-        Plugin.Commands.Register("/clearlog2", "Clear the Chat 2 chat log").Execute += ClearLog;
-        Plugin.Commands.Register("/chat2").Execute += ToggleChat;
+        Plugin.Commands.Register("/clearhellion", "Clear the Hellion Chat log").Execute += ClearLog;
+        Plugin.Commands.Register("/hellion").Execute += ToggleChat;
 
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
@@ -115,8 +115,8 @@ public sealed class ChatLogWindow : Window
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostUpdate, "ActionDetail", PayloadHandler.MoveTooltip);
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
-        Plugin.Commands.Register("/chat2").Execute -= ToggleChat;
-        Plugin.Commands.Register("/clearlog2").Execute -= ClearLog;
+        Plugin.Commands.Register("/hellion").Execute -= ToggleChat;
+        Plugin.Commands.Register("/clearhellion").Execute -= ClearLog;
     }
 
     private void Logout(int _, int __)

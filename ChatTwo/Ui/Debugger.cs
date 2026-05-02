@@ -28,12 +28,12 @@ public class DebuggerWindow : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        Plugin.Commands.Register("/chat2Debugger", showInHelp: false).Execute += Toggle;
+        Plugin.Commands.Register("/hellionDebugger", showInHelp: false).Execute += Toggle;
     }
 
     public void Dispose()
     {
-        Plugin.Commands.Register("/chat2Debugger", showInHelp: false).Execute -= Toggle;
+        Plugin.Commands.Register("/hellionDebugger", showInHelp: false).Execute -= Toggle;
     }
 
     private void Toggle(string _, string __) => Toggle();

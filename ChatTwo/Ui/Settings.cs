@@ -52,14 +52,14 @@ public sealed class SettingsWindow : Window
 
         Initialise();
 
-        Plugin.Commands.Register("/chat2", "Perform various actions with Chat 2.").Execute += Command;
+        Plugin.Commands.Register("/hellion", "Perform various actions with Hellion Chat.").Execute += Command;
         Plugin.Interface.UiBuilder.OpenConfigUi += Toggle;
     }
 
     public void Dispose()
     {
         Plugin.Interface.UiBuilder.OpenConfigUi -= Toggle;
-        Plugin.Commands.Register("/chat2").Execute -= Command;
+        Plugin.Commands.Register("/hellion").Execute -= Command;
     }
 
     private void Command(string command, string args)

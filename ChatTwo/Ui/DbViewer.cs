@@ -76,12 +76,12 @@ public class DbViewer : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute += Toggle;
+        Plugin.Commands.Register("/hellionView", "Get access to your message history, with simple filter options.", true).Execute += Toggle;
     }
 
     public void Dispose()
     {
-        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute -= Toggle;
+        Plugin.Commands.Register("/hellionView", "Get access to your message history, with simple filter options.", true).Execute -= Toggle;
     }
 
     private void Toggle(string _, string __) => Toggle();
