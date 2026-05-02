@@ -395,11 +395,11 @@ internal class MessageStore : IDisposable
             throw new InvalidOperationException("CleanupRetainOnly requires at least one allowed ChatType. Use ClearMessages for a full wipe.");
         }
 
-        var inList = string.Join(",", allowedTypes);
         long deleted;
         using (var cmd = Connection.CreateCommand())
         {
-            cmd.CommandText = $"DELETE FROM messages WHERE ChatType NOT IN ({inList});";
+            var placeholders = BindIntList(cmd, "ct", allowedTypes);
+            cmd.CommandText = $"DELETE FROM messages WHERE ChatType NOT IN ({placeholders});";
             cmd.CommandTimeout = 600;
             deleted = cmd.ExecuteNonQuery();
         }
@@ -512,15 +512,16 @@ internal class MessageStore : IDisposable
         DateTimeOffset? from,
         DateTimeOffset? to)
     {
+        var cmd = Connection.CreateCommand();
+
         var clauses = new List<string> { "deleted = false" };
         if (chatTypes is { Count: > 0 })
-            clauses.Add($"ChatType IN ({string.Join(",", chatTypes)})");
+            clauses.Add($"ChatType IN ({BindIntList(cmd, "exct", chatTypes)})");
         if (from is not null)
             clauses.Add("Date >= $From");
         if (to is not null)
             clauses.Add("Date <= $To");
 
-        var cmd = Connection.CreateCommand();
         cmd.CommandText = @"
             SELECT
                 Id,
@@ -693,16 +694,17 @@ internal class MessageStore : IDisposable
 
     internal long CountDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null)
     {
+        using var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "cdr", channels.Select(c => (int)c))})");
 
         var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 
-        using var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -722,16 +724,17 @@ internal class MessageStore : IDisposable
 
     internal MessageEnumerator GetDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null)
     {
+        var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "gdr", channels.Select(c => (int)c))})");
 
         var whereClause = $"WHERE {string.Join(" AND ", whereClauses)}";
 
-        var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -763,16 +766,17 @@ internal class MessageStore : IDisposable
 
     internal MessageEnumerator GetPagedDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null, int page = 0)
     {
+        var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "pdr", channels.Select(c => (int)c))})");
 
         var whereClause = $"WHERE {string.Join(" AND ", whereClauses)}";
 
-        var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
