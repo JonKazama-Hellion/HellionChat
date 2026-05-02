@@ -245,7 +245,17 @@ public class Configuration : IPluginConfiguration
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
-        Tabs = other.Tabs.Select(t => t.Clone()).ToList();
+
+        // Hellion Chat — Auto-Tell-Tabs are session-only and therefore
+        // never present in a disk-loaded copy. Keep the live temp tabs of
+        // *this* configuration alive across an UpdateFrom so a settings
+        // save (or sidebar-mode toggle) does not silently destroy the
+        // user's open tell conversations. Persistent tabs from `other`
+        // still get the regular clone-replace treatment.
+        var liveTempTabs = Tabs.Where(t => t.IsTempTab).ToList();
+        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t => t.Clone()).ToList();
+        Tabs.AddRange(liveTempTabs);
+
         OverrideStyle = other.OverrideStyle;
         ChosenStyle = other.ChosenStyle;
         ChatTabForward = other.ChatTabForward;
