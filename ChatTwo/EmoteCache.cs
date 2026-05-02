@@ -35,20 +35,20 @@ public static class EmoteCache
         public Emote Emote { get; set; }
 
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public required string Id { get; set; }
     }
 
     [Serializable]
     public struct Emote()
     {
         [JsonPropertyName("id")]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("code")]
-        public string Code { get; set; }
+        public required string Code { get; set; }
 
         [JsonPropertyName("imageType")]
-        public string ImageType { get; set; }
+        public required string ImageType { get; set; }
     }
 
     public enum LoadingState
