@@ -9,7 +9,7 @@ using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui;
 
-public sealed class SettingsWindow : Window
+public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 {
     private readonly Plugin Plugin;
 
@@ -33,18 +33,14 @@ public sealed class SettingsWindow : Window
 
         Tabs =
         [
-            new Display(Mutable),
-            new ChatLog(Plugin, Mutable),
-            new Emote(Plugin, Mutable),
-            new Preview(Mutable),
-            new Fonts(Mutable),
-            new ChatColours(Plugin, Mutable),
-            new Tabs(Plugin, Mutable),
+            new General(Plugin, Mutable),
+            new Appearance(Plugin, Mutable),
+            new SettingsTabs.Window(Plugin, Mutable),
+            new Chat(Plugin, Mutable),
+            new SettingsTabs.Tabs(Plugin, Mutable),
             new SettingsTabs.Privacy(Plugin, Mutable),
             new Database(Plugin, Mutable),
-            new Miscellaneous(Mutable),
-            new Changelog(Mutable),
-            new About()
+            new Information(Mutable),
         ];
 
         RespectCloseHotkey = false;

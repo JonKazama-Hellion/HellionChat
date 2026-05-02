@@ -196,4 +196,11 @@ internal class HellionStrings
     // Hellion Chat — Settings UX Polish v10 wipe migration
     internal static string SettingsRefactor_Migration_Title => Get(nameof(SettingsRefactor_Migration_Title));
     internal static string SettingsRefactor_Migration_Content => Get(nameof(SettingsRefactor_Migration_Content));
+
+    // Hellion Chat — Settings UX Polish 8-tab structure
+    internal static string Settings_Tab_General => Get(nameof(Settings_Tab_General));
+    internal static string Settings_Tab_Appearance => Get(nameof(Settings_Tab_Appearance));
+    internal static string Settings_Tab_Window => Get(nameof(Settings_Tab_Window));
+    internal static string Settings_Tab_Chat => Get(nameof(Settings_Tab_Chat));
+    internal static string Settings_Tab_Information => Get(nameof(Settings_Tab_Information));
 }

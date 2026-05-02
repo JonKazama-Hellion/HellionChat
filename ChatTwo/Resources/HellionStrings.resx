@@ -446,4 +446,21 @@
   <data name="SettingsRefactor_Migration_Content" xml:space="preserve">
     <value>Hellion Chat 0.5.0 reorganised the settings into themed tabs. Your chat database and your message history stay untouched. Settings have been reset to defaults; if you want to pick a privacy profile again, the reopen button is in the Privacy tab. A backup of your previous config is at HellionChat.json.pre-v10-backup next to the live config file.</value>
   </data>
+
+  <!-- Hellion Chat — Settings UX Polish 8-tab structure -->
+  <data name="Settings_Tab_General" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Tab_Appearance" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Settings_Tab_Window" xml:space="preserve">
+    <value>Window</value>
+  </data>
+  <data name="Settings_Tab_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Settings_Tab_Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
 </root>
