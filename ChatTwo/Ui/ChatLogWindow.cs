@@ -451,7 +451,9 @@ public sealed class ChatLogWindow : Window
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
         if (LastViewport == ImGuiHelpers.MainViewport.Handle && !WasDocked)
-            BgAlpha = Plugin.Config.WindowAlpha / 100f;
+            BgAlpha = Plugin.Config.HellionThemeEnabled
+                ? Plugin.Config.HellionThemeWindowOpacity
+                : Plugin.Config.WindowAlpha / 100f;
 
         LastViewport = ImGui.GetWindowViewport().Handle;
         WasDocked = ImGui.IsWindowDocked();
@@ -1188,7 +1190,13 @@ public sealed class ChatLogWindow : Window
                 if (tab.DisplayTimestamp)
                 {
                     var localTime = message.Date.ToLocalTime();
-                    var timestamp = localTime.ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("de-DE"));
+                    // Force the format explicitly per setting. Relying on the
+                    // current culture meant a German system locale always
+                    // produced 24h regardless of the toggle, so the checkbox
+                    // looked dead.
+                    var timestamp = Plugin.Config.Use24HourClock
+                        ? localTime.ToString("HH:mm", CultureInfo.InvariantCulture)
+                        : localTime.ToString("h:mm tt", CultureInfo.InvariantCulture);
                     if (isTable)
                     {
                         if (!Plugin.Config.HideSameTimestamps || timestamp != lastTimestamp)

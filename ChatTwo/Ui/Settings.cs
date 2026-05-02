@@ -9,7 +9,7 @@ using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui;
 
-public sealed class SettingsWindow : Window
+public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 {
     private readonly Plugin Plugin;
 
@@ -33,18 +33,14 @@ public sealed class SettingsWindow : Window
 
         Tabs =
         [
-            new Display(Mutable),
-            new ChatLog(Plugin, Mutable),
-            new Emote(Plugin, Mutable),
-            new Preview(Mutable),
-            new Fonts(Mutable),
-            new ChatColours(Plugin, Mutable),
-            new Tabs(Plugin, Mutable),
+            new General(Plugin, Mutable),
+            new Appearance(Plugin, Mutable),
+            new SettingsTabs.Window(Plugin, Mutable),
+            new Chat(Plugin, Mutable),
+            new SettingsTabs.Tabs(Plugin, Mutable),
             new SettingsTabs.Privacy(Plugin, Mutable),
             new Database(Plugin, Mutable),
-            new Miscellaneous(Mutable),
-            new Changelog(Mutable),
-            new About()
+            new Information(Mutable),
         ];
 
         RespectCloseHotkey = false;
@@ -114,14 +110,16 @@ public sealed class SettingsWindow : Window
 
         ImGui.SameLine();
 
-        if (ImGui.Button(Language.Settings_SaveAndClose)) {
+        if (ImGui.Button(Language.Settings_SaveAndClose))
+        {
             save = true;
             IsOpen = false;
         }
 
         ImGui.SameLine();
 
-        if (ImGui.Button(Language.Settings_Discard)) {
+        if (ImGui.Button(Language.Settings_Discard))
+        {
             IsOpen = false;
         }
 
@@ -135,7 +133,7 @@ public sealed class SettingsWindow : Window
         {
             var buttonWidth = ImGui.CalcTextSize(buttonLabel).X + ImGui.GetStyle().FramePadding.X * 2;
             var buttonWidth2 = ImGui.CalcTextSize(buttonLabel2).X + ImGui.GetStyle().FramePadding.X * 2;
-            ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth - buttonWidth2);
+            ImGui.SameLine(ImGui.GetContentRegionAvail().X - buttonWidth - buttonWidth2 - ImGui.GetStyle().ItemSpacing.X);
 
             if (ImGui.Button(buttonLabel2))
                 Dalamud.Utility.Util.OpenLink("https://ko-fi.com/infiii");

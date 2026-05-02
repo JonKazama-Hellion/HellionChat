@@ -33,56 +33,76 @@ internal sealed class Database : ISettingsTab
 
     public void Draw(bool changed)
     {
+        // Shift-on-open keeps the Advanced tools available without a permanent
+        // toggle in the UI, mirroring upstream Chat 2 behaviour.
         if (changed)
             ShowAdvanced = ImGui.GetIO().KeyShift;
 
-        ImGuiUtil.OptionCheckbox(ref Mutable.DatabaseBattleMessages, Language.Options_DatabaseBattleMessages_Name, Language.Options_DatabaseBattleMessages_Description);
+        DrawStorageSection();
         ImGui.Spacing();
-
-        if (ImGuiUtil.OptionCheckbox(ref Mutable.LoadPreviousSession, Language.Options_LoadPreviousSession_Name, Language.Options_LoadPreviousSession_Description))
-            if (Mutable.LoadPreviousSession)
-                Mutable.FilterIncludePreviousSessions = true;
-
+        DrawViewerSection();
         ImGui.Spacing();
+        DrawStatsSection();
+    }
 
-        if (ImGuiUtil.OptionCheckbox(ref Mutable.FilterIncludePreviousSessions, Language.Options_FilterIncludePreviousSessions_Name, Language.Options_FilterIncludePreviousSessions_Description))
-            if (!Mutable.FilterIncludePreviousSessions)
-                Mutable.LoadPreviousSession = false;
+    private void DrawStorageSection()
+    {
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Database_Storage_Heading);
+        if (!tree.Success)
+            return;
 
-        ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
-
-        var old = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat.db"));
-        var migratedOld = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-litedb.db"));
-        if (old.Exists || migratedOld.Exists)
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            ImGui.TextUnformatted(Language.Options_Database_Old_Heading);
-            ImGui.Spacing();
+            ImGui.Checkbox(Language.Options_DatabaseBattleMessages_Name, ref Mutable.DatabaseBattleMessages);
+            ImGuiUtil.HelpMarker(Language.Options_DatabaseBattleMessages_Description);
 
-            if (ImGuiUtil.CtrlShiftButton(Language.Options_Database_Old_Delete, Language.Options_Database_Old_Delete_Tooltip))
+            if (ImGui.Checkbox(Language.Options_LoadPreviousSession_Name, ref Mutable.LoadPreviousSession))
+                if (Mutable.LoadPreviousSession)
+                    Mutable.FilterIncludePreviousSessions = true;
+            ImGuiUtil.HelpMarker(Language.Options_LoadPreviousSession_Description);
+
+            if (ImGui.Checkbox(Language.Options_FilterIncludePreviousSessions_Name, ref Mutable.FilterIncludePreviousSessions))
+                if (!Mutable.FilterIncludePreviousSessions)
+                    Mutable.LoadPreviousSession = false;
+            ImGuiUtil.HelpMarker(Language.Options_FilterIncludePreviousSessions_Description);
+
+            var old = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat.db"));
+            var migratedOld = new FileInfo(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "chat-litedb.db"));
+            if (old.Exists || migratedOld.Exists)
             {
-                try
+                ImGui.Spacing();
+                ImGui.Separator();
+                ImGui.Spacing();
+
+                ImGui.TextUnformatted(Language.Options_Database_Old_Heading);
+                ImGui.Spacing();
+
+                if (ImGuiUtil.CtrlShiftButton(Language.Options_Database_Old_Delete, Language.Options_Database_Old_Delete_Tooltip))
                 {
-                    if (old.Exists)
-                        old.Delete();
-                    else
-                        migratedOld.Delete();
-                    WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Success, NotificationType.Success);
-                }
-                catch (Exception e)
-                {
-                    Plugin.Log.Error(e, "Unable to delete old database");
-                    WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Error, NotificationType.Error);
+                    try
+                    {
+                        if (old.Exists)
+                            old.Delete();
+                        else
+                            migratedOld.Delete();
+                        WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Success, NotificationType.Success);
+                    }
+                    catch (Exception e)
+                    {
+                        Plugin.Log.Error(e, "Unable to delete old database");
+                        WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Error, NotificationType.Error);
+                    }
                 }
             }
-
-            ImGui.Spacing();
-            ImGui.Separator();
-            ImGui.Spacing();
         }
+    }
 
-        ImGui.TextUnformatted(Language.Options_Database_Metadata_Heading);
+    private void DrawViewerSection()
+    {
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Database_Viewer_Heading);
+        if (!tree.Success)
+            return;
+
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
             // Refresh the database size and message count every 5 seconds to avoid
@@ -132,28 +152,34 @@ internal sealed class Database : ISettingsTab
                 WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
             }
         }
+    }
 
-        ImGui.Spacing();
-
+    private void DrawStatsSection()
+    {
         if (!ShowAdvanced)
             return;
 
-        using var treeNode = ImRaii.TreeNode(Language.Options_Database_Advanced);
-        using var wrap = ImRaii.TextWrapPos(0.0f);
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Database_Stats_Heading);
+        if (!tree.Success)
+            return;
 
-        ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
-        if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
-            Plugin.MessageManager.Store.PerformMaintenance();
-
-        if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs()"))
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            Plugin.MessageManager.ClearAllTabs();
-            Plugin.MessageManager.FilterAllTabsAsync();
-        }
+            using var wrap = ImRaii.TextWrapPos(0.0f);
 
-        if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
-            new Thread(() => InsertMessages(10_000)).Start();
-        ImGui.Spacing();
+            ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
+            if (ImGuiUtil.CtrlShiftButton("Perform maintenance", "Ctrl+Shift: MessageManager.Store.PerformMaintenance()"))
+                Plugin.MessageManager.Store.PerformMaintenance();
+
+            if (ImGuiUtil.CtrlShiftButton("Reload messages from database", "Ctrl+Shift: MessageManager.FilterAllTabs()"))
+            {
+                Plugin.MessageManager.ClearAllTabs();
+                Plugin.MessageManager.FilterAllTabsAsync();
+            }
+
+            if (ImGuiUtil.CtrlShiftButton("Inject 10,000 messages", "Ctrl+Shift: creates 10,000 unique messages (async)"))
+                new Thread(() => InsertMessages(10_000)).Start();
+        }
     }
 
     private void InsertMessages(int count)

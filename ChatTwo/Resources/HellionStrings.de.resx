@@ -24,6 +24,9 @@
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
     <value>Der Filter steuert nur, was in die lokale Datenbank geschrieben wird. Im Chat-Log siehst du weiterhin jede Nachricht live, ausgeschlossene Kanäle werden nur nicht mehr gespeichert. Wenn du Kanäle auch aus der sichtbaren Anzeige entfernen willst, nutze die normalen Chat-Tab-Filter im Spiel.</value>
   </data>
+  <data name="Privacy_Filter_Tree_Heading" xml:space="preserve">
+    <value>Privacy-Filter und Whitelist</value>
+  </data>
   <data name="Privacy_Whitelist_Help" xml:space="preserve">
     <value>Wähle aus, welche Kanäle in die lokale Datenbank gespeichert werden. Standard nach Datensparsamkeit: nur deine eigenen Konversationen. Über die Buttons unten kannst du eine Voreinstellung anwenden.</value>
   </data>
@@ -74,6 +77,9 @@
   </data>
   <data name="Cleanup_Help_SavedNote" xml:space="preserve">
     <value>Das Aufräumen nutzt deine GESPEICHERTE Whitelist (Plugin.Config), nicht ungespeicherte Änderungen oben. Klicke zuerst Speichern, wenn du deine aktuellen Änderungen anwenden willst.</value>
+  </data>
+  <data name="Retention_Help_SavedNote" xml:space="preserve">
+    <value>Der manuelle Lauf nutzt deine GESPEICHERTE Retention-Policy, nicht die Slider-Werte oben. Klicke zuerst Speichern, wenn der Lauf deine aktuellen Änderungen anwenden soll.</value>
   </data>
   <data name="Cleanup_RefreshPreview" xml:space="preserve">
     <value>Vorschau aktualisieren</value>
@@ -174,18 +180,6 @@
   <data name="Retention_Error" xml:space="preserve">
     <value>Aufbewahrungs-Bereinigung fehlgeschlagen, siehe /xllog</value>
   </data>
-  <data name="Migration_Notification_Title" xml:space="preserve">
-    <value>Hellion Chat</value>
-  </data>
-  <data name="Migration_Notification_Content" xml:space="preserve">
-    <value>Datenschutz-Filter ist standardmäßig aktiviert. Einstellungen → Datenschutz zum Anpassen.</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Title" xml:space="preserve">
-    <value>Hellion Chat 0.2.0</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Content" xml:space="preserve">
-    <value>Das Webinterface wurde in dieser Version entfernt, weil es nicht auf das Datenschutz-Niveau gehärtet werden konnte das Hellion Chat standardmäßig zusichert. Falls du es genutzt hast, schau bitte in die README für Hintergründe.</value>
-  </data>
   <data name="Wizard_Title" xml:space="preserve">
     <value>Hellion Chat — Willkommen</value>
   </data>
@@ -272,9 +266,6 @@
   </data>
   <data name="Export_Error" xml:space="preserve">
     <value>Export fehlgeschlagen, siehe /xllog</value>
-  </data>
-  <data name="Theme_Heading" xml:space="preserve">
-    <value>Erscheinungsbild</value>
   </data>
   <data name="Theme_Enabled_Name" xml:space="preserve">
     <value>Hellion-Theme für alle Plugin-Fenster verwenden</value>
@@ -368,12 +359,6 @@
   </data>
 
   <!-- Hellion Chat — Auto-Tell-Tabs (Runtime-Strings) -->
-  <data name="AutoTellTabs_Migration_Title" xml:space="preserve">
-    <value>Auto-Tell-Tabs</value>
-  </data>
-  <data name="AutoTellTabs_Migration_Content" xml:space="preserve">
-    <value>Auto-Tell-Tabs sind ab Version 0.4.0 standardmäßig aktiv. Du kannst sie im Chat-Tab deaktivieren oder anpassen.</value>
-  </data>
   <data name="AutoTellTabs_SectionHeader" xml:space="preserve">
     <value>Aktive Tells</value>
   </data>
@@ -437,5 +422,128 @@
   </data>
   <data name="Privacy_AutoTellTabs_Preload_Hint" xml:space="preserve">
     <value>Greift nur, wenn Auto-Tell-Tabs im Chat-Tab aktiviert sind.</value>
+  </data>
+
+  <!-- Hellion Chat — Settings UX Polish v10 Wipe-Migration -->
+  <data name="SettingsRefactor_Migration_Title" xml:space="preserve">
+    <value>Settings umstrukturiert</value>
+  </data>
+  <data name="SettingsRefactor_Migration_Content" xml:space="preserve">
+    <value>Hellion Chat 0.5.0 hat die Settings in thematische Tabs umstrukturiert. Deine Chat-Datenbank und dein Nachrichtenverlauf bleiben unverändert. Settings wurden auf Defaults zurückgesetzt. Falls du das Privacy-Profil neu wählen willst, findest du den Reopen-Button im Datenschutz-Tab. Ein Backup der vorherigen Config liegt unter HellionChat.json.pre-v10-backup neben der aktiven Config-Datei.</value>
+  </data>
+
+  <!-- Hellion Chat — Settings UX Polish 8-Tab-Struktur -->
+  <data name="Settings_Tab_General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Settings_Tab_Appearance" xml:space="preserve">
+    <value>Aussehen</value>
+  </data>
+  <data name="Settings_Tab_Window" xml:space="preserve">
+    <value>Fenster</value>
+  </data>
+  <data name="Settings_Tab_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Settings_Tab_Information" xml:space="preserve">
+    <value>Über</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Allgemein-Tabs -->
+  <data name="Settings_General_Input_Heading" xml:space="preserve">
+    <value>Eingabe</value>
+  </data>
+  <data name="Settings_General_Audio_Heading" xml:space="preserve">
+    <value>Audio &amp; Benachrichtigungen</value>
+  </data>
+  <data name="Settings_General_Performance_Heading" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="Settings_General_Language_Heading" xml:space="preserve">
+    <value>Sprache &amp; Eingabe-Hilfen</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Aussehen-Tabs -->
+  <data name="Settings_Appearance_Theme_Heading" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Appearance_Fonts_Heading" xml:space="preserve">
+    <value>Schriftarten</value>
+  </data>
+  <data name="Settings_Appearance_Colours_Heading" xml:space="preserve">
+    <value>Chat-Farben</value>
+  </data>
+  <data name="Settings_Appearance_Timestamps_Heading" xml:space="preserve">
+    <value>Zeitstempel</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Fenster-Tabs -->
+  <data name="Settings_Window_Hide_Heading" xml:space="preserve">
+    <value>Verstecken</value>
+  </data>
+  <data name="Settings_Window_InactivityHide_Heading" xml:space="preserve">
+    <value>Inaktivitäts-Verstecken</value>
+  </data>
+  <data name="Settings_Window_Frame_Heading" xml:space="preserve">
+    <value>Fenster-Rahmen</value>
+  </data>
+  <data name="Settings_Window_Tooltips_Heading" xml:space="preserve">
+    <value>Tooltips</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Chat-Tabs -->
+  <data name="Settings_Chat_AutoTellTabs_Heading" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="Settings_Chat_Behaviour_Heading" xml:space="preserve">
+    <value>Nachrichten-Verhalten</value>
+  </data>
+  <data name="Settings_Chat_Preview_Heading" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Settings_Chat_Emotes_Heading" xml:space="preserve">
+    <value>Emotes</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Database-Tabs -->
+  <data name="Settings_Database_Storage_Heading" xml:space="preserve">
+    <value>Speicherung</value>
+  </data>
+  <data name="Settings_Database_Viewer_Heading" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Settings_Database_Stats_Heading" xml:space="preserve">
+    <value>Wartung</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Information-Tabs -->
+  <data name="Settings_Information_VersionInfo_Heading" xml:space="preserve">
+    <value>Versionsinfo</value>
+  </data>
+  <data name="Settings_Information_About_Heading" xml:space="preserve">
+    <value>Über HellionChat</value>
+  </data>
+  <data name="Settings_Information_Changelog_Heading" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+
+  <!-- Hellion Chat — Default-Tab-Presets (kanalspezifisch) -->
+  <data name="Tabs_Presets_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Tabs_Presets_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Tabs_Presets_Party" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="Tabs_Presets_Beginner" xml:space="preserve">
+    <value>Neulinge</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell" xml:space="preserve">
+    <value>Linkshell</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
+    <value>Wenn du mehrere Linkshells benutzt, empfiehlt der Maintainer einen Tab pro Shell für eine sauberere Übersicht. Tab duplizieren und je Kopie die Kanalauswahl einschränken.</value>
   </data>
 </root>

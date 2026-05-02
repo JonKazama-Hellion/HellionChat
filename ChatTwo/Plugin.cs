@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -71,8 +72,11 @@ public sealed class Plugin : IDalamudPlugin
     // plugin start would launch two sweeps in parallel and the second one
     // would just re-do work the first one already finished. The lock guards
     // the flag — the flag check itself bails before we touch the database.
+    // Volatile because the ImGui thread reads the flag outside the lock to
+    // gate the manual button; without it the JIT may cache the value in a
+    // register and miss the background-thread update.
     internal readonly object RetentionSweepLock = new();
-    internal bool RetentionSweepRunning;
+    internal volatile bool RetentionSweepRunning;
 
     internal DateTime GameStarted { get; }
 
@@ -107,94 +111,64 @@ public sealed class Plugin : IDalamudPlugin
             // Drop them on load to guarantee the session-only invariant.
             Config.Tabs.RemoveAll(t => t.IsTempTab);
 
-#pragma warning disable CS0618 // Type or member is obsolete
-            // TODO Remove after 01.07.2026
-            // Migrate old channel values
-            if (Config.Version <= 5)
+            // Hellion Chat v9 → v10 — wipes the configuration so the new 8-tab
+            // layout starts from defaults instead of mapping every previous setting
+            // to its new position. Backup-Failure ist non-fatal, der Wipe läuft
+            // trotzdem; dem User fehlt dann nur das manuelle Restore-Sicherheitsnetz.
+            if (Config.Version < 10)
             {
-                foreach (var tab in Config.Tabs)
+                var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+                if (pluginConfigsDir is not null)
                 {
-                    if (tab.ChatCodes.Count > 0)
-                    {
-                        tab.SelectedChannels = tab.ChatCodes.ToDictionary(pair => pair.Key, pair => (pair.Value, pair.Value));
-                        tab.ChatCodes.Clear();
-                    }
+                    var liveConfigPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json");
+                    var backupPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json.pre-v10-backup");
 
-                    if (Config.InactivityHideChannels.Count > 0)
+                    try
                     {
-                        Config.InactivityHideChannelsV2 = Config.InactivityHideChannels.ToDictionary(pair => pair.Key, pair => (pair.Value, pair.Value));
-                        Config.InactivityHideChannels.Clear();
+                        if (File.Exists(liveConfigPath))
+                        {
+                            File.Copy(liveConfigPath, backupPath, overwrite: true);
+                        }
                     }
-
-                    Config.Version = 6;
-                    SaveConfig();
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "HellionChat: pre-v10 config backup failed");
+                    }
                 }
-            }
-#pragma warning restore CS0618 // Type or member is obsolete
 
-            // Hellion Chat v6→v7: seed Privacy-First defaults.
-            if (Config.Version <= 6)
-            {
-                Config.PrivacyFilterEnabled = true;
-                Config.PrivacyPersistChannels = [..Privacy.PrivacyDefaults.PrivacyFirstWhitelist];
-                Config.PrivacyPersistUnknownChannels = false;
-                // Existing ChatTwo users skip the first-run wizard — the
-                // migration toast already explains what changed and they
-                // can reopen the wizard from Settings → Privacy if they
-                // want to pick a different profile.
-                Config.FirstRunCompleted = true;
-                Config.Version = 7;
+                Config = new Configuration
+                {
+                    Version = 10,
+                    FirstRunCompleted = true,
+                };
                 SaveConfig();
 
                 Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
                 {
-                    Title = HellionStrings.Migration_Notification_Title,
-                    Content = HellionStrings.Migration_Notification_Content,
+                    Title = HellionStrings.SettingsRefactor_Migration_Title,
+                    Content = HellionStrings.SettingsRefactor_Migration_Content,
                     Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
-                    InitialDuration = TimeSpan.FromSeconds(15),
+                    InitialDuration = TimeSpan.FromSeconds(25),
                 });
             }
 
-            // Hellion Chat v7→v8: webinterface removed in 0.2.0. Old config
-            // entries (WebinterfacePassword, AuthStore, etc.) get dropped on
-            // the next save because their properties no longer exist on the
-            // Configuration class. The bump is recorded so the notification
-            // only fires once.
-            if (Config.Version <= 7)
-            {
-                Config.Version = 8;
-                SaveConfig();
-
-                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
-                {
-                    Title = HellionStrings.Migration_Webinterface_Removed_Title,
-                    Content = HellionStrings.Migration_Webinterface_Removed_Content,
-                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
-                    InitialDuration = TimeSpan.FromSeconds(20),
-                });
-            }
-
-            // Hellion Chat v8→v9: Auto-Tell-Tabs feature seeded with
-            // property-initializer defaults (enabled, limit 15, history 20,
-            // section header on). No data migration needed — just bump the
-            // version and notify the user once so the feature does not
-            // surprise them.
-            if (Config.Version <= 8)
-            {
-                Config.Version = 9;
-                SaveConfig();
-
-                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
-                {
-                    Title = HellionStrings.AutoTellTabs_Migration_Title,
-                    Content = HellionStrings.AutoTellTabs_Migration_Content,
-                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
-                    InitialDuration = TimeSpan.FromSeconds(20),
-                });
-            }
-
+            // Hellion default tab layout for first-run and v10-wipe.
+            // General catches player chat plus active gameplay events; the
+            // System tab takes the technical noise so it does not bury real
+            // conversation. Beginner tab only appears when the Novice
+            // Network is enabled in Audio and Notifications, otherwise it
+            // would just sit empty.
             if (Config.Tabs.Count == 0)
+            {
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
+                Config.Tabs.Add(TabsUtil.HellionSystem);
+                Config.Tabs.Add(TabsUtil.HellionFreeCompany);
+                Config.Tabs.Add(TabsUtil.HellionParty);
+                if (Config.ShowNoviceNetwork)
+                    Config.Tabs.Add(TabsUtil.HellionBeginner);
+                Config.Tabs.Add(TabsUtil.HellionLinkshell);
+                Config.Tabs.Add(TabsUtil.VanillaTellExclusive);
+            }
 
             LanguageChanged(Interface.UiLanguage);
             ImGuiUtil.Initialize(this);

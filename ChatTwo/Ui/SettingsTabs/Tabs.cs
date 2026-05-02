@@ -10,7 +10,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab
 {
-    private readonly Plugin Plugin;
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
@@ -26,6 +26,9 @@ internal sealed class Tabs : ISettingsTab
     public void Draw(bool changed)
     {
         const string addTabPopup = "add-tab-popup";
+
+        ImGuiUtil.HelpText(HellionStrings.Tabs_Presets_Linkshell_Hint);
+        ImGui.Spacing();
 
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: Language.Options_Tabs_Add))
             ImGui.OpenPopup(addTabPopup);

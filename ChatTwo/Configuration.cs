@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 9;
+    private const int LatestVersion = 10;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -147,7 +147,7 @@ public class Configuration : IPluginConfiguration
     public LanguageOverride LanguageOverride = LanguageOverride.None;
     public bool CanMove = true;
     public bool CanResize = true;
-    public bool ShowTitleBar;
+    public bool ShowTitleBar = true;
     public bool ShowPopOutTitleBar = true;
     public bool DatabaseBattleMessages;
     public bool LoadPreviousSession;
@@ -157,7 +157,7 @@ public class Configuration : IPluginConfiguration
     public bool CollapseKeepUniqueLinks;
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
-    public int MaxLinesToRender = 10_000; // 1-10000
+    public int MaxLinesToRender = 5_000; // 1-10000
     public bool Use24HourClock;
 
     public bool ShowEmotes = true;

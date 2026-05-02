@@ -45,6 +45,7 @@ internal class HellionStrings
     internal static string Privacy_FilterEnabled_Name => Get(nameof(Privacy_FilterEnabled_Name));
     internal static string Privacy_FilterEnabled_Description => Get(nameof(Privacy_FilterEnabled_Description));
     internal static string Privacy_FilterEnabled_StorageOnly_Help => Get(nameof(Privacy_FilterEnabled_StorageOnly_Help));
+    internal static string Privacy_Filter_Tree_Heading => Get(nameof(Privacy_Filter_Tree_Heading));
     internal static string Privacy_Whitelist_Help => Get(nameof(Privacy_Whitelist_Help));
     internal static string Privacy_Preset_PrivacyFirst => Get(nameof(Privacy_Preset_PrivacyFirst));
     internal static string Privacy_Preset_ClearAll => Get(nameof(Privacy_Preset_ClearAll));
@@ -63,6 +64,7 @@ internal class HellionStrings
     internal static string Cleanup_Heading => Get(nameof(Cleanup_Heading));
     internal static string Cleanup_Help_Intro => Get(nameof(Cleanup_Help_Intro));
     internal static string Cleanup_Help_SavedNote => Get(nameof(Cleanup_Help_SavedNote));
+    internal static string Retention_Help_SavedNote => Get(nameof(Retention_Help_SavedNote));
     internal static string Cleanup_RefreshPreview => Get(nameof(Cleanup_RefreshPreview));
     internal static string Cleanup_NoPreview => Get(nameof(Cleanup_NoPreview));
     internal static string Cleanup_TotalStored => Get(nameof(Cleanup_TotalStored));
@@ -98,11 +100,6 @@ internal class HellionStrings
     internal static string Retention_Success => Get(nameof(Retention_Success));
     internal static string Retention_Error => Get(nameof(Retention_Error));
 
-    internal static string Migration_Notification_Title => Get(nameof(Migration_Notification_Title));
-    internal static string Migration_Notification_Content => Get(nameof(Migration_Notification_Content));
-    internal static string Migration_Webinterface_Removed_Title => Get(nameof(Migration_Webinterface_Removed_Title));
-    internal static string Migration_Webinterface_Removed_Content => Get(nameof(Migration_Webinterface_Removed_Content));
-
     internal static string Wizard_Title => Get(nameof(Wizard_Title));
     internal static string Wizard_Intro => Get(nameof(Wizard_Intro));
     internal static string Wizard_Profile_PrivacyFirst_Heading => Get(nameof(Wizard_Profile_PrivacyFirst_Heading));
@@ -134,7 +131,6 @@ internal class HellionStrings
     internal static string Export_Empty => Get(nameof(Export_Empty));
     internal static string Export_Error => Get(nameof(Export_Error));
 
-    internal static string Theme_Heading => Get(nameof(Theme_Heading));
     internal static string Theme_Enabled_Name => Get(nameof(Theme_Enabled_Name));
     internal static string Theme_Enabled_Description => Get(nameof(Theme_Enabled_Description));
     internal static string Theme_WindowOpacity_Label => Get(nameof(Theme_WindowOpacity_Label));
@@ -166,8 +162,6 @@ internal class HellionStrings
     internal static string About_Translators_TreeNode => Get(nameof(About_Translators_TreeNode));
 
     // Hellion Chat — Auto-Tell-Tabs runtime strings
-    internal static string AutoTellTabs_Migration_Title => Get(nameof(AutoTellTabs_Migration_Title));
-    internal static string AutoTellTabs_Migration_Content => Get(nameof(AutoTellTabs_Migration_Content));
     internal static string AutoTellTabs_SectionHeader => Get(nameof(AutoTellTabs_SectionHeader));
     internal static string AutoTellTabs_HistorySeparator => Get(nameof(AutoTellTabs_HistorySeparator));
     internal static string AutoTellTabs_HistoryLoadError => Get(nameof(AutoTellTabs_HistoryLoadError));
@@ -192,4 +186,57 @@ internal class HellionStrings
     internal static string Privacy_AutoTellTabs_Preload_Name => Get(nameof(Privacy_AutoTellTabs_Preload_Name));
     internal static string Privacy_AutoTellTabs_Preload_Description => Get(nameof(Privacy_AutoTellTabs_Preload_Description));
     internal static string Privacy_AutoTellTabs_Preload_Hint => Get(nameof(Privacy_AutoTellTabs_Preload_Hint));
+
+    // Hellion Chat — Settings UX Polish v10 wipe migration
+    internal static string SettingsRefactor_Migration_Title => Get(nameof(SettingsRefactor_Migration_Title));
+    internal static string SettingsRefactor_Migration_Content => Get(nameof(SettingsRefactor_Migration_Content));
+
+    // Hellion Chat — Settings UX Polish 8-tab structure
+    internal static string Settings_Tab_General => Get(nameof(Settings_Tab_General));
+    internal static string Settings_Tab_Appearance => Get(nameof(Settings_Tab_Appearance));
+    internal static string Settings_Tab_Window => Get(nameof(Settings_Tab_Window));
+    internal static string Settings_Tab_Chat => Get(nameof(Settings_Tab_Chat));
+    internal static string Settings_Tab_Information => Get(nameof(Settings_Tab_Information));
+
+    // Hellion Chat — General-Tab section headings
+    internal static string Settings_General_Input_Heading => Get(nameof(Settings_General_Input_Heading));
+    internal static string Settings_General_Audio_Heading => Get(nameof(Settings_General_Audio_Heading));
+    internal static string Settings_General_Performance_Heading => Get(nameof(Settings_General_Performance_Heading));
+    internal static string Settings_General_Language_Heading => Get(nameof(Settings_General_Language_Heading));
+
+    // Hellion Chat — Appearance-Tab section headings
+    internal static string Settings_Appearance_Theme_Heading => Get(nameof(Settings_Appearance_Theme_Heading));
+    internal static string Settings_Appearance_Fonts_Heading => Get(nameof(Settings_Appearance_Fonts_Heading));
+    internal static string Settings_Appearance_Colours_Heading => Get(nameof(Settings_Appearance_Colours_Heading));
+    internal static string Settings_Appearance_Timestamps_Heading => Get(nameof(Settings_Appearance_Timestamps_Heading));
+
+    // Hellion Chat — Window-Tab section headings
+    internal static string Settings_Window_Hide_Heading => Get(nameof(Settings_Window_Hide_Heading));
+    internal static string Settings_Window_InactivityHide_Heading => Get(nameof(Settings_Window_InactivityHide_Heading));
+    internal static string Settings_Window_Frame_Heading => Get(nameof(Settings_Window_Frame_Heading));
+    internal static string Settings_Window_Tooltips_Heading => Get(nameof(Settings_Window_Tooltips_Heading));
+
+    // Hellion Chat — Chat-Tab section headings
+    internal static string Settings_Chat_AutoTellTabs_Heading => Get(nameof(Settings_Chat_AutoTellTabs_Heading));
+    internal static string Settings_Chat_Behaviour_Heading => Get(nameof(Settings_Chat_Behaviour_Heading));
+    internal static string Settings_Chat_Preview_Heading => Get(nameof(Settings_Chat_Preview_Heading));
+    internal static string Settings_Chat_Emotes_Heading => Get(nameof(Settings_Chat_Emotes_Heading));
+
+    // Hellion Chat — Database-Tab section headings
+    internal static string Settings_Database_Storage_Heading => Get(nameof(Settings_Database_Storage_Heading));
+    internal static string Settings_Database_Viewer_Heading => Get(nameof(Settings_Database_Viewer_Heading));
+    internal static string Settings_Database_Stats_Heading => Get(nameof(Settings_Database_Stats_Heading));
+
+    // Hellion Chat — Information-Tab section headings
+    internal static string Settings_Information_VersionInfo_Heading => Get(nameof(Settings_Information_VersionInfo_Heading));
+    internal static string Settings_Information_About_Heading => Get(nameof(Settings_Information_About_Heading));
+    internal static string Settings_Information_Changelog_Heading => Get(nameof(Settings_Information_Changelog_Heading));
+
+    // Hellion Chat — Default tab presets (channel-themed)
+    internal static string Tabs_Presets_System => Get(nameof(Tabs_Presets_System));
+    internal static string Tabs_Presets_FreeCompany => Get(nameof(Tabs_Presets_FreeCompany));
+    internal static string Tabs_Presets_Party => Get(nameof(Tabs_Presets_Party));
+    internal static string Tabs_Presets_Beginner => Get(nameof(Tabs_Presets_Beginner));
+    internal static string Tabs_Presets_Linkshell => Get(nameof(Tabs_Presets_Linkshell));
+    internal static string Tabs_Presets_Linkshell_Hint => Get(nameof(Tabs_Presets_Linkshell_Hint));
 }

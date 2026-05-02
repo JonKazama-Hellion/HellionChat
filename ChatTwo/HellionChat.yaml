@@ -40,6 +40,39 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.5.0 — Settings UX polish**
+
+  The settings window has been pulled apart and rebuilt around eight
+  themed tabs instead of the twelve organic ones it grew into.
+  Settings now sit where they belong and the wall-of-text descriptions
+  have been replaced with hover help markers across every section.
+
+  What changed in this release:
+
+  - Twelve tabs collapsed into eight: General, Appearance, Window,
+    Chat, Tabs, Privacy, Database and Information
+  - Theme and font controls moved out of the Privacy tab into
+    Appearance where they belong
+  - Auto-Tell-Tabs settings, message preview and emote controls now
+    live under one Chat tab with collapsible sections
+  - About and Changelog merged into a single Information tab
+  - Disabled settings keep their tooltip help marker visible so you
+    can still read why an option is greyed out
+  - Section headings start collapsed by default, the same pattern
+    used for the Auto-Tell-Tabs preload section in 0.4.0
+
+  Configuration version bumps from 9 to 10 as a wipe migration. The
+  old config file is copied to HellionChat.json.pre-v10-backup before
+  the new defaults are written, so you can restore your previous
+  setup by hand if anything looks off. A one-shot notification on
+  first start explains the reset.
+
+  No changes to message storage, retention sweep, the privacy filter
+  or the export pipeline. Tabs and chat history are untouched by the
+  migration.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.4.0 — Auto-Tell-Tabs**
 
   Auto-Tell-Tabs lets you turn each /tell into a session-only tab

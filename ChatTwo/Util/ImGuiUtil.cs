@@ -225,7 +225,11 @@ internal static class ImGuiUtil
         using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]))
             ImGui.TextUnformatted("(?)");
 
-        if (!ImGui.IsItemHovered())
+        // AllowWhenDisabled — ohne das Flag liefert IsItemHovered bei
+        // ausgegrauten Settings false, der User könnte nicht mehr lesen
+        // warum eine Option nicht aktiv ist. Genau dann braucht er den
+        // Hover-Tooltip aber am dringendsten.
+        if (!ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             return;
 
         using var tooltip = ImRaii.Tooltip();
