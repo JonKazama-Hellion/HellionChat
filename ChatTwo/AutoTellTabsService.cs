@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using ChatTwo.Code;
 using ChatTwo.GameFunctions.Types;
+using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Game.Text;
+using Dalamud.Game.Text.SeStringHandling;
 
 namespace ChatTwo;
 
@@ -251,6 +254,14 @@ internal sealed class AutoTellTabsService : IDisposable
                 senderWorld,
                 preloadCount);
 
+            if (history.Count == 0)
+            {
+                // No prior tells with this player — leave the tab to start
+                // empty so the user does not see a "history loaded" marker
+                // sitting alone above the very first message.
+                return;
+            }
+
             // The history list is already oldest-first, so a plain AddPrune
             // loop produces the chronological order the user expects to see
             // when the tab opens.
@@ -258,14 +269,32 @@ internal sealed class AutoTellTabsService : IDisposable
             {
                 tab.Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
             }
+
+            // Visible separator between the loaded history and the live
+            // tell that triggered this spawn. Goes in last so it sorts
+            // after the historical messages but before the current one.
+            tab.Messages.AddPrune(
+                MakeSystemMarker(HellionStrings.AutoTellTabs_HistorySeparator),
+                MessageManager.MessageDisplayLimit);
         }
         catch (Exception ex)
         {
-            // Non-fatal: the tab still spawns, the user just sees only the
-            // current message. The error logs once with full stack trace
-            // for diagnosis.
+            // Non-fatal: the tab still spawns, but the user gets a visible
+            // notice instead of silently missing history. The error logs
+            // once with full stack trace for diagnosis.
             Plugin.Log.Error(ex, "[AutoTellTabs] History preload failed");
+            tab.Messages.AddPrune(
+                MakeSystemMarker(HellionStrings.AutoTellTabs_HistoryLoadError),
+                MessageManager.MessageDisplayLimit);
         }
+    }
+
+    private static Message MakeSystemMarker(string text)
+    {
+        var seString = new SeStringBuilder().AddText(text).Build();
+        var chunks = ChunkUtil.ToChunks(seString, ChunkSource.Content, ChatType.System).ToList();
+        var code = new ChatCode((XivChatType)ChatType.System, 0, 0);
+        return Message.FakeMessage(chunks, code);
     }
 
     internal void MarkGreeted(Tab tab)

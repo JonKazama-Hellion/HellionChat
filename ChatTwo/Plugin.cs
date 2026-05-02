@@ -184,11 +184,10 @@ public sealed class Plugin : IDalamudPlugin
                 Config.Version = 9;
                 SaveConfig();
 
-                // TODO Task 14: replace with HellionStrings.AutoTellTabs_Migration_Title / _Content
                 Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
                 {
-                    Title = "Auto-Tell-Tabs",
-                    Content = "Auto-Tell-Tabs sind ab Version 0.4.0 standardmäßig aktiv. Du kannst sie im Chat-Tab deaktivieren oder anpassen.",
+                    Title = HellionStrings.AutoTellTabs_Migration_Title,
+                    Content = HellionStrings.AutoTellTabs_Migration_Content,
                     Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
                     InitialDuration = TimeSpan.FromSeconds(20),
                 });

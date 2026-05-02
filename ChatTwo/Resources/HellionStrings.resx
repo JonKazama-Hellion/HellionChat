@@ -366,4 +366,67 @@
   <data name="About_Translators_TreeNode" xml:space="preserve">
     <value>Chat 2 community translators (upstream)</value>
   </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (runtime strings) -->
+  <data name="AutoTellTabs_Migration_Title" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="AutoTellTabs_Migration_Content" xml:space="preserve">
+    <value>Auto-Tell-Tabs are enabled by default starting with version 0.4.0. You can disable or fine-tune them in the Chat tab.</value>
+  </data>
+  <data name="AutoTellTabs_SectionHeader" xml:space="preserve">
+    <value>Active Tells</value>
+  </data>
+  <data name="AutoTellTabs_HistorySeparator" xml:space="preserve">
+    <value>— Earlier conversations —</value>
+  </data>
+  <data name="AutoTellTabs_HistoryLoadError" xml:space="preserve">
+    <value>History could not be loaded.</value>
+  </data>
+  <data name="AutoTellTabs_GreetedTooltip" xml:space="preserve">
+    <value>Marked as greeted. Click to remove the marker.</value>
+  </data>
+  <data name="AutoTellTabs_UnGreetedTooltip" xml:space="preserve">
+    <value>Mark as greeted.</value>
+  </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (Chat settings tab) -->
+  <data name="ChatLog_AutoTellTabs_Section_Title" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Enable_Name" xml:space="preserve">
+    <value>Open a tab automatically for each tell partner</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Enable_Description" xml:space="preserve">
+    <value>When you receive or send a /tell, a temporary tab dedicated to that player is opened automatically. Tabs vanish on logout.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Limit_Name" xml:space="preserve">
+    <value>Maximum number of auto tell tabs</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Limit_Description" xml:space="preserve">
+    <value>When the limit is reached, greeted tabs with the oldest activity are dropped first. The change applies on the next /tell.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Compact_Name" xml:space="preserve">
+    <value>Compact display</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Compact_Description" xml:space="preserve">
+    <value>Show only a thin separator between persistent tabs and auto tell tabs, without the section header.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
+    <value>The number of preloaded tells is configured in the Privacy tab.</value>
+  </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (Privacy settings tab) -->
+  <data name="Privacy_AutoTellTabs_Section_Title" xml:space="preserve">
+    <value>Tell history in auto tabs</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Name" xml:space="preserve">
+    <value>Number of preloaded tells</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Description" xml:space="preserve">
+    <value>How many earlier tell messages are loaded from the database when an auto tell tab is opened. 0 disables the preload.</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Hint" xml:space="preserve">
+    <value>Only takes effect when auto tell tabs are enabled in the Chat tab.</value>
+  </data>
 </root>
