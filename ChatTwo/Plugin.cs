@@ -241,7 +241,7 @@ public sealed class Plugin : IDalamudPlugin
             Interface.UiBuilder.OpenMainUi += OpenMainUi;
 
             if (Config.ShowEmotes)
-                Task.Run(EmoteCache.LoadData);
+                _ = EmoteCache.LoadData(); // Fire-and-forget intentional, exceptions are caught inside
 
             #if !DEBUG
             // Avoid 300ms hitch when sending first message by preloading the

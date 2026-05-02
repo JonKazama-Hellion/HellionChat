@@ -66,7 +66,7 @@ public static class EmoteCache
 
     public static string[] SortedCodeArray = [];
 
-    public static async void LoadData()
+    public static async Task LoadData()
     {
         if (State is not LoadingState.Unloaded)
             return;
