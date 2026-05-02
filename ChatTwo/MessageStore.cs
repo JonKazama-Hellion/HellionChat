@@ -724,7 +724,7 @@ internal class MessageStore : IDisposable
         cmd.Parameters.AddWithValue("$After", ((DateTimeOffset) after).ToUnixTimeMilliseconds());
         cmd.Parameters.AddWithValue("$Before", ((DateTimeOffset) before).ToUnixTimeMilliseconds());
         cmd.Parameters.AddWithValue("$Offset", DbViewer.RowPerPage * page);
-        cmd.Parameters.AddWithValue("OffsetCount", DbViewer.RowPerPage);
+        cmd.Parameters.AddWithValue("$OffsetCount", DbViewer.RowPerPage);
 
         return new MessageEnumerator(cmd.ExecuteReader());
     }

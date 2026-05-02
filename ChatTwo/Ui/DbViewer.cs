@@ -22,7 +22,7 @@ namespace ChatTwo.Ui;
 
 public class DbViewer : Window
 {
-    public const float RowPerPage = 1000.0f;
+    public const int RowPerPage = 1000;
 
     private readonly Plugin Plugin;
 
@@ -88,7 +88,7 @@ public class DbViewer : Window
 
     public override void Draw()
     {
-        var totalPages = (int)Math.Ceiling(Count / RowPerPage);
+        var totalPages = (int)Math.Ceiling((double)Count / RowPerPage);
         if (totalPages < 1)
             totalPages = 1;
 
