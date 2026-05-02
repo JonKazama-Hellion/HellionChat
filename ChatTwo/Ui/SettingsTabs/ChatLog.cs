@@ -146,6 +146,9 @@ internal sealed class ChatLog : ISettingsTab
             ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_Compact_Name, ref Mutable.AutoTellTabsCompactDisplay);
             ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_Compact_Description);
 
+            ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_GreetedToggle_Name, ref Mutable.AutoTellTabsShowGreetedToggle);
+            ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_GreetedToggle_Description);
+
             ImGui.Spacing();
             ImGuiUtil.HelpText(HellionStrings.ChatLog_AutoTellTabs_PreloadHint);
 

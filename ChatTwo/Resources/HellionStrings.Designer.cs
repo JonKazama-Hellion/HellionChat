@@ -182,6 +182,8 @@ internal class HellionStrings
     internal static string ChatLog_AutoTellTabs_Limit_Description => Get(nameof(ChatLog_AutoTellTabs_Limit_Description));
     internal static string ChatLog_AutoTellTabs_Compact_Name => Get(nameof(ChatLog_AutoTellTabs_Compact_Name));
     internal static string ChatLog_AutoTellTabs_Compact_Description => Get(nameof(ChatLog_AutoTellTabs_Compact_Description));
+    internal static string ChatLog_AutoTellTabs_GreetedToggle_Name => Get(nameof(ChatLog_AutoTellTabs_GreetedToggle_Name));
+    internal static string ChatLog_AutoTellTabs_GreetedToggle_Description => Get(nameof(ChatLog_AutoTellTabs_GreetedToggle_Description));
     internal static string ChatLog_AutoTellTabs_PreloadHint => Get(nameof(ChatLog_AutoTellTabs_PreloadHint));
     internal static string ChatLog_AutoTellTabs_ConflictHint => Get(nameof(ChatLog_AutoTellTabs_ConflictHint));
 

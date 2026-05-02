@@ -95,6 +95,11 @@ public class Configuration : IPluginConfiguration
     // Number of prior tells to preload from the message store when an
     // auto tell tab is spawned. Range 0–100; 0 disables preload.
     public int AutoTellTabsHistoryPreload = 20;
+    // Show the greeter "marked-as-greeted" toggle button next to each
+    // temp tab and dim the tab name when set. Off by default because the
+    // workflow is specific to club-greeter use cases — most users just
+    // want the auto tabs themselves without the extra UI affordance.
+    public bool AutoTellTabsShowGreetedToggle;
 
     public int GetRetentionDays(ChatType type)
     {
@@ -284,6 +289,7 @@ public class Configuration : IPluginConfiguration
         AutoTellTabsLimit = other.AutoTellTabsLimit;
         AutoTellTabsCompactDisplay = other.AutoTellTabsCompactDisplay;
         AutoTellTabsHistoryPreload = other.AutoTellTabsHistoryPreload;
+        AutoTellTabsShowGreetedToggle = other.AutoTellTabsShowGreetedToggle;
     }
 }
 

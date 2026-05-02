@@ -412,6 +412,12 @@
   <data name="ChatLog_AutoTellTabs_Compact_Description" xml:space="preserve">
     <value>Zeigt nur einen dünnen Separator zwischen normalen Tabs und Auto-Tell-Tabs, ohne Sektions-Header.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Name" xml:space="preserve">
+    <value>„Als begrüßt markieren"-Button anzeigen</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Description" xml:space="preserve">
+    <value>Fügt neben jedem Auto-Tell-Tab einen Klick-Button hinzu, um einen Gesprächspartner als bereits begrüßt zu markieren — der Tab-Name wird dann gedimmt. Nützlich für Club-Greeter, die parallel viele Konversationen führen. Standardmäßig aus.</value>
+  </data>
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>Die Anzahl der vorgeladenen Tells lässt sich im Datenschutz-Tab einstellen.</value>
   </data>

@@ -1329,7 +1329,9 @@ public sealed class ChatLogWindow : Window
                     var selectableLabel = $"{tab.Name}{unread}###log-tab-{tabI}";
                     var isCurrentTab = Plugin.LastTab == tabI || Plugin.WantedTab == tabI;
 
-                    if (tab.IsTempTab)
+                    var showGreetedAffordance = tab.IsTempTab && Plugin.Config.AutoTellTabsShowGreetedToggle;
+
+                    if (showGreetedAffordance)
                     {
                         // Greeted toggle sits left of the selectable so the
                         // click areas stay separate. The icon also doubles
@@ -1360,7 +1362,7 @@ public sealed class ChatLogWindow : Window
                     }
 
                     bool clicked;
-                    if (tab.IsTempTab && tab.IsGreeted)
+                    if (showGreetedAffordance && tab.IsGreeted)
                     {
                         // Dim the tab name once the user marked the partner
                         // as greeted, so a glance at the sidebar tells them

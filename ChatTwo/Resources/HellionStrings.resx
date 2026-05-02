@@ -412,6 +412,12 @@
   <data name="ChatLog_AutoTellTabs_Compact_Description" xml:space="preserve">
     <value>Show only a thin separator between persistent tabs and auto tell tabs, without the section header.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Name" xml:space="preserve">
+    <value>Show "mark as greeted" button</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Description" xml:space="preserve">
+    <value>Adds a click-to-toggle button next to each auto tell tab to mark a partner as already greeted, dimming the tab name when set. Useful for club greeters tracking many parallel conversations; off by default.</value>
+  </data>
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>The number of preloaded tells is configured in the Privacy tab.</value>
   </data>
