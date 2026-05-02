@@ -1,0 +1,93 @@
+name: CodeQL
+
+# Replaces the GitHub default-setup CodeQL scan. The default setup runs
+# without resolving the Dalamud assemblies (they live in a user-AppData
+# path) and reports "Low C# analysis quality" because call-target
+# resolution sits at ~64%. This workflow downloads the Dalamud staging
+# distribution before the build, runs a manual dotnet build, and then
+# lets CodeQL analyse the fully-resolved compilation. Quality climbs
+# back above the 85% thresholds.
+#
+# This workflow only consumes trusted inputs: the tag/branch ref via
+# the standard checkout action, and the Dalamud distribution URL which
+# is pinned to a goatcorp-controlled GitHub Pages target. No user-
+# controlled event payload (issue title, PR body, commit message) flows
+# into a run-step.
+#
+# Disable the default setup in the repo before this workflow lands:
+# Settings -> Code security -> Code scanning -> "CodeQL analysis" tile
+# -> Switch to advanced.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '17 6 * * 1'
+
+permissions:
+  actions: read
+  contents: read
+  security-events: write
+
+jobs:
+  analyze-csharp:
+    name: Analyze (csharp)
+    runs-on: windows-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud staging
+        shell: pwsh
+        run: |
+          $hooks = Join-Path $env:APPDATA "XIVLauncher\addon\Hooks\dev"
+          New-Item -ItemType Directory -Force -Path $hooks | Out-Null
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile dalamud.zip
+          Expand-Archive -Force -Path dalamud.zip -DestinationPath $hooks
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: csharp
+          build-mode: manual
+          queries: security-extended
+
+      - name: Restore
+        run: dotnet restore ChatTwo/ChatTwo.csproj
+
+      - name: Build (Release)
+        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release --no-restore
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:csharp
+
+  analyze-actions:
+    name: Analyze (actions)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: actions
+          build-mode: none
+
+      - name: Perform CodeQL analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: /language:actions
