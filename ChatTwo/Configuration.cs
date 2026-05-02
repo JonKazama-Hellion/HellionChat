@@ -361,39 +361,10 @@ public class Tab
         // here, otherwise all temp tabs would mirror "Tell Exclusive".
         if (IsTempTab && TellTarget?.IsSet() == true)
         {
-            return MatchesTempTabSender(message);
+            return ChunkUtil.MatchesSender(message, TellTarget.Name, TellTarget.World);
         }
 
         return true;
-    }
-
-    private bool MatchesTempTabSender(Message message)
-    {
-        var senderPayload = ExtractPlayerPayload(message.Sender);
-        if (senderPayload == null)
-        {
-            senderPayload = ExtractPlayerPayload(message.Content);
-        }
-        if (senderPayload == null)
-        {
-            return false;
-        }
-
-        var nameMatches = string.Equals(senderPayload.PlayerName, TellTarget.Name, StringComparison.OrdinalIgnoreCase);
-        var worldMatches = senderPayload.World.RowId == TellTarget.World;
-        return nameMatches && worldMatches;
-    }
-
-    private static PlayerPayload? ExtractPlayerPayload(IReadOnlyList<Chunk> chunks)
-    {
-        foreach (var chunk in chunks)
-        {
-            if (chunk.Link is PlayerPayload pp)
-            {
-                return pp;
-            }
-        }
-        return null;
     }
 
     public void AddMessage(Message message, bool unread = true)

@@ -603,6 +603,84 @@ internal class MessageStore : IDisposable
     }
 
     /// <summary>
+    /// Hellion Chat — Auto-Tell-Tabs history preload.
+    ///
+    /// Returns up to <paramref name="limit"/> tells exchanged with the named
+    /// player, oldest-first, ready to be added to a freshly spawned auto
+    /// tell tab. The Sender column is a serialized chunk blob, so SQL on its
+    /// own cannot filter by player identity; we narrow with SQL on Receiver
+    /// + ChatType (cheap, indexed) and let the client do the final
+    /// PlayerPayload comparison on the result set.
+    ///
+    /// <paramref name="sqlScanLimit"/> caps how many recent tells we scan
+    /// before giving up. 500 covers around 10 days for an active greeter
+    /// and stays well under the 20 ms budget required to keep the spawn on
+    /// the message-processing worker thread.
+    /// </summary>
+    internal IReadOnlyList<Message> GetTellHistoryWithSender(
+        ulong receiver,
+        string senderName,
+        uint senderWorld,
+        int limit,
+        int sqlScanLimit = 500)
+    {
+        if (limit <= 0)
+        {
+            return [];
+        }
+
+        using var cmd = Connection.CreateCommand();
+        cmd.CommandText = @"
+            SELECT
+                Id,
+                Receiver,
+                ContentId,
+                Date,
+                ChatType,
+                SourceKind,
+                TargetKind,
+                Sender,
+                Content,
+                SenderSource,
+                ContentSource,
+                ExtraChatChannel
+            FROM messages
+            WHERE deleted = false
+              AND Receiver = $Receiver
+              AND ChatType IN ($TellIncoming, $TellOutgoing)
+            ORDER BY Date DESC
+            LIMIT $ScanLimit;
+        ";
+        cmd.CommandTimeout = 60;
+        cmd.Parameters.AddWithValue("$Receiver", receiver);
+        cmd.Parameters.AddWithValue("$TellIncoming", (int)ChatType.TellIncoming);
+        cmd.Parameters.AddWithValue("$TellOutgoing", (int)ChatType.TellOutgoing);
+        cmd.Parameters.AddWithValue("$ScanLimit", sqlScanLimit);
+
+        var collected = new List<Message>();
+        using var enumerator = new MessageEnumerator(cmd.ExecuteReader());
+        foreach (var message in enumerator)
+        {
+            if (!ChunkUtil.MatchesSender(message, senderName, senderWorld))
+            {
+                continue;
+            }
+
+            collected.Add(message);
+            if (collected.Count >= limit)
+            {
+                break;
+            }
+        }
+
+        // SQL was DESC (newest-first) so we hit the limit on the most
+        // recent matching tells. Reverse to oldest-first for chronological
+        // display in the tab.
+        collected.Reverse();
+        return collected;
+    }
+
+    /// <summary>
     /// Marks a message as deleted so it won't get returned in queries.
     /// </summary>
     internal void DeleteMessage(Guid id)
