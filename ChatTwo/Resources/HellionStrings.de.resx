@@ -528,6 +528,9 @@
   </data>
 
   <!-- Hellion Chat — Default-Tab-Presets (kanalspezifisch) -->
+  <data name="Tabs_Presets_System" xml:space="preserve">
+    <value>System</value>
+  </data>
   <data name="Tabs_Presets_FreeCompany" xml:space="preserve">
     <value>Free Company</value>
   </data>

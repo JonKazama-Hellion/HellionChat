@@ -153,13 +153,15 @@ public sealed class Plugin : IDalamudPlugin
             }
 
             // Hellion default tab layout for first-run and v10-wipe.
-            // General-catch-all + FC + Party + Linkshell + Tells matches the
-            // channel set the average raider uses; the Beginner tab only
-            // appears when the user has the Novice Network enabled in Audio
-            // & Notifications, otherwise it would just sit empty.
+            // General catches player chat plus active gameplay events; the
+            // System tab takes the technical noise so it does not bury real
+            // conversation. Beginner tab only appears when the Novice
+            // Network is enabled in Audio and Notifications, otherwise it
+            // would just sit empty.
             if (Config.Tabs.Count == 0)
             {
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
+                Config.Tabs.Add(TabsUtil.HellionSystem);
                 Config.Tabs.Add(TabsUtil.HellionFreeCompany);
                 Config.Tabs.Add(TabsUtil.HellionParty);
                 if (Config.ShowNoviceNetwork)

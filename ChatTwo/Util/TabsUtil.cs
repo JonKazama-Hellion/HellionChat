@@ -14,22 +14,17 @@ public static class TabsUtil
         return channels;
     }
 
-    // Hellion-tuned General preset. Differs from upstream Vanilla:
-    // Tells (own tab), emotes, novice network and the FC/PvP announcement
-    // streams move into their dedicated themed tabs so the General tab
-    // is the public-chat catch-all that the maintainer actually runs in
-    // production. NpcDialogue stays here because the user reads it
-    // alongside system messages instead of in a separate Event tab.
+    // Hellion-tuned General preset. The pure player-talk catch-all plus
+    // the active-gameplay event streams (loot, crafting, gathering, NPC
+    // dialogue, party-finder pings). Pure technical noise (System, Error,
+    // Login/Logout spam, retainer sales, alarms, sign messages) lives in
+    // the dedicated System tab so it doesn't bury actual conversation.
     public static Tab VanillaGeneral => new()
     {
         Name = Language.Tabs_Presets_General,
         SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
         {
-            // Special
-            [ChatType.Debug] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Urgent] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Notice] = (ChatSourceExt.All, ChatSourceExt.All),
-            // Chat
+            // Player chat
             [ChatType.Say] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Yell] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Shout] = (ChatSourceExt.All, ChatSourceExt.All),
@@ -54,25 +49,13 @@ public static class TabsUtil
             [ChatType.Linkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Linkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Linkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
-            // Announcements
-            [ChatType.System] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Error] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Echo] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.NpcAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            // Active-gameplay events
             [ChatType.NpcDialogue] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.FreeCompanyLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.PvpTeamLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.RetainerSale] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Progress] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Crafting] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Gathering] = (ChatSource.LocalPlayer, ChatSource.LocalPlayer),
             [ChatType.PeriodicRecruitmentNotification] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.RandomNumber] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Orchestrion] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.MessageBook] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Alarm] = (ChatSourceExt.All, ChatSourceExt.All),
         }
     };
 
@@ -137,6 +120,33 @@ public static class TabsUtil
             [ChatType.NoviceNetworkSystem] = (ChatSourceExt.All, ChatSourceExt.All),
         },
         Channel = InputChannel.NoviceNetwork,
+    };
+
+    public static Tab HellionSystem => new()
+    {
+        Name = HellionStrings.Tabs_Presets_System,
+        SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+        {
+            [ChatType.Debug] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Urgent] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Notice] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.System] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Error] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Echo] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.GatheringSystem] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.NoviceNetworkSystem] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.NpcAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.FreeCompanyLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PvpTeamLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.RetainerSale] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Progress] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.RandomNumber] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Orchestrion] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.MessageBook] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Alarm] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Sign] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.GlamourNotifications] = (ChatSourceExt.All, ChatSourceExt.All),
+        },
     };
 
     public static Tab HellionLinkshell => new()

@@ -233,6 +233,7 @@ internal class HellionStrings
     internal static string Settings_Information_Changelog_Heading => Get(nameof(Settings_Information_Changelog_Heading));
 
     // Hellion Chat — Default tab presets (channel-themed)
+    internal static string Tabs_Presets_System => Get(nameof(Tabs_Presets_System));
     internal static string Tabs_Presets_FreeCompany => Get(nameof(Tabs_Presets_FreeCompany));
     internal static string Tabs_Presets_Party => Get(nameof(Tabs_Presets_Party));
     internal static string Tabs_Presets_Beginner => Get(nameof(Tabs_Presets_Beginner));
