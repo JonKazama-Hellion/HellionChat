@@ -149,7 +149,30 @@ internal sealed class AutoTellTabsService : IDisposable
 
     private void DropOldestTempTab()
     {
-        // Stub — implemented in Task 9.
+        // Greeted tabs are dropped before un-greeted ones (the user said
+        // "I'm done with that conversation"), and within each bucket we
+        // pick the oldest LastActivity. This protects active conversations
+        // and unfinished greetings while still freeing up a slot.
+        var victim = Plugin.Config.Tabs
+            .Select((tab, idx) => (Tab: tab, Index: idx))
+            .Where(t => t.Tab.IsTempTab)
+            .OrderByDescending(t => t.Tab.IsGreeted)
+            .ThenBy(t => t.Tab.LastActivity)
+            .FirstOrDefault();
+
+        if (victim.Tab == null)
+        {
+            return;
+        }
+
+        Plugin.Config.Tabs.RemoveAt(victim.Index);
+
+        // Re-anchor the active tab so the user does not silently end up on
+        // a different conversation when their tab gets dropped or shifted.
+        if (victim.Index <= _plugin.LastTab)
+        {
+            _plugin.WantedTab = 0;
+        }
     }
 
     private void SpawnTempTab((string Name, uint World) partner, Message currentMessage)
