@@ -1,6 +1,6 @@
 # Hellion Chat
 
-**Version 0.2.0** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.3.0** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
@@ -231,7 +231,7 @@ Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig 
 
 ## Projektstatus
 
-**Version 0.2.0** | Stand: Mai 2026
+**Version 0.3.0** | Stand: Mai 2026
 
 Alle Bootstrap-Phasen abgeschlossen:
 
@@ -244,11 +244,13 @@ Alle Bootstrap-Phasen abgeschlossen:
 - [x] About-Tab im Hellion-Branding mit License + Disclaimer
 - [x] AI-Disclosure dokumentiert (Pair-Klassifikation)
 - [x] Webinterface entfernt (Phase 1.5, Audit-Konsequenz aus 2026-05-02)
+- [x] Audit-Hardening Phase 2 (Path-Traversal, Retention-Race, DbViewer-Konsistenz, Privacy-Filter-Help-Text)
+- [x] Slash-Commands auf `/hellion`-Familie umbenannt
+- [x] Theme auf Hellion-Online-Media-Brand-Palette aligned (Arctic Cyan + Ember Orange)
+- [x] About-Tab vollständig lokalisiert (EN + DE) mit Mission-Statement und neutraler Tonart
 
-Phase 2 (offen, kein festes Datum):
+Phase 3 (offen, kein festes Datum):
 
-- [ ] EmoteCache Path-Traversal-Hardening (`Path.GetFullPath` + StartsWith-Check)
-- [ ] Race-Hardening für `RetentionLastRunAt` (CompareExchange / Lock)
 - [ ] MySQL/MariaDB-Backend mit Drei-Stufen-Bestätigung
 - [ ] PostgreSQL-Backend
 - [ ] Encryption für sensible Channels (AES-256, lokaler Key)

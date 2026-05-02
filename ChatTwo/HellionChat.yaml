@@ -40,6 +40,67 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.3.0 — Audit hardening, brand sweep and rebrand of slash commands**
+
+  This release closes the remaining audit follow-ups from the
+  0.2.0 cleanup and finishes turning Hellion Chat into a properly
+  branded fork rather than a Chat 2 with a different name.
+
+  Slash commands have been renamed across the board so they no
+  longer collide with the upstream plugin and tell you which
+  plugin owns them at a glance:
+
+  - /chat2          becomes /hellion
+  - /chat2Viewer    becomes /hellionView
+  - /clearlog2      becomes /clearhellion
+  - /chat2Debugger  becomes /hellionDebugger (internal)
+  - /chat2SeString  becomes /hellionSeString (internal)
+
+  This is a breaking change for anyone with macros bound to the
+  old command names. The upstream Chat 2 commands keep working
+  if you also have that plugin installed.
+
+  Privacy and storage hardening based on the post-0.2.0 audit:
+
+  - Privacy filter master switch now states explicitly that the
+    filter only governs storage, not the live chat log
+  - Emote cache refuses to write outside its own directory if a
+    third-party API ever returns a path that escapes
+  - Retention sweep is serialised so the 24h auto-sweep and the
+    manual button cannot launch in parallel and race for the
+    SQLite connection
+  - DbViewer paging uses an int constant and the matching SQL
+    parameter name (the upstream code passed a float and a name
+    without the parameter prefix; both worked in practice but
+    were inconsistent)
+
+  Visual identity now matches the Hellion Online Media website:
+
+  - Theme palette switched to Arctic Cyan plus Ember Orange,
+    matching the website's BRANDING.md tokens
+  - Active tabs and window title bars use a brand-color-dark teal
+    variation as identity colour, replacing the previous slate
+    violet that did not appear in the brand
+  - Resize grips and scrollbar grabs picked up Ember Orange
+    instead of industrial amber on hover and active states
+
+  About tab rewritten and properly localised:
+
+  - New "Why this fork exists" block sets out the mission in
+    neutral terms, framing Chat 2's full-history default as the
+    right one for most users while explaining the narrower
+    default footprint this fork chose
+  - All Hellion-specific About copy now lives in HellionStrings
+    in EN and DE, so German users see the Hellion sections in
+    German rather than the upstream English fallback
+  - Webinterface absence is described as a focus mismatch
+    (different use case, substantial rebuild) rather than as
+    a security issue with the upstream code
+  - Translator list at the bottom of the About tab is reachable
+    again on smaller settings windows
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.2.0 — Webinterface removed**
 
   The upstream webinterface has been removed in its entirety. It
