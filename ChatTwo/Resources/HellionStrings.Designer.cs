@@ -203,4 +203,10 @@ internal class HellionStrings
     internal static string Settings_Tab_Window => Get(nameof(Settings_Tab_Window));
     internal static string Settings_Tab_Chat => Get(nameof(Settings_Tab_Chat));
     internal static string Settings_Tab_Information => Get(nameof(Settings_Tab_Information));
+
+    // Hellion Chat — General-Tab section headings
+    internal static string Settings_General_Input_Heading => Get(nameof(Settings_General_Input_Heading));
+    internal static string Settings_General_Audio_Heading => Get(nameof(Settings_General_Audio_Heading));
+    internal static string Settings_General_Performance_Heading => Get(nameof(Settings_General_Performance_Heading));
+    internal static string Settings_General_Language_Heading => Get(nameof(Settings_General_Language_Heading));
 }

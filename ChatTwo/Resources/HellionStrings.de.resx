@@ -463,4 +463,18 @@
   <data name="Settings_Tab_Information" xml:space="preserve">
     <value>Über</value>
   </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Allgemein-Tabs -->
+  <data name="Settings_General_Input_Heading" xml:space="preserve">
+    <value>Eingabe</value>
+  </data>
+  <data name="Settings_General_Audio_Heading" xml:space="preserve">
+    <value>Audio &amp; Benachrichtigungen</value>
+  </data>
+  <data name="Settings_General_Performance_Heading" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="Settings_General_Language_Heading" xml:space="preserve">
+    <value>Sprache &amp; Eingabe-Hilfen</value>
+  </data>
 </root>
