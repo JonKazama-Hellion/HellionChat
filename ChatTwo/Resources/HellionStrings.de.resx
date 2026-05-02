@@ -491,4 +491,18 @@
   <data name="Settings_Appearance_Timestamps_Heading" xml:space="preserve">
     <value>Zeitstempel</value>
   </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Fenster-Tabs -->
+  <data name="Settings_Window_Hide_Heading" xml:space="preserve">
+    <value>Verstecken</value>
+  </data>
+  <data name="Settings_Window_InactivityHide_Heading" xml:space="preserve">
+    <value>Inaktivitäts-Verstecken</value>
+  </data>
+  <data name="Settings_Window_Frame_Heading" xml:space="preserve">
+    <value>Fenster-Rahmen</value>
+  </data>
+  <data name="Settings_Window_Tooltips_Heading" xml:space="preserve">
+    <value>Tooltips</value>
+  </data>
 </root>
