@@ -54,7 +54,7 @@ jobs:
           "path=$($zip.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
       - name: Attach to GitHub release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: ${{ steps.locate.outputs.path }}
           fail_on_unmatched_files: true
