@@ -109,21 +109,18 @@ internal sealed class About : ISettingsTab
 
         ImGui.Spacing();
 
-        var height = ImGui.GetContentRegionAvail().Y - ImGui.CalcTextSize("A").Y - ImGui.GetStyle().ItemSpacing.Y * 2;
-        using (var aboutChild = ImRaii.Child("about", new Vector2(-1, height)))
+        // The translator list lives at the bottom of the About tab. Render
+        // it directly inside the parent scroll container instead of a
+        // fixed-height child — the previous "remaining space" calculation
+        // shrank to zero (or below) once the About copy grew, which made
+        // the section unreachable on smaller settings windows.
+        using (var treeNode = ImRaii.TreeNode(HellionStrings.About_Translators_TreeNode))
         {
-            if (aboutChild)
+            if (treeNode)
             {
-                using var treeNode = ImRaii.TreeNode(HellionStrings.About_Translators_TreeNode);
-                if (treeNode)
-                {
-                    using var translatorChild = ImRaii.Child("translators");
-                    if (translatorChild)
-                    {
-                        foreach (var translator in Translators)
-                            ImGui.TextUnformatted(translator);
-                    }
-                }
+                using var indent = ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false);
+                foreach (var translator in Translators)
+                    ImGui.TextUnformatted(translator);
             }
         }
         ImGui.Spacing();
