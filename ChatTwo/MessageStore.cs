@@ -346,31 +346,44 @@ internal class MessageStore : IDisposable
                 throw new ArgumentOutOfRangeException(nameof(chatTypeDaysMap), "Negative retention is not allowed.");
 
         var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var clauses = new List<string>();
-        foreach (var (type, days) in chatTypeDaysMap)
-        {
-            var cutoff = nowMs - days * 86400000L;
-            clauses.Add($"(ChatType = {type} AND Date < {cutoff})");
-        }
 
-        // Catch-all for channels without an explicit override. "0" is treated
-        // as "do not delete by default" — without an explicit user override,
-        // unmapped channels stay forever instead of getting wiped immediately.
-        if (defaultDays > 0)
-        {
-            var cutoff = nowMs - defaultDays * 86400000L;
-            var explicitTypes = chatTypeDaysMap.Count > 0
-                ? string.Join(",", chatTypeDaysMap.Keys)
-                : "-1"; // empty list would produce invalid SQL
-            clauses.Add($"(ChatType NOT IN ({explicitTypes}) AND Date < {cutoff})");
-        }
-
-        if (clauses.Count == 0)
+        if (chatTypeDaysMap.Count == 0 && defaultDays <= 0)
             return 0;
 
         long deleted;
         using (var cmd = Connection.CreateCommand())
         {
+            var clauses = new List<string>();
+            var index = 0;
+            foreach (var (type, days) in chatTypeDaysMap)
+            {
+                var cutoff = nowMs - days * 86400000L;
+                var typeParam = $"$type{index}";
+                var cutoffParam = $"$cutoff{index}";
+                cmd.Parameters.AddWithValue(typeParam, type);
+                cmd.Parameters.AddWithValue(cutoffParam, cutoff);
+                clauses.Add($"(ChatType = {typeParam} AND Date < {cutoffParam})");
+                index++;
+            }
+
+            // Catch-all for channels without an explicit override. "0" is
+            // treated as "do not delete by default" — without an explicit
+            // user override, unmapped channels stay forever instead of
+            // getting wiped immediately.
+            if (defaultDays > 0)
+            {
+                var defaultCutoff = nowMs - defaultDays * 86400000L;
+                cmd.Parameters.AddWithValue("$defaultCutoff", defaultCutoff);
+
+                var explicitPlaceholders = chatTypeDaysMap.Count > 0
+                    ? BindIntList(cmd, "explicit", chatTypeDaysMap.Keys)
+                    : "-1"; // empty list would produce invalid SQL
+                clauses.Add($"(ChatType NOT IN ({explicitPlaceholders}) AND Date < $defaultCutoff)");
+            }
+
+            if (clauses.Count == 0)
+                return 0;
+
             cmd.CommandText = $"DELETE FROM messages WHERE {string.Join(" OR ", clauses)};";
             cmd.CommandTimeout = 600;
             deleted = cmd.ExecuteNonQuery();
