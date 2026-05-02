@@ -2,10 +2,13 @@ name: Hellion Chat
 author: JonKazama-Hellion
 punchline: Chat 2 with privacy controls aligned to EU, US and JP rules
 description: |-
-  Hellion Chat is built on top of Chat 2 — every Chat 2 feature, command
-  and shortcut you already know works the same. The /chat2 command, tabs,
-  channel filters, RGB colours, emotes, screenshot mode, IPC integration
-  and the chat replacement window itself are all unchanged.
+  Hellion Chat is built on top of Chat 2 with one removal and a stack
+  of privacy controls on top. The /chat2 command, tabs, channel
+  filters, RGB colours, emotes, screenshot mode, IPC integration and
+  the chat replacement window itself work the same. The optional
+  webinterface that Chat 2 ships is intentionally not part of this
+  fork because it could not be hardened to the privacy guarantees
+  Hellion Chat makes by default.
 
   On top of that, Hellion Chat adds privacy and data-handling controls
   designed to align with the modern data protection rules that apply
@@ -37,6 +40,44 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.2.0 — Webinterface removed**
+
+  Following an internal security and consistency audit the upstream
+  webinterface has been removed in its entirety. Hardening it to the
+  privacy guarantees Hellion Chat makes by default would have meant
+  rewriting the auth flow (the upstream code uses a five-digit
+  numeric code from System.Random), changing the default bind address
+  (currently every interface), reworking cookie handling and adding
+  the privacy filter to the live message stream that the webinterface
+  was broadcasting around it. The cumulative cost did not match the
+  niche use case for a fork that wants less network surface, not more.
+
+  What changed in this release:
+
+  - Settings tab "Webinterface" is gone, the corresponding
+    Configuration fields (WebinterfaceEnabled / AutoStart / Password /
+    Port / AuthStore / MaxLinesToSend) are dropped and stale entries
+    fall out of the JSON on the next save automatically
+  - The whole ChatTwo/Http tree, the bundled Svelte frontend in
+    websiteBuild.zip and the WebinterfaceUtil helper are deleted
+  - Watson.Lite (the HTTP server) and Newtonsoft.Json (only used by
+    the webinterface JSON wire format) are removed from the
+    package references
+  - DbViewer's "Chat2 JSON Export" button is dropped because it
+    serialised the database into the webinterface message protocol;
+    the Privacy tab's MessageExporter (Markdown, JSON, CSV with
+    channel and date filters) covers the same ground without the
+    proprietary shape
+  - About tab notes the absence so users coming from Chat 2 do not
+    look for it
+  - Configuration version bumps from 7 to 8 with a one-shot
+    notification (EN + DE)
+
+  No changes to the privacy filter, retention sweep, first-run wizard
+  or export pipeline. Existing chat history is preserved.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.1.2 — About tab rebrand, DBViewer polish**
 
   - About tab now shows Hellion-specific maintainer, license, EU/US/JP
