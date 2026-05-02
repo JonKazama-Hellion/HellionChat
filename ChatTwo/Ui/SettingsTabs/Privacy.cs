@@ -104,6 +104,8 @@ internal sealed class Privacy : ISettingsTab
             HellionStrings.Privacy_FilterEnabled_Name,
             HellionStrings.Privacy_FilterEnabled_Description);
 
+        ImGuiUtil.HelpText(HellionStrings.Privacy_FilterEnabled_StorageOnly_Help);
+
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
