@@ -168,10 +168,19 @@ public static class EmoteCache
 
         internal async Task<byte[]> LoadAsync(Emote emote)
         {
-            var dir = Path.Join(Plugin.Interface.ConfigDirectory.FullName, "EmoteCacheV1");
+            // BetterTTV-supplied Id and ImageType are interpolated straight
+            // into the filename. HTTPS protects the wire, but a compromised
+            // upstream could still hand us "../foo" and write into the
+            // pluginConfigs root (or worse). Resolve the candidate path and
+            // refuse anything that escapes the cache directory.
+            var dir = Path.GetFullPath(Path.Join(Plugin.Interface.ConfigDirectory.FullName, "EmoteCacheV1"));
             Directory.CreateDirectory(dir);
 
-            var filePath = Path.Join(dir, $"{emote.Id}.{emote.ImageType}");
+            var dirPrefix = dir.EndsWith(Path.DirectorySeparatorChar) ? dir : dir + Path.DirectorySeparatorChar;
+            var filePath = Path.GetFullPath(Path.Join(dir, $"{emote.Id}.{emote.ImageType}"));
+            if (!filePath.StartsWith(dirPrefix, StringComparison.Ordinal))
+                throw new InvalidOperationException($"Emote path escapes cache directory: id={emote.Id}, type={emote.ImageType}");
+
             if (File.Exists(filePath))
             {
                 RawData = await File.ReadAllBytesAsync(filePath);
