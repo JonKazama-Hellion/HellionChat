@@ -528,9 +528,9 @@
     <value>Storage</value>
   </data>
   <data name="Settings_Database_Viewer_Heading" xml:space="preserve">
-    <value>DB Viewer</value>
+    <value>Overview</value>
   </data>
   <data name="Settings_Database_Stats_Heading" xml:space="preserve">
-    <value>Statistics</value>
+    <value>Maintenance</value>
   </data>
 </root>

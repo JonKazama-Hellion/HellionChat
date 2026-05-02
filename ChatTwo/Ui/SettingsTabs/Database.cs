@@ -105,55 +105,51 @@ internal sealed class Database : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            ImGui.TextUnformatted(Language.Options_Database_Metadata_Heading);
-            using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+            // Refresh the database size and message count every 5 seconds to avoid
+            // constant stat calls and spamming the database.
+            if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
             {
-                // Refresh the database size and message count every 5 seconds to avoid
-                // constant stat calls and spamming the database.
-                if (DatabaseLastRefreshTicks + 5 * 1000 < Environment.TickCount64)
-                {
-                    DatabaseSize = Plugin.MessageManager.Store.DatabaseSize();
-                    DatabaseLogSize = Plugin.MessageManager.Store.DatabaseLogSize();
-                    DatabaseMessageCount = Plugin.MessageManager.Store.MessageCount();
-                    DatabaseLastRefreshTicks = Environment.TickCount64;
-                }
+                DatabaseSize = Plugin.MessageManager.Store.DatabaseSize();
+                DatabaseLogSize = Plugin.MessageManager.Store.DatabaseLogSize();
+                DatabaseMessageCount = Plugin.MessageManager.Store.MessageCount();
+                DatabaseLastRefreshTicks = Environment.TickCount64;
+            }
 
-                // Copy the directory path instead of the file path so people can
-                // paste it into their file explorer.
-                ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, MessageManager.DatabasePath()));
-                if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
-                {
-                    var path = Path.GetDirectoryName(MessageManager.DatabasePath());
-                    ImGui.SetClipboardText(path);
-                    WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
-                }
+            // Copy the directory path instead of the file path so people can
+            // paste it into their file explorer.
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Path, MessageManager.DatabasePath()));
+            if (ImGui.IsItemClicked(ImGuiMouseButton.Left))
+            {
+                var path = Path.GetDirectoryName(MessageManager.DatabasePath());
+                ImGui.SetClipboardText(path);
+                WrapperUtil.AddNotification(Language.Options_Database_Metadata_CopyConfigPathNotification, NotificationType.Info);
+            }
 
-                if (ImGui.IsItemHovered())
-                {
-                    ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
-                    ImGuiUtil.Tooltip(Language.Options_Database_Metadata_CopyConfigPath);
-                }
+            if (ImGui.IsItemHovered())
+            {
+                ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+                ImGuiUtil.Tooltip(Language.Options_Database_Metadata_CopyConfigPath);
+            }
 
-                ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
-                if (ImGui.IsItemHovered())
-                    ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseSize));
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_Size, StringUtil.BytesToString(DatabaseSize)));
+            if (ImGui.IsItemHovered())
+                ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseSize));
 
-                ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
-                if (ImGui.IsItemHovered())
-                    ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseLogSize));
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_LogSize, StringUtil.BytesToString(DatabaseLogSize)));
+            if (ImGui.IsItemHovered())
+                ImGuiUtil.Tooltip(StringUtil.BytesToString(DatabaseLogSize));
 
-                ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
+            ImGuiUtil.HelpText(string.Format(Language.Options_Database_Metadata_MessageCount, DatabaseMessageCount));
 
-                if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
-                {
-                    Plugin.Log.Warning("Clearing messages from database");
-                    Plugin.MessageManager.Store.ClearMessages();
-                    Plugin.MessageManager.ClearAllTabs();
+            if (ImGuiUtil.CtrlShiftButton(Language.Options_ClearDatabase_Button, Language.Options_ClearDatabase_Tooltip))
+            {
+                Plugin.Log.Warning("Clearing messages from database");
+                Plugin.MessageManager.Store.ClearMessages();
+                Plugin.MessageManager.ClearAllTabs();
 
-                    // Refresh on next draw
-                    DatabaseLastRefreshTicks = 0;
-                    WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
-                }
+                // Refresh on next draw
+                DatabaseLastRefreshTicks = 0;
+                WrapperUtil.AddNotification(Language.Options_ClearDatabase_Success, NotificationType.Info);
             }
         }
     }
@@ -169,7 +165,6 @@ internal sealed class Database : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            using var treeNode = ImRaii.TreeNode(Language.Options_Database_Advanced);
             using var wrap = ImRaii.TextWrapPos(0.0f);
 
             ImGuiUtil.WarningText(Language.Options_Database_Advanced_Warning);
