@@ -1334,20 +1334,26 @@ public sealed class ChatLogWindow : Window
                         // Greeted toggle sits left of the selectable so the
                         // click areas stay separate. The icon also doubles
                         // as the visual "I'm done with this person" cue.
+                        // Compact frame padding keeps the icon dezent next
+                        // to the tab name instead of a chunky button block.
                         var greetedIcon = tab.IsGreeted ? FontAwesomeIcon.CheckCircle : FontAwesomeIcon.Check;
                         var greetedTooltip = tab.IsGreeted
                             ? HellionStrings.AutoTellTabs_GreetedTooltip
                             : HellionStrings.AutoTellTabs_UnGreetedTooltip;
 
-                        if (ImGuiUtil.IconButton(greetedIcon, $"greeted-{tabI}", greetedTooltip))
+                        using (ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new Vector2(2, 1)))
+                        using (ImRaii.PushColor(ImGuiCol.Button, 0))
                         {
-                            if (tab.IsGreeted)
+                            if (ImGuiUtil.IconButton(greetedIcon, $"greeted-{tabI}", greetedTooltip))
                             {
-                                Plugin.AutoTellTabsService.UnmarkGreeted(tab);
-                            }
-                            else
-                            {
-                                Plugin.AutoTellTabsService.MarkGreeted(tab);
+                                if (tab.IsGreeted)
+                                {
+                                    Plugin.AutoTellTabsService.UnmarkGreeted(tab);
+                                }
+                                else
+                                {
+                                    Plugin.AutoTellTabsService.MarkGreeted(tab);
+                                }
                             }
                         }
                         ImGui.SameLine();
