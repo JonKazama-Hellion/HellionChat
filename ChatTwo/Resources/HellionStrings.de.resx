@@ -505,4 +505,18 @@
   <data name="Settings_Window_Tooltips_Heading" xml:space="preserve">
     <value>Tooltips</value>
   </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Chat-Tabs -->
+  <data name="Settings_Chat_AutoTellTabs_Heading" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="Settings_Chat_Behaviour_Heading" xml:space="preserve">
+    <value>Nachrichten-Verhalten</value>
+  </data>
+  <data name="Settings_Chat_Preview_Heading" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Settings_Chat_Emotes_Heading" xml:space="preserve">
+    <value>Emotes</value>
+  </data>
 </root>
