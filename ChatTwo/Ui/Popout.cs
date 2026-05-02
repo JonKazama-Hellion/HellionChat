@@ -70,8 +70,16 @@ internal class Popout : Window
 
         if (!ChatLogWindow.PopOutDocked[Idx])
         {
-            var alpha = Tab.IndependentOpacity ? Tab.Opacity : Plugin.Config.WindowAlpha;
-            BgAlpha = alpha / 100f;
+            if (Tab.IndependentOpacity)
+            {
+                BgAlpha = Tab.Opacity / 100f;
+            }
+            else
+            {
+                BgAlpha = Plugin.Config.HellionThemeEnabled
+                    ? Plugin.Config.HellionThemeWindowOpacity
+                    : Plugin.Config.WindowAlpha / 100f;
+            }
         }
     }
 

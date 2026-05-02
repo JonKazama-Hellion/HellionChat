@@ -72,7 +72,15 @@ internal sealed class Appearance : ISettingsTab
                 DrawStyleCombo();
             }
 
-            ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
+            // The Bestand-Slider WindowAlpha targets the chat log window's
+            // background only. The Hellion theme opacity above already covers
+            // every plugin window globally, so the two sliders fight each
+            // other when the theme is active. Disable the legacy slider in
+            // that case to make Hellion theme the single source of truth.
+            using (ImRaii.Disabled(Mutable.HellionThemeEnabled))
+            {
+                ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
+            }
         }
     }
 
@@ -111,14 +119,18 @@ internal sealed class Appearance : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            ImGui.Checkbox(HellionStrings.Theme_UseHellionFont_Name, ref Mutable.UseHellionFont);
+            if (ImGui.Checkbox(HellionStrings.Theme_UseHellionFont_Name, ref Mutable.UseHellionFont))
+            {
+                // Mutex with the Bestand custom-font stack. Leaving FontsEnabled
+                // checked alongside UseHellionFont made both checkboxes look
+                // active even though the lower stack was greyed out, which
+                // confused the user during the v0.5.0 walkthrough.
+                if (Mutable.UseHellionFont)
+                    Mutable.FontsEnabled = false;
+            }
             ImGuiUtil.HelpMarker(HellionStrings.Theme_UseHellionFont_Description);
             ImGui.Spacing();
 
-            // Hellion-Font und der Custom-Font-Stack schließen sich aus:
-            // wenn Exo 2 erzwungen wird, sind die ChatTwo-Font-Picker
-            // ohne Wirkung, also UI-seitig ausgrauen statt versteckt
-            // weiterzuwerken.
             using var fontDisabled = ImRaii.Disabled(Mutable.UseHellionFont);
 
             ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
