@@ -127,7 +127,12 @@ public class Configuration : IPluginConfiguration
     public bool MoreCompactPretty;
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
-    public bool SidebarTabView;
+    // Hellion Chat — vertical sidebar tab layout reads better than the
+    // horizontal tab strip in the company of Auto-Tell-Tabs (a club
+    // greeter typically tracks 5–15 simultaneous conversations). Bestand
+    // users keep their saved value untouched — only fresh installs pick
+    // up the new default.
+    public bool SidebarTabView = true;
     public bool PrintChangelog = true;
     public bool OnlyPreviewIf;
     public int PreviewMinimum = 1;
