@@ -522,4 +522,15 @@
   <data name="Settings_Chat_Emotes_Heading" xml:space="preserve">
     <value>Emotes</value>
   </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Database-Tabs -->
+  <data name="Settings_Database_Storage_Heading" xml:space="preserve">
+    <value>Speicherung</value>
+  </data>
+  <data name="Settings_Database_Viewer_Heading" xml:space="preserve">
+    <value>DB-Viewer</value>
+  </data>
+  <data name="Settings_Database_Stats_Heading" xml:space="preserve">
+    <value>Statistiken</value>
+  </data>
 </root>
