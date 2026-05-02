@@ -16,7 +16,7 @@ internal sealed class Database : ISettingsTab
     private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
-    public string Name => Language.Options_Database_Tab + "###tabs-database";
+    public string Name => HellionStrings.Settings_Tab_Database + "###tabs-database";
 
     internal Database(Plugin plugin, Configuration mutable)
     {

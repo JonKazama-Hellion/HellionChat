@@ -445,6 +445,12 @@
   <data name="Settings_Tab_Chat" xml:space="preserve">
     <value>Chat</value>
   </data>
+  <data name="Settings_Tab_Tabs" xml:space="preserve">
+    <value>Kanäle</value>
+  </data>
+  <data name="Settings_Tab_Database" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
   <data name="Settings_Tab_Information" xml:space="preserve">
     <value>Über</value>
   </data>

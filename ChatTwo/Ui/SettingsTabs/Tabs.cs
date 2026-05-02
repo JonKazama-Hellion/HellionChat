@@ -13,7 +13,7 @@ internal sealed class Tabs : ISettingsTab
     private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
-    public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
+    public string Name => HellionStrings.Settings_Tab_Tabs + "###tabs-tabs";
 
     private int ToOpen = -2;
 
