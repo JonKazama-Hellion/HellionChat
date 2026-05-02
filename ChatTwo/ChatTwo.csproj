@@ -4,7 +4,7 @@
              0.1.0 is our bootstrap release; the underlying Chat 2 base is
              called out in the yaml changelog so users can see what it
              derives from. -->
-        <Version>0.5.2</Version>
+        <Version>0.5.3</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <!-- HellionChat fork: assembly is renamed so Dalamud uses
              pluginConfigs/HellionChat instead of pluginConfigs/ChatTwo,

@@ -44,6 +44,26 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.5.3 — Pointer arithmetic hardening**
+
+  Single hardening fix on top of v0.5.2.
+
+  Security:
+
+  - Closed CodeQL Critical alert "unvalidated local pointer
+    arithmetic" in ImGuiUtil.WrapText. The earlier v0.5.2 fix
+    handled the empty-input edge case but the rule re-fired on the
+    pointer arithmetic itself because Encoding.GetBytes is virtual
+    on the base Encoding class and CodeQL therefore tracks its
+    return as untrusted input. Now compute the expected byte count
+    via GetByteCount on the same encoder and bail out if a swapped
+    Encoding ever returned a buffer of the wrong length. Real
+    consistency check, not a dead defensive guard.
+
+  No new features, no migration, configuration version stays at 10.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.5.2 — Bugfix patch**
 
   Three corrections to the v0.5.1 surface plus two security findings
