@@ -56,7 +56,7 @@ Privates Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo währen
 
 ### Was gegenüber Chat 2 fehlt
 
-- **Webinterface** wurde in Hellion Chat 0.2.0 entfernt. Der eingebaute HTTP-Server hat unter dem Privacy-Versprechen nicht abgesichert werden können (5-stelliger numerischer Auth-Code aus `System.Random`, Bind auf alle Interfaces per Default, Cookies ohne Security-Flags und ein Server-Sent-Events-Stream der den Privacy-Filter umgangen hat). Wer den Funktionsumfang von Chat 2 vollständig braucht, sollte beim Upstream-Plugin bleiben; Hellion Chat fokussiert auf DSGVO-konforme Persistenz und verzichtet bewusst auf Remote-Zugriffs-Features.
+- **Webinterface** wurde in Hellion Chat 0.2.0 entfernt. Es bedient einen anderen Anwendungsfall als der Fokus dieses Forks, nämlich Remote-Zugriff auf den Chat von einem zweiten Gerät. An die kleineren Defaults dieses Forks anzupassen hätte einen erheblichen Umbau bedeutet, also ist es ersatzlos entfernt worden. Wer den vollen Funktionsumfang von Chat 2 möchte, ist mit dem Upstream-Plugin besser bedient. Hellion Chat fokussiert sich auf einen schmaleren Datenbestand und verzichtet bewusst auf Remote-Zugriffs-Features.
 
 ---
 

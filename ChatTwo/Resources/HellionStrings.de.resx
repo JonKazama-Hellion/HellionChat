@@ -280,7 +280,7 @@
     <value>Hellion-Theme für alle Plugin-Fenster verwenden</value>
   </data>
   <data name="Theme_Enabled_Description" xml:space="preserve">
-    <value>Industrielle HUD-Palette mit cyan-blauen Aktionsfarben, schiefer-violetten Tabs und Bernstein-Akzenten für aktive Zustände, global angewendet auf Chat-Fenster, Einstellungen, Viewer und Wizard. Deaktivieren, um das Standard-Dalamud-Erscheinungsbild zu nutzen.</value>
+    <value>Hellion-Online-Media-Palette aus Arctic Cyan und Ember Orange, angewendet auf Chat-Fenster, Einstellungen, Viewer und Wizard. Deaktivieren, um das Standard-Dalamud-Erscheinungsbild zu nutzen.</value>
   </data>
   <data name="Theme_WindowOpacity_Label" xml:space="preserve">
     <value>Fenster-Deckkraft</value>
@@ -293,5 +293,77 @@
   </data>
   <data name="Theme_UseHellionFont_Description" xml:space="preserve">
     <value>Rendert Chat und UI in Exo 2 (SIL Open Font License 1.1), die mit dem Plugin ausgeliefert wird. Deaktivieren, um auf die unter Einstellungen → Schrift gewählte Schriftart zurückzufallen.</value>
+  </data>
+
+  <data name="About_Maintainer_Heading" xml:space="preserve">
+    <value>Maintainer</value>
+  </data>
+  <data name="About_Maintainer_Body" xml:space="preserve">
+    <value>Ich pflege Hellion Chat über Hellion Online Media. Auf der Website findest du die Kontaktdaten für lizenzrechtliche, rechtliche oder geschäftliche Fragen.</value>
+  </data>
+  <data name="About_Maintainer_Website_Label" xml:space="preserve">
+    <value>Website:</value>
+  </data>
+
+  <data name="About_Mission_Heading" xml:space="preserve">
+    <value>Warum es diesen Fork gibt</value>
+  </data>
+  <data name="About_Mission_P1" xml:space="preserve">
+    <value>Hellion Chat soll Chat 2 nicht ersetzen. Chat 2 liefert ein vollständiges Chat-Erlebnis mit kompletter Historie, die für Filter, Suche und Replay zur Verfügung steht. Dieser Default ist für die meisten Nutzer der richtige. Dieser Fork wählt einen anderen Ansatz: einen kleineren Default-Footprint, mit zusätzlichen Stellschrauben für Nutzer, die weniger fremden Chat auf der Festplatte behalten möchten.</value>
+  </data>
+  <data name="About_Mission_P2" xml:space="preserve">
+    <value>Der Wunsch nach diesem engeren Default war persönlich. Nach zwei Jahren mit Chat 2 lag meine Datenbank bei über zwei Millionen Nachrichten, der Großteil davon /say, /shout und /yell von Fremden in Limsa. Genau diese Daten machen Chat 2's Voll-Historie nützlich, und die meisten Nutzer behalten sie gerne. Mein eigener Geschmack wollte einen kleineren Default. Also habe ich diesen Fork gebaut.</value>
+  </data>
+  <data name="About_Mission_P3" xml:space="preserve">
+    <value>Ich strebe keine große Zielgruppe an, und der Fork steht nicht in Konkurrenz zu Chat 2. Der Code liegt offen unter derselben EUPL-1.2-Lizenz wie das Original. Infi, Anna oder sonst jemand dürfen reinschauen, Ideen mitnehmen, Fragen stellen oder das Projekt einfach ignorieren. Alles drei ist für mich in Ordnung.</value>
+  </data>
+
+  <data name="About_BuiltOn_Heading" xml:space="preserve">
+    <value>Aufbauend auf Chat 2</value>
+  </data>
+  <data name="About_BuiltOn_P1" xml:space="preserve">
+    <value>Hellion Chat ist ein Fork von Chat 2 von Infi und Anna (ascclemens). Das Chat-Replacement-Fenster, die IPC-Integration, die Render-Engine und der komplette Storage-Kern stammen aus dem Original.</value>
+  </data>
+  <data name="About_BuiltOn_P2" xml:space="preserve">
+    <value>Das Webinterface ist das einzige größere Teil, das ich entfernt habe. Es ist für den Remote-Zugriff auf den Chat von einem zweiten Gerät gebaut, also für einen anderen Fokus als der kleinere Default-Footprint, den dieser Fork verfolgt. Es an diese Defaults anzupassen hätte einen erheblichen Umbau bedeutet, also war die Entfernung der saubere Weg für genau diesen Fork.</value>
+  </data>
+  <data name="About_BuiltOn_Upstream_Label" xml:space="preserve">
+    <value>Upstream-Repository:</value>
+  </data>
+
+  <data name="About_License_Heading" xml:space="preserve">
+    <value>Lizenz</value>
+  </data>
+  <data name="About_License_P1" xml:space="preserve">
+    <value>Hellion Chat und Chat 2 stehen beide unter der European Union Public Licence v1.2 (EUPL-1.2).</value>
+  </data>
+  <data name="About_License_P2" xml:space="preserve">
+    <value>© 2023 bis 2026, die Chat-2-Autoren (Infi, Anna und die Upstream-Mitwirkenden).</value>
+  </data>
+  <data name="About_License_P3" xml:space="preserve">
+    <value>© 2026 Hellion Online Media für die Erweiterungen in diesem Fork.</value>
+  </data>
+
+  <data name="About_SE_Heading" xml:space="preserve">
+    <value>FINAL FANTASY XIV-Hinweis</value>
+  </data>
+  <data name="About_SE_P1" xml:space="preserve">
+    <value>FINAL FANTASY XIV © SQUARE ENIX CO., LTD. Alle Rechte vorbehalten.</value>
+  </data>
+  <data name="About_SE_P2" xml:space="preserve">
+    <value>Hellion Chat ist ein inoffizielles Fan-Plugin. Es steht in keiner Verbindung zu Square Enix und wird von ihnen weder unterstützt, gesponsert noch genehmigt.</value>
+  </data>
+
+  <data name="About_Localization_Heading" xml:space="preserve">
+    <value>Lokalisierung</value>
+  </data>
+  <data name="About_Localization_P1" xml:space="preserve">
+    <value>Die deutschen Übersetzungen der Hellion-spezifischen Strings stammen von mir. Weitere Sprachen sind aktuell nicht verfügbar.</value>
+  </data>
+  <data name="About_Localization_P2" xml:space="preserve">
+    <value>Die Übersetzerliste weiter unten gehört zu den Chat-2-Strings auf Crowdin. Diese Freiwilligen haben Chat 2 übersetzt, nicht die Hellion-Erweiterungen.</value>
+  </data>
+  <data name="About_Translators_TreeNode" xml:space="preserve">
+    <value>Chat-2-Community-Übersetzer (Upstream)</value>
   </data>
 </root>

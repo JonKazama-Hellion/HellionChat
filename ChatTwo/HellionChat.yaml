@@ -3,12 +3,12 @@ author: JonKazama-Hellion
 punchline: Chat 2 with privacy controls aligned to EU, US and JP rules
 description: |-
   Hellion Chat is built on top of Chat 2 with one removal and a stack
-  of privacy controls on top. The /chat2 command, tabs, channel
-  filters, RGB colours, emotes, screenshot mode, IPC integration and
-  the chat replacement window itself work the same. The optional
-  webinterface that Chat 2 ships is intentionally not part of this
-  fork because it could not be hardened to the privacy guarantees
-  Hellion Chat makes by default.
+  of privacy controls on top. Tabs, channel filters, RGB colours,
+  emotes, screenshot mode, IPC integration and the chat replacement
+  window itself work the same. The optional webinterface that Chat 2
+  ships is intentionally not part of this fork because it serves a
+  different use case from the smaller default footprint Hellion Chat
+  is built around.
 
   On top of that, Hellion Chat adds privacy and data-handling controls
   designed to align with the modern data protection rules that apply
@@ -42,15 +42,12 @@ tags:
 changelog: |-
   **Hellion Chat 0.2.0 — Webinterface removed**
 
-  Following an internal security and consistency audit the upstream
-  webinterface has been removed in its entirety. Hardening it to the
-  privacy guarantees Hellion Chat makes by default would have meant
-  rewriting the auth flow (the upstream code uses a five-digit
-  numeric code from System.Random), changing the default bind address
-  (currently every interface), reworking cookie handling and adding
-  the privacy filter to the live message stream that the webinterface
-  was broadcasting around it. The cumulative cost did not match the
-  niche use case for a fork that wants less network surface, not more.
+  The upstream webinterface has been removed in its entirety. It
+  serves a different use case from the smaller default footprint
+  this fork is built around, namely remote access to chat from a
+  second device. Aligning it with the data minimisation defaults
+  Hellion Chat ships with would have meant a substantial rebuild.
+  Removing it was the cleaner path for this particular fork.
 
   What changed in this release:
 

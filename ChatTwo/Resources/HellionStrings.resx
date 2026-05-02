@@ -22,7 +22,7 @@
     <value>When enabled, only messages from whitelisted channels are persisted to the database. Disabling restores upstream ChatTwo behavior (everything except battle messages is stored).</value>
   </data>
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
-    <value>The filter only controls what is written to the local database. The chat log itself keeps showing every message live — disallowed channels just stop being saved. Use the channel hide options in your in-game chat tabs if you want to remove channels from the visible chat.</value>
+    <value>The filter only controls what is written to the local database. The chat log itself keeps showing every message live, disallowed channels just stop being saved. Use the channel hide options in your in-game chat tabs if you want to remove channels from the visible chat.</value>
   </data>
   <data name="Privacy_Whitelist_Help" xml:space="preserve">
     <value>Pick which channels are stored in the local database. Privacy-First default: only your own conversations. Use the buttons below to apply a preset.</value>
@@ -124,7 +124,7 @@
     <value>Auto-delete messages after a per-channel retention window</value>
   </data>
   <data name="Retention_Enabled_Description" xml:space="preserve">
-    <value>When enabled, messages older than the configured window are deleted on every plugin start (at most once per 24 hours). Off by default — the plugin never deletes history without your explicit consent.</value>
+    <value>When enabled, messages older than the configured window are deleted on every plugin start (at most once per 24 hours). Off by default. The plugin never deletes history without your explicit consent.</value>
   </data>
   <data name="Retention_Default_Label" xml:space="preserve">
     <value>Default retention (days, 0 = never)</value>
@@ -280,7 +280,7 @@
     <value>Use the Hellion theme across all plugin windows</value>
   </data>
   <data name="Theme_Enabled_Description" xml:space="preserve">
-    <value>Industrial HUD palette with cyan-teal action accents, slate-violet tabs and amber active highlights, applied globally to chat log, settings, viewers and the wizard. Disable to fall back to the default Dalamud look.</value>
+    <value>Hellion Online Media palette of Arctic Cyan plus Ember Orange, applied across the chat log, settings, viewers and the wizard. Disable to fall back to the default Dalamud look.</value>
   </data>
   <data name="Theme_WindowOpacity_Label" xml:space="preserve">
     <value>Window opacity</value>
@@ -293,5 +293,77 @@
   </data>
   <data name="Theme_UseHellionFont_Description" xml:space="preserve">
     <value>Renders chat and UI in Exo 2 (SIL Open Font License 1.1) which ships with the plugin. Disable to fall back to whatever font you picked under Settings → Fonts.</value>
+  </data>
+
+  <data name="About_Maintainer_Heading" xml:space="preserve">
+    <value>Maintainer</value>
+  </data>
+  <data name="About_Maintainer_Body" xml:space="preserve">
+    <value>I maintain Hellion Chat through Hellion Online Media. The website has the contact details for licensing, legal or business questions.</value>
+  </data>
+  <data name="About_Maintainer_Website_Label" xml:space="preserve">
+    <value>Website:</value>
+  </data>
+
+  <data name="About_Mission_Heading" xml:space="preserve">
+    <value>Why this fork exists</value>
+  </data>
+  <data name="About_Mission_P1" xml:space="preserve">
+    <value>Hellion Chat is not trying to replace Chat 2. Chat 2 ships a complete chat experience with full history available for filtering, search and replay. That default is the right one for most users. This fork takes a different stance: a smaller default footprint, with extra knobs for users who want to keep less third-party chat on disk.</value>
+  </data>
+  <data name="About_Mission_P2" xml:space="preserve">
+    <value>The reason I wanted that narrower default was personal. After two years on Chat 2 my database had grown past two million messages, most of them /say, /shout and /yell from strangers in Limsa. That data is exactly what makes Chat 2's full-history view powerful and most users are happy to keep it. For my own taste I wanted a smaller default. So I built this fork.</value>
+  </data>
+  <data name="About_Mission_P3" xml:space="preserve">
+    <value>I am not chasing a big audience and the fork is not in competition with Chat 2. The code is open under the same EUPL-1.2 licence as the upstream plugin. Infi, Anna or anyone else are welcome to read it, borrow ideas, ask questions, or ignore the project. All three are fine by me.</value>
+  </data>
+
+  <data name="About_BuiltOn_Heading" xml:space="preserve">
+    <value>Built on Chat 2</value>
+  </data>
+  <data name="About_BuiltOn_P1" xml:space="preserve">
+    <value>Hellion Chat is a fork of Chat 2 by Infi and Anna (ascclemens). The chat replacement window, the IPC integration, the rendering engine and the entire storage core come from upstream Chat 2.</value>
+  </data>
+  <data name="About_BuiltOn_P2" xml:space="preserve">
+    <value>The webinterface is the only major piece I removed. It is built for remote access to chat from a second device, which is a different focus than the smaller default footprint this fork is built around. Aligning it with these defaults would have meant a substantial rebuild, so removing it was the cleaner path for this particular fork.</value>
+  </data>
+  <data name="About_BuiltOn_Upstream_Label" xml:space="preserve">
+    <value>Upstream repository:</value>
+  </data>
+
+  <data name="About_License_Heading" xml:space="preserve">
+    <value>License</value>
+  </data>
+  <data name="About_License_P1" xml:space="preserve">
+    <value>Hellion Chat and Chat 2 both ship under the European Union Public Licence v1.2 (EUPL-1.2).</value>
+  </data>
+  <data name="About_License_P2" xml:space="preserve">
+    <value>© 2023 to 2026, the Chat 2 authors (Infi, Anna and the upstream contributors).</value>
+  </data>
+  <data name="About_License_P3" xml:space="preserve">
+    <value>© 2026 Hellion Online Media for the additions made in this fork.</value>
+  </data>
+
+  <data name="About_SE_Heading" xml:space="preserve">
+    <value>FINAL FANTASY XIV disclaimer</value>
+  </data>
+  <data name="About_SE_P1" xml:space="preserve">
+    <value>FINAL FANTASY XIV © SQUARE ENIX CO., LTD. All rights reserved.</value>
+  </data>
+  <data name="About_SE_P2" xml:space="preserve">
+    <value>Hellion Chat is an unofficial, fan-made plugin. It has no affiliation with Square Enix and is not endorsed, sponsored or approved by them.</value>
+  </data>
+
+  <data name="About_Localization_Heading" xml:space="preserve">
+    <value>Localization</value>
+  </data>
+  <data name="About_Localization_P1" xml:space="preserve">
+    <value>The German translations of the Hellion-specific strings come from me. Other languages are not provided yet.</value>
+  </data>
+  <data name="About_Localization_P2" xml:space="preserve">
+    <value>The translator list below covers the upstream Chat 2 strings on Crowdin. Those volunteers translated Chat 2, not the Hellion additions.</value>
+  </data>
+  <data name="About_Translators_TreeNode" xml:space="preserve">
+    <value>Chat 2 community translators (upstream)</value>
   </data>
 </root>
