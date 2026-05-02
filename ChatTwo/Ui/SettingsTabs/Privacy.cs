@@ -55,7 +55,10 @@ internal sealed class Privacy : ISettingsTab
     private long CleanupDeleteCount;
     private bool CleanupRunning;
 
-    private bool RetentionRunning;
+    // The retention-running state lives on Plugin so the auto-sweep and
+    // this manual button see the same flag. UI reads stay lock-free
+    // because ImGui is single-threaded and bool reads are atomic in .NET.
+    private bool RetentionRunning => Plugin.RetentionSweepRunning;
 
     // Export form state
     private int ExportRangeDays = 30;
@@ -410,10 +413,17 @@ internal sealed class Privacy : ISettingsTab
 
     private void StartRetentionRun()
     {
-        if (RetentionRunning)
-            return;
+        // Take the shared retention lock so we cannot fight the auto-sweep
+        // for the database connection. If the auto-sweep is already in
+        // flight we just bail — the user can press the button again once
+        // it finishes.
+        lock (Plugin.RetentionSweepLock)
+        {
+            if (Plugin.RetentionSweepRunning)
+                return;
+            Plugin.RetentionSweepRunning = true;
+        }
 
-        RetentionRunning = true;
         var policy = Plugin.Config.RetentionPerChannelDays.ToDictionary(p => (int)(ushort)p.Key, p => p.Value);
         var defaultDays = Plugin.Config.RetentionDefaultDays;
 
@@ -445,7 +455,8 @@ internal sealed class Privacy : ISettingsTab
             }
             finally
             {
-                RetentionRunning = false;
+                lock (Plugin.RetentionSweepLock)
+                    Plugin.RetentionSweepRunning = false;
             }
         }) { IsBackground = true }.Start();
     }
