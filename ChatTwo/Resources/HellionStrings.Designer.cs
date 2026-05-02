@@ -183,6 +183,7 @@ internal class HellionStrings
     internal static string ChatLog_AutoTellTabs_Compact_Name => Get(nameof(ChatLog_AutoTellTabs_Compact_Name));
     internal static string ChatLog_AutoTellTabs_Compact_Description => Get(nameof(ChatLog_AutoTellTabs_Compact_Description));
     internal static string ChatLog_AutoTellTabs_PreloadHint => Get(nameof(ChatLog_AutoTellTabs_PreloadHint));
+    internal static string ChatLog_AutoTellTabs_ConflictHint => Get(nameof(ChatLog_AutoTellTabs_ConflictHint));
 
     // Hellion Chat — Auto-Tell-Tabs Privacy settings tab
     internal static string Privacy_AutoTellTabs_Section_Title => Get(nameof(Privacy_AutoTellTabs_Section_Title));

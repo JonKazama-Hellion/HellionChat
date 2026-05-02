@@ -415,6 +415,9 @@
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>Die Anzahl der vorgeladenen Tells lässt sich im Datenschutz-Tab einstellen.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_ConflictHint" xml:space="preserve">
+    <value>Hinweis: Falls XIV Messanger oder ein ähnliches Plugin Tells unterdrückt, dort die Option „Suppress DMs" deaktivieren, damit Hellion Chat Tells empfangen und die Auto-Tabs öffnen kann.</value>
+  </data>
 
   <!-- Hellion Chat — Auto-Tell-Tabs (Datenschutz-Einstellungstab) -->
   <data name="Privacy_AutoTellTabs_Section_Title" xml:space="preserve">

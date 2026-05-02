@@ -415,6 +415,9 @@
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>The number of preloaded tells is configured in the Privacy tab.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_ConflictHint" xml:space="preserve">
+    <value>Heads-up: if XIV Messanger or a similar plugin is suppressing direct messages, turn its "Suppress DMs" option off so Hellion Chat can receive tells and open the auto tabs.</value>
+  </data>
 
   <!-- Hellion Chat — Auto-Tell-Tabs (Privacy settings tab) -->
   <data name="Privacy_AutoTellTabs_Section_Title" xml:space="preserve">
