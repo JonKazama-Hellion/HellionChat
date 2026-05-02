@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ChatTwo.Code;
+using ChatTwo.GameFunctions.Types;
 using ChatTwo.Util;
 
 namespace ChatTwo;
@@ -177,7 +179,80 @@ internal sealed class AutoTellTabsService : IDisposable
 
     private void SpawnTempTab((string Name, uint World) partner, Message currentMessage)
     {
-        // Stub — implemented in Task 11.
+        var tab = BuildTempTab(partner.Name, partner.World);
+
+        // Preload first so the tab opens with chronological history above
+        // the current message — and so a slow DB query never causes a
+        // visible "empty tab, then history pops in" effect on screen.
+        PreloadHistory(tab, partner.Name, partner.World);
+
+        tab.AddMessage(currentMessage, unread: true);
+        Plugin.Config.Tabs.Add(tab);
+    }
+
+    private static Tab BuildTempTab(string playerName, uint worldRowId)
+    {
+        return new Tab
+        {
+            Name = FormatTabName(playerName, worldRowId),
+            IsTempTab = true,
+            AllSenderMessages = true,
+            TellTarget = new TellTarget(playerName, worldRowId, 0, TellReason.Direct),
+            Channel = InputChannel.Tell,
+            DisplayTimestamp = true,
+            UnreadMode = UnreadMode.Unseen,
+            HideWhenInactive = false,
+            SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+            {
+                [ChatType.TellIncoming] = (ChatSourceExt.All, ChatSourceExt.All),
+                [ChatType.TellOutgoing] = (ChatSourceExt.All, ChatSourceExt.All),
+            },
+        };
+    }
+
+    private static string FormatTabName(string playerName, uint worldRowId)
+    {
+        if (Sheets.WorldSheet.TryGetRow(worldRowId, out var worldRow))
+        {
+            return $"{playerName}@{worldRow.Name}";
+        }
+        // World sheet lookup miss is rare (only for FFXIV worlds Dalamud has
+        // not yet seen). Fall back to the raw RowId so the user still has a
+        // unique, readable label.
+        return $"{playerName}@World{worldRowId}";
+    }
+
+    private void PreloadHistory(Tab tab, string senderName, uint senderWorld)
+    {
+        var preloadCount = Plugin.Config.AutoTellTabsHistoryPreload;
+        if (preloadCount <= 0)
+        {
+            return;
+        }
+
+        try
+        {
+            var history = _store.GetTellHistoryWithSender(
+                _messageManager.CurrentContentId,
+                senderName,
+                senderWorld,
+                preloadCount);
+
+            // The history list is already oldest-first, so a plain AddPrune
+            // loop produces the chronological order the user expects to see
+            // when the tab opens.
+            foreach (var message in history)
+            {
+                tab.Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Non-fatal: the tab still spawns, the user just sees only the
+            // current message. The error logs once with full stack trace
+            // for diagnosis.
+            Plugin.Log.Error(ex, "[AutoTellTabs] History preload failed");
+        }
     }
 
     internal void MarkGreeted(Tab tab)
