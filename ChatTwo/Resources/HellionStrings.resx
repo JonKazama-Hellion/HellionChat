@@ -477,4 +477,18 @@
   <data name="Settings_General_Language_Heading" xml:space="preserve">
     <value>Language &amp; Input Helpers</value>
   </data>
+
+  <!-- Hellion Chat — Appearance-Tab section headings -->
+  <data name="Settings_Appearance_Theme_Heading" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Appearance_Fonts_Heading" xml:space="preserve">
+    <value>Fonts</value>
+  </data>
+  <data name="Settings_Appearance_Colours_Heading" xml:space="preserve">
+    <value>Chat Colours</value>
+  </data>
+  <data name="Settings_Appearance_Timestamps_Heading" xml:space="preserve">
+    <value>Timestamps</value>
+  </data>
 </root>

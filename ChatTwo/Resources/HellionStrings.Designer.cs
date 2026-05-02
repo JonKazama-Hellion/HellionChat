@@ -209,4 +209,10 @@ internal class HellionStrings
     internal static string Settings_General_Audio_Heading => Get(nameof(Settings_General_Audio_Heading));
     internal static string Settings_General_Performance_Heading => Get(nameof(Settings_General_Performance_Heading));
     internal static string Settings_General_Language_Heading => Get(nameof(Settings_General_Language_Heading));
+
+    // Hellion Chat — Appearance-Tab section headings
+    internal static string Settings_Appearance_Theme_Heading => Get(nameof(Settings_Appearance_Theme_Heading));
+    internal static string Settings_Appearance_Fonts_Heading => Get(nameof(Settings_Appearance_Fonts_Heading));
+    internal static string Settings_Appearance_Colours_Heading => Get(nameof(Settings_Appearance_Colours_Heading));
+    internal static string Settings_Appearance_Timestamps_Heading => Get(nameof(Settings_Appearance_Timestamps_Heading));
 }
