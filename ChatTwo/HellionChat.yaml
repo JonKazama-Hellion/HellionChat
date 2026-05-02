@@ -40,6 +40,51 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.4.0 — Auto-Tell-Tabs**
+
+  Auto-Tell-Tabs lets you turn each /tell into a session-only tab
+  dedicated to that conversation partner. The original use case is
+  the FFXIV club greeter who has to track 5–15 parallel "hi, welcome"
+  exchanges; everyone else can disable the feature in one click and
+  go back to a single Tell Exclusive tab.
+
+  What lands in this release:
+
+  - Auto-spawn temp tab "Name@World" on /tell (incoming and outgoing)
+  - Tab limit (default 15, range 1–50) with LRU drop that prefers
+    greeted tabs first, then sorts by last activity
+  - History preload from the local message store (default 20 tells,
+    range 0–100) with a "— Earlier conversations —" separator above
+    the live tell that triggered the spawn
+  - Optional "mark as greeted" toggle button (off by default,
+    greeter-specific) that dims the tab name and lets you flip the
+    status
+  - Section header "Active Tells (n)" or compact-mode separator in
+    the sidebar between persistent tabs and the temp tabs
+  - Settings UI under Chat (toggle / limit / compact / greeted-toggle)
+    and Privacy (history preload count), with hover-tooltip help
+    markers replacing the previous wall-of-text descriptions for the
+    new sections
+  - Save and load filters strip temp tabs from the on-disk config so
+    a crash or a sidebar-mode toggle never persists or wipes them
+
+  Compatibility note: if XIV Messanger or another plugin is
+  suppressing direct messages, disable its "Suppress DMs" option so
+  Hellion Chat can receive tells and open the auto tabs.
+
+  Configuration version bumps from 8 to 9. Existing users get a one-
+  shot notification on the first start, defaults are seeded by
+  property initializers, persistent tabs are untouched.
+
+  The vertical sidebar tab view becomes the default for fresh
+  installs; existing users keep their saved preference.
+
+  Inspired by the per-sender tab pattern in XIV InstantMessenger
+  (Limiana, AGPL-3.0). No code was ported across the licence
+  boundary; only the architectural concept influenced this design.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.3.1 — Upstream emote regression fix**
 
   Cherry-picks Infi's upstream commit ff899ff "Fix a regression

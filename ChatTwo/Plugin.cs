@@ -57,6 +57,7 @@ public sealed class Plugin : IDalamudPlugin
     internal Commands Commands { get; }
     internal GameFunctions.GameFunctions Functions { get; }
     internal MessageManager MessageManager { get; }
+    internal AutoTellTabsService AutoTellTabsService { get; }
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
     internal TypingIpc TypingIpc { get; }
@@ -99,6 +100,12 @@ public sealed class Plugin : IDalamudPlugin
             MigrateFromChatTwoLayout();
 
             Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
+
+            // Hellion Chat — Auto-Tell-Tabs Defense-in-Depth. SaveConfig
+            // already strips temp tabs before persistence, but a previous
+            // crash or external write could have left them in the JSON.
+            // Drop them on load to guarantee the session-only invariant.
+            Config.Tabs.RemoveAll(t => t.IsTempTab);
 
 #pragma warning disable CS0618 // Type or member is obsolete
             // TODO Remove after 01.07.2026
@@ -167,6 +174,25 @@ public sealed class Plugin : IDalamudPlugin
                 });
             }
 
+            // Hellion Chat v8→v9: Auto-Tell-Tabs feature seeded with
+            // property-initializer defaults (enabled, limit 15, history 20,
+            // section header on). No data migration needed — just bump the
+            // version and notify the user once so the feature does not
+            // surprise them.
+            if (Config.Version <= 8)
+            {
+                Config.Version = 9;
+                SaveConfig();
+
+                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                {
+                    Title = HellionStrings.AutoTellTabs_Migration_Title,
+                    Content = HellionStrings.AutoTellTabs_Migration_Content,
+                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                    InitialDuration = TimeSpan.FromSeconds(20),
+                });
+            }
+
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
 
@@ -183,6 +209,14 @@ public sealed class Plugin : IDalamudPlugin
             FontManager = new FontManager();
 
             MessageManager = new MessageManager(this); // Does it require UI?
+
+            // Hellion Chat — Auto-Tell-Tabs service. Subscribes to the
+            // MessageManager's MessageProcessed event for live tells and
+            // to ClientState.Logout for the cleanup pass. Created after
+            // MessageManager so the constructor can hand off the live
+            // store and event source.
+            AutoTellTabsService = new AutoTellTabsService(this, MessageManager, MessageManager.Store);
+            AutoTellTabsService.Initialize();
 
             // Hellion Chat — daily retention sweep, off-thread so it never
             // blocks plugin load. Skips itself when disabled or already ran
@@ -274,6 +308,10 @@ public sealed class Plugin : IDalamudPlugin
         TypingIpc?.Dispose();
         ExtraChat?.Dispose();
         Ipc?.Dispose();
+        // Dispose the Auto-Tell-Tabs service before MessageManager so it
+        // can cleanly unsubscribe from the MessageProcessed event before
+        // its source goes away.
+        AutoTellTabsService?.Dispose();
         MessageManager?.DisposeAsync().AsTask().Wait();
         Functions?.Dispose();
         Commands?.Dispose();
@@ -491,7 +529,17 @@ public sealed class Plugin : IDalamudPlugin
 
     internal void SaveConfig()
     {
+        // Hellion Chat — Auto-Tell-Tabs are session-only. Strip them out
+        // before serialization so a crash mid-session can never persist
+        // them. We snapshot the full tab list first and restore it after
+        // the save, preserving the user's order and open conversations.
+        var snapshot = Config.Tabs.ToList();
+        Config.Tabs.RemoveAll(t => t.IsTempTab);
+
         Interface.SavePluginConfig(Config);
+
+        Config.Tabs.Clear();
+        Config.Tabs.AddRange(snapshot);
     }
 
     internal void LanguageChanged(string langCode)

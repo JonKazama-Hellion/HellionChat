@@ -398,6 +398,60 @@ internal static class ChunkUtil
         return builder.ToString();
     }
 
+    // Hellion Chat — shared helper for Auto-Tell-Tabs and the MessageStore
+    // history-preload query. Walks the chunk list once and returns the
+    // first PlayerPayload it finds, or null when the message has no
+    // resolved player link (e.g. system messages, GM tells we already
+    // skipped earlier in the pipeline).
+    internal static PlayerPayload? TryGetPlayerPayload(IReadOnlyList<Chunk> chunks)
+    {
+        foreach (var chunk in chunks)
+        {
+            if (chunk.Link is PlayerPayload pp)
+            {
+                return pp;
+            }
+        }
+        return null;
+    }
+
+    // Fallback for tells where the PlayerPayload lives in the raw SeString
+    // payload list rather than on a chunk's Link slot. Same semantics as
+    // the chunk-walking variant above: returns the first PlayerPayload or
+    // null if the SeString has none.
+    internal static PlayerPayload? TryGetPlayerPayload(SeString? seString)
+    {
+        if (seString == null)
+        {
+            return null;
+        }
+        foreach (var payload in seString.Payloads)
+        {
+            if (payload is PlayerPayload pp)
+            {
+                return pp;
+            }
+        }
+        return null;
+    }
+
+    // True when the message's sender (or, as a fallback, content) carries a
+    // PlayerPayload that matches the given identity. Used by both the
+    // Tab.Matches sender filter and the MessageStore tell-history scan.
+    internal static bool MatchesSender(Message message, string senderName, uint senderWorld)
+    {
+        var payload = TryGetPlayerPayload(message.Sender) ?? TryGetPlayerPayload(message.Content);
+        if (payload == null)
+        {
+            return false;
+        }
+        if (!string.Equals(payload.PlayerName, senderName, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+        return payload.World.RowId == senderWorld;
+    }
+
     internal static readonly RawPayload PeriodicRecruitmentLink = new([0x02, 0x27, 0x07, 0x08, 0x01, 0x01, 0x01, 0xFF, 0x01, 0x03]);
 
     private static uint GetInteger(BinaryReader input)

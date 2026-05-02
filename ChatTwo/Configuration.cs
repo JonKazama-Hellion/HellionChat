@@ -6,6 +6,7 @@ using ChatTwo.Util;
 using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Bindings.ImGui;
 
@@ -33,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 8;
+    private const int LatestVersion = 9;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -81,6 +82,25 @@ public class Configuration : IPluginConfiguration
     // to fall back to the user's chosen system or Dalamud font.
     public bool UseHellionFont = true;
 
+    // Hellion Chat — Auto-Tell-Tabs. When enabled, an incoming or outgoing
+    // /tell spawns a session-only tab dedicated to that conversation
+    // partner. See spec: Hellion Chat Auto-Tell-Tabs Spec (Obsidian).
+    public bool EnableAutoTellTabs = true;
+    // Hard cap on simultaneously open auto tell tabs. Range enforced by the
+    // settings slider (1–50). LRU drop favors greeted tabs first.
+    public int AutoTellTabsLimit = 15;
+    // When true the sidebar shows only a thin separator before the temp
+    // tabs; when false a section header "Active Tells (n)" is rendered.
+    public bool AutoTellTabsCompactDisplay;
+    // Number of prior tells to preload from the message store when an
+    // auto tell tab is spawned. Range 0–100; 0 disables preload.
+    public int AutoTellTabsHistoryPreload = 20;
+    // Show the greeter "marked-as-greeted" toggle button next to each
+    // temp tab and dim the tab name when set. Off by default because the
+    // workflow is specific to club-greeter use cases — most users just
+    // want the auto tabs themselves without the extra UI affordance.
+    public bool AutoTellTabsShowGreetedToggle;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -112,7 +132,12 @@ public class Configuration : IPluginConfiguration
     public bool MoreCompactPretty;
     public bool HideSameTimestamps;
     public bool ShowNoviceNetwork;
-    public bool SidebarTabView;
+    // Hellion Chat — vertical sidebar tab layout reads better than the
+    // horizontal tab strip in the company of Auto-Tell-Tabs (a club
+    // greeter typically tracks 5–15 simultaneous conversations). Bestand
+    // users keep their saved value untouched — only fresh installs pick
+    // up the new default.
+    public bool SidebarTabView = true;
     public bool PrintChangelog = true;
     public bool OnlyPreviewIf;
     public int PreviewMinimum = 1;
@@ -230,7 +255,17 @@ public class Configuration : IPluginConfiguration
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
-        Tabs = other.Tabs.Select(t => t.Clone()).ToList();
+
+        // Hellion Chat — Auto-Tell-Tabs are session-only and therefore
+        // never present in a disk-loaded copy. Keep the live temp tabs of
+        // *this* configuration alive across an UpdateFrom so a settings
+        // save (or sidebar-mode toggle) does not silently destroy the
+        // user's open tell conversations. Persistent tabs from `other`
+        // still get the regular clone-replace treatment.
+        var liveTempTabs = Tabs.Where(t => t.IsTempTab).ToList();
+        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t => t.Clone()).ToList();
+        Tabs.AddRange(liveTempTabs);
+
         OverrideStyle = other.OverrideStyle;
         ChosenStyle = other.ChosenStyle;
         ChatTabForward = other.ChatTabForward;
@@ -249,6 +284,12 @@ public class Configuration : IPluginConfiguration
         HellionThemeEnabled = other.HellionThemeEnabled;
         HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
         UseHellionFont = other.UseHellionFont;
+
+        EnableAutoTellTabs = other.EnableAutoTellTabs;
+        AutoTellTabsLimit = other.AutoTellTabsLimit;
+        AutoTellTabsCompactDisplay = other.AutoTellTabsCompactDisplay;
+        AutoTellTabsHistoryPreload = other.AutoTellTabsHistoryPreload;
+        AutoTellTabsShowGreetedToggle = other.AutoTellTabsShowGreetedToggle;
     }
 }
 
@@ -324,9 +365,27 @@ public class Tab
 
     [NonSerialized] public Guid Identifier = Guid.NewGuid();
 
+    // Hellion Chat — Auto-Tell-Tabs greeted flag. Toggled manually from the
+    // sidebar to mark a tell partner as already greeted in the current
+    // session. NonSerialized because the temp tab itself is session-only.
+    [NonSerialized] public bool IsGreeted;
+
     public bool Matches(Message message)
     {
-        return message.Matches(SelectedChannels, ExtraChatAll, ExtraChatChannels);
+        if (!message.Matches(SelectedChannels, ExtraChatAll, ExtraChatChannels))
+        {
+            return false;
+        }
+
+        // Auto-tell temp tabs are bound to a single conversation partner;
+        // every other tell that matches the channel filter must NOT land
+        // here, otherwise all temp tabs would mirror "Tell Exclusive".
+        if (IsTempTab && TellTarget?.IsSet() == true)
+        {
+            return ChunkUtil.MatchesSender(message, TellTarget.Name, TellTarget.World);
+        }
+
+        return true;
     }
 
     public void AddMessage(Message message, bool unread = true)
@@ -375,6 +434,7 @@ public class Tab
             IsTempTab = IsTempTab,
             AllSenderMessages = AllSenderMessages,
             TellTarget = TellTarget.From(TellTarget),
+            IsGreeted = IsGreeted,
         };
     }
 

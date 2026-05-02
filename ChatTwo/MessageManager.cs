@@ -50,6 +50,13 @@ internal class MessageManager : IAsyncDisposable
         }
     }
 
+    // Hellion Chat — Auto-Tell-Tabs hook. Fires after a fully processed
+    // message has been routed to all matching persistent tabs and stored
+    // in the database. The AutoTellTabsService subscribes to spawn or
+    // refresh temp tabs without having to wedge itself into ProcessMessage
+    // directly.
+    public event Action<Message>? MessageProcessed;
+
     internal unsafe MessageManager(Plugin plugin)
     {
         Plugin = plugin;
@@ -266,6 +273,8 @@ internal class MessageManager : IAsyncDisposable
             if (tab.Matches(message))
                 tab.AddMessage(message, unread);
         }
+
+        MessageProcessed?.Invoke(message);
     }
 
     internal class NameFormatting
