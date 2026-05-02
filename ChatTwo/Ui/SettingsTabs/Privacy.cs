@@ -74,101 +74,7 @@ internal sealed class Privacy : ISettingsTab
             Plugin.FirstRunWizard.IsOpen = true;
         ImGui.Spacing();
 
-        ImGui.TextUnformatted(HellionStrings.Theme_Heading);
-        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
-        {
-            ImGuiUtil.OptionCheckbox(
-                ref Mutable.HellionThemeEnabled,
-                HellionStrings.Theme_Enabled_Name,
-                HellionStrings.Theme_Enabled_Description);
-
-            using (ImRaii.Disabled(!Mutable.HellionThemeEnabled))
-            {
-                ImGui.Spacing();
-                var opacity = Mutable.HellionThemeWindowOpacity;
-                if (ImGui.SliderFloat($"{HellionStrings.Theme_WindowOpacity_Label}##theme-opacity", ref opacity, 0.5f, 1.0f, "%.2f"))
-                    Mutable.HellionThemeWindowOpacity = Math.Clamp(opacity, 0.5f, 1.0f);
-                ImGuiUtil.HelpText(HellionStrings.Theme_WindowOpacity_Help);
-            }
-
-            ImGui.Spacing();
-
-            ImGuiUtil.OptionCheckbox(
-                ref Mutable.UseHellionFont,
-                HellionStrings.Theme_UseHellionFont_Name,
-                HellionStrings.Theme_UseHellionFont_Description);
-        }
-
-        ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
-
-        ImGuiUtil.OptionCheckbox(
-            ref Mutable.PrivacyFilterEnabled,
-            HellionStrings.Privacy_FilterEnabled_Name,
-            HellionStrings.Privacy_FilterEnabled_Description);
-
-        ImGuiUtil.HelpText(HellionStrings.Privacy_FilterEnabled_StorageOnly_Help);
-
-        ImGui.Spacing();
-        ImGui.Separator();
-        ImGui.Spacing();
-
-        using (ImRaii.Disabled(!Mutable.PrivacyFilterEnabled))
-        {
-            ImGuiUtil.HelpText(HellionStrings.Privacy_Whitelist_Help);
-
-            ImGui.Spacing();
-
-            if (ImGui.Button(HellionStrings.Privacy_Preset_PrivacyFirst))
-                Mutable.PrivacyPersistChannels = [..PrivacyDefaults.PrivacyFirstWhitelist];
-
-            ImGui.SameLine();
-            if (ImGui.Button(HellionStrings.Privacy_Preset_ClearAll))
-                Mutable.PrivacyPersistChannels.Clear();
-
-            ImGui.SameLine();
-            if (ImGui.Button(HellionStrings.Privacy_Preset_SelectAll))
-                foreach (var group in Groups)
-                foreach (var t in group.Types)
-                    Mutable.PrivacyPersistChannels.Add(t);
-
-            ImGui.Spacing();
-            ImGui.Separator();
-            ImGui.Spacing();
-
-            foreach (var (heading, types) in Groups)
-            {
-                using var tree = ImRaii.TreeNode(heading());
-                if (!tree.Success)
-                    continue;
-
-                using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
-                {
-                    foreach (var type in types)
-                    {
-                        var enabled = Mutable.PrivacyPersistChannels.Contains(type);
-                        var label = type.ToString();
-                        if (ImGui.Checkbox($"{label}##privacy-{(int)type}", ref enabled))
-                        {
-                            if (enabled)
-                                Mutable.PrivacyPersistChannels.Add(type);
-                            else
-                                Mutable.PrivacyPersistChannels.Remove(type);
-                        }
-                    }
-                }
-            }
-
-            ImGui.Spacing();
-            ImGui.Separator();
-            ImGui.Spacing();
-
-            ImGuiUtil.OptionCheckbox(
-                ref Mutable.PrivacyPersistUnknownChannels,
-                HellionStrings.Privacy_PersistUnknown_Name,
-                HellionStrings.Privacy_PersistUnknown_Description);
-        }
+        DrawPrivacyFilterSection();
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -213,6 +119,82 @@ internal sealed class Privacy : ISettingsTab
 
             ImGui.Spacing();
             ImGuiUtil.HelpText(HellionStrings.Privacy_AutoTellTabs_Preload_Hint);
+        }
+    }
+
+    private void DrawPrivacyFilterSection()
+    {
+        using var tree = ImRaii.TreeNode(HellionStrings.Privacy_Filter_Tree_Heading);
+        if (!tree.Success)
+            return;
+
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGuiUtil.OptionCheckbox(
+                ref Mutable.PrivacyFilterEnabled,
+                HellionStrings.Privacy_FilterEnabled_Name,
+                HellionStrings.Privacy_FilterEnabled_Description);
+            ImGuiUtil.HelpMarker(HellionStrings.Privacy_FilterEnabled_StorageOnly_Help);
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
+            using (ImRaii.Disabled(!Mutable.PrivacyFilterEnabled))
+            {
+                ImGuiUtil.HelpText(HellionStrings.Privacy_Whitelist_Help);
+
+                ImGui.Spacing();
+
+                if (ImGui.Button(HellionStrings.Privacy_Preset_PrivacyFirst))
+                    Mutable.PrivacyPersistChannels = [..PrivacyDefaults.PrivacyFirstWhitelist];
+
+                ImGui.SameLine();
+                if (ImGui.Button(HellionStrings.Privacy_Preset_ClearAll))
+                    Mutable.PrivacyPersistChannels.Clear();
+
+                ImGui.SameLine();
+                if (ImGui.Button(HellionStrings.Privacy_Preset_SelectAll))
+                    foreach (var group in Groups)
+                    foreach (var t in group.Types)
+                        Mutable.PrivacyPersistChannels.Add(t);
+
+                ImGui.Spacing();
+                ImGui.Separator();
+                ImGui.Spacing();
+
+                foreach (var (heading, types) in Groups)
+                {
+                    using var groupTree = ImRaii.TreeNode(heading());
+                    if (!groupTree.Success)
+                        continue;
+
+                    using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+                    {
+                        foreach (var type in types)
+                        {
+                            var enabled = Mutable.PrivacyPersistChannels.Contains(type);
+                            var label = type.ToString();
+                            if (ImGui.Checkbox($"{label}##privacy-{(int)type}", ref enabled))
+                            {
+                                if (enabled)
+                                    Mutable.PrivacyPersistChannels.Add(type);
+                                else
+                                    Mutable.PrivacyPersistChannels.Remove(type);
+                            }
+                        }
+                    }
+                }
+
+                ImGui.Spacing();
+                ImGui.Separator();
+                ImGui.Spacing();
+
+                ImGuiUtil.OptionCheckbox(
+                    ref Mutable.PrivacyPersistUnknownChannels,
+                    HellionStrings.Privacy_PersistUnknown_Name,
+                    HellionStrings.Privacy_PersistUnknown_Description);
+            }
         }
     }
 
@@ -363,7 +345,7 @@ internal sealed class Privacy : ISettingsTab
                 var defaultDays = Mutable.RetentionDefaultDays;
                 if (ImGui.InputInt(HellionStrings.Retention_Default_Label, ref defaultDays))
                     Mutable.RetentionDefaultDays = Math.Max(0, defaultDays);
-                ImGuiUtil.HelpText(HellionStrings.Retention_Default_Help);
+                ImGuiUtil.HelpMarker(HellionStrings.Retention_Default_Help);
 
                 ImGui.Spacing();
 

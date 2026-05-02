@@ -24,6 +24,9 @@
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
     <value>The filter only controls what is written to the local database. The chat log itself keeps showing every message live, disallowed channels just stop being saved. Use the channel hide options in your in-game chat tabs if you want to remove channels from the visible chat.</value>
   </data>
+  <data name="Privacy_Filter_Tree_Heading" xml:space="preserve">
+    <value>Privacy filter and whitelist</value>
+  </data>
   <data name="Privacy_Whitelist_Help" xml:space="preserve">
     <value>Pick which channels are stored in the local database. Privacy-First default: only your own conversations. Use the buttons below to apply a preset.</value>
   </data>

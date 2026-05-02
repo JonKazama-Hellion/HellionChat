@@ -24,6 +24,9 @@
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
     <value>Der Filter steuert nur, was in die lokale Datenbank geschrieben wird. Im Chat-Log siehst du weiterhin jede Nachricht live, ausgeschlossene Kanäle werden nur nicht mehr gespeichert. Wenn du Kanäle auch aus der sichtbaren Anzeige entfernen willst, nutze die normalen Chat-Tab-Filter im Spiel.</value>
   </data>
+  <data name="Privacy_Filter_Tree_Heading" xml:space="preserve">
+    <value>Privacy-Filter und Whitelist</value>
+  </data>
   <data name="Privacy_Whitelist_Help" xml:space="preserve">
     <value>Wähle aus, welche Kanäle in die lokale Datenbank gespeichert werden. Standard nach Datensparsamkeit: nur deine eigenen Konversationen. Über die Buttons unten kannst du eine Voreinstellung anwenden.</value>
   </data>

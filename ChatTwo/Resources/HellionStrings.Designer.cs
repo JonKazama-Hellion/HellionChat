@@ -45,6 +45,7 @@ internal class HellionStrings
     internal static string Privacy_FilterEnabled_Name => Get(nameof(Privacy_FilterEnabled_Name));
     internal static string Privacy_FilterEnabled_Description => Get(nameof(Privacy_FilterEnabled_Description));
     internal static string Privacy_FilterEnabled_StorageOnly_Help => Get(nameof(Privacy_FilterEnabled_StorageOnly_Help));
+    internal static string Privacy_Filter_Tree_Heading => Get(nameof(Privacy_Filter_Tree_Heading));
     internal static string Privacy_Whitelist_Help => Get(nameof(Privacy_Whitelist_Help));
     internal static string Privacy_Preset_PrivacyFirst => Get(nameof(Privacy_Preset_PrivacyFirst));
     internal static string Privacy_Preset_ClearAll => Get(nameof(Privacy_Preset_ClearAll));
