@@ -6,6 +6,7 @@ using ChatTwo.Util;
 using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.ClientState.Keys;
+using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Bindings.ImGui;
 
@@ -343,9 +344,56 @@ public class Tab
 
     [NonSerialized] public Guid Identifier = Guid.NewGuid();
 
+    // Hellion Chat — Auto-Tell-Tabs greeted flag. Toggled manually from the
+    // sidebar to mark a tell partner as already greeted in the current
+    // session. NonSerialized because the temp tab itself is session-only.
+    [NonSerialized] public bool IsGreeted;
+
     public bool Matches(Message message)
     {
-        return message.Matches(SelectedChannels, ExtraChatAll, ExtraChatChannels);
+        if (!message.Matches(SelectedChannels, ExtraChatAll, ExtraChatChannels))
+        {
+            return false;
+        }
+
+        // Auto-tell temp tabs are bound to a single conversation partner;
+        // every other tell that matches the channel filter must NOT land
+        // here, otherwise all temp tabs would mirror "Tell Exclusive".
+        if (IsTempTab && TellTarget?.IsSet() == true)
+        {
+            return MatchesTempTabSender(message);
+        }
+
+        return true;
+    }
+
+    private bool MatchesTempTabSender(Message message)
+    {
+        var senderPayload = ExtractPlayerPayload(message.Sender);
+        if (senderPayload == null)
+        {
+            senderPayload = ExtractPlayerPayload(message.Content);
+        }
+        if (senderPayload == null)
+        {
+            return false;
+        }
+
+        var nameMatches = string.Equals(senderPayload.PlayerName, TellTarget.Name, StringComparison.OrdinalIgnoreCase);
+        var worldMatches = senderPayload.World.RowId == TellTarget.World;
+        return nameMatches && worldMatches;
+    }
+
+    private static PlayerPayload? ExtractPlayerPayload(IReadOnlyList<Chunk> chunks)
+    {
+        foreach (var chunk in chunks)
+        {
+            if (chunk.Link is PlayerPayload pp)
+            {
+                return pp;
+            }
+        }
+        return null;
     }
 
     public void AddMessage(Message message, bool unread = true)
@@ -394,6 +442,7 @@ public class Tab
             IsTempTab = IsTempTab,
             AllSenderMessages = AllSenderMessages,
             TellTarget = TellTarget.From(TellTarget),
+            IsGreeted = IsGreeted,
         };
     }
 
