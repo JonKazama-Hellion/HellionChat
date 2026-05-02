@@ -77,6 +77,7 @@ internal sealed class About : ISettingsTab
         ImGui.TextColored(ImGuiColors.ParsedGold, "Built on Chat 2");
         ImGui.TextUnformatted("Hellion Chat is a fork of Chat 2 by Infi and Anna (ascclemens).");
         ImGui.TextUnformatted("Every chat replacement feature, the IPC integration, the rendering engine and the storage core come from upstream Chat 2.");
+        ImGui.TextUnformatted("The upstream webinterface is intentionally not part of Hellion Chat — it could not be hardened to the privacy guarantees this fork makes by default.");
         ImGui.TextUnformatted("Upstream repository:");
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "chatTwoUpstream"))

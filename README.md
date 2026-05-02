@@ -1,6 +1,6 @@
 # Hellion Chat
 
-**Version 0.1.2** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.2.0** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
@@ -53,6 +53,10 @@ Privates Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo währen
 - BetterTTV-Cache-Crash-Fix (Null-Key-Handling).
 - Font-Atlas-Build-Fallback bei nicht-installierten System-Fonts.
 - Defensive Wrapping aller Migrations-Operationen.
+
+### Was gegenüber Chat 2 fehlt
+
+- **Webinterface** wurde in Hellion Chat 0.2.0 entfernt. Der eingebaute HTTP-Server hat unter dem Privacy-Versprechen nicht abgesichert werden können (5-stelliger numerischer Auth-Code aus `System.Random`, Bind auf alle Interfaces per Default, Cookies ohne Security-Flags und ein Server-Sent-Events-Stream der den Privacy-Filter umgangen hat). Wer den Funktionsumfang von Chat 2 vollständig braucht, sollte beim Upstream-Plugin bleiben; Hellion Chat fokussiert auf DSGVO-konforme Persistenz und verzichtet bewusst auf Remote-Zugriffs-Features.
 
 ---
 
@@ -227,7 +231,7 @@ Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig 
 
 ## Projektstatus
 
-**Version 0.1.2** | Stand: Mai 2026
+**Version 0.2.0** | Stand: Mai 2026
 
 Alle Bootstrap-Phasen abgeschlossen:
 
@@ -239,9 +243,12 @@ Alle Bootstrap-Phasen abgeschlossen:
 - [x] Custom-Repo-Pipeline mit GitHub-Release-Distribution
 - [x] About-Tab im Hellion-Branding mit License + Disclaimer
 - [x] AI-Disclosure dokumentiert (Pair-Klassifikation)
+- [x] Webinterface entfernt (Phase 1.5, Audit-Konsequenz aus 2026-05-02)
 
 Phase 2 (offen, kein festes Datum):
 
+- [ ] EmoteCache Path-Traversal-Hardening (`Path.GetFullPath` + StartsWith-Check)
+- [ ] Race-Hardening für `RetentionLastRunAt` (CompareExchange / Lock)
 - [ ] MySQL/MariaDB-Backend mit Drei-Stufen-Bestätigung
 - [ ] PostgreSQL-Backend
 - [ ] Encryption für sensible Channels (AES-256, lokaler Key)
