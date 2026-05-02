@@ -108,7 +108,10 @@ public static class TabsUtil
             [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
         },
-        Channel = InputChannel.Party,
+        // No automatic input-channel switch; the Gruppe tab is a read
+        // surface that pulls in Party, CrossParty, Alliance and PvpTeam
+        // together. Auto-routing /party into this tab would surprise the
+        // user when they actually wanted /alliance or /pvpteam.
     };
 
     public static Tab HellionBeginner => new()

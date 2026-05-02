@@ -152,15 +152,8 @@ public class Configuration : IPluginConfiguration
     public bool ShowTitleBar = true;
     public bool ShowPopOutTitleBar = true;
     public bool DatabaseBattleMessages;
-    // Load previously stored messages back into the tabs on plugin start
-    // so a /tell or party conversation picks up where it left off after
-    // a crash, restart or character switch. Default ON because the
-    // privacy filter already gates which channels go into the store at
-    // all; loading what is in there is not an additional privacy cost.
-    // Users can flip this off in Datenbank → Speicherung if they prefer
-    // every session to start with empty tabs.
-    public bool LoadPreviousSession = true;
-    public bool FilterIncludePreviousSessions = true;
+    public bool LoadPreviousSession;
+    public bool FilterIncludePreviousSessions;
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
     public bool CollapseKeepUniqueLinks;
