@@ -171,14 +171,6 @@ public class Configuration : IPluginConfiguration
     public ConfigKeyBind? ChatTabForward;
     public ConfigKeyBind? ChatTabBackward;
 
-    // Webinterface
-    public bool WebinterfaceEnabled;
-    public bool WebinterfaceAutoStart;
-    public string WebinterfacePassword = WebinterfaceUtil.GenerateSimpleAuthCode();
-    public int WebinterfacePort = 9000;
-    public HashSet<string> AuthStore = [];
-    public int WebinterfaceMaxLinesToSend = 1000; // 1-10000
-
     public void UpdateFrom(Configuration other, bool backToOriginal)
     {
         if (backToOriginal)
@@ -243,11 +235,6 @@ public class Configuration : IPluginConfiguration
         ChosenStyle = other.ChosenStyle;
         ChatTabForward = other.ChatTabForward;
         ChatTabBackward = other.ChatTabBackward;
-        WebinterfaceEnabled = other.WebinterfaceEnabled;
-        WebinterfaceAutoStart = other.WebinterfaceAutoStart;
-        WebinterfacePassword = other.WebinterfacePassword;
-        WebinterfacePort = other.WebinterfacePort;
-        WebinterfaceMaxLinesToSend = other.WebinterfaceMaxLinesToSend;
 
         PrivacyFilterEnabled = other.PrivacyFilterEnabled;
         PrivacyPersistChannels = [..other.PrivacyPersistChannels];

@@ -42,7 +42,6 @@ public sealed class SettingsWindow : Window
             new Tabs(Plugin, Mutable),
             new SettingsTabs.Privacy(Plugin, Mutable),
             new Database(Plugin, Mutable),
-            new Webinterface(Plugin, Mutable),
             new Miscellaneous(Mutable),
             new Changelog(Mutable),
             new About()
