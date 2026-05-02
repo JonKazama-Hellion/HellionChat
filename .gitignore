@@ -374,6 +374,9 @@ FodyWeavers.xsd
 
 #Specs und Plan datein
 /.superpowers/
+
+#Test Datein
+ChatTwo.Tests
 TestResults
 *.db-shm
 *.db-wal
