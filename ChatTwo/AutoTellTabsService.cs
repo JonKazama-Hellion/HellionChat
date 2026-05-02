@@ -82,8 +82,14 @@ internal sealed class AutoTellTabsService : IDisposable
         if (partner == null)
         {
             // Real message without a player payload — e.g. GM tells, which
-            // we deliberately skip. Warn once so we notice future regressions.
-            Plugin.Log.Warning("[AutoTellTabs] Could not extract tell partner from message; skipping spawn.");
+            // we deliberately skip. The diagnostics make future regressions
+            // (FFXIV changing tell payload shape, new edge cases) findable
+            // without having to crank up debug logging at the source.
+            Plugin.Log.Warning(
+                $"[AutoTellTabs] Could not extract tell partner. type={message.Code.Type}, " +
+                $"senderChunks={message.Sender.Count}, contentChunks={message.Content.Count}, " +
+                $"senderSourcePayloads={message.SenderSource?.Payloads?.Count ?? 0}, " +
+                $"contentSourcePayloads={message.ContentSource?.Payloads?.Count ?? 0}");
             return;
         }
 
@@ -111,8 +117,12 @@ internal sealed class AutoTellTabsService : IDisposable
     {
         if (message.Code.Type == ChatType.TellIncoming)
         {
-            // Incoming tell: the sender is the conversation partner.
-            var fromSender = ChunkUtil.TryGetPlayerPayload(message.Sender);
+            // Incoming tell: the sender is the conversation partner. The
+            // PlayerPayload normally rides on a chunk's Link slot, but for
+            // some tell types FFXIV only puts it in the raw SeString —
+            // fall back to that before giving up.
+            var fromSender = ChunkUtil.TryGetPlayerPayload(message.Sender)
+                             ?? ChunkUtil.TryGetPlayerPayload(message.SenderSource);
             if (fromSender != null)
             {
                 return (fromSender.PlayerName, fromSender.World.RowId);
@@ -123,8 +133,11 @@ internal sealed class AutoTellTabsService : IDisposable
         // Outgoing tell: the local player is the sender, the partner shows
         // up either as a payload in the content (for tells typed via the
         // Chat 2 input bar) or as the channel's tracked tell target (set by
-        // the SetContextTellTarget game hook).
-        var fromContent = ChunkUtil.TryGetPlayerPayload(message.Content);
+        // the SetContextTellTarget game hook). Same SeString fallback.
+        var fromContent = ChunkUtil.TryGetPlayerPayload(message.Content)
+                          ?? ChunkUtil.TryGetPlayerPayload(message.ContentSource)
+                          ?? ChunkUtil.TryGetPlayerPayload(message.Sender)
+                          ?? ChunkUtil.TryGetPlayerPayload(message.SenderSource);
         if (fromContent != null)
         {
             return (fromContent.PlayerName, fromContent.World.RowId);

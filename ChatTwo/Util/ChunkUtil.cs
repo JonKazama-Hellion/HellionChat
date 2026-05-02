@@ -415,6 +415,26 @@ internal static class ChunkUtil
         return null;
     }
 
+    // Fallback for tells where the PlayerPayload lives in the raw SeString
+    // payload list rather than on a chunk's Link slot. Same semantics as
+    // the chunk-walking variant above: returns the first PlayerPayload or
+    // null if the SeString has none.
+    internal static PlayerPayload? TryGetPlayerPayload(SeString? seString)
+    {
+        if (seString == null)
+        {
+            return null;
+        }
+        foreach (var payload in seString.Payloads)
+        {
+            if (payload is PlayerPayload pp)
+            {
+                return pp;
+            }
+        }
+        return null;
+    }
+
     // True when the message's sender (or, as a fallback, content) carries a
     // PlayerPayload that matches the given identity. Used by both the
     // Tab.Matches sender filter and the MessageStore tell-history scan.
