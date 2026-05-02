@@ -27,6 +27,9 @@ internal sealed class Tabs : ISettingsTab
     {
         const string addTabPopup = "add-tab-popup";
 
+        ImGuiUtil.HelpText(HellionStrings.Tabs_Presets_Linkshell_Hint);
+        ImGui.Spacing();
+
         if (ImGuiUtil.IconButton(FontAwesomeIcon.Plus, tooltip: Language.Options_Tabs_Add))
             ImGui.OpenPopup(addTabPopup);
 

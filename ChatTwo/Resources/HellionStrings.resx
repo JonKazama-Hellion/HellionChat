@@ -526,4 +526,21 @@
   <data name="Settings_Information_Changelog_Heading" xml:space="preserve">
     <value>Changelog</value>
   </data>
+
+  <!-- Hellion Chat — Default tab presets (channel-themed) -->
+  <data name="Tabs_Presets_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Tabs_Presets_Party" xml:space="preserve">
+    <value>Party</value>
+  </data>
+  <data name="Tabs_Presets_Beginner" xml:space="preserve">
+    <value>Beginner</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell" xml:space="preserve">
+    <value>Linkshell</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
+    <value>If you use multiple linkshells, the maintainer recommends one tab per shell for cleaner readability. Duplicate this tab and narrow the channel selection per copy.</value>
+  </data>
 </root>

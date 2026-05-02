@@ -98,6 +98,75 @@ public static class TabsUtil
         AllSenderMessages = true,
     };
 
+    // Hellion default-tab presets used by the v10 wipe migration. Names are
+    // kept in HellionStrings (EN+DE) instead of Language.* so the upstream
+    // resource files stay untouched. Channel selections cover the channels
+    // a typical Eorzea raider uses without forcing the user to hand-tick
+    // each box on first start.
+    public static Tab HellionFreeCompany => new()
+    {
+        Name = HellionStrings.Tabs_Presets_FreeCompany,
+        SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+        {
+            [ChatType.FreeCompany] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.FreeCompanyAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.FreeCompanyLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
+        },
+        Channel = InputChannel.FreeCompany,
+    };
+
+    public static Tab HellionParty => new()
+    {
+        Name = HellionStrings.Tabs_Presets_Party,
+        SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+        {
+            [ChatType.Party] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossParty] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Alliance] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PvpTeam] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PvpTeamAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PvpTeamLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
+        },
+        Channel = InputChannel.Party,
+    };
+
+    public static Tab HellionBeginner => new()
+    {
+        Name = HellionStrings.Tabs_Presets_Beginner,
+        SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+        {
+            [ChatType.NoviceNetwork] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.NoviceNetworkSystem] = (ChatSourceExt.All, ChatSourceExt.All),
+        },
+        Channel = InputChannel.NoviceNetwork,
+    };
+
+    public static Tab HellionLinkshell => new()
+    {
+        Name = HellionStrings.Tabs_Presets_Linkshell,
+        SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
+        {
+            [ChatType.Linkshell1] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell2] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell3] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell4] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell5] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Linkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell1] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell2] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell3] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell4] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell5] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.CrossLinkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
+        },
+    };
+
     public static Dictionary<ChatType, (ChatSource, ChatSource)> MostlyPlayer => new()
     {
             // Special
