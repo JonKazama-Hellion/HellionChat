@@ -40,6 +40,36 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.5.1 — Backlog Sweep**
+
+  Pure hardening and polish. No new features. Eight backlog items
+  from the v0.5.0 codebase review collected into one patch:
+
+  - Cleanup preview now flags itself as out-of-date when the user
+    edits the whitelist after the last refresh, and the refresh
+    button is visually emphasised in that state
+  - Greeted Auto-Tell-Tabs now also dim their selection and hover
+    backgrounds in the sidebar, not just the text
+  - Performance section in the General tab moves to the standard
+    HelpMarker tooltip pattern instead of a wall-of-text description
+  - Tabs and Database settings tabs pull their display name from
+    HellionStrings instead of the upstream Language bundle, so all
+    eight tabs share one i18n source
+  - FontChooser results are now marshalled onto the framework thread
+    via Plugin.Framework.Run instead of being written to settings
+    state directly from the threadpool
+  - EmoteCache.LoadData drops async void and the four CS8618 build
+    warnings the build has been carrying since v0.4.0
+  - All MessageStore SQL paths that fed dynamic value lists into
+    interpolated SQL now use named parameter bindings via a new
+    BindIntList helper. Same behaviour, defence against future
+    user-input regressions
+
+  Configuration version is unchanged at 10. No migration. Existing
+  installs upgrade silently.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.5.0 — Settings UX polish**
 
   The settings window has been pulled apart and rebuilt around eight
