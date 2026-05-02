@@ -1,5 +1,13 @@
 # Hellion Chat
 
+[![Build](https://github.com/JonKazama-Hellion/HellionChat/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/JonKazama-Hellion/HellionChat/actions/workflows/build.yml)
+[![CodeQL](https://github.com/JonKazama-Hellion/HellionChat/actions/workflows/github-code-scanning/codeql/badge.svg?branch=main)](https://github.com/JonKazama-Hellion/HellionChat/security/code-scanning)
+[![License: EUPL-1.2](https://img.shields.io/badge/License-EUPL--1.2-blue.svg)](LICENSE)
+[![Latest release](https://img.shields.io/github/v/release/JonKazama-Hellion/HellionChat?display_name=tag&sort=semver&color=brightgreen)](https://github.com/JonKazama-Hellion/HellionChat/releases/latest)
+[![Dalamud API](https://img.shields.io/badge/Dalamud-API_15-purple)](https://github.com/goatcorp/Dalamud)
+[![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
+[![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
+
 **Version 0.5.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
