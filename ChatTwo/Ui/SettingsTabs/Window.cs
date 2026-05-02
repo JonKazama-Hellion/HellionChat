@@ -8,7 +8,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Window : ISettingsTab
 {
-    private readonly Plugin Plugin;
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => HellionStrings.Settings_Tab_Window + "###tabs-window";

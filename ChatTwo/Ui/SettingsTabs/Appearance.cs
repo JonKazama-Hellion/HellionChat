@@ -9,7 +9,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Appearance : ISettingsTab
 {
-    private readonly Plugin Plugin;
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => HellionStrings.Settings_Tab_Appearance + "###tabs-appearance";
