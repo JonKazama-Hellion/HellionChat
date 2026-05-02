@@ -74,6 +74,13 @@ internal sealed class About : ISettingsTab
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
+        ImGui.TextColored(ImGuiColors.ParsedGold, "Why this fork exists");
+        ImGui.TextUnformatted("Hellion Chat is not meant to replace Chat 2 — it is a niche alternative for users who want a privacy-by-default chat persistence layer aligned with EU, US and JP data protection rules.");
+        ImGui.TextUnformatted("The trigger was a personal one: a two-year Chat 2 database with over two million logged messages, the bulk of them /say, /shout and /yell from strangers in cities. Most plugin users do not mind that data sitting on their disk. I do, so this fork exists.");
+        ImGui.TextUnformatted("No big audience expected, no competition with the upstream plugin intended. The source is open under the same EUPL-1.2 licence as Chat 2 — Infi, Anna and anyone else are welcome to look at how this fork solves things, take ideas, ask questions or ignore it entirely. All three responses are fine.");
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
         ImGui.TextColored(ImGuiColors.ParsedGold, "Built on Chat 2");
         ImGui.TextUnformatted("Hellion Chat is a fork of Chat 2 by Infi and Anna (ascclemens).");
         ImGui.TextUnformatted("Every chat replacement feature, the IPC integration, the rendering engine and the storage core come from upstream Chat 2.");
