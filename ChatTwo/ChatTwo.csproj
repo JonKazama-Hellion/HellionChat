@@ -57,17 +57,16 @@
     </ItemGroup>
 
 
+    <!-- Plugin icon. Copy images/* into the build output so Dalamud
+         finds the icon next to the DLL, and let the SDK default
+         DalamudPackager pipeline include the same path in the
+         release ZIP. Earlier we shipped a custom DalamudPackager
+         targets override that explicitly set HandleImages and
+         ImagesPath; that override conflicted with the SDK 15
+         default and the resulting manifest carried no IconUrl.
+         Removed in v0.5.2. -->
     <ItemGroup>
-      <Folder Include="images\" />
-    </ItemGroup>
-
-    <!-- Copy images/icon.png next to the built DLL so Dalamud's local
-         plugin loader finds it at <plugindir>/images/icon.png. The
-         DalamudPackager.targets file in this directory then includes
-         the same path inside the release ZIP — see that file for the
-         full packaging override. -->
-    <ItemGroup>
-        <None Include="images\icon.png">
+        <None Include="images\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
