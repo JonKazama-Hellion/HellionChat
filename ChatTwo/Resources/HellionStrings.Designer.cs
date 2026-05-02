@@ -64,6 +64,7 @@ internal class HellionStrings
     internal static string Cleanup_Heading => Get(nameof(Cleanup_Heading));
     internal static string Cleanup_Help_Intro => Get(nameof(Cleanup_Help_Intro));
     internal static string Cleanup_Help_SavedNote => Get(nameof(Cleanup_Help_SavedNote));
+    internal static string Cleanup_Preview_Stale => Get(nameof(Cleanup_Preview_Stale));
     internal static string Retention_Help_SavedNote => Get(nameof(Retention_Help_SavedNote));
     internal static string Cleanup_RefreshPreview => Get(nameof(Cleanup_RefreshPreview));
     internal static string Cleanup_NoPreview => Get(nameof(Cleanup_NoPreview));
