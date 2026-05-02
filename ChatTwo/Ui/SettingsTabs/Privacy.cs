@@ -4,6 +4,7 @@ using ChatTwo.Privacy;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface.ImGuiNotification;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
@@ -186,6 +187,33 @@ internal sealed class Privacy : ISettingsTab
         ImGui.Spacing();
 
         DrawExportSection();
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        DrawAutoTellTabsPreloadSection();
+    }
+
+    private void DrawAutoTellTabsPreloadSection()
+    {
+        using var tree = ImRaii.TreeNode(HellionStrings.Privacy_AutoTellTabs_Section_Title);
+        if (!tree.Success)
+            return;
+
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            var preload = Mutable.AutoTellTabsHistoryPreload;
+            ImGui.SetNextItemWidth(200f * ImGuiHelpers.GlobalScale);
+            if (ImGui.SliderInt(HellionStrings.Privacy_AutoTellTabs_Preload_Name, ref preload, 0, 100))
+            {
+                Mutable.AutoTellTabsHistoryPreload = preload;
+            }
+            ImGuiUtil.HelpMarker(HellionStrings.Privacy_AutoTellTabs_Preload_Description);
+
+            ImGui.Spacing();
+            ImGuiUtil.HelpText(HellionStrings.Privacy_AutoTellTabs_Preload_Hint);
+        }
     }
 
     private void DrawExportSection()

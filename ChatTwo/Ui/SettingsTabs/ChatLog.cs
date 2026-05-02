@@ -1,6 +1,7 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface.Style;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
@@ -92,6 +93,12 @@ internal sealed class ChatLog : ISettingsTab
                 Plugin.ChatLogWindow.Position = pos;
             ImGuiUtil.WarningText(Language.Options_AdjustPosition_Warning);
             ImGui.Spacing();
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
+            DrawAutoTellTabsSection();
         }
 
         if (!Mutable.OverrideStyle)
@@ -115,5 +122,35 @@ internal sealed class ChatLog : ISettingsTab
         }
 
         ImGui.Spacing();
+    }
+
+    private void DrawAutoTellTabsSection()
+    {
+        using var tree = ImRaii.TreeNode(HellionStrings.ChatLog_AutoTellTabs_Section_Title);
+        if (!tree.Success)
+            return;
+
+        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
+        {
+            ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_Enable_Name, ref Mutable.EnableAutoTellTabs);
+            ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_Enable_Description);
+
+            ImGui.SetNextItemWidth(200f * ImGuiHelpers.GlobalScale);
+            var limit = Mutable.AutoTellTabsLimit;
+            if (ImGui.SliderInt(HellionStrings.ChatLog_AutoTellTabs_Limit_Name, ref limit, 1, 50))
+            {
+                Mutable.AutoTellTabsLimit = limit;
+            }
+            ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_Limit_Description);
+
+            ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_Compact_Name, ref Mutable.AutoTellTabsCompactDisplay);
+            ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_Compact_Description);
+
+            ImGui.Spacing();
+            ImGuiUtil.HelpText(HellionStrings.ChatLog_AutoTellTabs_PreloadHint);
+
+            ImGui.Spacing();
+            ImGuiUtil.WarningText(HellionStrings.ChatLog_AutoTellTabs_ConflictHint);
+        }
     }
 }

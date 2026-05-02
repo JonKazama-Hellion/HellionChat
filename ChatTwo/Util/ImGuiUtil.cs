@@ -215,6 +215,24 @@ internal static class ImGuiUtil
             ImGui.TextUnformatted(text);
     }
 
+    // Hellion Chat — compact help affordance: a dimmed "(?)" glyph rendered
+    // on the same line as the previous item, with the long-form description
+    // tucked into a hover tooltip. Lets us keep the settings panes scannable
+    // instead of stacking a wall of HelpText paragraphs under every option.
+    internal static void HelpMarker(string description)
+    {
+        ImGui.SameLine();
+        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int) ImGuiCol.TextDisabled]))
+            ImGui.TextUnformatted("(?)");
+
+        if (!ImGui.IsItemHovered())
+            return;
+
+        using var tooltip = ImRaii.Tooltip();
+        using (ImRaii.TextWrapPos(35.0f * ImGui.GetFontSize()))
+            ImGui.TextUnformatted(description);
+    }
+
     internal static void WarningText(string text, bool wrap = true)
     {
         var style = StyleModel.GetConfiguredStyle() ?? StyleModel.GetFromCurrent();
