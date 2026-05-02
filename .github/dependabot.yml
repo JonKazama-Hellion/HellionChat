@@ -1,0 +1,42 @@
+version: 2
+
+updates:
+  # NuGet package updates for the plugin project. Weekly cadence keeps the
+  # noise down while still catching transitive security advisories within
+  # a few days of disclosure.
+  - package-ecosystem: nuget
+    directory: /ChatTwo
+    schedule:
+      interval: weekly
+      day: monday
+      time: "07:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    labels:
+      - dependencies
+      - nuget
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      patches:
+        update-types:
+          - patch
+      minor:
+        update-types:
+          - minor
+
+  # GitHub Actions versions in .github/workflows. Lower cadence because
+  # Action releases ship less frequently and are usually safe to defer
+  # for a month.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+      time: "07:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - github-actions
+    commit-message:
+      prefix: "chore(actions)"

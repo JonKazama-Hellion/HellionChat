@@ -1,0 +1,61 @@
+name: Release
+
+# Triggered when a vX.Y.Z tag is pushed. Builds the plugin against the
+# current Dalamud staging branch, locates the latest.zip produced by
+# DalamudPackager and attaches it to the matching GitHub Release.
+# Does not consume any user-controlled event payload, only the tag name
+# (validated by the on.tags filter) and the steps output of the locate
+# step (path string from Get-ChildItem on a controlled directory).
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and attach release ZIP
+    runs-on: windows-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud staging
+        shell: pwsh
+        run: |
+          $hooks = Join-Path $env:APPDATA "XIVLauncher\addon\Hooks\dev"
+          New-Item -ItemType Directory -Force -Path $hooks | Out-Null
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile dalamud.zip
+          Expand-Archive -Force -Path dalamud.zip -DestinationPath $hooks
+
+      - name: Build (Release)
+        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release
+
+      - name: Locate latest.zip
+        id: locate
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem -Path ChatTwo\bin\Release -Recurse -Filter latest.zip | Select-Object -First 1
+          if (-not $zip)
+          {
+              throw "latest.zip not found under ChatTwo\bin\Release"
+          }
+          Write-Host "Found: $($zip.FullName)"
+          "path=$($zip.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Attach to GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.locate.outputs.path }}
+          fail_on_unmatched_files: true
+          generate_release_notes: false

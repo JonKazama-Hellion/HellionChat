@@ -269,7 +269,7 @@ Phase 3 (offen, kein festes Datum):
 
 ## Lizenz
 
-EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Volltext liegt in [LICENSE](LICENSE), persönliche Danksagung an die Upstream-Autoren in [NOTICE.md](NOTICE.md).
+EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Volltext in [LICENSE](LICENSE), Copyright-Notes mit Dual-Holder-Block in [COPYRIGHT](COPYRIGHT), persönliche Danksagung an die Upstream-Autoren in [NOTICE.md](NOTICE.md).
 
 © 2023–2026 die Chat-2-Autoren (Infi, Anna und die Upstream-Contributors) für die Engine, IPC und Storage-Schicht.
 © 2026 Hellion Online Media für die Hellion-Chat-Erweiterungen.

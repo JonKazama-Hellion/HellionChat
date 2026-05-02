@@ -1,0 +1,27 @@
+HellionChat — a privacy-focused fork of ChatTwo for FINAL FANTASY XIV
+
+Copyright (c) 2024-2025 Infiziert90 (Infi) and Anna Clemens (ascclemens)
+    Original ChatTwo authors and copyright holders of the upstream
+    plugin this fork is built on. Their work covers the message store,
+    the channel filtering, the sidebar tab system, the FFXIV chat
+    hooks, the localisation infrastructure and most of the
+    architecture HellionChat still relies on.
+
+Copyright (c) 2025-2026 Florian Wathling / Hellion Online Media
+    HellionChat-specific modifications, including the privacy filter,
+    per-channel retention sweep, export pipeline, Auto-Tell-Tabs,
+    Hellion theme and font integration, German localisation and the
+    EUPL-1.2 fork maintenance.
+
+Licensed under the European Union Public Licence (EUPL), Version 1.2
+only. The full Licence text lives in the LICENSE file at the root of
+this repository. The official Licence website is at:
+
+    https://eupl.eu/1.2/en/
+
+This Work is provided "AS IS" without warranties of any kind. See
+Article 7 (Disclaimer of Warranty) and Article 8 (Disclaimer of
+Liability) of the Licence for the legally binding wording.
+
+Acknowledgements directed at the upstream ChatTwo authors live in
+NOTICE.md. The manual upstream-sync workflow lives in UPSTREAM_SYNC.md.
