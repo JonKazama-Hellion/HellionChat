@@ -9,6 +9,10 @@ using Dalamud.Bindings.ImGui;
 
 namespace ChatTwo.Ui.SettingsTabs;
 
+// Chat-Tab — vier eigenständige Sektionen: Auto-Tell-Tabs, Behaviour,
+// Preview, Emotes. Der Emotes-Block ist 1:1 aus der Bestand-Datei
+// Emote.cs übernommen; die Datei wird in Plan-Task 11 (Settings UX
+// Polish v0.5.0) entfernt, sobald alle Tabs migriert sind.
 internal sealed class Chat : ISettingsTab
 {
     private Plugin Plugin { get; }
