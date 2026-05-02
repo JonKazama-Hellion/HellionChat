@@ -372,6 +372,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+#Specs und Plan datein
+/.superpowers/
 TestResults
 *.db-shm
 *.db-wal
