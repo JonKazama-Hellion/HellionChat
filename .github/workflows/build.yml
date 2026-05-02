@@ -11,6 +11,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# Minimum permissions for a build-only workflow: read the repo, nothing
+# else. Closes the CodeQL "Workflow does not contain permissions" alert
+# and matches the principle-of-least-privilege the security guide
+# recommends for workflows that don't push or create releases.
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build (Release)

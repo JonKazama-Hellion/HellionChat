@@ -94,17 +94,23 @@ internal static class ImGuiUtil
         foreach (var part in csText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None))
         {
             var bytes = Encoding.UTF8.GetBytes(part);
+
+            // Empty splits (consecutive newlines) leave bytes.Length at 0
+            // and the textEnd pointer below would coincide with text. The
+            // ImGuiNative word-wrap calls treat that as undefined input,
+            // and the CodeQL "unvalidated local pointer arithmetic" alert
+            // also flags it. Render an empty line and skip the unsafe
+            // block entirely for this iteration.
+            if (bytes.Length == 0)
+            {
+                ImGui.TextUnformatted("");
+                continue;
+            }
+
             fixed (byte* rawText = bytes)
             {
                 var text = rawText;
                 var textEnd = text + bytes.Length;
-
-                // empty string
-                if (text == null)
-                {
-                    ImGui.TextUnformatted("");
-                    continue;
-                }
 
                 var widthLeft = ImGui.GetContentRegionAvail().X;
                 var endPrevLine = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
