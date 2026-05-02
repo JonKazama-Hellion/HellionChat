@@ -21,63 +21,79 @@ internal static class HellionStyle
 {
     // Encoded as 0xRRGGBBAA, matching ChatTwo convention (see Settings.cs
     // Ko-fi buttons). RgbaToAbgr handles the byte swap to the format ImGui
-    // expects.
+    // expects. Hex values are sourced from the Hellion Online Media brand
+    // guide ("Arctic Cyan + Ember Glow", BRANDING.md in the website repo).
 
-    // Primary — cyan-teal for actionable controls (buttons, checks, sliders).
-    private const uint PrimaryRgba = 0x00B8D4FF;
-    private const uint PrimaryHoverRgba = 0x26C6DAFF;
-    private const uint PrimaryActiveRgba = 0x00838FFF;
+    // Primary — Arctic Cyan, used for every interactive control (buttons,
+    // checks, sliders, separators when hovered). Three brand stages plus a
+    // hover that lifts to brand-color-light and a press that drops to
+    // brand-color-dark.
+    private const uint PrimaryRgba = 0x00BED2FF;       // brand-color
+    private const uint PrimaryHoverRgba = 0x4DD9E8FF;  // brand-color-light
+    private const uint PrimaryActiveRgba = 0x0097A7FF; // brand-color-dark
 
-    // Secondary — industrial amber, used as a warm highlight for active
-    // states (tab borders, resize grips, scrollbar grabs).
-    private const uint SecondaryRgba = 0xFFB300FF;
-    private const uint SecondaryHoverRgba = 0xFFC940FF;
-    private const uint SecondaryActiveRgba = 0xC68400FF;
+    // Identity — brand-color-dark teal for window title bars and the
+    // active tab. Sits visibly below the primary cyan on buttons so the
+    // user sees "where am I" (deep teal) versus "what can I click"
+    // (brand cyan) without leaving the cyan family.
+    private const uint IdentityRgba = 0x0097A7FF;       // brand-color-dark
+    private const uint IdentityHoverRgba = 0x4DD9E8FF;  // brand-color-light
+    private const uint IdentityDeepRgba = 0x005670FF;   // dimmer teal for unfocused-active tab
 
-    // Tertiary — slate violet, reserved for title bars and the active tab
-    // background so identity beats out the cyan accent without competing
-    // with it on action controls.
-    private const uint TertiaryRgba = 0x7B61FFFF;
-    private const uint TertiaryHoverRgba = 0x9580FFFF;
-    private const uint TertiaryActiveRgba = 0x5E45D9FF;
+    // Accent — Ember Orange for warm highlights on grips and scrollbar
+    // pulls. Replaces the previous industrial amber so the plugin matches
+    // the website's CTA palette. AccentActive is reserved for any future
+    // pressed-state on accent surfaces; the current slots only need
+    // AccentRgba and AccentHoverRgba.
+    private const uint AccentRgba = 0xF97316FF;        // accent-color
+    private const uint AccentHoverRgba = 0xFB923CFF;   // accent-color-light
 
-    // Surfaces — deep slate window/frame backgrounds, steel borders.
-    private const uint WindowBgRgba = 0x0E1A20FF;
-    private const uint ChildBgRgba = 0x102027FF;
-    private const uint PopupBgRgba = 0x102027FF;
-    private const uint FrameBgRgba = 0x162831FF;
-    private const uint FrameBgHoverRgba = 0x1F3540FF;
-    private const uint FrameBgActiveRgba = 0x274250FF;
-    private const uint BorderRgba = 0x37474FFF;
+    // Surfaces — Hellion brand background ladder. Window darkest, frame
+    // hover ladder climbs into surface tones. Matches the website's
+    // background / background-medium / background-light / surface vars.
+    private const uint WindowBgRgba = 0x070B12FF;       // background
+    private const uint ChildBgRgba = 0x0C1220FF;        // background-medium
+    private const uint PopupBgRgba = 0x0C1220FF;        // background-medium
+    private const uint FrameBgRgba = 0x141E30FF;        // background-light
+    private const uint FrameBgHoverRgba = 0x1A2538FF;   // surface
+    private const uint FrameBgActiveRgba = 0x22303FFF;  // surface-hover
+    // Cyan-tinted border — matches website --border-brand (cyan @ 40% α).
+    private const uint BorderRgba = 0x00BED266;
     private const uint BorderShadowRgba = 0x00000000;
 
-    // Headers / collapsing-headers / tree nodes / selectables.
-    private const uint HeaderRgba = 0x1B2C36FF;
-    private const uint HeaderHoverRgba = 0x263A45FF;
-    private const uint HeaderActiveRgba = 0x324A57FF;
+    // Headers / collapsing-headers / tree nodes / selectables — same
+    // surface ladder as frames so panels feel consistent.
+    private const uint HeaderRgba = 0x141E30FF;
+    private const uint HeaderHoverRgba = 0x1A2538FF;
+    private const uint HeaderActiveRgba = 0x22303FFF;
 
-    // Title bars — tertiary identity for the active state.
-    private const uint TitleBgRgba = 0x0E1A20FF;
-    private const uint TitleBgActiveRgba = 0x5E45D9FF;
-    private const uint TitleBgCollapsedRgba = 0x0A1318FF;
+    // Title bars — Identity teal on active so the focused window reads
+    // as "yours" without using accent or primary slots.
+    private const uint TitleBgRgba = 0x070B12FF;
+    private const uint TitleBgActiveRgba = IdentityRgba;
+    private const uint TitleBgCollapsedRgba = 0x05080EFF;
 
-    // Tabs — tertiary tint, secondary highlight while hovered/unfocused.
-    private const uint TabRgba = 0x162831FF;
-    private const uint TabHoveredRgba = 0x9580FFFF;
-    private const uint TabActiveRgba = 0x7B61FFFF;
-    private const uint TabUnfocusedRgba = 0x12222AFF;
-    private const uint TabUnfocusedActiveRgba = 0x5E45D9FF;
+    // Tabs — neutral inactive, Identity-light on hover, Identity teal on
+    // active. Unfocused-active uses the deeper Identity stage so an
+    // unfocused window's active tab still reads but does not pull focus.
+    private const uint TabRgba = 0x141E30FF;
+    private const uint TabHoveredRgba = IdentityHoverRgba;
+    private const uint TabActiveRgba = IdentityRgba;
+    private const uint TabUnfocusedRgba = 0x0C1220FF;
+    private const uint TabUnfocusedActiveRgba = IdentityDeepRgba;
 
-    // Scrollbar — slate base, secondary amber on grab.
-    private const uint ScrollbarBgRgba = 0x0E1A20FF;
-    private const uint ScrollbarGrabRgba = 0x37474FFF;
-    private const uint ScrollbarGrabHoveredRgba = 0xFFC940FF;
-    private const uint ScrollbarGrabActiveRgba = 0xFFB300FF;
+    // Scrollbar — Ember on grab so the pull stands out without competing
+    // with the cyan action buttons. Idle grab is a subtle surface tone,
+    // hover/active climb into accent.
+    private const uint ScrollbarBgRgba = 0x070B12FF;
+    private const uint ScrollbarGrabRgba = 0x22303FFF;       // surface-hover
+    private const uint ScrollbarGrabHoveredRgba = AccentHoverRgba;
+    private const uint ScrollbarGrabActiveRgba = AccentRgba;
 
-    // Resize grip — secondary amber for the active corner pull.
-    private const uint ResizeGripRgba = 0x37474FFF;
-    private const uint ResizeGripHoveredRgba = 0xFFC940FF;
-    private const uint ResizeGripActiveRgba = 0xFFB300FF;
+    // Resize grip — same Ember treatment as the scrollbar.
+    private const uint ResizeGripRgba = 0x141E30FF;
+    private const uint ResizeGripHoveredRgba = AccentHoverRgba;
+    private const uint ResizeGripActiveRgba = AccentRgba;
 
     // Separator and check mark / slider follow the primary cyan.
 
