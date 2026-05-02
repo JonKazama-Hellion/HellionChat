@@ -72,8 +72,11 @@ public sealed class Plugin : IDalamudPlugin
     // plugin start would launch two sweeps in parallel and the second one
     // would just re-do work the first one already finished. The lock guards
     // the flag — the flag check itself bails before we touch the database.
+    // Volatile because the ImGui thread reads the flag outside the lock to
+    // gate the manual button; without it the JIT may cache the value in a
+    // register and miss the background-thread update.
     internal readonly object RetentionSweepLock = new();
-    internal bool RetentionSweepRunning;
+    internal volatile bool RetentionSweepRunning;
 
     internal DateTime GameStarted { get; }
 

@@ -105,6 +105,11 @@ public static class EmoteCache
         }
         catch (Exception ex)
         {
+            // Reset to Unloaded so a later trigger (e.g. the user reopening
+            // the Emotes tab after the network recovers) can retry. Without
+            // this the State stays on Loading and the early-out at the top
+            // of LoadData blocks every further attempt until plugin reload.
+            State = LoadingState.Unloaded;
             Plugin.Log.Error(ex, "BetterTTV cache wasn't initialized");
         }
     }

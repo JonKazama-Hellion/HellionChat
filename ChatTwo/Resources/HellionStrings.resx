@@ -78,6 +78,9 @@
   <data name="Cleanup_Help_SavedNote" xml:space="preserve">
     <value>Cleanup uses your SAVED whitelist (Plugin.Config), not unsaved edits above. Click Save first if you want to apply your current edits.</value>
   </data>
+  <data name="Retention_Help_SavedNote" xml:space="preserve">
+    <value>The manual sweep uses your SAVED retention policy, not the slider values above. Click Save first if you want the run to apply your current edits.</value>
+  </data>
   <data name="Cleanup_RefreshPreview" xml:space="preserve">
     <value>Refresh preview</value>
   </data>
@@ -177,18 +180,6 @@
   <data name="Retention_Error" xml:space="preserve">
     <value>Retention sweep failed, see /xllog</value>
   </data>
-  <data name="Migration_Notification_Title" xml:space="preserve">
-    <value>Hellion Chat</value>
-  </data>
-  <data name="Migration_Notification_Content" xml:space="preserve">
-    <value>Privacy filter activated by default. Settings → Privacy to adjust.</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Title" xml:space="preserve">
-    <value>Hellion Chat 0.2.0</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Content" xml:space="preserve">
-    <value>The webinterface has been removed in this version because it could not be hardened to the privacy guarantees Hellion Chat makes by default. If you used it, please consult the README for context.</value>
-  </data>
   <data name="Wizard_Title" xml:space="preserve">
     <value>Hellion Chat — Welcome</value>
   </data>
@@ -275,9 +266,6 @@
   </data>
   <data name="Export_Error" xml:space="preserve">
     <value>Export failed, see /xllog</value>
-  </data>
-  <data name="Theme_Heading" xml:space="preserve">
-    <value>Appearance</value>
   </data>
   <data name="Theme_Enabled_Name" xml:space="preserve">
     <value>Use the Hellion theme across all plugin windows</value>
@@ -371,12 +359,6 @@
   </data>
 
   <!-- Hellion Chat — Auto-Tell-Tabs (runtime strings) -->
-  <data name="AutoTellTabs_Migration_Title" xml:space="preserve">
-    <value>Auto-Tell-Tabs</value>
-  </data>
-  <data name="AutoTellTabs_Migration_Content" xml:space="preserve">
-    <value>Auto-Tell-Tabs are enabled by default starting with version 0.4.0. You can disable or fine-tune them in the Chat tab.</value>
-  </data>
   <data name="AutoTellTabs_SectionHeader" xml:space="preserve">
     <value>Active Tells</value>
   </data>

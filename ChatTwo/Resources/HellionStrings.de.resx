@@ -78,6 +78,9 @@
   <data name="Cleanup_Help_SavedNote" xml:space="preserve">
     <value>Das Aufräumen nutzt deine GESPEICHERTE Whitelist (Plugin.Config), nicht ungespeicherte Änderungen oben. Klicke zuerst Speichern, wenn du deine aktuellen Änderungen anwenden willst.</value>
   </data>
+  <data name="Retention_Help_SavedNote" xml:space="preserve">
+    <value>Der manuelle Lauf nutzt deine GESPEICHERTE Retention-Policy, nicht die Slider-Werte oben. Klicke zuerst Speichern, wenn der Lauf deine aktuellen Änderungen anwenden soll.</value>
+  </data>
   <data name="Cleanup_RefreshPreview" xml:space="preserve">
     <value>Vorschau aktualisieren</value>
   </data>
@@ -177,18 +180,6 @@
   <data name="Retention_Error" xml:space="preserve">
     <value>Aufbewahrungs-Bereinigung fehlgeschlagen, siehe /xllog</value>
   </data>
-  <data name="Migration_Notification_Title" xml:space="preserve">
-    <value>Hellion Chat</value>
-  </data>
-  <data name="Migration_Notification_Content" xml:space="preserve">
-    <value>Datenschutz-Filter ist standardmäßig aktiviert. Einstellungen → Datenschutz zum Anpassen.</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Title" xml:space="preserve">
-    <value>Hellion Chat 0.2.0</value>
-  </data>
-  <data name="Migration_Webinterface_Removed_Content" xml:space="preserve">
-    <value>Das Webinterface wurde in dieser Version entfernt, weil es nicht auf das Datenschutz-Niveau gehärtet werden konnte das Hellion Chat standardmäßig zusichert. Falls du es genutzt hast, schau bitte in die README für Hintergründe.</value>
-  </data>
   <data name="Wizard_Title" xml:space="preserve">
     <value>Hellion Chat — Willkommen</value>
   </data>
@@ -275,9 +266,6 @@
   </data>
   <data name="Export_Error" xml:space="preserve">
     <value>Export fehlgeschlagen, siehe /xllog</value>
-  </data>
-  <data name="Theme_Heading" xml:space="preserve">
-    <value>Erscheinungsbild</value>
   </data>
   <data name="Theme_Enabled_Name" xml:space="preserve">
     <value>Hellion-Theme für alle Plugin-Fenster verwenden</value>
@@ -371,12 +359,6 @@
   </data>
 
   <!-- Hellion Chat — Auto-Tell-Tabs (Runtime-Strings) -->
-  <data name="AutoTellTabs_Migration_Title" xml:space="preserve">
-    <value>Auto-Tell-Tabs</value>
-  </data>
-  <data name="AutoTellTabs_Migration_Content" xml:space="preserve">
-    <value>Auto-Tell-Tabs sind ab Version 0.4.0 standardmäßig aktiv. Du kannst sie im Chat-Tab deaktivieren oder anpassen.</value>
-  </data>
   <data name="AutoTellTabs_SectionHeader" xml:space="preserve">
     <value>Aktive Tells</value>
   </data>

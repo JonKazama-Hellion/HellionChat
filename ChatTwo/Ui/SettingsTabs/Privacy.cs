@@ -403,6 +403,9 @@ internal sealed class Privacy : ISettingsTab
 
                 ImGui.Spacing();
 
+                ImGuiUtil.HelpText(HellionStrings.Retention_Help_SavedNote);
+                ImGui.Spacing();
+
                 using (ImRaii.Disabled(RetentionRunning))
                 {
                     if (ImGuiUtil.CtrlShiftButton(HellionStrings.Retention_Apply_Label, HellionStrings.Retention_Apply_Tooltip))

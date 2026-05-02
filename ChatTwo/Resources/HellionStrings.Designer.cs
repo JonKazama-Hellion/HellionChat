@@ -64,6 +64,7 @@ internal class HellionStrings
     internal static string Cleanup_Heading => Get(nameof(Cleanup_Heading));
     internal static string Cleanup_Help_Intro => Get(nameof(Cleanup_Help_Intro));
     internal static string Cleanup_Help_SavedNote => Get(nameof(Cleanup_Help_SavedNote));
+    internal static string Retention_Help_SavedNote => Get(nameof(Retention_Help_SavedNote));
     internal static string Cleanup_RefreshPreview => Get(nameof(Cleanup_RefreshPreview));
     internal static string Cleanup_NoPreview => Get(nameof(Cleanup_NoPreview));
     internal static string Cleanup_TotalStored => Get(nameof(Cleanup_TotalStored));
@@ -99,11 +100,6 @@ internal class HellionStrings
     internal static string Retention_Success => Get(nameof(Retention_Success));
     internal static string Retention_Error => Get(nameof(Retention_Error));
 
-    internal static string Migration_Notification_Title => Get(nameof(Migration_Notification_Title));
-    internal static string Migration_Notification_Content => Get(nameof(Migration_Notification_Content));
-    internal static string Migration_Webinterface_Removed_Title => Get(nameof(Migration_Webinterface_Removed_Title));
-    internal static string Migration_Webinterface_Removed_Content => Get(nameof(Migration_Webinterface_Removed_Content));
-
     internal static string Wizard_Title => Get(nameof(Wizard_Title));
     internal static string Wizard_Intro => Get(nameof(Wizard_Intro));
     internal static string Wizard_Profile_PrivacyFirst_Heading => Get(nameof(Wizard_Profile_PrivacyFirst_Heading));
@@ -135,7 +131,6 @@ internal class HellionStrings
     internal static string Export_Empty => Get(nameof(Export_Empty));
     internal static string Export_Error => Get(nameof(Export_Error));
 
-    internal static string Theme_Heading => Get(nameof(Theme_Heading));
     internal static string Theme_Enabled_Name => Get(nameof(Theme_Enabled_Name));
     internal static string Theme_Enabled_Description => Get(nameof(Theme_Enabled_Description));
     internal static string Theme_WindowOpacity_Label => Get(nameof(Theme_WindowOpacity_Label));
@@ -167,8 +162,6 @@ internal class HellionStrings
     internal static string About_Translators_TreeNode => Get(nameof(About_Translators_TreeNode));
 
     // Hellion Chat — Auto-Tell-Tabs runtime strings
-    internal static string AutoTellTabs_Migration_Title => Get(nameof(AutoTellTabs_Migration_Title));
-    internal static string AutoTellTabs_Migration_Content => Get(nameof(AutoTellTabs_Migration_Content));
     internal static string AutoTellTabs_SectionHeader => Get(nameof(AutoTellTabs_SectionHeader));
     internal static string AutoTellTabs_HistorySeparator => Get(nameof(AutoTellTabs_HistorySeparator));
     internal static string AutoTellTabs_HistoryLoadError => Get(nameof(AutoTellTabs_HistoryLoadError));
