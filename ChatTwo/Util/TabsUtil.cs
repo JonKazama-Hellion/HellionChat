@@ -14,6 +14,12 @@ public static class TabsUtil
         return channels;
     }
 
+    // Hellion-tuned General preset. Differs from upstream Vanilla:
+    // Tells (own tab), emotes, novice network and the FC/PvP announcement
+    // streams move into their dedicated themed tabs so the General tab
+    // is the public-chat catch-all that the maintainer actually runs in
+    // production. NpcDialogue stays here because the user reads it
+    // alongside system messages instead of in a separate Event tab.
     public static Tab VanillaGeneral => new()
     {
         Name = Language.Tabs_Presets_General,
@@ -27,8 +33,6 @@ public static class TabsUtil
             [ChatType.Say] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Yell] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Shout] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.TellIncoming] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.TellOutgoing] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Party] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.CrossParty] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Alliance] = (ChatSourceExt.All, ChatSourceExt.All),
@@ -50,33 +54,25 @@ public static class TabsUtil
             [ChatType.Linkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Linkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Linkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.NoviceNetwork] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.StandardEmote] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CustomEmote] = (ChatSourceExt.All, ChatSourceExt.All),
             // Announcements
             [ChatType.System] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.GatheringSystem] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Error] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Echo] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.NoviceNetworkSystem] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.FreeCompanyAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.PvpTeamAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.NpcAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.NpcDialogue] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.FreeCompanyLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.PvpTeamLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.RetainerSale] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.NpcAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Progress] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Crafting] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Gathering] = (ChatSource.LocalPlayer, ChatSource.LocalPlayer),
             [ChatType.PeriodicRecruitmentNotification] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Sign] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.RandomNumber] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Orchestrion] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.MessageBook] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Alarm] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.GlamourNotifications] = (ChatSourceExt.All, ChatSourceExt.All),
         }
     };
 
