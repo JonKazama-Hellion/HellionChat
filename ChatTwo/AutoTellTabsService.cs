@@ -1,5 +1,7 @@
 using System;
 using System.Linq;
+using ChatTwo.Code;
+using ChatTwo.Util;
 
 namespace ChatTwo;
 
@@ -64,7 +66,95 @@ internal sealed class AutoTellTabsService : IDisposable
 
     internal void HandleTell(Message message)
     {
-        // Stub — implemented in Task 8.
+        if (!Plugin.Config.EnableAutoTellTabs)
+        {
+            return;
+        }
+
+        if (message.Code.Type != ChatType.TellIncoming && message.Code.Type != ChatType.TellOutgoing)
+        {
+            return;
+        }
+
+        var partner = ExtractTellPartner(message);
+        if (partner == null)
+        {
+            // Real message without a player payload — e.g. GM tells, which
+            // we deliberately skip. Warn once so we notice future regressions.
+            Plugin.Log.Warning("[AutoTellTabs] Could not extract tell partner from message; skipping spawn.");
+            return;
+        }
+
+        lock (_tempTabsLock)
+        {
+            var existing = FindTempTab(partner.Value.Name, partner.Value.World);
+            if (existing != null)
+            {
+                // Tab already exists; Tab.Matches has already routed this
+                // message via the MessageManager pipeline (see Task 2 sender
+                // filter).
+                return;
+            }
+
+            if (ActiveTempTabCount >= Plugin.Config.AutoTellTabsLimit)
+            {
+                DropOldestTempTab();
+            }
+
+            SpawnTempTab(partner.Value, message);
+        }
+    }
+
+    private (string Name, uint World)? ExtractTellPartner(Message message)
+    {
+        if (message.Code.Type == ChatType.TellIncoming)
+        {
+            // Incoming tell: the sender is the conversation partner.
+            var fromSender = ChunkUtil.TryGetPlayerPayload(message.Sender);
+            if (fromSender != null)
+            {
+                return (fromSender.PlayerName, fromSender.World.RowId);
+            }
+            return null;
+        }
+
+        // Outgoing tell: the local player is the sender, the partner shows
+        // up either as a payload in the content (for tells typed via the
+        // Chat 2 input bar) or as the channel's tracked tell target (set by
+        // the SetContextTellTarget game hook).
+        var fromContent = ChunkUtil.TryGetPlayerPayload(message.Content);
+        if (fromContent != null)
+        {
+            return (fromContent.PlayerName, fromContent.World.RowId);
+        }
+
+        var current = _plugin.CurrentTab.CurrentChannel.TellTarget
+                      ?? _plugin.CurrentTab.CurrentChannel.TempTellTarget;
+        if (current != null && current.IsSet())
+        {
+            return (current.Name, current.World);
+        }
+
+        return null;
+    }
+
+    private Tab? FindTempTab(string name, uint world)
+    {
+        return Plugin.Config.Tabs.FirstOrDefault(t =>
+            t.IsTempTab
+            && t.TellTarget != null
+            && string.Equals(t.TellTarget.Name, name, StringComparison.OrdinalIgnoreCase)
+            && t.TellTarget.World == world);
+    }
+
+    private void DropOldestTempTab()
+    {
+        // Stub — implemented in Task 9.
+    }
+
+    private void SpawnTempTab((string Name, uint World) partner, Message currentMessage)
+    {
+        // Stub — implemented in Task 11.
     }
 
     internal void MarkGreeted(Tab tab)
