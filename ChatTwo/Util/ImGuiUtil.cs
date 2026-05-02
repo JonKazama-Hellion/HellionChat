@@ -93,15 +93,16 @@ internal static class ImGuiUtil
 
         foreach (var part in csText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None))
         {
+            // Encoding.GetBytes is virtual, so the returned array's
+            // Length is treated as untrusted by CodeQL for pointer
+            // arithmetic ("cs/unvalidated-local-pointer-arithmetic").
+            // Compute the expected byte count against the same encoder
+            // and bail out if a swapped-in encoding ever returned a
+            // mismatched buffer. Also drops empty splits so the textEnd
+            // pointer below cannot collapse onto text.
+            var expectedLength = Encoding.UTF8.GetByteCount(part);
             var bytes = Encoding.UTF8.GetBytes(part);
-
-            // Empty splits (consecutive newlines) leave bytes.Length at 0
-            // and the textEnd pointer below would coincide with text. The
-            // ImGuiNative word-wrap calls treat that as undefined input,
-            // and the CodeQL "unvalidated local pointer arithmetic" alert
-            // also flags it. Render an empty line and skip the unsafe
-            // block entirely for this iteration.
-            if (bytes.Length == 0)
+            if (expectedLength == 0 || bytes.Length != expectedLength)
             {
                 ImGui.TextUnformatted("");
                 continue;
@@ -110,7 +111,7 @@ internal static class ImGuiUtil
             fixed (byte* rawText = bytes)
             {
                 var text = rawText;
-                var textEnd = text + bytes.Length;
+                var textEnd = text + expectedLength;
 
                 var widthLeft = ImGui.GetContentRegionAvail().X;
                 var endPrevLine = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
