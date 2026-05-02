@@ -81,6 +81,9 @@
   <data name="Retention_Help_SavedNote" xml:space="preserve">
     <value>The manual sweep uses your SAVED retention policy, not the slider values above. Click Save first if you want the run to apply your current edits.</value>
   </data>
+  <data name="Cleanup_Preview_Stale" xml:space="preserve">
+    <value>Preview is out of date — your whitelist has changed since the last refresh. Click Refresh to recalculate.</value>
+  </data>
   <data name="Cleanup_RefreshPreview" xml:space="preserve">
     <value>Refresh preview</value>
   </data>
@@ -444,6 +447,12 @@
   </data>
   <data name="Settings_Tab_Chat" xml:space="preserve">
     <value>Chat</value>
+  </data>
+  <data name="Settings_Tab_Tabs" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Settings_Tab_Database" xml:space="preserve">
+    <value>Database</value>
   </data>
   <data name="Settings_Tab_Information" xml:space="preserve">
     <value>Information</value>

@@ -1,5 +1,6 @@
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
@@ -81,10 +82,12 @@ internal sealed class General : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            if (ImGuiUtil.InputIntVertical(Language.Options_MaxLinesToShow_Name, Language.Options_MaxLinesToShow_Description, ref Mutable.MaxLinesToRender))
+            ImGui.SetNextItemWidth(200f * ImGuiHelpers.GlobalScale);
+            if (ImGui.InputInt(Language.Options_MaxLinesToShow_Name, ref Mutable.MaxLinesToRender))
             {
                 Mutable.MaxLinesToRender = Math.Clamp(Mutable.MaxLinesToRender, 1, 10_000);
             }
+            ImGuiUtil.HelpMarker(Language.Options_MaxLinesToShow_Description);
         }
     }
 

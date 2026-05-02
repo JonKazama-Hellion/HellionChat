@@ -81,6 +81,9 @@
   <data name="Retention_Help_SavedNote" xml:space="preserve">
     <value>Der manuelle Lauf nutzt deine GESPEICHERTE Retention-Policy, nicht die Slider-Werte oben. Klicke zuerst Speichern, wenn der Lauf deine aktuellen Änderungen anwenden soll.</value>
   </data>
+  <data name="Cleanup_Preview_Stale" xml:space="preserve">
+    <value>Vorschau veraltet, deine Whitelist hat sich seit dem letzten Aktualisieren geändert. Klicke Aktualisieren, um neu zu berechnen.</value>
+  </data>
   <data name="Cleanup_RefreshPreview" xml:space="preserve">
     <value>Vorschau aktualisieren</value>
   </data>
@@ -444,6 +447,12 @@
   </data>
   <data name="Settings_Tab_Chat" xml:space="preserve">
     <value>Chat</value>
+  </data>
+  <data name="Settings_Tab_Tabs" xml:space="preserve">
+    <value>Kanäle</value>
+  </data>
+  <data name="Settings_Tab_Database" xml:space="preserve">
+    <value>Datenbank</value>
   </data>
   <data name="Settings_Tab_Information" xml:space="preserve">
     <value>Über</value>

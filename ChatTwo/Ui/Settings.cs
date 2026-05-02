@@ -177,7 +177,7 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
             GameFunctions.GameFunctions.SetChatInteractable(true);
 
         if (Plugin.Config.ShowEmotes)
-            Task.Run(EmoteCache.LoadData);
+            _ = EmoteCache.LoadData(); // Fire-and-forget intentional, exceptions are caught inside
 
         Initialise();
     }

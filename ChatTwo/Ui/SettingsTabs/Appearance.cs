@@ -147,7 +147,9 @@ internal sealed class Appearance : ISettingsTab
                 globalChooser?.ResultTask.ContinueWith(r =>
                 {
                     if (r.IsCompletedSuccessfully)
-                        Mutable.GlobalFontV2 = r.Result;
+                    {
+                        Plugin.Framework.Run(() => Mutable.GlobalFontV2 = r.Result);
+                    }
                 });
                 ImGui.SameLine();
                 if (ImGui.Button("Reset##global"))
@@ -164,7 +166,9 @@ internal sealed class Appearance : ISettingsTab
                 japaneseChooser?.ResultTask.ContinueWith(r =>
                 {
                     if (r.IsCompletedSuccessfully)
-                        Mutable.JapaneseFontV2 = r.Result;
+                    {
+                        Plugin.Framework.Run(() => Mutable.JapaneseFontV2 = r.Result);
+                    }
                 });
                 ImGui.SameLine();
                 if (ImGui.Button("Reset##japanese"))
@@ -179,7 +183,9 @@ internal sealed class Appearance : ISettingsTab
                 italicChooser?.ResultTask.ContinueWith(r =>
                 {
                     if (r.IsCompletedSuccessfully)
-                        Mutable.ItalicFontV2 = r.Result;
+                    {
+                        Plugin.Framework.Run(() => Mutable.ItalicFontV2 = r.Result);
+                    }
                 });
                 ImGui.SameLine();
                 if (ImGui.Button("Reset##italic"))

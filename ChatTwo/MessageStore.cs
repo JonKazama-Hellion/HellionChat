@@ -239,6 +239,9 @@ internal class MessageStore : IDisposable
 
     private bool ColumnExists(string table, string column)
     {
+        // PRAGMA does not accept SQLite parameter bindings. The table name is
+        // a compile-time constant fed in from internal call sites, so the
+        // interpolation cannot be reached from any user-controlled path.
         using var cmd = Connection.CreateCommand();
         cmd.CommandText = $"PRAGMA table_info({table});";
         using var reader = cmd.ExecuteReader();
@@ -298,8 +301,10 @@ internal class MessageStore : IDisposable
     {
         Plugin.Log.Information($"Setting version {version}");
         using var cmd = Connection.CreateCommand();
-        // Parameters aren't supported for PRAGMA queries, and you can't set the
-        // version with a pragma_ function.
+        // PRAGMA does not accept SQLite parameter bindings, and there is no
+        // pragma_ function variant that can set the version either. The
+        // version is a compile-time int from the migration sequence, never
+        // user input.
         cmd.CommandText = $"PRAGMA user_version = {version};";
         cmd.ExecuteNonQuery();
     }
@@ -346,31 +351,44 @@ internal class MessageStore : IDisposable
                 throw new ArgumentOutOfRangeException(nameof(chatTypeDaysMap), "Negative retention is not allowed.");
 
         var nowMs = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
-        var clauses = new List<string>();
-        foreach (var (type, days) in chatTypeDaysMap)
-        {
-            var cutoff = nowMs - days * 86400000L;
-            clauses.Add($"(ChatType = {type} AND Date < {cutoff})");
-        }
 
-        // Catch-all for channels without an explicit override. "0" is treated
-        // as "do not delete by default" — without an explicit user override,
-        // unmapped channels stay forever instead of getting wiped immediately.
-        if (defaultDays > 0)
-        {
-            var cutoff = nowMs - defaultDays * 86400000L;
-            var explicitTypes = chatTypeDaysMap.Count > 0
-                ? string.Join(",", chatTypeDaysMap.Keys)
-                : "-1"; // empty list would produce invalid SQL
-            clauses.Add($"(ChatType NOT IN ({explicitTypes}) AND Date < {cutoff})");
-        }
-
-        if (clauses.Count == 0)
+        if (chatTypeDaysMap.Count == 0 && defaultDays <= 0)
             return 0;
 
         long deleted;
         using (var cmd = Connection.CreateCommand())
         {
+            var clauses = new List<string>();
+            var index = 0;
+            foreach (var (type, days) in chatTypeDaysMap)
+            {
+                var cutoff = nowMs - days * 86400000L;
+                var typeParam = $"$type{index}";
+                var cutoffParam = $"$cutoff{index}";
+                cmd.Parameters.AddWithValue(typeParam, type);
+                cmd.Parameters.AddWithValue(cutoffParam, cutoff);
+                clauses.Add($"(ChatType = {typeParam} AND Date < {cutoffParam})");
+                index++;
+            }
+
+            // Catch-all for channels without an explicit override. "0" is
+            // treated as "do not delete by default" — without an explicit
+            // user override, unmapped channels stay forever instead of
+            // getting wiped immediately.
+            if (defaultDays > 0)
+            {
+                var defaultCutoff = nowMs - defaultDays * 86400000L;
+                cmd.Parameters.AddWithValue("$defaultCutoff", defaultCutoff);
+
+                var explicitPlaceholders = chatTypeDaysMap.Count > 0
+                    ? BindIntList(cmd, "explicit", chatTypeDaysMap.Keys)
+                    : "-1"; // empty list would produce invalid SQL
+                clauses.Add($"(ChatType NOT IN ({explicitPlaceholders}) AND Date < $defaultCutoff)");
+            }
+
+            if (clauses.Count == 0)
+                return 0;
+
             cmd.CommandText = $"DELETE FROM messages WHERE {string.Join(" OR ", clauses)};";
             cmd.CommandTimeout = 600;
             deleted = cmd.ExecuteNonQuery();
@@ -395,11 +413,11 @@ internal class MessageStore : IDisposable
             throw new InvalidOperationException("CleanupRetainOnly requires at least one allowed ChatType. Use ClearMessages for a full wipe.");
         }
 
-        var inList = string.Join(",", allowedTypes);
         long deleted;
         using (var cmd = Connection.CreateCommand())
         {
-            cmd.CommandText = $"DELETE FROM messages WHERE ChatType NOT IN ({inList});";
+            var placeholders = BindIntList(cmd, "ct", allowedTypes);
+            cmd.CommandText = $"DELETE FROM messages WHERE ChatType NOT IN ({placeholders});";
             cmd.CommandTimeout = 600;
             deleted = cmd.ExecuteNonQuery();
         }
@@ -512,15 +530,16 @@ internal class MessageStore : IDisposable
         DateTimeOffset? from,
         DateTimeOffset? to)
     {
+        var cmd = Connection.CreateCommand();
+
         var clauses = new List<string> { "deleted = false" };
         if (chatTypes is { Count: > 0 })
-            clauses.Add($"ChatType IN ({string.Join(",", chatTypes)})");
+            clauses.Add($"ChatType IN ({BindIntList(cmd, "exct", chatTypes)})");
         if (from is not null)
             clauses.Add("Date >= $From");
         if (to is not null)
             clauses.Add("Date <= $To");
 
-        var cmd = Connection.CreateCommand();
         cmd.CommandText = @"
             SELECT
                 Id,
@@ -693,16 +712,17 @@ internal class MessageStore : IDisposable
 
     internal long CountDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null)
     {
+        using var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "cdr", channels.Select(c => (int)c))})");
 
         var whereClause = "WHERE " + string.Join(" AND ", whereClauses);
 
-        using var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -722,16 +742,17 @@ internal class MessageStore : IDisposable
 
     internal MessageEnumerator GetDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null)
     {
+        var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "gdr", channels.Select(c => (int)c))})");
 
         var whereClause = $"WHERE {string.Join(" AND ", whereClauses)}";
 
-        var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -763,16 +784,17 @@ internal class MessageStore : IDisposable
 
     internal MessageEnumerator GetPagedDateRange(DateTime after, DateTime before, IEnumerable<byte> channels, ulong? receiver = null, int page = 0)
     {
+        var cmd = Connection.CreateCommand();
+
         List<string> whereClauses = ["deleted = false"];
         if (receiver != null)
             whereClauses.Add("Receiver = $Receiver");
 
         whereClauses.Add("Date BETWEEN $After AND $Before");
-        whereClauses.Add($"ChatType IN ({string.Join(", ", channels)})");
+        whereClauses.Add($"ChatType IN ({BindIntList(cmd, "pdr", channels.Select(c => (int)c))})");
 
         var whereClause = $"WHERE {string.Join(" AND ", whereClauses)}";
 
-        var cmd = Connection.CreateCommand();
         // Select last N messages by date DESC, but reverse the order to get
         // them in ascending order.
         cmd.CommandText = @"
@@ -805,6 +827,24 @@ internal class MessageStore : IDisposable
         cmd.Parameters.AddWithValue("$OffsetCount", DbViewer.RowPerPage);
 
         return new MessageEnumerator(cmd.ExecuteReader());
+    }
+
+    // Build "$prefix0,$prefix1,..." placeholder list and bind values to
+    // the command. SQLite has no native array parameter, so we generate
+    // the list at runtime and bind each entry under its own name. Used
+    // for IN-clauses and similar dynamic-arity SQL fragments.
+    private static string BindIntList(SqliteCommand cmd, string prefix, IEnumerable<int> values)
+    {
+        var names = new List<string>();
+        var index = 0;
+        foreach (var value in values)
+        {
+            var name = $"${prefix}{index}";
+            cmd.Parameters.AddWithValue(name, value);
+            names.Add(name);
+            index++;
+        }
+        return string.Join(",", names);
     }
 }
 

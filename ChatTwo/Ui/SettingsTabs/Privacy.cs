@@ -3,6 +3,7 @@ using ChatTwo.Export;
 using ChatTwo.Privacy;
 using ChatTwo.Resources;
 using ChatTwo.Util;
+using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
@@ -55,6 +56,8 @@ internal sealed class Privacy : ISettingsTab
     private long CleanupKeepCount;
     private long CleanupDeleteCount;
     private bool CleanupRunning;
+    private bool CleanupPreviewStale;
+    private HashSet<ChatType>? CleanupPreviewSnapshot;
 
     // The retention-running state lives on Plugin so the auto-sweep and
     // this manual button see the same flag. UI reads stay lock-free
@@ -484,6 +487,21 @@ internal sealed class Privacy : ISettingsTab
 
             ImGui.Spacing();
 
+            // Drift-detection between the snapshot taken at last refresh
+            // and the current Mutable whitelist. Cleanup itself runs on
+            // the SAVED policy (Cleanup_Help_SavedNote covers that), but
+            // the user usually expects "the preview reflects what I just
+            // ticked" — so we surface the divergence instead of silently
+            // showing stale numbers.
+            if (CleanupPreviewSnapshot is not null
+                && !CleanupPreviewSnapshot.SetEquals(Mutable.PrivacyPersistChannels))
+            {
+                CleanupPreviewStale = true;
+            }
+
+            using (var emphasis = CleanupPreviewStale
+                       ? ImRaii.PushColor(ImGuiCol.Button, ImGuiColors.HealerGreen with { W = 0.6f })
+                       : null)
             using (ImRaii.Disabled(CleanupRunning))
             {
                 if (ImGui.Button(HellionStrings.Cleanup_RefreshPreview))
@@ -496,10 +514,22 @@ internal sealed class Privacy : ISettingsTab
                 return;
             }
 
+            if (CleanupPreviewStale)
+            {
+                ImGui.Spacing();
+                ImGuiUtil.HelpText(HellionStrings.Cleanup_Preview_Stale);
+            }
+
             ImGui.Spacing();
-            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_TotalStored, CleanupKeepCount + CleanupDeleteCount));
-            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillKeep, CleanupKeepCount));
-            ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillDelete, CleanupDeleteCount));
+
+            using (var staleColor = CleanupPreviewStale
+                       ? ImRaii.PushColor(ImGuiCol.Text, ImGuiColors.DalamudGrey)
+                       : null)
+            {
+                ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_TotalStored, CleanupKeepCount + CleanupDeleteCount));
+                ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillKeep, CleanupKeepCount));
+                ImGuiUtil.HelpText(string.Format(HellionStrings.Cleanup_WillDelete, CleanupDeleteCount));
+            }
 
             using (var tree = ImRaii.TreeNode(HellionStrings.Cleanup_Breakdown))
             {
@@ -555,6 +585,13 @@ internal sealed class Privacy : ISettingsTab
                 else
                     CleanupDeleteCount += count;
             }
+
+            // Snapshot the whitelist as it stood at preview-time so the
+            // render pass can flag the user about subsequent edits. Only
+            // updated on success — if the preview throws, the previous
+            // snapshot stays in place so stale-detection keeps working.
+            CleanupPreviewSnapshot = new HashSet<ChatType>(Mutable.PrivacyPersistChannels);
+            CleanupPreviewStale = false;
         }
         catch (Exception e)
         {

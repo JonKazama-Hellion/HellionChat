@@ -64,6 +64,7 @@ internal class HellionStrings
     internal static string Cleanup_Heading => Get(nameof(Cleanup_Heading));
     internal static string Cleanup_Help_Intro => Get(nameof(Cleanup_Help_Intro));
     internal static string Cleanup_Help_SavedNote => Get(nameof(Cleanup_Help_SavedNote));
+    internal static string Cleanup_Preview_Stale => Get(nameof(Cleanup_Preview_Stale));
     internal static string Retention_Help_SavedNote => Get(nameof(Retention_Help_SavedNote));
     internal static string Cleanup_RefreshPreview => Get(nameof(Cleanup_RefreshPreview));
     internal static string Cleanup_NoPreview => Get(nameof(Cleanup_NoPreview));
@@ -196,6 +197,8 @@ internal class HellionStrings
     internal static string Settings_Tab_Appearance => Get(nameof(Settings_Tab_Appearance));
     internal static string Settings_Tab_Window => Get(nameof(Settings_Tab_Window));
     internal static string Settings_Tab_Chat => Get(nameof(Settings_Tab_Chat));
+    internal static string Settings_Tab_Tabs => Get(nameof(Settings_Tab_Tabs));
+    internal static string Settings_Tab_Database => Get(nameof(Settings_Tab_Database));
     internal static string Settings_Tab_Information => Get(nameof(Settings_Tab_Information));
 
     // Hellion Chat — General-Tab section headings
