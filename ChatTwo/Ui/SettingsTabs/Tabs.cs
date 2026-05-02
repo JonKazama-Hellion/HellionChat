@@ -10,7 +10,7 @@ namespace ChatTwo.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab
 {
-    private readonly Plugin Plugin;
+    private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
     public string Name => Language.Options_Tabs_Tab + "###tabs-tabs";
