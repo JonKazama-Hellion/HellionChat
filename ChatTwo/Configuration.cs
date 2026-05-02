@@ -73,8 +73,10 @@ public class Configuration : IPluginConfiguration
     public bool HellionThemeEnabled = true;
 
     // Window background opacity, 0.5–1.0. Lower values make the plugin
-    // panes more glass-like so the game shines through. Default ~92%.
-    public float HellionThemeWindowOpacity = 0.92f;
+    // panes more glass-like so the game shines through. Default 0.5
+    // matches the maintainer's daily-driver preference; users who want
+    // a less translucent look bump it up in Aussehen → Theme.
+    public float HellionThemeWindowOpacity = 0.5f;
 
     // Use the bundled Exo 2 font (OFL-1.1) for the regular plugin font
     // instead of whatever GlobalFontV2.FontId points at. Default ON so a
@@ -150,15 +152,26 @@ public class Configuration : IPluginConfiguration
     public bool ShowTitleBar = true;
     public bool ShowPopOutTitleBar = true;
     public bool DatabaseBattleMessages;
-    public bool LoadPreviousSession;
-    public bool FilterIncludePreviousSessions;
+    // Load previously stored messages back into the tabs on plugin start
+    // so a /tell or party conversation picks up where it left off after
+    // a crash, restart or character switch. Default ON because the
+    // privacy filter already gates which channels go into the store at
+    // all; loading what is in there is not an additional privacy cost.
+    // Users can flip this off in Datenbank → Speicherung if they prefer
+    // every session to start with empty tabs.
+    public bool LoadPreviousSession = true;
+    public bool FilterIncludePreviousSessions = true;
     public bool SortAutoTranslate;
     public bool CollapseDuplicateMessages;
     public bool CollapseKeepUniqueLinks;
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
     public int MaxLinesToRender = 5_000; // 1-10000
-    public bool Use24HourClock;
+    // Default ON to match a German / European 24h locale. The
+    // ChatLogWindow.cs format-flip in v0.5.1 honours this strictly via
+    // CultureInfo.InvariantCulture so the result is consistent across
+    // host locales.
+    public bool Use24HourClock = true;
 
     public bool ShowEmotes = true;
     public HashSet<string> BlockedEmotes = [];
