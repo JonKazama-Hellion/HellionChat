@@ -173,6 +173,26 @@ public sealed class Plugin : IDalamudPlugin
                 });
             }
 
+            // Hellion Chat v8→v9: Auto-Tell-Tabs feature seeded with
+            // property-initializer defaults (enabled, limit 15, history 20,
+            // section header on). No data migration needed — just bump the
+            // version and notify the user once so the feature does not
+            // surprise them.
+            if (Config.Version <= 8)
+            {
+                Config.Version = 9;
+                SaveConfig();
+
+                // TODO Task 14: replace with HellionStrings.AutoTellTabs_Migration_Title / _Content
+                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                {
+                    Title = "Auto-Tell-Tabs",
+                    Content = "Auto-Tell-Tabs sind ab Version 0.4.0 standardmäßig aktiv. Du kannst sie im Chat-Tab deaktivieren oder anpassen.",
+                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                    InitialDuration = TimeSpan.FromSeconds(20),
+                });
+            }
+
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
 

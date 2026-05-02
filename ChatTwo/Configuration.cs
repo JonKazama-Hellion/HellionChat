@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 8;
+    private const int LatestVersion = 9;
 
     public int Version { get; set; } = LatestVersion;
 
