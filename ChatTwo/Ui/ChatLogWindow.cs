@@ -375,10 +375,6 @@ public sealed class ChatLogWindow : Window
             newTab.CurrentChannel = previousTab.CurrentChannel;
 
         SetChannel(newTab.CurrentChannel.Channel);
-
-        // Inform the webinterface about tab switch
-        // TODO implement tabs in the webinterface
-        Plugin.ServerCore.SendNewLogin();
     }
 
     private enum HideState
@@ -772,10 +768,7 @@ public sealed class ChatLogWindow : Window
     {
         var currentChannel = ReadChannelName(activeTab);
         if (!currentChannel.SequenceEqual(PreviousChannel))
-        {
             PreviousChannel = currentChannel;
-            Plugin.ServerCore.SendChannelSwitch(currentChannel);
-        }
 
         DrawChunks(currentChannel);
     }

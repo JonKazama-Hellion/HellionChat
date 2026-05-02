@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
-using ChatTwo.Http.MessageProtocol;
 using ChatTwo.Resources;
 using ChatTwo.Util;
 using Dalamud.Interface;

@@ -156,9 +156,6 @@ internal sealed unsafe class Chat : IDisposable
             return;
 
         ChangeChannelNameDetour(agent);
-
-        // Inform all clients that a new login happened
-        Plugin.ServerCore.SendNewLogin();
     }
 
     private byte ChatLogRefreshDetour(nint log, ushort eventId, AtkValue* value)

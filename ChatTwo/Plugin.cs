@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using ChatTwo.Http;
 using ChatTwo.Ipc;
 using ChatTwo.Resources;
 using ChatTwo.Ui;
@@ -62,8 +61,6 @@ public sealed class Plugin : IDalamudPlugin
     internal ExtraChat ExtraChat { get; }
     internal TypingIpc TypingIpc { get; }
     internal FontManager FontManager { get; }
-
-    public readonly ServerCore ServerCore;
 
     internal int DeferredSaveFrames = -1;
 
@@ -150,9 +147,6 @@ public sealed class Plugin : IDalamudPlugin
 
             FileDialogManager = new FileDialogManager();
 
-            // Function call this in its ctor if the player is already logged in
-            ServerCore = new ServerCore(this);
-
             Commands = new Commands();
             Functions = new GameFunctions.GameFunctions(this);
             Ipc = new IpcManager();
@@ -219,16 +213,6 @@ public sealed class Plugin : IDalamudPlugin
             // profiling difficult.
             AutoTranslate.PreloadCache();
             #endif
-
-            // Automatically start the webserver if requested
-            if (Config.WebinterfaceAutoStart)
-            {
-                Task.Run(() =>
-                {
-                    ServerCore.Start();
-                    ServerCore.Run();
-                });
-            }
         }
         catch (Exception ex)
         {
@@ -267,7 +251,6 @@ public sealed class Plugin : IDalamudPlugin
         Commands?.Dispose();
 
         EmoteCache.Dispose();
-        ServerCore?.DisposeAsync().AsTask().Wait();
     }
 
     private static void MigrateFromChatTwoLayout()

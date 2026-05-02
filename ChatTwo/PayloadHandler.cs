@@ -150,9 +150,7 @@ public sealed class PayloadHandler
                 return;
         }
 
-        // ScreenshotMode changed, so we inform the webinterface about the new message format
-        if (ImGui.Checkbox(Language.Context_ScreenshotMode, ref LogWindow.ScreenshotMode))
-            LogWindow.Plugin.ServerCore.SendBulkMessageList();
+        ImGui.Checkbox(Language.Context_ScreenshotMode, ref LogWindow.ScreenshotMode);
 
         if (ImGui.Selectable(Language.Context_HideChat))
             LogWindow.UserHide();
