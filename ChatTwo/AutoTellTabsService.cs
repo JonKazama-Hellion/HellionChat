@@ -197,6 +197,24 @@ internal sealed class AutoTellTabsService : IDisposable
 
     private void OnLogout(int type, int code)
     {
-        // Stub — implemented in Task 10.
+        lock (_tempTabsLock)
+        {
+            // Snapshot whether the active tab is about to be removed, BEFORE
+            // we mutate the list — index lookups would lie to us afterwards.
+            var lastIndex = _plugin.LastTab;
+            var lastIndexValid = lastIndex >= 0 && lastIndex < Plugin.Config.Tabs.Count;
+            var currentWasTempTab = lastIndexValid && Plugin.Config.Tabs[lastIndex].IsTempTab;
+
+            Plugin.Config.Tabs.RemoveAll(t => t.IsTempTab);
+
+            // Force a switch to tab 0 if the active tab was a temp tab OR
+            // if drops before the active index pushed LastTab out of range.
+            // Otherwise the user keeps their current persistent tab.
+            var stillValid = lastIndex >= 0 && lastIndex < Plugin.Config.Tabs.Count;
+            if (currentWasTempTab || !stillValid)
+            {
+                _plugin.WantedTab = 0;
+            }
+        }
     }
 }
