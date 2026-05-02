@@ -40,6 +40,23 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.3.1 — Upstream emote regression fix**
+
+  Cherry-picks Infi's upstream commit ff899ff "Fix a regression
+  from API 15 updates" which changes the BetterTTV emote DTOs
+  (Emote and Top100) from public fields to public properties.
+  System.Text.Json under the API 15 toolchain only honours the
+  [JsonPropertyName] attribute on properties, so the previous
+  field-based version deserialised every fetched emote into empty
+  default values. Result: BetterTTV emotes were silently broken
+  on fresh installs. The fix is six lines and applies cleanly on
+  top of our defensive null-check from earlier; the EmoteCache
+  path-traversal hardening from 0.3.0 stays as it is.
+
+  Authorship of the fix is preserved with git cherry-pick -x, so
+  Infi shows up as the author on the commit. Thanks to him for
+  catching it in the upstream codebase.
+
   **Hellion Chat 0.3.0 — Audit hardening, brand sweep and rebrand of slash commands**
 
   This release closes the remaining audit follow-ups from the
