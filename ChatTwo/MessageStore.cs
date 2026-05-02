@@ -239,6 +239,9 @@ internal class MessageStore : IDisposable
 
     private bool ColumnExists(string table, string column)
     {
+        // PRAGMA does not accept SQLite parameter bindings. The table name is
+        // a compile-time constant fed in from internal call sites, so the
+        // interpolation cannot be reached from any user-controlled path.
         using var cmd = Connection.CreateCommand();
         cmd.CommandText = $"PRAGMA table_info({table});";
         using var reader = cmd.ExecuteReader();
@@ -298,8 +301,10 @@ internal class MessageStore : IDisposable
     {
         Plugin.Log.Information($"Setting version {version}");
         using var cmd = Connection.CreateCommand();
-        // Parameters aren't supported for PRAGMA queries, and you can't set the
-        // version with a pragma_ function.
+        // PRAGMA does not accept SQLite parameter bindings, and there is no
+        // pragma_ function variant that can set the version either. The
+        // version is a compile-time int from the migration sequence, never
+        // user input.
         cmd.CommandText = $"PRAGMA user_version = {version};";
         cmd.ExecuteNonQuery();
     }
