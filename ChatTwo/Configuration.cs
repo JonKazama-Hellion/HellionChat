@@ -81,6 +81,20 @@ public class Configuration : IPluginConfiguration
     // to fall back to the user's chosen system or Dalamud font.
     public bool UseHellionFont = true;
 
+    // Hellion Chat — Auto-Tell-Tabs. When enabled, an incoming or outgoing
+    // /tell spawns a session-only tab dedicated to that conversation
+    // partner. See spec: Hellion Chat Auto-Tell-Tabs Spec (Obsidian).
+    public bool EnableAutoTellTabs = true;
+    // Hard cap on simultaneously open auto tell tabs. Range enforced by the
+    // settings slider (1–50). LRU drop favors greeted tabs first.
+    public int AutoTellTabsLimit = 15;
+    // When true the sidebar shows only a thin separator before the temp
+    // tabs; when false a section header "Active Tells (n)" is rendered.
+    public bool AutoTellTabsCompactDisplay;
+    // Number of prior tells to preload from the message store when an
+    // auto tell tab is spawned. Range 0–100; 0 disables preload.
+    public int AutoTellTabsHistoryPreload = 20;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -249,6 +263,11 @@ public class Configuration : IPluginConfiguration
         HellionThemeEnabled = other.HellionThemeEnabled;
         HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
         UseHellionFont = other.UseHellionFont;
+
+        EnableAutoTellTabs = other.EnableAutoTellTabs;
+        AutoTellTabsLimit = other.AutoTellTabsLimit;
+        AutoTellTabsCompactDisplay = other.AutoTellTabsCompactDisplay;
+        AutoTellTabsHistoryPreload = other.AutoTellTabsHistoryPreload;
     }
 }
 
