@@ -806,6 +806,24 @@ internal class MessageStore : IDisposable
 
         return new MessageEnumerator(cmd.ExecuteReader());
     }
+
+    // Build "$prefix0,$prefix1,..." placeholder list and bind values to
+    // the command. SQLite has no native array parameter, so we generate
+    // the list at runtime and bind each entry under its own name. Used
+    // for IN-clauses and similar dynamic-arity SQL fragments.
+    private static string BindIntList(SqliteCommand cmd, string prefix, IEnumerable<int> values)
+    {
+        var names = new List<string>();
+        var index = 0;
+        foreach (var value in values)
+        {
+            var name = $"${prefix}{index}";
+            cmd.Parameters.AddWithValue(name, value);
+            names.Add(name);
+            index++;
+        }
+        return string.Join(",", names);
+    }
 }
 
 internal class MessageEnumerator(DbDataReader reader) : IEnumerable<Message>, IDisposable, IAsyncDisposable
