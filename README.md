@@ -1,10 +1,14 @@
 # Hellion Chat
 
-**Version 0.3.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.5.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
-Privates Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo während der Bootstrap-Phase.
+Eigenständiges Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo. Selektive Cherry-Picks von Upstream-Chat-2 nach Bedarf, dokumentiert in [UPSTREAM_SYNC.md](UPSTREAM_SYNC.md).
+
+## Acknowledgements
+
+Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Infiziert90 (Infi)** und **Anna Clemens** auf, die das Plugin über Jahre gepflegt haben bevor ich den Source-Code überhaupt gesehen habe. Die ganze Kern-Architektur, der Message-Store, die Channel-Logik, das Hook-System und vieles mehr stammt von ihnen. Wenn dir Hellion Chat hilft, dann läuft die Anerkennung dafür zu großen Teilen an Infi und Anna. Eine ausführliche Danksagung liegt in [NOTICE.md](NOTICE.md).
 
 ---
 
@@ -265,7 +269,7 @@ Phase 3 (offen, kein festes Datum):
 
 ## Lizenz
 
-EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Siehe `LICENCE`.
+EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Volltext liegt in [LICENSE](LICENSE), persönliche Danksagung an die Upstream-Autoren in [NOTICE.md](NOTICE.md).
 
 © 2023–2026 die Chat-2-Autoren (Infi, Anna und die Upstream-Contributors) für die Engine, IPC und Storage-Schicht.
 © 2026 Hellion Online Media für die Hellion-Chat-Erweiterungen.
