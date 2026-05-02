@@ -1303,14 +1303,72 @@ public sealed class ChatLogWindow : Window
             if (child)
             {
                 var previousTab = Plugin.CurrentTab;
+                // Hellion Chat — auto-tell-tabs section divider rendered
+                // exactly once before the first temp tab, with a live unit
+                // counter pulled directly from the tab list.
+                var tempTabHeaderRendered = false;
+                var tempTabCount = Plugin.Config.Tabs.Count(t => t.IsTempTab);
+
                 for (var tabI = 0; tabI < Plugin.Config.Tabs.Count; tabI++)
                 {
                     var tab = Plugin.Config.Tabs[tabI];
                     if (tab.PopOut)
                         continue;
 
+                    if (tab.IsTempTab && !tempTabHeaderRendered)
+                    {
+                        ImGui.Separator();
+                        if (!Plugin.Config.AutoTellTabsCompactDisplay)
+                        {
+                            ImGui.TextDisabled($"{HellionStrings.AutoTellTabs_SectionHeader} ({tempTabCount})");
+                        }
+                        tempTabHeaderRendered = true;
+                    }
+
                     var unread = tabI == Plugin.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                    var clicked = ImGui.Selectable($"{tab.Name}{unread}###log-tab-{tabI}", Plugin.LastTab == tabI || Plugin.WantedTab == tabI);
+                    var selectableLabel = $"{tab.Name}{unread}###log-tab-{tabI}";
+                    var isCurrentTab = Plugin.LastTab == tabI || Plugin.WantedTab == tabI;
+
+                    if (tab.IsTempTab)
+                    {
+                        // Greeted toggle sits left of the selectable so the
+                        // click areas stay separate. The icon also doubles
+                        // as the visual "I'm done with this person" cue.
+                        var greetedIcon = tab.IsGreeted ? FontAwesomeIcon.CheckCircle : FontAwesomeIcon.Check;
+                        var greetedTooltip = tab.IsGreeted
+                            ? HellionStrings.AutoTellTabs_GreetedTooltip
+                            : HellionStrings.AutoTellTabs_UnGreetedTooltip;
+
+                        if (ImGuiUtil.IconButton(greetedIcon, $"greeted-{tabI}", greetedTooltip))
+                        {
+                            if (tab.IsGreeted)
+                            {
+                                Plugin.AutoTellTabsService.UnmarkGreeted(tab);
+                            }
+                            else
+                            {
+                                Plugin.AutoTellTabsService.MarkGreeted(tab);
+                            }
+                        }
+                        ImGui.SameLine();
+                    }
+
+                    bool clicked;
+                    if (tab.IsTempTab && tab.IsGreeted)
+                    {
+                        // Dim the tab name once the user marked the partner
+                        // as greeted, so a glance at the sidebar tells them
+                        // who still needs attention.
+                        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.TextDisabled)))
+                        {
+                            clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
+                        }
+                    }
+                    else
+                    {
+                        clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
+                    }
+
                     DrawTabContextMenu(tab, tabI);
 
                     if (!clicked && Plugin.WantedTab != tabI)
