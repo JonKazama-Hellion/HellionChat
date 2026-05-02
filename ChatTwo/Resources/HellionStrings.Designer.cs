@@ -233,4 +233,9 @@ internal class HellionStrings
     internal static string Settings_Database_Storage_Heading => Get(nameof(Settings_Database_Storage_Heading));
     internal static string Settings_Database_Viewer_Heading => Get(nameof(Settings_Database_Viewer_Heading));
     internal static string Settings_Database_Stats_Heading => Get(nameof(Settings_Database_Stats_Heading));
+
+    // Hellion Chat — Information-Tab section headings
+    internal static string Settings_Information_VersionInfo_Heading => Get(nameof(Settings_Information_VersionInfo_Heading));
+    internal static string Settings_Information_About_Heading => Get(nameof(Settings_Information_About_Heading));
+    internal static string Settings_Information_Changelog_Heading => Get(nameof(Settings_Information_Changelog_Heading));
 }

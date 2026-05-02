@@ -533,4 +533,15 @@
   <data name="Settings_Database_Stats_Heading" xml:space="preserve">
     <value>Maintenance</value>
   </data>
+
+  <!-- Hellion Chat — Information-Tab section headings -->
+  <data name="Settings_Information_VersionInfo_Heading" xml:space="preserve">
+    <value>Version Info</value>
+  </data>
+  <data name="Settings_Information_About_Heading" xml:space="preserve">
+    <value>About HellionChat</value>
+  </data>
+  <data name="Settings_Information_Changelog_Heading" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
 </root>
