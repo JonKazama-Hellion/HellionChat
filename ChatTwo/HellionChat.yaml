@@ -40,6 +40,48 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.5.2 — Bugfix patch**
+
+  Three corrections to the v0.5.1 surface plus two security findings
+  closed by the new manual-build CodeQL workflow. No new features, no
+  migration, configuration version stays at 10.
+
+  Bug fixes:
+
+  - Auto-Tell-Tabs: the "earlier conversations" separator no longer
+    lands below the live tell. The triggering message was already
+    persisted in the store by the time the spawn handler fired, so
+    it appeared as the youngest historic message. The preload now
+    excludes the live tell explicitly and pulls one extra row so the
+    user does not lose a slot to the exclusion.
+  - General/Aussehen: HellionThemeWindowOpacity ships at 0.5 so a
+    fresh install lands at the more glass-like default. Existing
+    users keep their saved value.
+  - General/Allgemein: Use24HourClock ships at true so a German /
+    European install starts on 24h time without a manual flip.
+  - Tabs/Gruppe: the default Gruppe preset no longer auto-routes
+    /party into the tab. The tab still collects /party, /alliance,
+    /pvpteam together as a read surface but does not steal the
+    input focus when you wanted /alliance.
+
+  Security:
+
+  - Closed CodeQL Critical alert "unvalidated local pointer
+    arithmetic" in ImGuiUtil.WrapText: empty splits between
+    consecutive newlines produced a zero-length byte array whose
+    fixed pointer collapsed onto its end pointer. Bail before the
+    fixed block when the slice is empty.
+  - Closed CodeQL Medium alert "workflow does not contain
+    permissions" by pinning the build workflow to contents: read.
+
+  Documentation: README now carries Build, CodeQL, License, Latest
+  Release, Dalamud API, .NET and FFXIV badges. License detection
+  picks up EUPL-1.2 correctly via a separated COPYRIGHT file. Added
+  NOTICE.md and UPSTREAM_SYNC.md after leaving the GitHub fork
+  network.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.5.1 — Backlog Sweep**
 
   Pure hardening and polish. No new features. Eight backlog items
