@@ -177,6 +177,12 @@
   <data name="Migration_Notification_Content" xml:space="preserve">
     <value>Datenschutz-Filter ist standardmäßig aktiviert. Einstellungen → Datenschutz zum Anpassen.</value>
   </data>
+  <data name="Migration_Webinterface_Removed_Title" xml:space="preserve">
+    <value>Hellion Chat 0.2.0</value>
+  </data>
+  <data name="Migration_Webinterface_Removed_Content" xml:space="preserve">
+    <value>Das Webinterface wurde in dieser Version entfernt, weil es nicht auf das Datenschutz-Niveau gehärtet werden konnte das Hellion Chat standardmäßig zusichert. Falls du es genutzt hast, schau bitte in die README für Hintergründe.</value>
+  </data>
   <data name="Wizard_Title" xml:space="preserve">
     <value>Hellion Chat — Willkommen</value>
   </data>

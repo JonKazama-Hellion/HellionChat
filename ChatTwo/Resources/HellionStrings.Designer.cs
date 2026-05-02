@@ -99,6 +99,8 @@ internal class HellionStrings
 
     internal static string Migration_Notification_Title => Get(nameof(Migration_Notification_Title));
     internal static string Migration_Notification_Content => Get(nameof(Migration_Notification_Content));
+    internal static string Migration_Webinterface_Removed_Title => Get(nameof(Migration_Webinterface_Removed_Title));
+    internal static string Migration_Webinterface_Removed_Content => Get(nameof(Migration_Webinterface_Removed_Content));
 
     internal static string Wizard_Title => Get(nameof(Wizard_Title));
     internal static string Wizard_Intro => Get(nameof(Wizard_Intro));

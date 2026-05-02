@@ -177,6 +177,12 @@
   <data name="Migration_Notification_Content" xml:space="preserve">
     <value>Privacy filter activated by default. Settings → Privacy to adjust.</value>
   </data>
+  <data name="Migration_Webinterface_Removed_Title" xml:space="preserve">
+    <value>Hellion Chat 0.2.0</value>
+  </data>
+  <data name="Migration_Webinterface_Removed_Content" xml:space="preserve">
+    <value>The webinterface has been removed in this version because it could not be hardened to the privacy guarantees Hellion Chat makes by default. If you used it, please consult the README for context.</value>
+  </data>
   <data name="Wizard_Title" xml:space="preserve">
     <value>Hellion Chat — Welcome</value>
   </data>

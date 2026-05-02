@@ -139,6 +139,25 @@ public sealed class Plugin : IDalamudPlugin
                 });
             }
 
+            // Hellion Chat v7→v8: webinterface removed in 0.2.0. Old config
+            // entries (WebinterfacePassword, AuthStore, etc.) get dropped on
+            // the next save because their properties no longer exist on the
+            // Configuration class. The bump is recorded so the notification
+            // only fires once.
+            if (Config.Version <= 7)
+            {
+                Config.Version = 8;
+                SaveConfig();
+
+                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                {
+                    Title = HellionStrings.Migration_Webinterface_Removed_Title,
+                    Content = HellionStrings.Migration_Webinterface_Removed_Content,
+                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                    InitialDuration = TimeSpan.FromSeconds(20),
+                });
+            }
+
             if (Config.Tabs.Count == 0)
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
 
