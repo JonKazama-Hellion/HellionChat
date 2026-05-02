@@ -1374,8 +1374,18 @@ public sealed class ChatLogWindow : Window
                     {
                         // Dim the tab name once the user marked the partner
                         // as greeted, so a glance at the sidebar tells them
-                        // who still needs attention.
+                        // who still needs attention. Selectable has no idle
+                        // background slot in ImGui, so the dim only applies
+                        // to the selected and hovered states — the text dim
+                        // alone signals greeted in the idle state.
+                        var headerBase = ImGui.GetColorU32(ImGuiCol.Header);
+                        var hoverBase = ImGui.GetColorU32(ImGuiCol.HeaderHovered);
+                        var dimHeader = (headerBase & 0xFF000000u) | ((headerBase & 0x00FEFEFEu) >> 1);
+                        var dimHover = (hoverBase & 0xFF000000u) | ((hoverBase & 0x00FEFEFEu) >> 1);
+
                         using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.TextDisabled)))
+                        using (ImRaii.PushColor(ImGuiCol.Header, dimHeader))
+                        using (ImRaii.PushColor(ImGuiCol.HeaderHovered, dimHover))
                         {
                             clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
                         }
