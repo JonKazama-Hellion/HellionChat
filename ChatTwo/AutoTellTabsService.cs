@@ -200,7 +200,11 @@ internal sealed class AutoTellTabsService : IDisposable
         // Preload first so the tab opens with chronological history above
         // the current message — and so a slow DB query never causes a
         // visible "empty tab, then history pops in" effect on screen.
-        PreloadHistory(tab, partner.Name, partner.World);
+        // The current message is already persisted in the store by the
+        // time MessageProcessed fires (see MessageManager.cs: UpsertMessage
+        // runs before the event), so we have to exclude it explicitly to
+        // avoid the separator landing below the live tell.
+        PreloadHistory(tab, partner.Name, partner.World, currentMessage.Id);
 
         tab.AddMessage(currentMessage, unread: true);
         Plugin.Config.Tabs.Add(tab);
@@ -238,7 +242,7 @@ internal sealed class AutoTellTabsService : IDisposable
         return $"{playerName}@World{worldRowId}";
     }
 
-    private void PreloadHistory(Tab tab, string senderName, uint senderWorld)
+    private void PreloadHistory(Tab tab, string senderName, uint senderWorld, Guid currentMessageId)
     {
         var preloadCount = Plugin.Config.AutoTellTabsHistoryPreload;
         if (preloadCount <= 0)
@@ -248,13 +252,21 @@ internal sealed class AutoTellTabsService : IDisposable
 
         try
         {
+            // Pull one extra row because the live tell that triggered this
+            // spawn is already in the store and would otherwise eat one of
+            // the user's preload-budget slots.
             var history = _store.GetTellHistoryWithSender(
                 _messageManager.CurrentContentId,
                 senderName,
                 senderWorld,
-                preloadCount);
+                preloadCount + 1);
 
-            if (history.Count == 0)
+            var historicMessages = history
+                .Where(m => m.Id != currentMessageId)
+                .Take(preloadCount)
+                .ToList();
+
+            if (historicMessages.Count == 0)
             {
                 // No prior tells with this player — leave the tab to start
                 // empty so the user does not see a "history loaded" marker
@@ -265,7 +277,7 @@ internal sealed class AutoTellTabsService : IDisposable
             // The history list is already oldest-first, so a plain AddPrune
             // loop produces the chronological order the user expects to see
             // when the tab opens.
-            foreach (var message in history)
+            foreach (var message in historicMessages)
             {
                 tab.Messages.AddPrune(message, MessageManager.MessageDisplayLimit);
             }
