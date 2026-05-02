@@ -1,0 +1,49 @@
+name: Build
+
+# Verifies that every push to main and every PR still builds against the
+# current Dalamud staging branch. Does not produce release artefacts; the
+# release workflow handles that on tag.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build (Release)
+    runs-on: windows-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download Dalamud staging
+        shell: pwsh
+        run: |
+          $hooks = Join-Path $env:APPDATA "XIVLauncher\addon\Hooks\dev"
+          New-Item -ItemType Directory -Force -Path $hooks | Out-Null
+          Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile dalamud.zip
+          Expand-Archive -Force -Path dalamud.zip -DestinationPath $hooks
+
+      - name: Restore
+        run: dotnet restore ChatTwo/ChatTwo.csproj
+
+      - name: Build (Release)
+        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release --no-restore
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: HellionChat-build-${{ github.run_number }}
+          path: ChatTwo/bin/Release/**/HellionChat/**
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/JonKazama-Hellion/HellionChat/security/advisories/new
+    about: Do not open a public issue for security problems. Use the private advisory instead.
+
+  - name: Upstream Chat 2 issue
+    url: https://github.com/Infiziert90/ChatTwo/issues
+    about: If the issue exists in upstream Chat 2 too, please report it there so the original maintainers see it as well.
+
+  - name: Discord
+    url: https://discord.com/users/j.j_kazama
+    about: Quick questions, casual feedback. Bug reports still go through the issue tracker for tracking.

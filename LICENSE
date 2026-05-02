@@ -1,31 +1,5 @@
-HellionChat — a privacy-focused fork of ChatTwo
-
-Copyright (c) 2024-2025 Infiziert90 (Infi) and Anna Clemens
-    (original ChatTwo authors and copyright holders of the upstream work
-    this fork is built on)
-Copyright (c) 2025-2026 Florian Wathling / Hellion Online Media
-    (HellionChat-specific modifications, Privacy/Export/Auto-Tell-Tabs
-    features, Hellion theme, German localisation, EUPL-1.2 fork
-    maintenance)
-
-Licensed under the European Union Public Licence (EUPL), Version 1.2 only.
-
-You may obtain a copy of the Licence at:
-https://eupl.eu/1.2/en/
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the Licence is distributed on an "AS IS" basis, WITHOUT
-WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-Licence for the specific language governing permissions and limitations
-under the Licence.
-
-The full Licence text follows below.
-
-================================================================================
-
-EUROPEAN UNION PUBLIC LICENCE v. 1.2
-
-EUPL (c) the European Union 2007, 2016
+                      EUROPEAN UNION PUBLIC LICENCE v. 1.2
+                      EUPL (c) the European Union 2007, 2016
 
 This European Union Public Licence (the 'EUPL') applies to the Work (as
 defined below) which is provided under the terms of this Licence. Any use
@@ -37,7 +11,7 @@ The Work is provided under the terms of this Licence when the Licensor (as
 defined below) has placed the following notice immediately following the
 copyright notice for the Work:
 
-    Licensed under the EUPL
+        Licensed under the EUPL
 
 or has expressed by any other means his willingness to license under the
 EUPL.
