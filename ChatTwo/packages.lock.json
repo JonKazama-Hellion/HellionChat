@@ -54,26 +54,6 @@
         "resolved": "3.1.12",
         "contentHash": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A=="
       },
-      "Watson.Lite": {
-        "type": "Direct",
-        "requested": "[6.3.9, )",
-        "resolved": "6.3.9",
-        "contentHash": "sDigTY8D8V7W38lfzJGiigf7xZEfp3Kw7XE7VJyeNO9mxOkv+w8HcmCsmORMDhsipDqGU0gMEsPOqORmZzRaWg==",
-        "dependencies": {
-          "CavemanTcp": "2.0.9",
-          "Watson.Core": "6.3.9"
-        }
-      },
-      "CavemanTcp": {
-        "type": "Transitive",
-        "resolved": "2.0.9",
-        "contentHash": "KgIwYhPhGkBTm+wwVAmWonkKPw4xYVnutzzlIeqOLcX1fti+8d+MEGTvbern1smf3S/UpjFjihkf6XRziTddzQ=="
-      },
-      "IpMatcher": {
-        "type": "Transitive",
-        "resolved": "1.0.5",
-        "contentHash": "WXNlWERj+0GN699AnMNsuJ7PfUAbU4xhOHP3nrNXLHqbOaBxybu25luSYywX1133NSlitA4YkSNmJuyPvea4sw=="
-      },
       "MessagePack.Annotations": {
         "type": "Transitive",
         "resolved": "3.1.4",
@@ -96,11 +76,6 @@
         "type": "Transitive",
         "resolved": "17.11.4",
         "contentHash": "mudqUHhNpeqIdJoUx2YDWZO/I9uEDYVowan89R6wsomfnUJQk6HteoQTlNjZDixhT2B4IXMkMtgZtoceIjLRmA=="
-      },
-      "RegexMatcher": {
-        "type": "Transitive",
-        "resolved": "1.0.9",
-        "contentHash": "RkQGXIrqHjD5h1mqefhgCbkaSdRYNRG5rrbzyw5zeLWiS0K1wq9xR3cNhQdzYR2MsKZ3GN523yRUsEQIMPxh3Q=="
       },
       "SQLitePCLRaw.bundle_e_sqlite3": {
         "type": "Transitive",
@@ -127,27 +102,6 @@
         "contentHash": "uZVTi02C1SxqzgT0HqTWatIbWGb40iIkfc3FpFCpE/r7g6K0PqzDUeefL6P6HPhDtc6BacN3yQysfzP7ks+wSQ==",
         "dependencies": {
           "SQLitePCLRaw.core": "2.1.10"
-        }
-      },
-      "Timestamps": {
-        "type": "Transitive",
-        "resolved": "1.0.11",
-        "contentHash": "SnWhXm3FkEStQGgUTfWMh9mKItNW032o/v8eAtFrOGqG0/ejvPPA1LdLZx0N/qqoY0TH3x11+dO00jeVcM8xNQ=="
-      },
-      "UrlMatcher": {
-        "type": "Transitive",
-        "resolved": "3.0.1",
-        "contentHash": "hHBZVzFSfikrx4XsRsnCIwmGLgbNKtntnlqf4z+ygcNA6Y/L/J0x5GiZZWfXdTfpxhy5v7mlt2zrZs/L9SvbOA=="
-      },
-      "Watson.Core": {
-        "type": "Transitive",
-        "resolved": "6.3.9",
-        "contentHash": "hGoadE4SLbko8yxhx5+nxGV8lEVgEquNli87lN6/eOTQEJNpK/Cs+OF0etTgFKZ4p0u5ivetoDxl82Lg6oHZEg==",
-        "dependencies": {
-          "IpMatcher": "1.0.5",
-          "RegexMatcher": "1.0.9",
-          "Timestamps": "1.0.11",
-          "UrlMatcher": "3.0.1"
         }
       }
     }

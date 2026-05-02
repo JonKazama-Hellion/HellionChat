@@ -17,7 +17,6 @@ using Dalamud.Interface.ImGuiNotification;
 using Lumina.Data.Files;
 using Lumina.Text.ReadOnly;
 using MoreLinq;
-using Newtonsoft.Json;
 
 namespace ChatTwo.Ui;
 
@@ -166,28 +165,12 @@ public class DbViewer : Window
         if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
             ImGui.SetTooltip(Language.Export_Txt_Tooltip);
 
-        ImGui.SameLine(0, spacing);
-        using (ImRaii.Disabled(InputPath.Length == 0 || IsExporting))
-        {
-            if (ImGuiUtil.IconButton(FontAwesomeIcon.FileExport))
-            {
-                Notification = Plugin.Notification.AddNotification(
-                    new Notification
-                    {
-                        Title = "Chat2 Json Export",
-                        Content = Language.ChatExport_Initial,
-                        Type = NotificationType.Info,
-                        Minimized = false,
-                        UserDismissable = false,
-                        InitialDuration = TimeSpan.FromSeconds(10000),
-                        Progress = 0.0f,
-                    });
-                CreateTempJsonFile();
-            }
-        }
-
-        if (ImGui.IsItemHovered(ImGuiHoveredFlags.AllowWhenDisabled))
-            ImGui.SetTooltip(Language.Export_Json_Tooltip);
+        // Hellion Chat: the JSON export button used to dump the database in
+        // the upstream webinterface's wire format. With the webinterface
+        // removed there is no consumer for that format any more, so the
+        // button is dropped. The Privacy tab's MessageExporter covers the
+        // same ground (Markdown / JSON / CSV) with channel and date filters
+        // and is the supported way to get history out of the plugin.
 
         var width = 350 * ImGuiHelpers.GlobalScale;
         var loadingIndicator = IsProcessing && ProcessingStart < Environment.TickCount64;
@@ -461,136 +444,4 @@ public class DbViewer : Window
         });
     }
 
-    private void CreateTempJsonFile()
-    {
-        IsExporting = true;
-        Task.Run(async () =>
-        {
-            try
-            {
-                var channels = SelectedChannels.Select(pair => (byte)pair.Key).ToArray();
-
-                var rangeMessageEnumerator = Plugin.MessageManager.Store.GetDateRange(AfterDate, BeforeDate, channels);
-                var messageHistory = rangeMessageEnumerator.ToArray();
-                await rangeMessageEnumerator.DisposeAsync();
-
-                var filteredHistory = Filter(messageHistory);
-
-                await using var stream = new StreamWriter(Path.Join(InputPath, $"Chat2_{DateTime.Now:yyyy_dd_M__HH_mm_ss}.json"));
-
-                var batch = 0;
-                var messageContainer = new Messages();
-                List<MessageResponse> templates = [];
-                foreach (var messages in filteredHistory.Batch(5000))
-                {
-                    foreach (var message in messages)
-                    {
-                        templates.Add(ReadMessageContent(message));
-                        batch++;
-                    }
-
-                    Notification.Progress = (float)batch / filteredHistory.Count;
-                    Notification.Content = $"Exported {batch} of {filteredHistory.Count} messages";
-
-                    await Task.Delay(100);
-                }
-
-                messageContainer.Set = templates.ToArray();
-                await stream.WriteAsync(JsonConvert.SerializeObject(messageContainer));
-                templates.Clear();
-
-                await using (var fileStream = File.Open(Path.Join(InputPath, "gfdata.gfd"), FileMode.OpenOrCreate))
-                {
-                    await using var byteWriter = new BinaryWriter(fileStream);
-                    byteWriter.Write(Plugin.DataManager.GetFile("common/font/gfdata.gfd")!.Data);
-                }
-
-                await using (var fileStream = File.Open(Path.Join(InputPath, "fonticon_ps5.tex"), FileMode.OpenOrCreate))
-                {
-                    await using var byteWriter = new BinaryWriter(fileStream);
-                    byteWriter.Write(Plugin.DataManager.GetFile<TexFile>("common/font/fonticon_ps5.tex")!.Data);
-                }
-
-                await using (var fileStream = File.Open(Path.Join(InputPath, "FFXIV_Lodestone_SSF.ttf"), FileMode.OpenOrCreate))
-                {
-                    await using var byteWriter = new BinaryWriter(fileStream);
-                    byteWriter.Write(Plugin.FontManager.GameSymFont);
-                }
-
-                Notification.Progress = 1.0f;
-                Notification.Content = "Done!!!";
-                Notification.Type = NotificationType.Success;
-            }
-            catch (Exception ex)
-            {
-                Plugin.Log.Error(ex, "Failed creating txt backup");
-
-                Notification.Content = "Error ...";
-                Notification.Type = NotificationType.Error;
-            }
-            finally
-            {
-                IsExporting = false;
-                Notification.UserDismissable = true;
-            }
-        });
-    }
-
-    private MessageResponse ReadMessageContent(Message message)
-    {
-        var response = new MessageResponse
-        {
-            Id = message.Id,
-            Timestamp = message.Date.ToLocalTime().ToString("t", !Plugin.Config.Use24HourClock ? null : CultureInfo.CreateSpecificCulture("es-ES"))
-        };
-
-        var sender = message.Sender.Select(ProcessChunk);
-        var content = message.Content.Select(ProcessChunk);
-        response.Templates = sender.Concat(content).ToArray();
-
-        return response;
-    }
-
-    private MessageTemplate ProcessChunk(Chunk chunk)
-    {
-        if (chunk is IconChunk { } icon)
-        {
-            var iconId = (uint)icon.Icon;
-            return IconUtil.GfdFileView.TryGetEntry(iconId, out _) ? new MessageTemplate {PayloadType = WebPayloadType.Icon, IconId = iconId}: MessageTemplate.Empty;
-        }
-
-        if (chunk is TextChunk { } text)
-        {
-            if (chunk.Link is EmotePayload emotePayload && Plugin.Config.ShowEmotes)
-            {
-                var image = EmoteCache.GetEmote(emotePayload.Code);
-
-                if (image is { Failed: false })
-                    return new MessageTemplate { PayloadType = WebPayloadType.CustomEmote, Color = 0, Content = emotePayload.Code };
-            }
-
-            var color = text.Foreground;
-            if (color == null && text.FallbackColour != null)
-            {
-                var type = text.FallbackColour.Value;
-                color = Plugin.Config.ChatColours.TryGetValue(type, out var col) ? col : type.DefaultColor();
-            }
-
-            color ??= 0;
-
-            var userContent = text.Content;
-            if (Plugin.ChatLogWindow.ScreenshotMode)
-            {
-                if (chunk.Link is PlayerPayload playerPayload)
-                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, playerPayload.PlayerName, playerPayload.World.RowId);
-                else if (Plugin.PlayerState.IsLoaded)
-                    userContent = Plugin.ChatLogWindow.HidePlayerInString(userContent, Plugin.PlayerState.CharacterName, Plugin.PlayerState.HomeWorld.RowId);
-            }
-
-            var isNotUrl = text.Link is not UriPayload;
-            return new MessageTemplate { PayloadType = isNotUrl ? WebPayloadType.RawText : WebPayloadType.CustomUri, Color = color.Value, Content = userContent };
-        }
-
-        return MessageTemplate.Empty;
-    }
 }
