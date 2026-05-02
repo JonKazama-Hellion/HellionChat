@@ -257,17 +257,38 @@ internal sealed class AutoTellTabsService : IDisposable
 
     internal void MarkGreeted(Tab tab)
     {
-        // Stub — implemented in Task 12.
+        SetGreeted(tab, true);
     }
 
     internal void UnmarkGreeted(Tab tab)
     {
-        // Stub — implemented in Task 12.
+        SetGreeted(tab, false);
     }
 
     internal bool IsGreeted(Tab tab)
     {
         return tab.IsGreeted;
+    }
+
+    private void SetGreeted(Tab tab, bool greeted)
+    {
+        if (tab == null)
+        {
+            return;
+        }
+
+        lock (_tempTabsLock)
+        {
+            // Frame-race guard (E5): the sidebar might still render a tab
+            // that has already been removed by LRU drop or logout cleanup.
+            // Silently skip the toggle so we don't mutate stale state.
+            if (!Plugin.Config.Tabs.Contains(tab))
+            {
+                return;
+            }
+
+            tab.IsGreeted = greeted;
+        }
     }
 
     private void OnLogout(int type, int code)
