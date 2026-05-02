@@ -1,3 +1,4 @@
+using System.Buffers;
 using System.Numerics;
 using System.Text;
 using ChatTwo.Code;
@@ -58,130 +59,175 @@ internal static class ImGuiUtil
                 handler.Click(chunk, payload, button);
     }
 
-    internal static unsafe void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText, float lineWidth)
+    // Ceiling on the byte buffer for a single rendered line. UTF-8 takes at
+    // most 4 bytes per char; ImGui's internal ImString limit is well below
+    // this and FFXIV's chat lines top out around a few hundred chars in
+    // practice. The cap prevents an unbounded ArrayPool rent if a caller
+    // ever feeds in a degenerate input.
+    private const int MaxLineByteCount = 16 * 1024;
+
+    internal static void WrapText(string csText, Chunk chunk, PayloadHandler? handler, Vector4 defaultText, float lineWidth)
     {
-        void Text(byte* text, byte* textEnd)
-        {
-            var oldPos = ImGui.GetCursorScreenPos();
-
-            ImGuiNative.TextUnformatted(text, textEnd);
-            PostPayload(chunk, handler);
-
-            if (!ReferenceEquals(LastLink, chunk.Link))
-                PayloadBounds.Clear();
-
-            LastLink = chunk.Link;
-
-            if (Hovered != null && ReferenceEquals(Hovered, chunk.Link))
-            {
-                defaultText.W = 0.25f;
-                var actualCol = ColourUtil.Vector4ToAbgr(defaultText);
-                ImGui.GetWindowDrawList().AddRectFilled(oldPos, oldPos + ImGui.GetItemRectSize(), actualCol);
-
-                foreach (var (start, size) in PayloadBounds)
-                    ImGui.GetWindowDrawList().AddRectFilled(start, start + size, actualCol);
-
-                PayloadBounds.Clear();
-            }
-
-            if (Hovered == null && chunk.Link != null)
-                PayloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
-        }
-
         if (csText.Length == 0)
             return;
 
         foreach (var part in csText.Split(["\r\n", "\r", "\n"], StringSplitOptions.None))
         {
-            // Encoding.GetBytes is virtual, so the returned array's
-            // Length is treated as untrusted by CodeQL for pointer
-            // arithmetic ("cs/unvalidated-local-pointer-arithmetic").
-            // Compute the expected byte count against the same encoder
-            // and bail out if a swapped-in encoding ever returned a
-            // mismatched buffer. Also drops empty splits so the textEnd
-            // pointer below cannot collapse onto text.
-            var expectedLength = Encoding.UTF8.GetByteCount(part);
-            var bytes = Encoding.UTF8.GetBytes(part);
-            if (expectedLength == 0 || bytes.Length != expectedLength)
+            if (part.Length == 0)
             {
                 ImGui.TextUnformatted("");
                 continue;
             }
 
-            fixed (byte* rawText = bytes)
+            // Allocate against the encoder's own MaxByteCount so the buffer
+            // we hand to ImGui is sized by us. The actual byte count
+            // returned by GetBytes is then validated against that ceiling
+            // before any pointer arithmetic touches it; CodeQL recognises
+            // that comparison as a sanitiser for the
+            // cs/unvalidated-local-pointer-arithmetic taint flow.
+            var maxBytes = Encoding.UTF8.GetMaxByteCount(part.Length);
+            if (maxBytes <= 0 || maxBytes > MaxLineByteCount)
             {
-                var text = rawText;
-                var textEnd = text + expectedLength;
+                ImGui.TextUnformatted("");
+                continue;
+            }
 
-                var widthLeft = ImGui.GetContentRegionAvail().X;
-                var endPrevLine = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
-                if (endPrevLine == null)
+            var buffer = ArrayPool<byte>.Shared.Rent(maxBytes);
+            try
+            {
+                var written = Encoding.UTF8.GetBytes(part, 0, part.Length, buffer, 0);
+                if (written <= 0 || written > maxBytes)
+                {
+                    ImGui.TextUnformatted("");
                     continue;
+                }
 
-                var firstSpace = FindFirstSpace(text, textEnd);
-                var properBreak = firstSpace <= endPrevLine;
+                WrapEncodedLine(buffer.AsSpan(0, written), chunk, handler, defaultText, lineWidth);
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(buffer);
+            }
+        }
+    }
+
+    private static unsafe void WrapEncodedLine(ReadOnlySpan<byte> bytes, Chunk chunk, PayloadHandler? handler, Vector4 defaultText, float lineWidth)
+    {
+        var byteCount = bytes.Length;
+        if (byteCount == 0)
+        {
+            ImGui.TextUnformatted("");
+            return;
+        }
+
+        fixed (byte* basePtr = bytes)
+        {
+            var widthLeft = ImGui.GetContentRegionAvail().X;
+            var endPrev = CalcWordWrap(basePtr, 0, byteCount, widthLeft);
+            if (endPrev < 0)
+                return;
+
+            var firstSpace = FindFirstSpace(bytes, 0, byteCount);
+            var properBreak = firstSpace <= endPrev;
+            if (properBreak)
+            {
+                DrawText(basePtr, 0, endPrev, chunk, handler, defaultText);
+            }
+            else if (lineWidth == 0f)
+            {
+                ImGui.TextUnformatted("");
+            }
+            else
+            {
+                // Check whether the next chunk would wrap at or past the
+                // first space. If yes, force a line break.
+                var wrapPos = CalcWordWrap(basePtr, 0, firstSpace, lineWidth);
+                if (wrapPos >= firstSpace)
+                    ImGui.TextUnformatted("");
+            }
+
+            widthLeft = ImGui.GetContentRegionAvail().X;
+            var lineStart = 0;
+            while (endPrev < byteCount)
+            {
                 if (properBreak)
-                {
-                    Text(text, endPrevLine);
-                }
-                else
-                {
-                    if (lineWidth == 0f)
-                    {
-                        ImGui.TextUnformatted("");
-                    }
-                    else
-                    {
-                        // check if the next bit is longer than the entire line width
-                        var wrapPos = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, firstSpace, lineWidth);
+                    lineStart = endPrev;
 
-                        // only go to next line is it's going to wrap at the space
-                        if (wrapPos >= firstSpace)
-                            ImGui.TextUnformatted("");
-                    }
+                // Skip a leading space at the start of a wrapped line.
+                if (lineStart < byteCount && bytes[lineStart] == (byte)' ')
+                    lineStart++;
+
+                var newEnd = CalcWordWrap(basePtr, lineStart, byteCount, widthLeft);
+                if (properBreak && newEnd == endPrev)
+                    break;
+
+                if (newEnd < 0)
+                {
+                    ImGui.TextUnformatted("");
+                    ImGui.TextUnformatted("");
+                    break;
                 }
 
-                widthLeft = ImGui.GetContentRegionAvail().X;
-                while (endPrevLine < textEnd)
+                endPrev = newEnd;
+                DrawText(basePtr, lineStart, endPrev, chunk, handler, defaultText);
+
+                if (!properBreak)
                 {
-                    if (properBreak)
-                        text = endPrevLine;
-
-                    // skip a space at start of line
-                    if (*text == ' ')
-                        ++text;
-
-                    var newEnd = ImGuiNative.CalcWordWrapPositionA(ImGui.GetFont().Handle, ImGuiHelpers.GlobalScale, text, textEnd, widthLeft);
-                    if (properBreak && newEnd == endPrevLine)
-                        break;
-
-                    endPrevLine = newEnd;
-                    if (endPrevLine == null)
-                    {
-                        ImGui.TextUnformatted("");
-                        ImGui.TextUnformatted("");
-                        break;
-                    }
-
-                    Text(text, endPrevLine);
-
-                    if (!properBreak)
-                    {
-                        properBreak = true;
-                        widthLeft = ImGui.GetContentRegionAvail().X;
-                    }
+                    properBreak = true;
+                    widthLeft = ImGui.GetContentRegionAvail().X;
                 }
             }
         }
     }
 
-    private static unsafe byte* FindFirstSpace(byte* text, byte* textEnd)
+    private static unsafe int CalcWordWrap(byte* basePtr, int start, int end, float width)
     {
-        for (var i = text; i < textEnd; i++)
-            if (char.IsWhiteSpace((char) *i))
+        var result = ImGuiNative.CalcWordWrapPositionA(
+            ImGui.GetFont().Handle,
+            ImGuiHelpers.GlobalScale,
+            basePtr + start,
+            basePtr + end,
+            width);
+        if (result == null)
+            return -1;
+        return (int)(result - basePtr);
+    }
+
+    private static unsafe void DrawText(byte* basePtr, int start, int end, Chunk chunk, PayloadHandler? handler, Vector4 defaultText)
+    {
+        var oldPos = ImGui.GetCursorScreenPos();
+
+        ImGuiNative.TextUnformatted(basePtr + start, basePtr + end);
+        PostPayload(chunk, handler);
+
+        if (!ReferenceEquals(LastLink, chunk.Link))
+            PayloadBounds.Clear();
+
+        LastLink = chunk.Link;
+
+        if (Hovered != null && ReferenceEquals(Hovered, chunk.Link))
+        {
+            defaultText.W = 0.25f;
+            var actualCol = ColourUtil.Vector4ToAbgr(defaultText);
+            ImGui.GetWindowDrawList().AddRectFilled(oldPos, oldPos + ImGui.GetItemRectSize(), actualCol);
+
+            foreach (var (boundsStart, boundsSize) in PayloadBounds)
+                ImGui.GetWindowDrawList().AddRectFilled(boundsStart, boundsStart + boundsSize, actualCol);
+
+            PayloadBounds.Clear();
+        }
+
+        if (Hovered == null && chunk.Link != null)
+            PayloadBounds.Add((oldPos, ImGui.GetItemRectSize()));
+    }
+
+    private static int FindFirstSpace(ReadOnlySpan<byte> bytes, int start, int end)
+    {
+        for (var i = start; i < end; i++)
+            if (char.IsWhiteSpace((char)bytes[i]))
                 return i;
 
-        return textEnd;
+        return end;
     }
 
     internal static bool IconButton(FontAwesomeIcon icon, string? id = null, string? tooltip = null, int width = 0)

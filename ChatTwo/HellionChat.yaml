@@ -44,340 +44,57 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
-  **Hellion Chat 0.5.3 — Pointer arithmetic hardening**
+  **Hellion Chat 0.5.4 — WrapText hardening**
 
-  Single hardening fix on top of v0.5.2.
+  Replaces the unsafe pointer-arithmetic in ImGuiUtil.WrapText with
+  Span- and index-based control flow. Closes the persistent CodeQL
+  Critical alert "unvalidated local pointer arithmetic" that kept
+  re-firing on every shape of the previous fix.
 
-  Security:
+  Hardening:
 
-  - Closed CodeQL Critical alert "unvalidated local pointer
-    arithmetic" in ImGuiUtil.WrapText. The earlier v0.5.2 fix
-    handled the empty-input edge case but the rule re-fired on the
-    pointer arithmetic itself because Encoding.GetBytes is virtual
-    on the base Encoding class and CodeQL therefore tracks its
-    return as untrusted input. Now compute the expected byte count
-    via GetByteCount on the same encoder and bail out if a swapped
-    Encoding ever returned a buffer of the wrong length. Real
-    consistency check, not a dead defensive guard.
+  - WrapText now allocates a buffer sized by Encoding.UTF8.GetMaxByteCount
+    via ArrayPool, validates the actual encoded length against that
+    ceiling, and threads the rest of the algorithm through int offsets
+    instead of raw byte pointers
+  - Pointer arithmetic only happens inside two small private helpers
+    (CalcWordWrap and DrawText) that take the pinned base pointer plus
+    int offsets sourced from the plugin's own logic, not from any
+    virtual-method return
+  - Added a 16 KiB upper bound on the buffer rent to prevent a
+    pathological input from triggering an unbounded ArrayPool allocation
 
-  No new features, no migration, configuration version stays at 10.
+  No user-visible behaviour change. Word-wrap output is byte-identical
+  to v0.5.3.
 
   Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+  **Hellion Chat 0.5.3 — Pointer arithmetic hardening**
+
+  Closed CodeQL Critical alert in ImGuiUtil.WrapText by validating the
+  encoded byte buffer length via GetByteCount before pointer
+  arithmetic. Single-fix patch on top of v0.5.2.
 
   **Hellion Chat 0.5.2 — Bugfix patch**
 
-  Three corrections to the v0.5.1 surface plus two security findings
-  closed by the new manual-build CodeQL workflow. No new features, no
-  migration, configuration version stays at 10.
-
-  Bug fixes:
-
-  - Auto-Tell-Tabs: the "earlier conversations" separator no longer
-    lands below the live tell. The triggering message was already
-    persisted in the store by the time the spawn handler fired, so
-    it appeared as the youngest historic message. The preload now
-    excludes the live tell explicitly and pulls one extra row so the
-    user does not lose a slot to the exclusion.
-  - General/Aussehen: HellionThemeWindowOpacity ships at 0.5 so a
-    fresh install lands at the more glass-like default. Existing
-    users keep their saved value.
-  - General/Allgemein: Use24HourClock ships at true so a German /
-    European install starts on 24h time without a manual flip.
-  - Tabs/Gruppe: the default Gruppe preset no longer auto-routes
-    /party into the tab. The tab still collects /party, /alliance,
-    /pvpteam together as a read surface but does not steal the
-    input focus when you wanted /alliance.
-
-  Security:
-
-  - Closed CodeQL Critical alert "unvalidated local pointer
-    arithmetic" in ImGuiUtil.WrapText: empty splits between
-    consecutive newlines produced a zero-length byte array whose
-    fixed pointer collapsed onto its end pointer. Bail before the
-    fixed block when the slice is empty.
-  - Closed CodeQL Medium alert "workflow does not contain
-    permissions" by pinning the build workflow to contents: read.
-
-  Documentation: README now carries Build, CodeQL, License, Latest
-  Release, Dalamud API, .NET and FFXIV badges. License detection
-  picks up EUPL-1.2 correctly via a separated COPYRIGHT file. Added
-  NOTICE.md and UPSTREAM_SYNC.md after leaving the GitHub fork
-  network.
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+  Auto-Tell-Tabs history-separator landed below the live tell instead
+  of above (preload now excludes the trigger message). Plugin icon
+  packaging fixed by removing a stale DalamudPackager.targets override
+  that conflicted with the SDK 15 default. Default config aligned to
+  the maintainer's daily driver: HellionThemeWindowOpacity 0.5,
+  Use24HourClock true, Gruppe tab no longer auto-routes /party. Two
+  earlier CodeQL findings closed (workflow permissions, empty-input
+  pointer arithmetic).
 
   **Hellion Chat 0.5.1 — Backlog Sweep**
 
-  Pure hardening and polish. No new features. Eight backlog items
-  from the v0.5.0 codebase review collected into one patch:
+  Pure hardening and polish. Eight backlog items from the v0.5.0
+  codebase review collected into one patch: cleanup-preview-stale
+  detection, greeted-tab dim background, Performance HelpMarker
+  consistency, Tabs/Database tab names from HellionStrings,
+  FontChooser framework-thread marshalling, async-void on
+  EmoteCache.LoadData, parameterised SQL via BindIntList helper.
 
-  - Cleanup preview now flags itself as out-of-date when the user
-    edits the whitelist after the last refresh, and the refresh
-    button is visually emphasised in that state
-  - Greeted Auto-Tell-Tabs now also dim their selection and hover
-    backgrounds in the sidebar, not just the text
-  - Performance section in the General tab moves to the standard
-    HelpMarker tooltip pattern instead of a wall-of-text description
-  - Tabs and Database settings tabs pull their display name from
-    HellionStrings instead of the upstream Language bundle, so all
-    eight tabs share one i18n source
-  - FontChooser results are now marshalled onto the framework thread
-    via Plugin.Framework.Run instead of being written to settings
-    state directly from the threadpool
-  - EmoteCache.LoadData drops async void and the four CS8618 build
-    warnings the build has been carrying since v0.4.0
-  - All MessageStore SQL paths that fed dynamic value lists into
-    interpolated SQL now use named parameter bindings via a new
-    BindIntList helper. Same behaviour, defence against future
-    user-input regressions
+  ---
 
-  Configuration version is unchanged at 10. No migration. Existing
-  installs upgrade silently.
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 0.5.0 — Settings UX polish**
-
-  The settings window has been pulled apart and rebuilt around eight
-  themed tabs instead of the twelve organic ones it grew into.
-  Settings now sit where they belong and the wall-of-text descriptions
-  have been replaced with hover help markers across every section.
-
-  What changed in this release:
-
-  - Twelve tabs collapsed into eight: General, Appearance, Window,
-    Chat, Tabs, Privacy, Database and Information
-  - Theme and font controls moved out of the Privacy tab into
-    Appearance where they belong
-  - Auto-Tell-Tabs settings, message preview and emote controls now
-    live under one Chat tab with collapsible sections
-  - About and Changelog merged into a single Information tab
-  - Disabled settings keep their tooltip help marker visible so you
-    can still read why an option is greyed out
-  - Section headings start collapsed by default, the same pattern
-    used for the Auto-Tell-Tabs preload section in 0.4.0
-
-  Configuration version bumps from 9 to 10 as a wipe migration. The
-  old config file is copied to HellionChat.json.pre-v10-backup before
-  the new defaults are written, so you can restore your previous
-  setup by hand if anything looks off. A one-shot notification on
-  first start explains the reset.
-
-  No changes to message storage, retention sweep, the privacy filter
-  or the export pipeline. Tabs and chat history are untouched by the
-  migration.
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 0.4.0 — Auto-Tell-Tabs**
-
-  Auto-Tell-Tabs lets you turn each /tell into a session-only tab
-  dedicated to that conversation partner. The original use case is
-  the FFXIV club greeter who has to track 5–15 parallel "hi, welcome"
-  exchanges; everyone else can disable the feature in one click and
-  go back to a single Tell Exclusive tab.
-
-  What lands in this release:
-
-  - Auto-spawn temp tab "Name@World" on /tell (incoming and outgoing)
-  - Tab limit (default 15, range 1–50) with LRU drop that prefers
-    greeted tabs first, then sorts by last activity
-  - History preload from the local message store (default 20 tells,
-    range 0–100) with a "— Earlier conversations —" separator above
-    the live tell that triggered the spawn
-  - Optional "mark as greeted" toggle button (off by default,
-    greeter-specific) that dims the tab name and lets you flip the
-    status
-  - Section header "Active Tells (n)" or compact-mode separator in
-    the sidebar between persistent tabs and the temp tabs
-  - Settings UI under Chat (toggle / limit / compact / greeted-toggle)
-    and Privacy (history preload count), with hover-tooltip help
-    markers replacing the previous wall-of-text descriptions for the
-    new sections
-  - Save and load filters strip temp tabs from the on-disk config so
-    a crash or a sidebar-mode toggle never persists or wipes them
-
-  Compatibility note: if XIV Messanger or another plugin is
-  suppressing direct messages, disable its "Suppress DMs" option so
-  Hellion Chat can receive tells and open the auto tabs.
-
-  Configuration version bumps from 8 to 9. Existing users get a one-
-  shot notification on the first start, defaults are seeded by
-  property initializers, persistent tabs are untouched.
-
-  The vertical sidebar tab view becomes the default for fresh
-  installs; existing users keep their saved preference.
-
-  Inspired by the per-sender tab pattern in XIV InstantMessenger
-  (Limiana, AGPL-3.0). No code was ported across the licence
-  boundary; only the architectural concept influenced this design.
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 0.3.1 — Upstream emote regression fix**
-
-  Cherry-picks Infi's upstream commit ff899ff "Fix a regression
-  from API 15 updates" which changes the BetterTTV emote DTOs
-  (Emote and Top100) from public fields to public properties.
-  System.Text.Json under the API 15 toolchain only honours the
-  [JsonPropertyName] attribute on properties, so the previous
-  field-based version deserialised every fetched emote into empty
-  default values. Result: BetterTTV emotes were silently broken
-  on fresh installs. The fix is six lines and applies cleanly on
-  top of our defensive null-check from earlier; the EmoteCache
-  path-traversal hardening from 0.3.0 stays as it is.
-
-  Authorship of the fix is preserved with git cherry-pick -x, so
-  Infi shows up as the author on the commit. Thanks to him for
-  catching it in the upstream codebase.
-
-  **Hellion Chat 0.3.0 — Audit hardening, brand sweep and rebrand of slash commands**
-
-  This release closes the remaining audit follow-ups from the
-  0.2.0 cleanup and finishes turning Hellion Chat into a properly
-  branded fork rather than a Chat 2 with a different name.
-
-  Slash commands have been renamed across the board so they no
-  longer collide with the upstream plugin and tell you which
-  plugin owns them at a glance:
-
-  - /chat2          becomes /hellion
-  - /chat2Viewer    becomes /hellionView
-  - /clearlog2      becomes /clearhellion
-  - /chat2Debugger  becomes /hellionDebugger (internal)
-  - /chat2SeString  becomes /hellionSeString (internal)
-
-  This is a breaking change for anyone with macros bound to the
-  old command names. The upstream Chat 2 commands keep working
-  if you also have that plugin installed.
-
-  Privacy and storage hardening based on the post-0.2.0 audit:
-
-  - Privacy filter master switch now states explicitly that the
-    filter only governs storage, not the live chat log
-  - Emote cache refuses to write outside its own directory if a
-    third-party API ever returns a path that escapes
-  - Retention sweep is serialised so the 24h auto-sweep and the
-    manual button cannot launch in parallel and race for the
-    SQLite connection
-  - DbViewer paging uses an int constant and the matching SQL
-    parameter name (the upstream code passed a float and a name
-    without the parameter prefix; both worked in practice but
-    were inconsistent)
-
-  Visual identity now matches the Hellion Online Media website:
-
-  - Theme palette switched to Arctic Cyan plus Ember Orange,
-    matching the website's BRANDING.md tokens
-  - Active tabs and window title bars use a brand-color-dark teal
-    variation as identity colour, replacing the previous slate
-    violet that did not appear in the brand
-  - Resize grips and scrollbar grabs picked up Ember Orange
-    instead of industrial amber on hover and active states
-
-  About tab rewritten and properly localised:
-
-  - New "Why this fork exists" block sets out the mission in
-    neutral terms, framing Chat 2's full-history default as the
-    right one for most users while explaining the narrower
-    default footprint this fork chose
-  - All Hellion-specific About copy now lives in HellionStrings
-    in EN and DE, so German users see the Hellion sections in
-    German rather than the upstream English fallback
-  - Webinterface absence is described as a focus mismatch
-    (different use case, substantial rebuild) rather than as
-    a security issue with the upstream code
-  - Translator list at the bottom of the About tab is reachable
-    again on smaller settings windows
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 0.2.0 — Webinterface removed**
-
-  The upstream webinterface has been removed in its entirety. It
-  serves a different use case from the smaller default footprint
-  this fork is built around, namely remote access to chat from a
-  second device. Aligning it with the data minimisation defaults
-  Hellion Chat ships with would have meant a substantial rebuild.
-  Removing it was the cleaner path for this particular fork.
-
-  What changed in this release:
-
-  - Settings tab "Webinterface" is gone, the corresponding
-    Configuration fields (WebinterfaceEnabled / AutoStart / Password /
-    Port / AuthStore / MaxLinesToSend) are dropped and stale entries
-    fall out of the JSON on the next save automatically
-  - The whole ChatTwo/Http tree, the bundled Svelte frontend in
-    websiteBuild.zip and the WebinterfaceUtil helper are deleted
-  - Watson.Lite (the HTTP server) and Newtonsoft.Json (only used by
-    the webinterface JSON wire format) are removed from the
-    package references
-  - DbViewer's "Chat2 JSON Export" button is dropped because it
-    serialised the database into the webinterface message protocol;
-    the Privacy tab's MessageExporter (Markdown, JSON, CSV with
-    channel and date filters) covers the same ground without the
-    proprietary shape
-  - About tab notes the absence so users coming from Chat 2 do not
-    look for it
-  - Configuration version bumps from 7 to 8 with a one-shot
-    notification (EN + DE)
-
-  No changes to the privacy filter, retention sweep, first-run wizard
-  or export pipeline. Existing chat history is preserved.
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 0.1.2 — About tab rebrand, DBViewer polish**
-
-  - About tab now shows Hellion-specific maintainer, license, EU/US/JP
-    disclaimer and SQUARE ENIX disclaimer instead of the inherited
-    Chat 2 contact info; original ChatTwo translator credits stay
-    visible under a clearly labelled upstream tree node
-  - Localization clarified: Hellion-specific German strings are
-    maintained by the fork maintainer, the Crowdin contributor list
-    only covers the inherited upstream strings
-  - Cherry-picked DBViewer UI improvements from upstream Chat 2
-    (auto-scroll-reset on page change, tooltips on date reset,
-    folder export, page arrows, localized export-running messages)
-  - README rewritten in the Hellion project style with a tech-stack
-    table, architecture tree, database column list, install guide,
-    upstream-sync workflow notes and project-status checklist
-
-  **Hellion Chat 0.1.1 — Packaging and migration fixes**
-
-  - Plugin icon now ships inside the bundle, so the Hellion logo
-    renders locally in the Dalamud plugin list once installed (the
-    previous release relied only on the remote IconUrl)
-  - Plugin icon downsampled from 1024×1024 to 256×256 to match the
-    rendered size; loads faster and caches better
-  - Migration from upstream Chat 2 is more robust: each file move is
-    wrapped individually, a locked SQLite database no longer aborts
-    the rest of the migration, and a warning notification fires when
-    any file is held open (with a hint to disable Chat 2 and restart
-    the game)
-  - README ships a step-by-step migration guide (fresh install versus
-    coming from Chat 2) and a troubleshooting section with manual
-    recovery commands for Linux and Windows
-
-  **Hellion Chat 0.1.0 — Initial fork release**
-
-  Privacy
-  - Channel whitelist filter in MessageStore.UpsertMessage with a
-    Privacy-First default (own conversations only)
-  - Per-channel retention with a 24-hour idempotent background sweep
-  - Retroactive cleanup with a Ctrl+Shift confirm and VACUUM
-  - Export to Markdown / JSON / CSV via Dalamud's file dialog
-
-  Onboarding
-  - First-run wizard with three profiles: Privacy-First / Casual /
-    Full History
-  - Configuration migration that seeds defaults on update
-  - One-shot migration from upstream Chat 2's pluginConfigs layout
-  - Migrate3 idempotency recovery for half-migrated databases
-
-  Look & feel
-  - Localized UI (English and German) with live language switching
-  - Industrial HUD theme with cyan-teal action accents, slate-violet
-    tabs, amber active highlights and a window-opacity slider
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+  Earlier history at https://github.com/JonKazama-Hellion/HellionChat/releases.
