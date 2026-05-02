@@ -108,29 +108,29 @@ public sealed class Plugin : IDalamudPlugin
             // Drop them on load to guarantee the session-only invariant.
             Config.Tabs.RemoveAll(t => t.IsTempTab);
 
-            // Hellion Chat v9 → v10 — Settings UX Polish wipes the configuration so
-            // the new 8-tab layout starts from defaults instead of mapping every
-            // previous setting to its new position. The chat database lives in a
-            // separate file and is not touched. A backup of the pre-wipe JSON is
-            // placed next to the live config as a manual restore safety net.
+            // Hellion Chat v9 → v10 — wipes the configuration so the new 8-tab
+            // layout starts from defaults instead of mapping every previous setting
+            // to its new position. Backup-Failure ist non-fatal, der Wipe läuft
+            // trotzdem; dem User fehlt dann nur das manuelle Restore-Sicherheitsnetz.
             if (Config.Version < 10)
             {
-                var configDir = Interface.ConfigDirectory.FullName;
-                var liveConfigPath = Path.Join(configDir, $"{Interface.InternalName}.json");
-                var backupPath = Path.Join(configDir, $"{Interface.InternalName}.json.pre-v10-backup");
+                var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+                if (pluginConfigsDir is not null)
+                {
+                    var liveConfigPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json");
+                    var backupPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json.pre-v10-backup");
 
-                try
-                {
-                    if (File.Exists(liveConfigPath))
+                    try
                     {
-                        File.Copy(liveConfigPath, backupPath, overwrite: true);
+                        if (File.Exists(liveConfigPath))
+                        {
+                            File.Copy(liveConfigPath, backupPath, overwrite: true);
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    // Backup failure is non-fatal — the wipe still runs, the user
-                    // just loses the safety net for manual restore.
-                    Plugin.Log.Warning(ex, "[SettingsRefactor] Could not write pre-v10 config backup");
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "HellionChat: pre-v10 config backup failed");
+                    }
                 }
 
                 Config = new Configuration
