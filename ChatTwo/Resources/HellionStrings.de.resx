@@ -438,4 +438,12 @@
   <data name="Privacy_AutoTellTabs_Preload_Hint" xml:space="preserve">
     <value>Greift nur, wenn Auto-Tell-Tabs im Chat-Tab aktiviert sind.</value>
   </data>
+
+  <!-- Hellion Chat — Settings UX Polish v10 Wipe-Migration -->
+  <data name="SettingsRefactor_Migration_Title" xml:space="preserve">
+    <value>Settings umstrukturiert</value>
+  </data>
+  <data name="SettingsRefactor_Migration_Content" xml:space="preserve">
+    <value>Hellion Chat 0.5.0 hat die Settings in thematische Tabs umstrukturiert. Deine Chat-Datenbank und dein Nachrichtenverlauf bleiben unverändert. Settings wurden auf Defaults zurückgesetzt. Falls du das Privacy-Profil neu wählen willst, findest du den Reopen-Button im Datenschutz-Tab. Ein Backup der vorherigen Config liegt unter HellionChat.json.pre-v10-backup neben der aktiven Config-Datei.</value>
+  </data>
 </root>

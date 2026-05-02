@@ -192,4 +192,8 @@ internal class HellionStrings
     internal static string Privacy_AutoTellTabs_Preload_Name => Get(nameof(Privacy_AutoTellTabs_Preload_Name));
     internal static string Privacy_AutoTellTabs_Preload_Description => Get(nameof(Privacy_AutoTellTabs_Preload_Description));
     internal static string Privacy_AutoTellTabs_Preload_Hint => Get(nameof(Privacy_AutoTellTabs_Preload_Hint));
+
+    // Hellion Chat — Settings UX Polish v10 wipe migration
+    internal static string SettingsRefactor_Migration_Title => Get(nameof(SettingsRefactor_Migration_Title));
+    internal static string SettingsRefactor_Migration_Content => Get(nameof(SettingsRefactor_Migration_Content));
 }
