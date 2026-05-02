@@ -44,6 +44,7 @@ internal class HellionStrings
     internal static string Privacy_Tab_Title => Get(nameof(Privacy_Tab_Title));
     internal static string Privacy_FilterEnabled_Name => Get(nameof(Privacy_FilterEnabled_Name));
     internal static string Privacy_FilterEnabled_Description => Get(nameof(Privacy_FilterEnabled_Description));
+    internal static string Privacy_FilterEnabled_StorageOnly_Help => Get(nameof(Privacy_FilterEnabled_StorageOnly_Help));
     internal static string Privacy_Whitelist_Help => Get(nameof(Privacy_Whitelist_Help));
     internal static string Privacy_Preset_PrivacyFirst => Get(nameof(Privacy_Preset_PrivacyFirst));
     internal static string Privacy_Preset_ClearAll => Get(nameof(Privacy_Preset_ClearAll));
@@ -140,4 +141,27 @@ internal class HellionStrings
     internal static string Theme_WindowOpacity_Help => Get(nameof(Theme_WindowOpacity_Help));
     internal static string Theme_UseHellionFont_Name => Get(nameof(Theme_UseHellionFont_Name));
     internal static string Theme_UseHellionFont_Description => Get(nameof(Theme_UseHellionFont_Description));
+
+    internal static string About_Maintainer_Heading => Get(nameof(About_Maintainer_Heading));
+    internal static string About_Maintainer_Body => Get(nameof(About_Maintainer_Body));
+    internal static string About_Maintainer_Website_Label => Get(nameof(About_Maintainer_Website_Label));
+    internal static string About_Mission_Heading => Get(nameof(About_Mission_Heading));
+    internal static string About_Mission_P1 => Get(nameof(About_Mission_P1));
+    internal static string About_Mission_P2 => Get(nameof(About_Mission_P2));
+    internal static string About_Mission_P3 => Get(nameof(About_Mission_P3));
+    internal static string About_BuiltOn_Heading => Get(nameof(About_BuiltOn_Heading));
+    internal static string About_BuiltOn_P1 => Get(nameof(About_BuiltOn_P1));
+    internal static string About_BuiltOn_P2 => Get(nameof(About_BuiltOn_P2));
+    internal static string About_BuiltOn_Upstream_Label => Get(nameof(About_BuiltOn_Upstream_Label));
+    internal static string About_License_Heading => Get(nameof(About_License_Heading));
+    internal static string About_License_P1 => Get(nameof(About_License_P1));
+    internal static string About_License_P2 => Get(nameof(About_License_P2));
+    internal static string About_License_P3 => Get(nameof(About_License_P3));
+    internal static string About_SE_Heading => Get(nameof(About_SE_Heading));
+    internal static string About_SE_P1 => Get(nameof(About_SE_P1));
+    internal static string About_SE_P2 => Get(nameof(About_SE_P2));
+    internal static string About_Localization_Heading => Get(nameof(About_Localization_Heading));
+    internal static string About_Localization_P1 => Get(nameof(About_Localization_P1));
+    internal static string About_Localization_P2 => Get(nameof(About_Localization_P2));
+    internal static string About_Translators_TreeNode => Get(nameof(About_Translators_TreeNode));
 }

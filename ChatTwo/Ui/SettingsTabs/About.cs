@@ -60,66 +60,67 @@ internal sealed class About : ISettingsTab
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        // Hellion-specific maintainer / attribution / license / SE-
-        // disclaimer block. Hand-rolled in English here rather than via
-        // HellionStrings — the legal-ish copy stays close to the EUPL-1.2
-        // wording and the SE disclaimer is the same in every locale.
-        ImGui.TextColored(ImGuiColors.ParsedGold, "Maintainer");
-        ImGui.TextUnformatted("Hellion Chat is maintained by Hellion Online Media (Florian Wathling).");
-        ImGui.TextUnformatted("Website:");
+        ImGui.TextColored(ImGuiColors.ParsedGold, HellionStrings.About_Maintainer_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_Maintainer_Body);
+        ImGui.TextUnformatted(HellionStrings.About_Maintainer_Website_Label);
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "hellionMedia"))
             Dalamud.Utility.Util.OpenLink("https://hellion-media.de");
-        ImGui.TextUnformatted("For licensing, legal or contact inquiries please reach out via the website above.");
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        ImGui.TextColored(ImGuiColors.ParsedGold, "Built on Chat 2");
-        ImGui.TextUnformatted("Hellion Chat is a fork of Chat 2 by Infi and Anna (ascclemens).");
-        ImGui.TextUnformatted("Every chat replacement feature, the IPC integration, the rendering engine and the storage core come from upstream Chat 2.");
-        ImGui.TextUnformatted("The upstream webinterface is intentionally not part of Hellion Chat — it could not be hardened to the privacy guarantees this fork makes by default.");
-        ImGui.TextUnformatted("Upstream repository:");
+        ImGui.TextColored(ImGuiColors.ParsedGold, HellionStrings.About_Mission_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_Mission_P1);
+        ImGui.Spacing();
+        ImGui.TextUnformatted(HellionStrings.About_Mission_P2);
+        ImGui.Spacing();
+        ImGui.TextUnformatted(HellionStrings.About_Mission_P3);
+
+        ImGuiHelpers.ScaledDummy(10.0f);
+
+        ImGui.TextColored(ImGuiColors.ParsedGold, HellionStrings.About_BuiltOn_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_BuiltOn_P1);
+        ImGui.Spacing();
+        ImGui.TextUnformatted(HellionStrings.About_BuiltOn_P2);
+        ImGui.Spacing();
+        ImGui.TextUnformatted(HellionStrings.About_BuiltOn_Upstream_Label);
         ImGui.SameLine();
         if (ImGuiUtil.IconButton(FontAwesomeIcon.ExternalLinkAlt, "chatTwoUpstream"))
             Dalamud.Utility.Util.OpenLink("https://github.com/Infiziert90/ChatTwo");
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        ImGui.TextColored(ImGuiColors.ParsedGold, "License");
-        ImGui.TextUnformatted("Hellion Chat and Chat 2 are licensed under the European Union Public License v1.2 (EUPL-1.2).");
-        ImGui.TextUnformatted("© 2023–2026 the Chat 2 authors (Infi, Anna and the upstream contributors).");
-        ImGui.TextUnformatted("© 2026 Hellion Online Media — for the Hellion Chat additions.");
+        ImGui.TextColored(ImGuiColors.ParsedGold, HellionStrings.About_License_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_License_P1);
+        ImGui.TextUnformatted(HellionStrings.About_License_P2);
+        ImGui.TextUnformatted(HellionStrings.About_License_P3);
 
         ImGuiHelpers.ScaledDummy(10.0f);
 
-        ImGui.TextColored(ImGuiColors.DalamudOrange, "FINAL FANTASY XIV disclaimer");
-        ImGui.TextUnformatted("FINAL FANTASY XIV © SQUARE ENIX CO., LTD. All rights reserved.");
-        ImGui.TextUnformatted("Hellion Chat is an unofficial, fan-made plugin and is not affiliated with, endorsed, sponsored or approved by Square Enix.");
+        ImGui.TextColored(ImGuiColors.DalamudOrange, HellionStrings.About_SE_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_SE_P1);
+        ImGui.TextUnformatted(HellionStrings.About_SE_P2);
 
         ImGui.Spacing();
 
-        ImGui.TextColored(ImGuiColors.ParsedGold, "Localization");
-        ImGui.TextUnformatted("German translations of Hellion-specific UI strings (HellionStrings.de.resx) are written by the Hellion Online Media maintainer.");
-        ImGui.TextUnformatted("All other locales for Hellion-specific strings are not currently provided.");
-        ImGui.TextUnformatted("The translator list below covers the upstream Chat 2 community translators on Crowdin — their work covers the inherited Chat 2 strings, not the Hellion additions.");
+        ImGui.TextColored(ImGuiColors.ParsedGold, HellionStrings.About_Localization_Heading);
+        ImGui.TextUnformatted(HellionStrings.About_Localization_P1);
+        ImGui.TextUnformatted(HellionStrings.About_Localization_P2);
 
         ImGui.Spacing();
 
-        var height = ImGui.GetContentRegionAvail().Y - ImGui.CalcTextSize("A").Y - ImGui.GetStyle().ItemSpacing.Y * 2;
-        using (var aboutChild = ImRaii.Child("about", new Vector2(-1, height)))
+        // The translator list lives at the bottom of the About tab. Render
+        // it directly inside the parent scroll container instead of a
+        // fixed-height child — the previous "remaining space" calculation
+        // shrank to zero (or below) once the About copy grew, which made
+        // the section unreachable on smaller settings windows.
+        using (var treeNode = ImRaii.TreeNode(HellionStrings.About_Translators_TreeNode))
         {
-            if (aboutChild)
+            if (treeNode)
             {
-                using var treeNode = ImRaii.TreeNode("Chat 2 community translators (upstream)");
-                if (treeNode)
-                {
-                    using var translatorChild = ImRaii.Child("translators");
-                    if (translatorChild)
-                    {
-                        foreach (var translator in Translators)
-                            ImGui.TextUnformatted(translator);
-                    }
-                }
+                using var indent = ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false);
+                foreach (var translator in Translators)
+                    ImGui.TextUnformatted(translator);
             }
         }
         ImGui.Spacing();

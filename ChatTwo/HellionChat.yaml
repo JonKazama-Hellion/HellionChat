@@ -3,12 +3,12 @@ author: JonKazama-Hellion
 punchline: Chat 2 with privacy controls aligned to EU, US and JP rules
 description: |-
   Hellion Chat is built on top of Chat 2 with one removal and a stack
-  of privacy controls on top. The /chat2 command, tabs, channel
-  filters, RGB colours, emotes, screenshot mode, IPC integration and
-  the chat replacement window itself work the same. The optional
-  webinterface that Chat 2 ships is intentionally not part of this
-  fork because it could not be hardened to the privacy guarantees
-  Hellion Chat makes by default.
+  of privacy controls on top. Tabs, channel filters, RGB colours,
+  emotes, screenshot mode, IPC integration and the chat replacement
+  window itself work the same. The optional webinterface that Chat 2
+  ships is intentionally not part of this fork because it serves a
+  different use case from the smaller default footprint Hellion Chat
+  is built around.
 
   On top of that, Hellion Chat adds privacy and data-handling controls
   designed to align with the modern data protection rules that apply
@@ -40,17 +40,75 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.3.0 — Audit hardening, brand sweep and rebrand of slash commands**
+
+  This release closes the remaining audit follow-ups from the
+  0.2.0 cleanup and finishes turning Hellion Chat into a properly
+  branded fork rather than a Chat 2 with a different name.
+
+  Slash commands have been renamed across the board so they no
+  longer collide with the upstream plugin and tell you which
+  plugin owns them at a glance:
+
+  - /chat2          becomes /hellion
+  - /chat2Viewer    becomes /hellionView
+  - /clearlog2      becomes /clearhellion
+  - /chat2Debugger  becomes /hellionDebugger (internal)
+  - /chat2SeString  becomes /hellionSeString (internal)
+
+  This is a breaking change for anyone with macros bound to the
+  old command names. The upstream Chat 2 commands keep working
+  if you also have that plugin installed.
+
+  Privacy and storage hardening based on the post-0.2.0 audit:
+
+  - Privacy filter master switch now states explicitly that the
+    filter only governs storage, not the live chat log
+  - Emote cache refuses to write outside its own directory if a
+    third-party API ever returns a path that escapes
+  - Retention sweep is serialised so the 24h auto-sweep and the
+    manual button cannot launch in parallel and race for the
+    SQLite connection
+  - DbViewer paging uses an int constant and the matching SQL
+    parameter name (the upstream code passed a float and a name
+    without the parameter prefix; both worked in practice but
+    were inconsistent)
+
+  Visual identity now matches the Hellion Online Media website:
+
+  - Theme palette switched to Arctic Cyan plus Ember Orange,
+    matching the website's BRANDING.md tokens
+  - Active tabs and window title bars use a brand-color-dark teal
+    variation as identity colour, replacing the previous slate
+    violet that did not appear in the brand
+  - Resize grips and scrollbar grabs picked up Ember Orange
+    instead of industrial amber on hover and active states
+
+  About tab rewritten and properly localised:
+
+  - New "Why this fork exists" block sets out the mission in
+    neutral terms, framing Chat 2's full-history default as the
+    right one for most users while explaining the narrower
+    default footprint this fork chose
+  - All Hellion-specific About copy now lives in HellionStrings
+    in EN and DE, so German users see the Hellion sections in
+    German rather than the upstream English fallback
+  - Webinterface absence is described as a focus mismatch
+    (different use case, substantial rebuild) rather than as
+    a security issue with the upstream code
+  - Translator list at the bottom of the About tab is reachable
+    again on smaller settings windows
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.2.0 — Webinterface removed**
 
-  Following an internal security and consistency audit the upstream
-  webinterface has been removed in its entirety. Hardening it to the
-  privacy guarantees Hellion Chat makes by default would have meant
-  rewriting the auth flow (the upstream code uses a five-digit
-  numeric code from System.Random), changing the default bind address
-  (currently every interface), reworking cookie handling and adding
-  the privacy filter to the live message stream that the webinterface
-  was broadcasting around it. The cumulative cost did not match the
-  niche use case for a fork that wants less network surface, not more.
+  The upstream webinterface has been removed in its entirety. It
+  serves a different use case from the smaller default footprint
+  this fork is built around, namely remote access to chat from a
+  second device. Aligning it with the data minimisation defaults
+  Hellion Chat ships with would have meant a substantial rebuild.
+  Removing it was the cleaner path for this particular fork.
 
   What changed in this release:
 

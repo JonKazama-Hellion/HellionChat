@@ -22,7 +22,7 @@ namespace ChatTwo.Ui;
 
 public class DbViewer : Window
 {
-    public const float RowPerPage = 1000.0f;
+    public const int RowPerPage = 1000;
 
     private readonly Plugin Plugin;
 
@@ -76,19 +76,19 @@ public class DbViewer : Window
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
 
-        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute += Toggle;
+        Plugin.Commands.Register("/hellionView", "Get access to your message history, with simple filter options.", true).Execute += Toggle;
     }
 
     public void Dispose()
     {
-        Plugin.Commands.Register("/chat2Viewer", "Get access to your message history, with simple filter options.", true).Execute -= Toggle;
+        Plugin.Commands.Register("/hellionView", "Get access to your message history, with simple filter options.", true).Execute -= Toggle;
     }
 
     private void Toggle(string _, string __) => Toggle();
 
     public override void Draw()
     {
-        var totalPages = (int)Math.Ceiling(Count / RowPerPage);
+        var totalPages = (int)Math.Ceiling((double)Count / RowPerPage);
         if (totalPages < 1)
             totalPages = 1;
 

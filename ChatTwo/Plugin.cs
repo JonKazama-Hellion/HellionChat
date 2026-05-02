@@ -64,6 +64,15 @@ public sealed class Plugin : IDalamudPlugin
 
     internal int DeferredSaveFrames = -1;
 
+    // Serialises retention sweeps. The 24h auto-sweep on plugin load and
+    // the manual button in the Privacy tab both run on background threads;
+    // without this gate, hitting the manual button moments after a fresh
+    // plugin start would launch two sweeps in parallel and the second one
+    // would just re-do work the first one already finished. The lock guards
+    // the flag — the flag check itself bails before we touch the database.
+    internal readonly object RetentionSweepLock = new();
+    internal bool RetentionSweepRunning;
+
     internal DateTime GameStarted { get; }
 
     // Tab management needs to happen outside the chatlog window class for access reasons
@@ -405,6 +414,16 @@ public sealed class Plugin : IDalamudPlugin
 
         new Thread(() =>
         {
+            // Bail out cheaply if a manual sweep is already in flight; the
+            // lock around the actual work would queue us up otherwise and
+            // we would just re-do whatever the manual run already did.
+            lock (RetentionSweepLock)
+            {
+                if (RetentionSweepRunning)
+                    return;
+                RetentionSweepRunning = true;
+            }
+
             try
             {
                 var deleted = MessageManager.Store.DeleteByRetentionPolicy(policy, defaultDays);
@@ -428,6 +447,11 @@ public sealed class Plugin : IDalamudPlugin
             catch (Exception e)
             {
                 Log.Error(e, "Retention sweep failed");
+            }
+            finally
+            {
+                lock (RetentionSweepLock)
+                    RetentionSweepRunning = false;
             }
         }) { IsBackground = true }.Start();
     }
