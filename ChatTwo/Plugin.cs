@@ -100,6 +100,12 @@ public sealed class Plugin : IDalamudPlugin
 
             Config = Interface.GetPluginConfig() as Configuration ?? new Configuration();
 
+            // Hellion Chat — Auto-Tell-Tabs Defense-in-Depth. SaveConfig
+            // already strips temp tabs before persistence, but a previous
+            // crash or external write could have left them in the JSON.
+            // Drop them on load to guarantee the session-only invariant.
+            Config.Tabs.RemoveAll(t => t.IsTempTab);
+
 #pragma warning disable CS0618 // Type or member is obsolete
             // TODO Remove after 01.07.2026
             // Migrate old channel values
@@ -491,7 +497,17 @@ public sealed class Plugin : IDalamudPlugin
 
     internal void SaveConfig()
     {
+        // Hellion Chat — Auto-Tell-Tabs are session-only. Strip them out
+        // before serialization so a crash mid-session can never persist
+        // them. We snapshot the full tab list first and restore it after
+        // the save, preserving the user's order and open conversations.
+        var snapshot = Config.Tabs.ToList();
+        Config.Tabs.RemoveAll(t => t.IsTempTab);
+
         Interface.SavePluginConfig(Config);
+
+        Config.Tabs.Clear();
+        Config.Tabs.AddRange(snapshot);
     }
 
     internal void LanguageChanged(string langCode)
