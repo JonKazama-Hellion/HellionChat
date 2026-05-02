@@ -57,6 +57,7 @@ public sealed class Plugin : IDalamudPlugin
     internal Commands Commands { get; }
     internal GameFunctions.GameFunctions Functions { get; }
     internal MessageManager MessageManager { get; }
+    internal AutoTellTabsService AutoTellTabsService { get; }
     internal IpcManager Ipc { get; }
     internal ExtraChat ExtraChat { get; }
     internal TypingIpc TypingIpc { get; }
@@ -210,6 +211,14 @@ public sealed class Plugin : IDalamudPlugin
 
             MessageManager = new MessageManager(this); // Does it require UI?
 
+            // Hellion Chat — Auto-Tell-Tabs service. Subscribes to the
+            // MessageManager's MessageProcessed event for live tells and
+            // to ClientState.Logout for the cleanup pass. Created after
+            // MessageManager so the constructor can hand off the live
+            // store and event source.
+            AutoTellTabsService = new AutoTellTabsService(this, MessageManager, MessageManager.Store);
+            AutoTellTabsService.Initialize();
+
             // Hellion Chat — daily retention sweep, off-thread so it never
             // blocks plugin load. Skips itself when disabled or already ran
             // within the past 24 hours.
@@ -300,6 +309,10 @@ public sealed class Plugin : IDalamudPlugin
         TypingIpc?.Dispose();
         ExtraChat?.Dispose();
         Ipc?.Dispose();
+        // Dispose the Auto-Tell-Tabs service before MessageManager so it
+        // can cleanly unsubscribe from the MessageProcessed event before
+        // its source goes away.
+        AutoTellTabsService?.Dispose();
         MessageManager?.DisposeAsync().AsTask().Wait();
         Functions?.Dispose();
         Commands?.Dispose();
