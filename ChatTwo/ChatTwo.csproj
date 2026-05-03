@@ -6,13 +6,12 @@
              derives from. -->
         <Version>0.6.1</Version>
         <ImplicitUsings>enable</ImplicitUsings>
-        <!-- HellionChat fork: assembly is renamed so Dalamud uses
-             pluginConfigs/HellionChat instead of pluginConfigs/ChatTwo,
-             keeping our state independent from the upstream plugin.
-             Code namespace stays ChatTwo.* so upstream cherry-picks
-             apply cleanly. -->
+        <!-- v1.0.0 standalone cut — both AssemblyName and RootNamespace
+             are HellionChat. The plugin no longer maintains source-level
+             cherry-pick compatibility with upstream Infiziert90/ChatTwo;
+             upstream changes are integrated manually if at all. -->
         <AssemblyName>HellionChat</AssemblyName>
-        <RootNamespace>ChatTwo</RootNamespace>
+        <RootNamespace>HellionChat</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
