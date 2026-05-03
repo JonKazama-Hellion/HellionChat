@@ -91,13 +91,10 @@ public class ChatCode
 
     public override bool Equals(object? obj)
     {
-        if (obj == null)
-            return false;
-
         if (obj is not ChatCode code)
             return false;
 
-        return GetHashCode() == code.GetHashCode();
+        return Type == code.Type && Source == code.Source && Target == code.Target;
     }
 
     public override int GetHashCode()
