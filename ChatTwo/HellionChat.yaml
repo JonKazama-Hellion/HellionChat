@@ -1,14 +1,15 @@
 name: Hellion Chat
 author: JonKazama-Hellion
-punchline: Chat 2 with privacy controls aligned to EU, US and JP rules
+punchline: Chat replacement with privacy controls aligned to EU, US and JP rules — based on Chat 2 (EUPL-1.2)
 description: |-
-  Hellion Chat is built on top of Chat 2 with one removal and a stack
-  of privacy controls on top. Tabs, channel filters, RGB colours,
-  emotes, screenshot mode, IPC integration and the chat replacement
-  window itself work the same. The optional webinterface that Chat 2
-  ships is intentionally not part of this fork because it serves a
-  different use case from the smaller default footprint Hellion Chat
-  is built around.
+  Hellion Chat is a privacy-focused chat replacement for FINAL FANTASY XIV
+  based on the Chat 2 codebase (EUPL-1.2). One feature is intentionally
+  removed (the optional webinterface) and a stack of privacy controls is
+  added on top. Tabs, channel filters, RGB colours, emotes, screenshot
+  mode, IPC integration and the chat replacement window itself work the
+  same. The webinterface is intentionally not part of Hellion Chat because
+  it serves a different use case from the smaller default footprint this
+  plugin is built around.
 
   On top of that, Hellion Chat adds privacy and data-handling controls
   designed to align with the modern data protection rules that apply
@@ -18,7 +19,7 @@ description: |-
   channel, history can be wiped retroactively, and stored data can be
   exported on demand.
 
-  Key additions on top of Chat 2:
+  Key privacy and data-handling features:
 
   - Channel whitelist with a Privacy-First default
   - Per-channel retention with a daily background sweep
@@ -28,7 +29,7 @@ description: |-
     Full History)
   - Bilingual UI (English and German) with live language switching
   - Independent plugin state — own config file and database directory,
-    so Hellion Chat does not share state with the upstream plugin
+    so Hellion Chat does not share state with upstream Chat 2
 
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
