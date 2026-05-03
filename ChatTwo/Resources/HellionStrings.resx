@@ -609,4 +609,13 @@
   <data name="Hint_v061_PopOutHeader_OpenSettings" xml:space="preserve">
     <value>Open Settings</value>
   </data>
+  <data name="ChatTwoConflictTitle" xml:space="preserve">
+    <value>Hellion Chat cannot start while Chat 2 is loaded.</value>
+  </data>
+  <data name="ChatTwoConflictBody" xml:space="preserve">
+    <value>Hellion Chat is a standalone fork of Chat 2. Both plugins replace the same in-game chat window and would conflict at runtime if loaded together.</value>
+  </data>
+  <data name="ChatTwoConflictAction" xml:space="preserve">
+    <value>Disable Chat 2 in /xlplugins, then re-enable Hellion Chat.</value>
+  </data>
 </root>

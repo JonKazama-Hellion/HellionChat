@@ -270,4 +270,9 @@ internal class HellionStrings
     internal static string Hint_v061_PopOutHeader_Body => Get(nameof(Hint_v061_PopOutHeader_Body));
     internal static string Hint_v061_PopOutHeader_Ack => Get(nameof(Hint_v061_PopOutHeader_Ack));
     internal static string Hint_v061_PopOutHeader_OpenSettings => Get(nameof(Hint_v061_PopOutHeader_OpenSettings));
+
+    // Hellion Chat — v1.0.0 Chat 2 parallel-load conflict detection
+    internal static string ChatTwoConflictTitle => Get(nameof(ChatTwoConflictTitle));
+    internal static string ChatTwoConflictBody => Get(nameof(ChatTwoConflictBody));
+    internal static string ChatTwoConflictAction => Get(nameof(ChatTwoConflictAction));
 }

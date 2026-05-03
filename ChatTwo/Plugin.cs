@@ -94,6 +94,12 @@ public sealed class Plugin : IDalamudPlugin
 
     public Plugin()
     {
+        // Refuse to start if upstream Chat 2 is loaded — prevents IPC
+        // channel collisions and double-replacement of the in-game chat
+        // window. Throwing here makes Dalamud abort the load cleanly with
+        // our localized message instead of crashing FFXIV mid-frame.
+        ChatTwoConflictDetector.ThrowIfChatTwoIsLoaded(Interface);
+
         try
         {
             GameStarted = Process.GetCurrentProcess().StartTime.ToUniversalTime();
