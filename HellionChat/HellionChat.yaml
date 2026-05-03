@@ -51,11 +51,13 @@ tags:
 changelog: |-
   **Hellion Chat 1.0.0 — Standalone Major Release**
 
-  First fully standalone release. Internal cleanup, no user action
+  First fully standalone release. Internal cleanup plus a sweep of
+  pre-existing correctness, security, threading and resource-leak
+  fixes carried over from the upstream codebase. No user action
   required — auto-update applies cleanly, configuration and database
   paths unchanged.
 
-  Internal changes:
+  Standalone identity:
 
   - Code namespace consolidated from ChatTwo.* to HellionChat.* across
     all source files
@@ -66,18 +68,83 @@ changelog: |-
   - ImGui popup ID renamed to hellionchat-context-popup
   - Repository folder restructured (ChatTwo/ → HellionChat/), all CI
     and build paths updated accordingly
+  - Public-facing descriptions reworded from upstream-fork framing to
+    standalone framing (Chat 2 attribution preserved per EUPL-1.2)
+  - Colour preset 'ChatTwo Default' is now 'Klassik (Chat 2 Default)'
+
+  Safety:
+
   - Plugin now refuses to load when upstream Chat 2 is also active —
     bilingual conflict message in EN/DE, throw before any subsystem
     initialization, prevents the runtime crash that previously occurred
     when both plugins replaced the same chat window in parallel
+  - SQLite native binary bumped to 3.50.3 (CVE-2025-6965 memory
+    corruption from aggregate-term overflow, CVE-2025-7709)
+  - NuGet restore now honors packages.lock.json so transitive
+    dependencies don't drift between machines or CI runs
 
-  Branding:
+  Crash-class fixes (formerly latent in upstream):
 
-  - Public-facing descriptions reworded from upstream-fork framing to
-    standalone framing (Chat 2 attribution preserved per EUPL-1.2)
-  - Colour preset 'ChatTwo Default' is now 'Klassik (Chat 2 Default)'
-  - License attribution (NOTICE.md, COPYRIGHT, THIRD_PARTY_NOTICES.md
-    and the Credits section in README) is unchanged
+  - MathUtil.HasOverlap now uses a correct AABB test; identical or
+    edge-touching rectangles are no longer reported as non-overlapping
+  - ChatCode.Equals compares fields directly instead of GetHashCode;
+    removes the hash-collision anti-pattern
+  - IpcManager.Dispose uses UnregisterAction to match the matching
+    RegisterAction call; previous mismatch leaked the action
+    subscription on every plugin reload
+  - ExtraChat.Dispose now unsubscribes all three IPC subscriptions
+    (was only the first); leaks closed
+  - TellTarget.FromTarget guards against a zero IPlayerCharacter.Address
+    before dereferencing the unsafe Character* cast
+  - GameFunctions ResolveTextCommandPlaceholderDetour null-checks the
+    Hook reference instead of using the null-forgiving operator
+  - Popout.cs and SettingsTabs/Tabs.cs bounds-check list indexing so
+    a tab drop or empty-worlds list no longer crashes the UI
+  - Debugger.cs now declares IDisposable so the existing Dispose runs
+
+  Correctness fixes:
+
+  - GlobalParametersCache.GetValue captures Cache into a local before
+    the bounds check, so a concurrent Refresh can't slip a different
+    array between check and read
+  - IconUtil binary search bounds initialized to entries.Length-1 and
+    reset on redirect-restart; entries.Length==0 short-circuits
+  - Sheets.WorldsOnDatacenter now compares DataCenter.RowId (was
+    Region.RowId) so it actually returns same-DC worlds
+  - Message.cs back-reference loop iterates the processed Sender/Content
+    properties so chunks added by CheckMessageContent get Message set
+  - Language.zh-Hans Webinterface_Start_Success corrected to
+    "网页界面已启动" (was "网页界面已停止")
+
+  Threading and async:
+
+  - AutoTranslate Entries/ValidEntries are now serialized behind a
+    single lock; the preload worker thread and main thread no longer
+    race on the underlying dictionary/hash set
+  - Privacy retention and cleanup workers bound their framework-refresh
+    waits to 5 seconds with a logged timeout; a hung framework tick can
+    no longer deadlock the background worker
+
+  Resource handling:
+
+  - EmoteCache reuses the static HttpClient instead of allocating a new
+    one per call (closed socket leak)
+  - FontManager wraps HttpClient/HttpResponseMessage in using-blocks
+    and adds EnsureSuccessStatusCode; failed downloads no longer
+    silently produce a zero-byte font file
+  - SearchSelector mixes the row index into the ImGui ID stack so
+    selectables don't collapse to a single ambiguous ID
+  - SettingsTabs/Chat blocked-emote add-button now opens its selector
+    popup on left-click
+
+  Performance:
+
+  - DbViewer text export caches filteredHistory.Count once instead of
+    re-enumerating the IEnumerable on every batch (O(N) instead of
+    O(N²) on large histories)
+
+  License attribution (NOTICE.md, COPYRIGHT, THIRD_PARTY_NOTICES.md
+  and the Credits section in README) is unchanged.
 
   Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
 
