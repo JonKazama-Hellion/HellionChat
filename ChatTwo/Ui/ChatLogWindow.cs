@@ -347,13 +347,13 @@ public sealed class ChatLogWindow : Window
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
             height -= Plugin.InputPreview.PreviewHeight;
 
-        // Hellion Chat v0.6.1 — Banner rendert in DrawChatLog VOR dem Tab-/
-        // Sidebar-Container, also außerhalb des Scopes von GetContentRegionAvail
-        // hier drin → Banner-Höhe muss explizit abgezogen werden, sonst drückt
-        // er die Eingabe aus dem sichtbaren Fenster. Header-Toolbar dagegen
-        // rendert IM selben Container direkt vor diesem Aufruf, daher ist sie
-        // schon im GetContentRegionAvail.Y berücksichtigt — kein eigener Abzug.
-        height -= _v061HintBannerHeight;
+        // Hellion Chat v0.6.1 — Header-Toolbar rendert auf Window-Ebene über
+        // einem horizontalen Layout-Pfad und wird von GetContentRegionAvail
+        // hier drin NICHT automatisch berücksichtigt, daher expliziter Abzug.
+        // Banner dagegen rendert in DrawChatLog VOR diesem ganzen Block und
+        // ImGui zieht seine Höhe automatisch von GetContentRegionAvail ab,
+        // weil der Cursor schon weiter unten steht — kein eigener Abzug.
+        height -= ImGui.GetFrameHeightWithSpacing();
 
         return height;
     }
