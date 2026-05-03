@@ -1,0 +1,621 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Privacy_Tab_Title" xml:space="preserve">
+    <value>Datenschutz</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Name" xml:space="preserve">
+    <value>Datenschutz-Filter aktivieren</value>
+  </data>
+  <data name="Privacy_FilterEnabled_Description" xml:space="preserve">
+    <value>Wenn aktiviert, werden nur Nachrichten aus den erlaubten Kanälen in die Datenbank gespeichert. Beim Deaktivieren gilt wieder das Standardverhalten, also alles außer Battle-Logs wird gespeichert.</value>
+  </data>
+  <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
+    <value>Der Filter steuert nur, was in die lokale Datenbank geschrieben wird. Im Chat-Log siehst du weiterhin jede Nachricht live, ausgeschlossene Kanäle werden nur nicht mehr gespeichert. Wenn du Kanäle auch aus der sichtbaren Anzeige entfernen willst, nutze die normalen Chat-Tab-Filter im Spiel.</value>
+  </data>
+  <data name="Privacy_Filter_Tree_Heading" xml:space="preserve">
+    <value>Privacy-Filter und Whitelist</value>
+  </data>
+  <data name="Privacy_Whitelist_Help" xml:space="preserve">
+    <value>Wähle aus, welche Kanäle in die lokale Datenbank gespeichert werden. Standard nach Datensparsamkeit: nur deine eigenen Konversationen. Über die Buttons unten kannst du eine Voreinstellung anwenden.</value>
+  </data>
+  <data name="Privacy_Preset_PrivacyFirst" xml:space="preserve">
+    <value>Datensparsamkeit (empfohlen)</value>
+  </data>
+  <data name="Privacy_Preset_ClearAll" xml:space="preserve">
+    <value>Alle abwählen</value>
+  </data>
+  <data name="Privacy_Preset_SelectAll" xml:space="preserve">
+    <value>Alle auswählen</value>
+  </data>
+  <data name="Privacy_Group_DirectMessages" xml:space="preserve">
+    <value>Direktnachrichten</value>
+  </data>
+  <data name="Privacy_Group_PartyAlliance" xml:space="preserve">
+    <value>Gruppe &amp; Allianz</value>
+  </data>
+  <data name="Privacy_Group_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Privacy_Group_Linkshells" xml:space="preserve">
+    <value>Linkshells</value>
+  </data>
+  <data name="Privacy_Group_CrossLinkshells" xml:space="preserve">
+    <value>Cross-World-Linkshells</value>
+  </data>
+  <data name="Privacy_Group_ExtraChat" xml:space="preserve">
+    <value>ExtraChat (verschlüsselt)</value>
+  </data>
+  <data name="Privacy_Group_PublicChat" xml:space="preserve">
+    <value>Öffentlicher Chat (Daten Dritter)</value>
+  </data>
+  <data name="Privacy_Group_SystemLogs" xml:space="preserve">
+    <value>System &amp; Spiel-Logs</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Name" xml:space="preserve">
+    <value>Unbekannte Kanal-Typen speichern</value>
+  </data>
+  <data name="Privacy_PersistUnknown_Description" xml:space="preserve">
+    <value>Sicherheitsnetz für ChatTypes, die durch zukünftige FFXIV-Patches dazukommen und dem Plugin noch nicht bekannt sind. Standard ist AUS (Datensparsamkeit). Aktivieren, wenn du auch zukünftige Kanäle vollständig mitloggen willst.</value>
+  </data>
+  <data name="Cleanup_Heading" xml:space="preserve">
+    <value>Filter auf bestehende Datenbank anwenden</value>
+  </data>
+  <data name="Cleanup_Help_Intro" xml:space="preserve">
+    <value>Der Datenschutz-Filter wirkt nur auf neue Nachrichten. Über das Aufräumen unten kannst du bereits gespeicherte Nachrichten nachträglich entfernen, die nicht zu deiner gespeicherten Whitelist passen.</value>
+  </data>
+  <data name="Cleanup_Help_SavedNote" xml:space="preserve">
+    <value>Das Aufräumen nutzt deine GESPEICHERTE Whitelist (Plugin.Config), nicht ungespeicherte Änderungen oben. Klicke zuerst Speichern, wenn du deine aktuellen Änderungen anwenden willst.</value>
+  </data>
+  <data name="Retention_Help_SavedNote" xml:space="preserve">
+    <value>Der manuelle Lauf nutzt deine GESPEICHERTE Retention-Policy, nicht die Slider-Werte oben. Klicke zuerst Speichern, wenn der Lauf deine aktuellen Änderungen anwenden soll.</value>
+  </data>
+  <data name="Cleanup_Preview_Stale" xml:space="preserve">
+    <value>Vorschau veraltet, deine Whitelist hat sich seit dem letzten Aktualisieren geändert. Klicke Aktualisieren, um neu zu berechnen.</value>
+  </data>
+  <data name="Cleanup_RefreshPreview" xml:space="preserve">
+    <value>Vorschau aktualisieren</value>
+  </data>
+  <data name="Cleanup_NoPreview" xml:space="preserve">
+    <value>Noch keine Vorschau. Klicke Aktualisieren, um die Auswirkung zu berechnen.</value>
+  </data>
+  <data name="Cleanup_TotalStored" xml:space="preserve">
+    <value>Gespeicherte Nachrichten gesamt: {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillKeep" xml:space="preserve">
+    <value>Behalten:    {0:N0}</value>
+  </data>
+  <data name="Cleanup_WillDelete" xml:space="preserve">
+    <value>Löschen:     {0:N0}</value>
+  </data>
+  <data name="Cleanup_Breakdown" xml:space="preserve">
+    <value>Aufschlüsselung pro Kanal</value>
+  </data>
+  <data name="Cleanup_Marker_Keep" xml:space="preserve">
+    <value>[BEHALTEN]</value>
+  </data>
+  <data name="Cleanup_Marker_Delete" xml:space="preserve">
+    <value>[LÖSCHEN] </value>
+  </data>
+  <data name="Cleanup_Apply_Label" xml:space="preserve">
+    <value>Aktuellen Filter auf Datenbank anwenden</value>
+  </data>
+  <data name="Cleanup_Apply_Tooltip" xml:space="preserve">
+    <value>Strg+Umschalt: Löscht {0:N0} Nachrichten unwiderruflich und führt danach VACUUM aus. Nicht rückgängig zu machen.</value>
+  </data>
+  <data name="Cleanup_Running" xml:space="preserve">
+    <value>Aufräumen läuft im Hintergrund…</value>
+  </data>
+  <data name="Cleanup_PreviewError" xml:space="preserve">
+    <value>Vorschau konnte nicht berechnet werden, siehe /xllog</value>
+  </data>
+  <data name="Cleanup_Success" xml:space="preserve">
+    <value>Aufräumen abgeschlossen, {0:N0} Nachrichten entfernt.</value>
+  </data>
+  <data name="Cleanup_Error" xml:space="preserve">
+    <value>Aufräumen fehlgeschlagen, siehe /xllog</value>
+  </data>
+  <data name="Retention_Heading" xml:space="preserve">
+    <value>Aufbewahrung von Nachrichten</value>
+  </data>
+  <data name="Retention_Enabled_Name" xml:space="preserve">
+    <value>Nachrichten nach Kanal-Aufbewahrung automatisch löschen</value>
+  </data>
+  <data name="Retention_Enabled_Description" xml:space="preserve">
+    <value>Wenn aktiviert, werden Nachrichten älter als das eingestellte Fenster bei jedem Plugin-Start gelöscht (höchstens einmal pro 24 Stunden). Standard ist AUS, das Plugin löscht ohne deine ausdrückliche Zustimmung nichts.</value>
+  </data>
+  <data name="Retention_Default_Label" xml:space="preserve">
+    <value>Standard-Aufbewahrung (Tage, 0 = nie)</value>
+  </data>
+  <data name="Retention_Default_Help" xml:space="preserve">
+    <value>Gilt für Kanäle, die unten keine eigene Vorgabe haben.</value>
+  </data>
+  <data name="Retention_Reset_Spec" xml:space="preserve">
+    <value>Vorgaben auf Spec-Defaults setzen</value>
+  </data>
+  <data name="Retention_Clear_Overrides" xml:space="preserve">
+    <value>Alle Vorgaben entfernen</value>
+  </data>
+  <data name="Retention_Tree_Heading" xml:space="preserve">
+    <value>Aufbewahrung pro Kanal</value>
+  </data>
+  <data name="Retention_Tag_Override" xml:space="preserve">
+    <value>[eigen]</value>
+  </data>
+  <data name="Retention_Tag_Spec" xml:space="preserve">
+    <value>[spec]</value>
+  </data>
+  <data name="Retention_Tag_Global" xml:space="preserve">
+    <value>[global]</value>
+  </data>
+  <data name="Retention_Reset_Button" xml:space="preserve">
+    <value>zurück</value>
+  </data>
+  <data name="Retention_Apply_Label" xml:space="preserve">
+    <value>Aufbewahrung jetzt anwenden</value>
+  </data>
+  <data name="Retention_Apply_Tooltip" xml:space="preserve">
+    <value>Strg+Umschalt: Führt die Aufbewahrungs-Bereinigung sofort mit der GESPEICHERTEN Vorgabe aus. Speichere deine Änderungen vorher.</value>
+  </data>
+  <data name="Retention_Running" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung läuft im Hintergrund…</value>
+  </data>
+  <data name="Retention_LastRun_Never" xml:space="preserve">
+    <value>Letzter Lauf: nie</value>
+  </data>
+  <data name="Retention_LastRun_At" xml:space="preserve">
+    <value>Letzter Lauf: {0:yyyy-MM-dd HH:mm}</value>
+  </data>
+  <data name="Retention_Success" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung abgeschlossen, {0:N0} Nachrichten entfernt.</value>
+  </data>
+  <data name="Retention_Error" xml:space="preserve">
+    <value>Aufbewahrungs-Bereinigung fehlgeschlagen, siehe /xllog</value>
+  </data>
+  <data name="Wizard_Title" xml:space="preserve">
+    <value>Hellion Chat — Willkommen</value>
+  </data>
+  <data name="Wizard_Intro" xml:space="preserve">
+    <value>Wähle ein Start-Profil. Du kannst später alles unter Einstellungen → Datenschutz anpassen.</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Heading" xml:space="preserve">
+    <value>Datensparsamkeit (empfohlen)</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Description" xml:space="preserve">
+    <value>Es werden nur deine eigenen Konversationen gespeichert: Tells, Gruppe, FC, Linkshells, Cross-World-Linkshells, Allianz und ExtraChat. Öffentlicher Chat, NPC-Dialoge und System-Spam werden auf der Storage-Ebene verworfen. Aufbewahrung nach Spec-Defaults (Tells 365 Tage, eigene Konversations-Kanäle 90 Tage).</value>
+  </data>
+  <data name="Wizard_Profile_PrivacyFirst_Apply" xml:space="preserve">
+    <value>Datensparsamkeit übernehmen</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Heading" xml:space="preserve">
+    <value>Locker</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Description" xml:space="preserve">
+    <value>Datensparsamkeit plus ein 24-Stunden-Fenster für öffentlichen Chat (Sagen, Schreien, Rufen, beide Emote-Typen, Anfänger-Netzwerk). Für RP-Spieler, die die letzte Szene nochmal nachlesen wollen, ohne öffentlichen Chat ewig zu behalten.</value>
+  </data>
+  <data name="Wizard_Profile_Casual_Apply" xml:space="preserve">
+    <value>Locker übernehmen</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Heading" xml:space="preserve">
+    <value>Volle Historie</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Description" xml:space="preserve">
+    <value>Deaktiviert den Datenschutz-Filter komplett. Speichert alles außer Battle-Logs (das ursprüngliche Voll-Historie-Verhalten). Aufbewahrung ist AUS, die Historie wächst dauerhaft.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_GdprWarning" xml:space="preserve">
+    <value>DSGVO-Hinweis: Wenn du Nachrichten Dritter (Sagen/Schreien/Rufen fremder Spieler, NPC-Dialoge mit Spielernamen usw.) zeitlich unbegrenzt speicherst, kann das die Ausnahme für rein persönliche oder familiäre Tätigkeiten (Art. 2 Abs. 2 Buchst. c) sprengen. Nutze dieses Profil nur, wenn du einen klaren Grund hast, das volle Archiv zu behalten.</value>
+  </data>
+  <data name="Wizard_Profile_FullHistory_Apply" xml:space="preserve">
+    <value>Volle Historie übernehmen</value>
+  </data>
+  <data name="Wizard_Reopen_Button" xml:space="preserve">
+    <value>Wizard erneut zeigen</value>
+  </data>
+  <data name="Export_Heading" xml:space="preserve">
+    <value>Export (DSGVO Art. 15 — Auskunftsrecht)</value>
+  </data>
+  <data name="Export_Help" xml:space="preserve">
+    <value>Gespeicherte Nachrichten als Markdown, JSON oder CSV exportieren. Damit kannst du einer Auskunftsanfrage einer Person nachkommen, deren Nachrichten du gespeichert hast, oder deine eigene Historie mitnehmen.</value>
+  </data>
+  <data name="Export_Range_Label" xml:space="preserve">
+    <value>Letzte X Tage (0 = ohne Zeitlimit)</value>
+  </data>
+  <data name="Export_Sender_Label" xml:space="preserve">
+    <value>Sender enthält (optional, Groß-/Kleinschreibung egal)</value>
+  </data>
+  <data name="Export_Channels_Heading" xml:space="preserve">
+    <value>Auf Kanäle einschränken</value>
+  </data>
+  <data name="Export_Channels_AllOff" xml:space="preserve">
+    <value>(nichts ausgewählt = alle gespeicherten Kanäle)</value>
+  </data>
+  <data name="Export_Format_Label" xml:space="preserve">
+    <value>Format</value>
+  </data>
+  <data name="Export_Format_Markdown" xml:space="preserve">
+    <value>Markdown</value>
+  </data>
+  <data name="Export_Format_Json" xml:space="preserve">
+    <value>JSON</value>
+  </data>
+  <data name="Export_Format_Csv" xml:space="preserve">
+    <value>CSV</value>
+  </data>
+  <data name="Export_Button" xml:space="preserve">
+    <value>In Datei exportieren…</value>
+  </data>
+  <data name="Export_Dialog_Title" xml:space="preserve">
+    <value>Export speichern</value>
+  </data>
+  <data name="Export_Running" xml:space="preserve">
+    <value>Export läuft im Hintergrund…</value>
+  </data>
+  <data name="Export_Success" xml:space="preserve">
+    <value>Export abgeschlossen, {0:N0} Nachrichten in {1} geschrieben</value>
+  </data>
+  <data name="Export_Empty" xml:space="preserve">
+    <value>Export abgeschlossen, keine Nachricht passte zum Filter.</value>
+  </data>
+  <data name="Export_Error" xml:space="preserve">
+    <value>Export fehlgeschlagen, siehe /xllog</value>
+  </data>
+  <data name="Theme_Enabled_Name" xml:space="preserve">
+    <value>Hellion-Theme für alle Plugin-Fenster verwenden</value>
+  </data>
+  <data name="Theme_Enabled_Description" xml:space="preserve">
+    <value>Hellion-Online-Media-Palette aus Arctic Cyan und Ember Orange, angewendet auf Chat-Fenster, Einstellungen, Viewer und Wizard. Deaktivieren, um das Standard-Dalamud-Erscheinungsbild zu nutzen.</value>
+  </data>
+  <data name="Theme_WindowOpacity_Label" xml:space="preserve">
+    <value>Fenster-Deckkraft</value>
+  </data>
+  <data name="Theme_WindowOpacity_Help" xml:space="preserve">
+    <value>Wie deckend die Plugin-Fenster sind. Niedrigere Werte lassen das Spiel durchscheinen, Form-Felder und Dialoge bleiben oben drauf deckend und gut lesbar.</value>
+  </data>
+  <data name="Theme_UseHellionFont_Name" xml:space="preserve">
+    <value>Mitgelieferte Hellion-Schrift (Exo 2) verwenden</value>
+  </data>
+  <data name="Theme_UseHellionFont_Description" xml:space="preserve">
+    <value>Rendert Chat und UI in Exo 2 (SIL Open Font License 1.1), die mit dem Plugin ausgeliefert wird. Deaktivieren, um auf die unter Einstellungen → Schrift gewählte Schriftart zurückzufallen.</value>
+  </data>
+
+  <data name="About_Maintainer_Heading" xml:space="preserve">
+    <value>Maintainer</value>
+  </data>
+  <data name="About_Maintainer_Body" xml:space="preserve">
+    <value>Ich pflege Hellion Chat über Hellion Online Media. Auf der Website findest du die Kontaktdaten für lizenzrechtliche, rechtliche oder geschäftliche Fragen.</value>
+  </data>
+  <data name="About_Maintainer_Website_Label" xml:space="preserve">
+    <value>Website:</value>
+  </data>
+
+  <data name="About_Mission_Heading" xml:space="preserve">
+    <value>Warum es diesen Fork gibt</value>
+  </data>
+  <data name="About_Mission_P1" xml:space="preserve">
+    <value>Hellion Chat soll Chat 2 nicht ersetzen. Chat 2 liefert ein vollständiges Chat-Erlebnis mit kompletter Historie, die für Filter, Suche und Replay zur Verfügung steht. Dieser Default ist für die meisten Nutzer der richtige. Dieser Fork wählt einen anderen Ansatz: einen kleineren Default-Footprint, mit zusätzlichen Stellschrauben für Nutzer, die weniger fremden Chat auf der Festplatte behalten möchten.</value>
+  </data>
+  <data name="About_Mission_P2" xml:space="preserve">
+    <value>Der Wunsch nach diesem engeren Default war persönlich. Nach zwei Jahren mit Chat 2 lag meine Datenbank bei über zwei Millionen Nachrichten, der Großteil davon /say, /shout und /yell von Fremden in Limsa. Genau diese Daten machen Chat 2's Voll-Historie nützlich, und die meisten Nutzer behalten sie gerne. Mein eigener Geschmack wollte einen kleineren Default. Also habe ich diesen Fork gebaut.</value>
+  </data>
+  <data name="About_Mission_P3" xml:space="preserve">
+    <value>Ich strebe keine große Zielgruppe an, und der Fork steht nicht in Konkurrenz zu Chat 2. Der Code liegt offen unter derselben EUPL-1.2-Lizenz wie das Original. Infi, Anna oder sonst jemand dürfen reinschauen, Ideen mitnehmen, Fragen stellen oder das Projekt einfach ignorieren. Alles drei ist für mich in Ordnung.</value>
+  </data>
+
+  <data name="About_BuiltOn_Heading" xml:space="preserve">
+    <value>Aufbauend auf Chat 2</value>
+  </data>
+  <data name="About_BuiltOn_P1" xml:space="preserve">
+    <value>Hellion Chat ist ein Fork von Chat 2 von Infi und Anna (ascclemens). Das Chat-Replacement-Fenster, die IPC-Integration, die Render-Engine und der komplette Storage-Kern stammen aus dem Original.</value>
+  </data>
+  <data name="About_BuiltOn_P2" xml:space="preserve">
+    <value>Das Webinterface ist das einzige größere Teil, das ich entfernt habe. Es ist für den Remote-Zugriff auf den Chat von einem zweiten Gerät gebaut, also für einen anderen Fokus als der kleinere Default-Footprint, den dieser Fork verfolgt. Es an diese Defaults anzupassen hätte einen erheblichen Umbau bedeutet, also war die Entfernung der saubere Weg für genau diesen Fork.</value>
+  </data>
+  <data name="About_BuiltOn_Upstream_Label" xml:space="preserve">
+    <value>Upstream-Repository:</value>
+  </data>
+
+  <data name="About_License_Heading" xml:space="preserve">
+    <value>Lizenz</value>
+  </data>
+  <data name="About_License_P1" xml:space="preserve">
+    <value>Hellion Chat und Chat 2 stehen beide unter der European Union Public Licence v1.2 (EUPL-1.2).</value>
+  </data>
+  <data name="About_License_P2" xml:space="preserve">
+    <value>© 2023 bis 2026, die Chat-2-Autoren (Infi, Anna und die Upstream-Mitwirkenden).</value>
+  </data>
+  <data name="About_License_P3" xml:space="preserve">
+    <value>© 2026 Hellion Online Media für die Erweiterungen in diesem Fork.</value>
+  </data>
+
+  <data name="About_SE_Heading" xml:space="preserve">
+    <value>FINAL FANTASY XIV-Hinweis</value>
+  </data>
+  <data name="About_SE_P1" xml:space="preserve">
+    <value>FINAL FANTASY XIV © SQUARE ENIX CO., LTD. Alle Rechte vorbehalten.</value>
+  </data>
+  <data name="About_SE_P2" xml:space="preserve">
+    <value>Hellion Chat ist ein inoffizielles Fan-Plugin. Es steht in keiner Verbindung zu Square Enix und wird von ihnen weder unterstützt, gesponsert noch genehmigt.</value>
+  </data>
+
+  <data name="About_Localization_Heading" xml:space="preserve">
+    <value>Lokalisierung</value>
+  </data>
+  <data name="About_Localization_P1" xml:space="preserve">
+    <value>Die deutschen Übersetzungen der Hellion-spezifischen Strings stammen von mir. Weitere Sprachen sind aktuell nicht verfügbar.</value>
+  </data>
+  <data name="About_Localization_P2" xml:space="preserve">
+    <value>Die Übersetzerliste weiter unten gehört zu den Chat-2-Strings auf Crowdin. Diese Freiwilligen haben Chat 2 übersetzt, nicht die Hellion-Erweiterungen.</value>
+  </data>
+  <data name="About_Translators_TreeNode" xml:space="preserve">
+    <value>Chat-2-Community-Übersetzer (Upstream)</value>
+  </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (Runtime-Strings) -->
+  <data name="AutoTellTabs_SectionHeader" xml:space="preserve">
+    <value>Aktive Tells</value>
+  </data>
+  <data name="AutoTellTabs_HistorySeparator" xml:space="preserve">
+    <value>— Frühere Unterhaltungen —</value>
+  </data>
+  <data name="AutoTellTabs_HistoryLoadError" xml:space="preserve">
+    <value>Verlauf konnte nicht geladen werden.</value>
+  </data>
+  <data name="AutoTellTabs_GreetedTooltip" xml:space="preserve">
+    <value>Als begrüßt markiert. Klicken um die Markierung zu entfernen.</value>
+  </data>
+  <data name="AutoTellTabs_UnGreetedTooltip" xml:space="preserve">
+    <value>Als begrüßt markieren.</value>
+  </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (Chat-Einstellungstab) -->
+  <data name="ChatLog_AutoTellTabs_Section_Title" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Enable_Name" xml:space="preserve">
+    <value>Bei jedem /tell automatisch einen Tab pro Gesprächspartner öffnen</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Enable_Description" xml:space="preserve">
+    <value>Sobald du einen /tell empfängst oder sendest, wird automatisch ein temporärer Tab für diesen Spieler geöffnet. Die Tabs verschwinden beim Logout.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Limit_Name" xml:space="preserve">
+    <value>Maximale Anzahl der Auto-Tell-Tabs</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Limit_Description" xml:space="preserve">
+    <value>Beim Erreichen werden begrüßte Tabs mit der ältesten Aktivität zuerst geschlossen. Änderungen greifen beim nächsten /tell.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Compact_Name" xml:space="preserve">
+    <value>Kompakte Anzeige</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_Compact_Description" xml:space="preserve">
+    <value>Zeigt nur einen dünnen Separator zwischen normalen Tabs und Auto-Tell-Tabs, ohne Sektions-Header.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Name" xml:space="preserve">
+    <value>„Als begrüßt markieren"-Button anzeigen</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_GreetedToggle_Description" xml:space="preserve">
+    <value>Fügt neben jedem Auto-Tell-Tab einen Klick-Button hinzu, um einen Gesprächspartner als bereits begrüßt zu markieren — der Tab-Name wird dann gedimmt. Nützlich für Club-Greeter, die parallel viele Konversationen führen. Standardmäßig aus.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Name" xml:space="preserve">
+    <value>Neue /tell-Tabs direkt als Pop-Out öffnen</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Description" xml:space="preserve">
+    <value>Wenn aktiv, wird jeder neu angelegte /tell-Tab sofort als eigenes Fenster geöffnet. Beim Schließen des Fensters kehrt der Tab in die Seitenleiste zurück.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
+    <value>Die Anzahl der vorgeladenen Tells lässt sich im Datenschutz-Tab einstellen.</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_ConflictHint" xml:space="preserve">
+    <value>Hinweis: Falls XIV Messanger oder ein ähnliches Plugin Tells unterdrückt, dort die Option „Suppress DMs" deaktivieren, damit Hellion Chat Tells empfangen und die Auto-Tabs öffnen kann.</value>
+  </data>
+
+  <!-- Hellion Chat — Auto-Tell-Tabs (Datenschutz-Einstellungstab) -->
+  <data name="Privacy_AutoTellTabs_Section_Title" xml:space="preserve">
+    <value>Tell-Verlauf in Auto-Tabs</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Name" xml:space="preserve">
+    <value>Anzahl der vorgeladenen Tells</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Description" xml:space="preserve">
+    <value>Wie viele frühere Tell-Nachrichten beim Öffnen eines Auto-Tell-Tabs aus der Datenbank geladen werden. 0 deaktiviert die Vorladung.</value>
+  </data>
+  <data name="Privacy_AutoTellTabs_Preload_Hint" xml:space="preserve">
+    <value>Greift nur, wenn Auto-Tell-Tabs im Chat-Tab aktiviert sind.</value>
+  </data>
+
+  <!-- Hellion Chat — Settings UX Polish v10 Wipe-Migration -->
+  <data name="SettingsRefactor_Migration_Title" xml:space="preserve">
+    <value>Settings umstrukturiert</value>
+  </data>
+  <data name="SettingsRefactor_Migration_Content" xml:space="preserve">
+    <value>Hellion Chat 0.5.0 hat die Settings in thematische Tabs umstrukturiert. Deine Chat-Datenbank und dein Nachrichtenverlauf bleiben unverändert. Settings wurden auf Defaults zurückgesetzt. Falls du das Privacy-Profil neu wählen willst, findest du den Reopen-Button im Datenschutz-Tab. Ein Backup der vorherigen Config liegt unter HellionChat.json.pre-v10-backup neben der aktiven Config-Datei.</value>
+  </data>
+
+  <!-- Hellion Chat — Settings UX Polish 8-Tab-Struktur -->
+  <data name="Settings_Tab_General" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Settings_Tab_Appearance" xml:space="preserve">
+    <value>Aussehen</value>
+  </data>
+  <data name="Settings_Tab_Window" xml:space="preserve">
+    <value>Fenster</value>
+  </data>
+  <data name="Settings_Tab_Chat" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Settings_Tab_Tabs" xml:space="preserve">
+    <value>Kanäle</value>
+  </data>
+  <data name="Settings_Tab_Database" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
+  <data name="Settings_Tab_Information" xml:space="preserve">
+    <value>Über</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Allgemein-Tabs -->
+  <data name="Settings_General_Input_Heading" xml:space="preserve">
+    <value>Eingabe</value>
+  </data>
+  <data name="Settings_General_Audio_Heading" xml:space="preserve">
+    <value>Audio &amp; Benachrichtigungen</value>
+  </data>
+  <data name="Settings_General_Performance_Heading" xml:space="preserve">
+    <value>Performance</value>
+  </data>
+  <data name="Settings_General_Language_Heading" xml:space="preserve">
+    <value>Sprache &amp; Eingabe-Hilfen</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Aussehen-Tabs -->
+  <data name="Settings_Appearance_Theme_Heading" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_Appearance_Fonts_Heading" xml:space="preserve">
+    <value>Schriftarten</value>
+  </data>
+  <data name="Settings_Appearance_Colours_Heading" xml:space="preserve">
+    <value>Chat-Farben</value>
+  </data>
+  <data name="Settings_Appearance_Timestamps_Heading" xml:space="preserve">
+    <value>Zeitstempel</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Fenster-Tabs -->
+  <data name="Settings_Window_Hide_Heading" xml:space="preserve">
+    <value>Verstecken</value>
+  </data>
+  <data name="Settings_Window_InactivityHide_Heading" xml:space="preserve">
+    <value>Inaktivitäts-Verstecken</value>
+  </data>
+  <data name="Settings_Window_Frame_Heading" xml:space="preserve">
+    <value>Fenster-Rahmen</value>
+  </data>
+  <data name="Settings_Window_Tooltips_Heading" xml:space="preserve">
+    <value>Tooltips</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Chat-Tabs -->
+  <data name="Settings_Chat_AutoTellTabs_Heading" xml:space="preserve">
+    <value>Auto-Tell-Tabs</value>
+  </data>
+  <data name="Settings_Chat_Behaviour_Heading" xml:space="preserve">
+    <value>Nachrichten-Verhalten</value>
+  </data>
+  <data name="Settings_Chat_Preview_Heading" xml:space="preserve">
+    <value>Vorschau</value>
+  </data>
+  <data name="Settings_Chat_Emotes_Heading" xml:space="preserve">
+    <value>Emotes</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Database-Tabs -->
+  <data name="Settings_Database_Storage_Heading" xml:space="preserve">
+    <value>Speicherung</value>
+  </data>
+  <data name="Settings_Database_Viewer_Heading" xml:space="preserve">
+    <value>Übersicht</value>
+  </data>
+  <data name="Settings_Database_Stats_Heading" xml:space="preserve">
+    <value>Wartung</value>
+  </data>
+
+  <!-- Hellion Chat — Sektions-Überschriften des Information-Tabs -->
+  <data name="Settings_Information_VersionInfo_Heading" xml:space="preserve">
+    <value>Versionsinfo</value>
+  </data>
+  <data name="Settings_Information_About_Heading" xml:space="preserve">
+    <value>Über HellionChat</value>
+  </data>
+  <data name="Settings_Information_Changelog_Heading" xml:space="preserve">
+    <value>Changelog</value>
+  </data>
+
+  <!-- Hellion Chat — Default-Tab-Presets (kanalspezifisch) -->
+  <data name="Tabs_Presets_System" xml:space="preserve">
+    <value>System</value>
+  </data>
+  <data name="Tabs_Presets_FreeCompany" xml:space="preserve">
+    <value>Free Company</value>
+  </data>
+  <data name="Tabs_Presets_Party" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="Tabs_Presets_Beginner" xml:space="preserve">
+    <value>Neulinge</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell" xml:space="preserve">
+    <value>Linkshell</value>
+  </data>
+  <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
+    <value>Wenn du mehrere Linkshells benutzt, empfiehlt der Maintainer einen Tab pro Shell für eine sauberere Übersicht. Tab duplizieren und je Kopie die Kanalauswahl einschränken.</value>
+  </data>
+  <data name="ChatColourPresets_Default" xml:space="preserve">
+    <value>Klassik (Chat 2 Default)</value>
+  </data>
+  <data name="ChatColourPresets_HighContrast" xml:space="preserve">
+    <value>Hoher Kontrast</value>
+  </data>
+  <data name="ChatColourPresets_Pastell" xml:space="preserve">
+    <value>Pastell</value>
+  </data>
+  <data name="ChatColourPresets_DarkModeTuned" xml:space="preserve">
+    <value>Dunkelmodus-optimiert</value>
+  </data>
+  <data name="ChatColourPresets_Hellion" xml:space="preserve">
+    <value>Hellion</value>
+  </data>
+  <data name="ChatColourPresets_NightBlue" xml:space="preserve">
+    <value>Night Blue</value>
+  </data>
+  <data name="ChatColourPresets_IndigoViolet" xml:space="preserve">
+    <value>Indigo Violet</value>
+  </data>
+  <data name="Settings_Appearance_Colours_PresetsHint" xml:space="preserve">
+    <value>Tipp: Presets überschreiben deine aktuellen Channel-Farben sofort.</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Name" xml:space="preserve">
+    <value>Eingabe in Pop-Outs aktivieren</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Description" xml:space="preserve">
+    <value>Master-Switch: erlaubt direktes Tippen und Absenden in jedem Pop-Out-Fenster (inkl. Auto-Tell-Tabs). Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster; Text-Buffer und History-Cursor sind pro Pop-Out unabhängig.</value>
+  </data>
+  <data name="Popout_v060_HintText" xml:space="preserve">
+    <value>Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Master-Switch in den Fenster-Settings aktivieren.</value>
+  </data>
+  <data name="Popout_v060_HintAck" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="Popout_v060_HintOpenSettings" xml:space="preserve">
+    <value>Fenster-Settings öffnen</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Body" xml:space="preserve">
+    <value>Du kannst jeden Chat-Tab als eigenes Fenster öffnen. Klicke auf das Fenster-Symbol oben rechts oder rechtsklicke den Tab. Neu in v0.6.1: die Pop-Out-Eingabe ist standardmäßig aktiv (abschaltbar unter Einstellungen → Fenster).</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Ack" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_OpenSettings" xml:space="preserve">
+    <value>Einstellungen öffnen</value>
+  </data>
+  <data name="ChatTwoConflictTitle" xml:space="preserve">
+    <value>Hellion Chat kann nicht starten, solange Chat 2 geladen ist.</value>
+  </data>
+  <data name="ChatTwoConflictBody" xml:space="preserve">
+    <value>Hellion Chat ist ein eigenständiger Fork von Chat 2. Beide Plugins ersetzen dasselbe Chat-Fenster im Spiel und würden zur Laufzeit kollidieren.</value>
+  </data>
+  <data name="ChatTwoConflictAction" xml:space="preserve">
+    <value>Chat 2 in /xlplugins deaktivieren, danach Hellion Chat erneut aktivieren.</value>
+  </data>
+</root>

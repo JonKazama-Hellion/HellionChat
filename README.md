@@ -8,9 +8,9 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
 
-**Version 0.6.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 1.0.0** — DSGVO-bewusster Chat-Ersatz für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
 
-Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
+Hellion Chat ergänzt das ursprüngliche Chat-2-Fundament um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle aus Chat 2 übernommenen Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
 Eigenständiges Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo. Selektive Cherry-Picks von Upstream-Chat-2 nach Bedarf, dokumentiert in [UPSTREAM_SYNC.md](UPSTREAM_SYNC.md).
 
@@ -57,7 +57,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 
 - **Bilinguale UI** (Englisch + Deutsch) mit Live-Sprachwechsel. Hellion-spezifische Strings in `HellionStrings.<lang>.resx`.
 - **Hellion-HUD-Theme** mit Cyan-Teal-Akzenten, Slate-Violet-Tabs, Bernstein-Highlights für aktive Zustände.
-- **Chat-Farben-Presets** (v0.6.0) mit sieben Built-in-Bundles in Settings → Aussehen → Chat-Farben: ChatTwo Default, High-Contrast, Pastell, Dark-Mode-Tuned, Hellion (Brand), plus Bonus-Stimmungen Night Blue und Indigo Violet. One-Click-Apply, Battle-Channels bleiben unangetastet.
+- **Chat-Farben-Presets** (v0.6.0) mit sieben Built-in-Bundles in Settings → Aussehen → Chat-Farben: Klassik (Chat 2 Default), High-Contrast, Pastell, Dark-Mode-Tuned, Hellion (Brand), plus Bonus-Stimmungen Night Blue und Indigo Violet. One-Click-Apply, Battle-Channels bleiben unangetastet.
 - **Fenster-Deckkraft-Slider** für Kampf-freundliche Transparenz.
 - **Mitgelieferte Hellion-Schrift** (Exo 2, OFL-1.1) als optionaler Default statt System-Font.
 - **Hellion-Logo** im Plugin-Bundle und in der Dalamud-Plugin-Liste.
@@ -108,9 +108,9 @@ ChatTwo/
 
 ### Regeln
 
-- **Code-Namespace bleibt `ChatTwo.*`** — Cherry-Picks von Upstream-Bugfixes bleiben damit konfliktarm.
+- **Code-Namespace ist `HellionChat.*`** — seit v1.0.0 vollständig konsolidiert auf den Plugin-Namen.
 - **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigene Datei-Manifest, kein Shared State mit Chat 2.
-- **Hellion-eigene Strings nur in `HellionStrings.*.resx`** — die Upstream-`Language.*.resx` bleiben unverändert, damit Cherry-Picks aus Chat 2 (inklusive deren Übersetzungs-Updates aus dem Upstream-Crowdin) konfliktarm bleiben.
+- **Hellion-eigene Strings in `HellionStrings.*.resx`**, übernommene Strings aus dem Chat-2-Bestand in `Language.*.resx` — die Original-`Language.*.resx` bleibt strukturell erhalten, weil die existierenden Übersetzungen aus dem Crowdin-Bestand der Upstream-Community weiter wertvoll sind.
 - **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager` — Font-Fallback und Hellion-Font laufen zentral.
 
 ---

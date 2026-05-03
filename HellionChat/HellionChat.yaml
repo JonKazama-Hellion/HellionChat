@@ -1,0 +1,243 @@
+name: Hellion Chat
+author: JonKazama-Hellion
+punchline: Chat replacement with privacy controls aligned to EU, US and JP rules — based on Chat 2 (EUPL-1.2)
+description: |-
+  Hellion Chat is a privacy-focused chat replacement for FINAL FANTASY XIV
+  based on the Chat 2 codebase (EUPL-1.2). One feature is intentionally
+  removed (the optional webinterface) and a stack of privacy controls is
+  added on top. Tabs, channel filters, RGB colours, emotes, screenshot
+  mode, IPC integration and the chat replacement window itself work the
+  same. The webinterface is intentionally not part of Hellion Chat because
+  it serves a different use case from the smaller default footprint this
+  plugin is built around.
+
+  On top of that, Hellion Chat adds privacy and data-handling controls
+  designed to align with the modern data protection rules that apply
+  across the EU, the United States and Japan. By default only your own
+  conversations are stored; messages from strangers, NPCs and system
+  spam stay out of the database. Retention windows are configurable per
+  channel, history can be wiped retroactively, and stored data can be
+  exported on demand.
+
+  Key privacy and data-handling features:
+
+  - Channel whitelist with a Privacy-First default
+  - Per-channel retention with a daily background sweep
+  - Retroactive cleanup with a Ctrl+Shift confirm
+  - Export to Markdown, JSON or CSV
+  - First-run wizard with three preset profiles (Privacy-First, Casual,
+    Full History)
+  - Bilingual UI (English and German) with live language switching
+  - Independent plugin state — own config file and database directory,
+    so Hellion Chat does not share state with upstream Chat 2
+
+  Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
+
+  Modding & support: join the Hellion Forge Discord at
+  https://discord.gg/X9V7Kcv5gR — community for Hellion Chat and
+  other Hellion Online Media plugins/tools.
+repo_url: https://github.com/JonKazama-Hellion/HellionChat
+accepts_feedback: true
+icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png
+image_urls:
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png
+tags:
+  - Social
+  - UI
+  - Chat
+  - Replacement
+  - Privacy
+changelog: |-
+  **Hellion Chat 1.0.0 — Standalone Major Release**
+
+  First fully standalone release. Internal cleanup plus a sweep of
+  pre-existing correctness, security, threading and resource-leak
+  fixes carried over from the upstream codebase. No user action
+  required — auto-update applies cleanly, configuration and database
+  paths unchanged.
+
+  Standalone identity:
+
+  - Code namespace consolidated from ChatTwo.* to HellionChat.* across
+    all source files
+  - IPC channels migrated from ChatTwo.* to HellionChat.* (6 channels:
+    Register, Available, Unregister, Invoke, GetChatInputState,
+    ChatInputStateChanged) — third-party plugins that bound to the old
+    channels need to be updated; none known at release time
+  - ImGui popup ID renamed to hellionchat-context-popup
+  - Repository folder restructured (ChatTwo/ → HellionChat/), all CI
+    and build paths updated accordingly
+  - Public-facing descriptions reworded from upstream-fork framing to
+    standalone framing (Chat 2 attribution preserved per EUPL-1.2)
+  - Colour preset 'ChatTwo Default' is now 'Klassik (Chat 2 Default)'
+
+  Safety:
+
+  - Plugin now refuses to load when upstream Chat 2 is also active —
+    bilingual conflict message in EN/DE, throw before any subsystem
+    initialization, prevents the runtime crash that previously occurred
+    when both plugins replaced the same chat window in parallel
+  - SQLite native binary bumped to 3.50.3 (CVE-2025-6965 memory
+    corruption from aggregate-term overflow, CVE-2025-7709)
+  - NuGet restore now honors packages.lock.json so transitive
+    dependencies don't drift between machines or CI runs
+
+  Crash-class fixes (formerly latent in upstream):
+
+  - MathUtil.HasOverlap now uses a correct AABB test; identical or
+    edge-touching rectangles are no longer reported as non-overlapping
+  - ChatCode.Equals compares fields directly instead of GetHashCode;
+    removes the hash-collision anti-pattern
+  - IpcManager.Dispose uses UnregisterAction to match the matching
+    RegisterAction call; previous mismatch leaked the action
+    subscription on every plugin reload
+  - ExtraChat.Dispose now unsubscribes all three IPC subscriptions
+    (was only the first); leaks closed
+  - TellTarget.FromTarget guards against a zero IPlayerCharacter.Address
+    before dereferencing the unsafe Character* cast
+  - GameFunctions ResolveTextCommandPlaceholderDetour null-checks the
+    Hook reference instead of using the null-forgiving operator
+  - Popout.cs and SettingsTabs/Tabs.cs bounds-check list indexing so
+    a tab drop or empty-worlds list no longer crashes the UI
+  - Debugger.cs now declares IDisposable so the existing Dispose runs
+
+  Correctness fixes:
+
+  - GlobalParametersCache.GetValue captures Cache into a local before
+    the bounds check, so a concurrent Refresh can't slip a different
+    array between check and read
+  - IconUtil binary search bounds initialized to entries.Length-1 and
+    reset on redirect-restart; entries.Length==0 short-circuits
+  - Sheets.WorldsOnDatacenter now compares DataCenter.RowId (was
+    Region.RowId) so it actually returns same-DC worlds
+  - Message.cs back-reference loop iterates the processed Sender/Content
+    properties so chunks added by CheckMessageContent get Message set
+  - Language.zh-Hans Webinterface_Start_Success corrected to
+    "网页界面已启动" (was "网页界面已停止")
+
+  Threading and async:
+
+  - AutoTranslate Entries/ValidEntries are now serialized behind a
+    single lock; the preload worker thread and main thread no longer
+    race on the underlying dictionary/hash set
+  - Privacy retention and cleanup workers bound their framework-refresh
+    waits to 5 seconds with a logged timeout; a hung framework tick can
+    no longer deadlock the background worker
+
+  Resource handling:
+
+  - EmoteCache reuses the static HttpClient instead of allocating a new
+    one per call (closed socket leak)
+  - FontManager wraps HttpClient/HttpResponseMessage in using-blocks
+    and adds EnsureSuccessStatusCode; failed downloads no longer
+    silently produce a zero-byte font file
+  - SearchSelector mixes the row index into the ImGui ID stack so
+    selectables don't collapse to a single ambiguous ID
+  - SettingsTabs/Chat blocked-emote add-button now opens its selector
+    popup on left-click
+
+  Performance:
+
+  - DbViewer text export caches filteredHistory.Count once instead of
+    re-enumerating the IEnumerable on every batch (O(N) instead of
+    O(N²) on large histories)
+
+  License attribution (NOTICE.md, COPYRIGHT, THIRD_PARTY_NOTICES.md
+  and the Credits section in README) is unchanged.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+  **Hellion Chat 0.6.1 — Pop-Out Discoverability & /tell Auto-Pop-Out**
+
+  - Pop-out button now visible in the chat header (no more hunting
+    through the right-click menu)
+  - One-time hint banner explains pop-out tabs and the right-click
+    shortcut
+  - New setting: open new /tell tabs directly as pop-out windows
+    (Settings → Chat → Auto-Tell-Tabs)
+  - Pop-out input is now enabled by default — closing a pop-out still
+    returns the tab to the sidebar
+  - Bugfix: dropping or logging out with an LRU/popped auto-tell tab
+    now also closes its pop-out window (no more ghost windows)
+  - Bugfix: dead zone below the chat input bar when the v0.6.0 pop-out
+    hint banner was visible (also fixed retroactively for the v0.6.0
+    banner inside pop-outs)
+
+  Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+  **Hellion Chat 0.6.0 — UX Polish: Pop-Out Input + Colour Presets**
+
+  Two opt-in UX features land in the same release. Existing users see
+  no change unless they enable the new toggles.
+
+  Pop-out input bar:
+
+  - New global master switch in Settings → Window → Frame: "Enable input
+    in pop-outs". Default OFF so existing behaviour is preserved
+  - When enabled, every pop-out window grows a compact input bar at the
+    bottom (channel-coloured icon button left, text input right). The
+    auto-translate picker is intentionally not part of the compact bar
+    in v0.6.0 — typical pop-out workflows (FC greeter, club hostess)
+    rarely need it there
+  - Each pop-out keeps an independent text buffer and history cursor;
+    channel changes still apply globally because that is how the FFXIV
+    channel API works
+  - Up/Down navigates a shared input history singleton across the main
+    window and every open pop-out
+  - First pop-out opening after the upgrade shows a one-time hint
+    banner pointing users to the new toggle
+
+  Chat colour presets:
+
+  - Seven built-in presets above the per-channel colour list in
+    Settings → Appearance → Colours: ChatTwo Default, High-Contrast,
+    Pastell, Dark-Mode-Tuned, Hellion (brand-coloured, blue/orange
+    Arctic Cyan + Ember Glow palette from the Hellion Online Media
+    branding spec), plus two bonus mood presets — Night Blue (royal
+    blue, classic-cool) and Indigo Violet (royal violet, glitter-mystic)
+  - Apply is immediate and overwrites the channels covered by the
+    preset; battle-channel colours are left alone so combat tuning
+    stays intact
+
+  Configuration migrates from v10 to v11 with a diagnostic log entry;
+  no data is reset. Bilingual (English/German) for both new sections.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+  **Hellion Chat 0.5.4 — WrapText hardening**
+
+  Replaces the unsafe pointer-arithmetic in ImGuiUtil.WrapText with
+  Span- and index-based control flow. Closes the persistent CodeQL
+  Critical alert "unvalidated local pointer arithmetic" that kept
+  re-firing on every shape of the previous fix.
+
+  Hardening:
+
+  - WrapText now allocates a buffer sized by Encoding.UTF8.GetMaxByteCount
+    via ArrayPool, validates the actual encoded length against that
+    ceiling, and threads the rest of the algorithm through int offsets
+    instead of raw byte pointers
+  - Pointer arithmetic only happens inside two small private helpers
+    (CalcWordWrap and DrawText) that take the pinned base pointer plus
+    int offsets sourced from the plugin's own logic, not from any
+    virtual-method return
+  - Added a 16 KiB upper bound on the buffer rent to prevent a
+    pathological input from triggering an unbounded ArrayPool allocation
+
+  No user-visible behaviour change. Word-wrap output is byte-identical
+  to v0.5.3.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+  **Hellion Chat 0.5.3 — Pointer arithmetic hardening**
+
+  Closed CodeQL Critical alert in ImGuiUtil.WrapText by validating the
+  encoded byte buffer length via GetByteCount before pointer
+  arithmetic. Single-fix patch on top of v0.5.2.
+
+  ---
+
+  Earlier history: https://github.com/JonKazama-Hellion/HellionChat/releases
