@@ -8,7 +8,7 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
 
-**Version 0.5.4** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.6.0** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
@@ -57,9 +57,16 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 
 - **Bilinguale UI** (Englisch + Deutsch) mit Live-Sprachwechsel. Hellion-spezifische Strings in `HellionStrings.<lang>.resx`.
 - **Hellion-HUD-Theme** mit Cyan-Teal-Akzenten, Slate-Violet-Tabs, Bernstein-Highlights für aktive Zustände.
+- **Chat-Farben-Presets** (v0.6.0) mit sieben Built-in-Bundles in Settings → Aussehen → Chat-Farben: ChatTwo Default, High-Contrast, Pastell, Dark-Mode-Tuned, Hellion (Brand), plus Bonus-Stimmungen Night Blue und Indigo Violet. One-Click-Apply, Battle-Channels bleiben unangetastet.
 - **Fenster-Deckkraft-Slider** für Kampf-freundliche Transparenz.
 - **Mitgelieferte Hellion-Schrift** (Exo 2, OFL-1.1) als optionaler Default statt System-Font.
 - **Hellion-Logo** im Plugin-Bundle und in der Dalamud-Plugin-Liste.
+
+### Pop-Out Convenience (v0.6.0)
+
+- **Eingabe-Bar in Pop-Out-Fenstern** als globaler Opt-In in Settings → Fenster → Fenster-Rahmen. Wenn aktiv hat jedes Pop-Out-Window unten einen kompakten Input mit kanal-farbigem Icon-Button und Text-Eingabe — kein Wechsel mehr ins Hauptfenster für eine schnelle Antwort.
+- **Pro-Pop-Out unabhängiger Text-Buffer und History-Cursor.** Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster (FFXIV-Channel-API), aber halb-getippte Eingaben kollidieren nicht zwischen Hauptfenster und Pop-Outs.
+- **Geteilte Eingabe-Historie** zwischen allen Fenstern via Singleton-Service — Up/Down-Pfeile navigieren überall durch dieselbe Liste der letzten 30 Eingaben.
 
 ### Stability
 
@@ -244,7 +251,7 @@ Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig 
 
 ## Projektstatus
 
-**Version 0.5.4** | Stand: 2026-05-03
+**Version 0.6.0** | Stand: 2026-05-03
 
 Alle Bootstrap-Phasen abgeschlossen:
 
