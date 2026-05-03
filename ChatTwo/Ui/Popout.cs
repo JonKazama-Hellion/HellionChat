@@ -15,6 +15,13 @@ internal class Popout : Window
     private long FrameTime; // set every frame
     private long LastActivityTime = Environment.TickCount64;
 
+    // v0.6.0 — optional input bar inside the pop-out window. Lazy-allocated
+    // when the user enables Tab.PopOutInputEnabled and torn down when the
+    // toggle is turned off (independent text buffer is intentionally
+    // discarded — see v0.6.0 spec edge-case P1).
+    public ChatInputBar? InputBar { get; private set; }
+    public bool HasFocusedInputBar => InputBar?.IsFocused ?? false;
+
     public Popout(ChatLogWindow chatLogWindow, Tab tab, int idx) : base($"{tab.Name}##popout")
     {
         ChatLogWindow = chatLogWindow;
@@ -93,8 +100,33 @@ internal class Popout : Window
             ImGui.Separator();
         }
 
+        // v0.6.0 — pop-out optional input bar. Reserve height first so the
+        // message log draws into the right region; only shown when the
+        // per-tab toggle is on. Toggle-OFF resets InputBar so the next
+        // toggle-ON gives a fresh buffer (no stale text persists).
+        var inputEnabled = Tab.PopOutInputEnabled;
+        if (!inputEnabled && InputBar != null)
+        {
+            InputBar = null;
+        }
+        if (inputEnabled)
+        {
+            InputBar ??= new ChatInputBar(ChatLogWindow.Plugin, ChatLogWindow, () => Tab);
+        }
+
+        var inputBarHeight = inputEnabled
+            ? ImGui.GetFrameHeightWithSpacing() + ImGui.GetStyle().ItemSpacing.Y
+            : 0f;
+
         var handler = ChatLogWindow.HandlerLender.Borrow();
-        ChatLogWindow.DrawMessageLog(Tab, handler, ImGui.GetContentRegionAvail().Y, false);
+        var logHeight = ImGui.GetContentRegionAvail().Y - inputBarHeight;
+        ChatLogWindow.DrawMessageLog(Tab, handler, logHeight, false);
+
+        if (inputEnabled && InputBar != null)
+        {
+            ImGui.Separator();
+            InputBar.RenderCompact();
+        }
 
         if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
             LastActivityTime = FrameTime;

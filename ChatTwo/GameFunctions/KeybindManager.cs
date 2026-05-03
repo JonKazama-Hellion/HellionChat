@@ -465,12 +465,21 @@ internal unsafe class KeybindManager : IDisposable {
         }
     }
 
-    // v0.6.0 — central dispatch for ChatTabForward/Backward so Task 25
-    // can extend it with focus-aware routing to pop-out ChatInputBars.
-    // Right now both windows share the main ChatLogWindow.ChangeTabDelta,
-    // identical to v0.5.x behavior.
+    // v0.6.0 — central dispatch for ChatTabForward/Backward. If a pop-out
+    // window currently has its compact input focused, the keybind is
+    // forwarded into that pop-out's ChatInputBar so the user navigates
+    // tabs in the window they are typing in. Otherwise the main window
+    // handles it (= v0.5.x behavior).
     private void DispatchTabDelta(int delta)
     {
+        foreach (var popout in Plugin.ChatLogWindow.ActivePopouts)
+        {
+            if (popout.HasFocusedInputBar && popout.InputBar != null)
+            {
+                popout.InputBar.HandleKeybindForward(delta);
+                return;
+            }
+        }
         Plugin.ChatLogWindow.ChangeTabDelta(delta);
     }
 

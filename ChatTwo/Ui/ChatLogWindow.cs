@@ -1490,6 +1490,13 @@ public sealed class ChatLogWindow : Window
 
     internal readonly List<bool> PopOutDocked = [];
     internal readonly HashSet<Guid> PopOutWindows = [];
+
+    // v0.6.0 — live enumeration of all active Popout windows so the
+    // KeybindManager can find a focused ChatInputBar to forward tab-cycle
+    // keybinds to. Filter on IsOpen prevents touching closed-but-still-
+    // registered popouts.
+    internal IEnumerable<Popout> ActivePopouts =>
+        Plugin.WindowSystem.Windows.OfType<Popout>().Where(p => p.IsOpen);
     private void AddPopOutsToDraw()
     {
         HandlerLender.ResetCounter();
