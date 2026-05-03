@@ -391,6 +391,10 @@ public class DbViewer : Window
                 await rangeMessageEnumerator.DisposeAsync();
 
                 var filteredHistory = Filter(messageHistory);
+                // Materialize Count once — re-enumerating the IEnumerable on
+                // every batch (twice per batch in the Notification update)
+                // turned the export into an O(N²) hot loop on large histories.
+                var totalCount = filteredHistory.Count;
 
                 var sb = new StringBuilder();
                 await using var stream = new StreamWriter(Path.Join(InputPath, $"Chat2_{DateTime.Now:yyyy_dd_M__HH_mm_ss}.txt"));
@@ -416,8 +420,8 @@ public class DbViewer : Window
                         }
                     }, delayTicks: 5);
 
-                    Notification.Progress = (float)batch / filteredHistory.Count;
-                    Notification.Content = $"Exported {batch} of {filteredHistory.Count} messages";
+                    Notification.Progress = (float)batch / totalCount;
+                    Notification.Content = $"Exported {batch} of {totalCount} messages";
                     await stream.WriteAsync(sb.ToString());
                     sb.Clear();
                 }
