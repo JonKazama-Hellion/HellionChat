@@ -1,6 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 // Modified from: https://jack-vanlightly.com/blog/2016/2/24/a-more-efficient-regex-tokenizer
 public static class Tokenizer

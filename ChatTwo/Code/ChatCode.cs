@@ -1,6 +1,6 @@
 using Dalamud.Game.Text;
 
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 public class ChatCode
 {

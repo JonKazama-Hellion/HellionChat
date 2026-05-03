@@ -1,12 +1,12 @@
 using System.Numerics;
-using ChatTwo.Util;
+using HellionChat.Util;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using Dalamud.Bindings.ImGui;
 using Lumina.Text.ReadOnly;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public class CommandHelpWindow : Window {
     private ChatLogWindow LogWindow { get; }

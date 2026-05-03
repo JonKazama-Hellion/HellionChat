@@ -8,7 +8,7 @@
 
 #nullable enable
 
-namespace ChatTwo.Resources;
+namespace HellionChat.Resources;
 
 [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
 [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute]
@@ -26,7 +26,7 @@ internal class HellionStrings
         get
         {
             if (resourceMan is null)
-                resourceMan = new global::System.Resources.ResourceManager("ChatTwo.Resources.HellionStrings", typeof(HellionStrings).Assembly);
+                resourceMan = new global::System.Resources.ResourceManager("HellionChat.Resources.HellionStrings", typeof(HellionStrings).Assembly);
             return resourceMan;
         }
     }

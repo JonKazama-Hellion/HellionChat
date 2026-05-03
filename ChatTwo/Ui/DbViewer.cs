@@ -2,9 +2,9 @@
 using System.Globalization;
 using System.Numerics;
 using System.Text;
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
@@ -18,7 +18,7 @@ using Lumina.Data.Files;
 using Lumina.Text.ReadOnly;
 using MoreLinq;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public class DbViewer : Window
 {

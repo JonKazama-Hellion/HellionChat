@@ -1,6 +1,6 @@
 using Dalamud.Game.Text.SeStringHandling;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal class PartyFinderPayload : Payload
 {

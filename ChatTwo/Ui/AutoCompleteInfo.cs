@@ -1,4 +1,4 @@
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 internal class AutoCompleteInfo
 {

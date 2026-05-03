@@ -1,8 +1,8 @@
-using ChatTwo.Code;
+using HellionChat.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using MessagePack;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 [Union(0, typeof(TextChunk))]
 [Union(1, typeof(IconChunk))]

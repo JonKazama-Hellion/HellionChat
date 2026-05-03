@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using ChatTwo.Resources;
+using HellionChat.Resources;
 using Dalamud.Memory;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 public unsafe class ChatBox
 {

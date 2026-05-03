@@ -1,7 +1,7 @@
-﻿using ChatTwo.Resources;
+﻿using HellionChat.Resources;
 using Dalamud.Interface.ImGuiNotification;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 public static class WrapperUtil
 {

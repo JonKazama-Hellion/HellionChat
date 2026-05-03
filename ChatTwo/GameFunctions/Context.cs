@@ -1,9 +1,9 @@
-using ChatTwo.Util;
+using HellionChat.Util;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 internal sealed unsafe class Context
 {

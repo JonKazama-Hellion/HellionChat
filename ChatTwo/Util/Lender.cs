@@ -1,4 +1,4 @@
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal class Lender<T>
 {

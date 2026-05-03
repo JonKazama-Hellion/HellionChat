@@ -1,4 +1,4 @@
-namespace ChatTwo.GameFunctions.Types;
+namespace HellionChat.GameFunctions.Types;
 
 internal sealed class ChatActivatedArgs
 {

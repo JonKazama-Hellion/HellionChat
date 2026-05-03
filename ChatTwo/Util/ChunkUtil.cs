@@ -1,4 +1,4 @@
-using ChatTwo.Code;
+using HellionChat.Code;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text;
@@ -6,7 +6,7 @@ using Lumina.Text.Payloads;
 
 using PayloadType = Dalamud.Game.Text.SeStringHandling.PayloadType;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal static class ChunkUtil
 {

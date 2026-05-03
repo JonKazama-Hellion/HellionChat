@@ -1,8 +1,8 @@
 using System.Linq;
-using ChatTwo.Resources;
+using HellionChat.Resources;
 using Dalamud.Plugin;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 internal static class ChatTwoConflictDetector
 {

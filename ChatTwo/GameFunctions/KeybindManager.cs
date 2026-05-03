@@ -1,16 +1,16 @@
 ﻿using System.Numerics;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Util;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Config;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.System.String;
 using FFXIVClientStructs.FFXIV.Client.UI;
 using Dalamud.Bindings.ImGui;
-using ModifierFlag = ChatTwo.GameFunctions.Types.ModifierFlag;
+using ModifierFlag = HellionChat.GameFunctions.Types.ModifierFlag;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 internal enum KeyboardSource {
     Game,

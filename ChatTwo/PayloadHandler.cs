@@ -1,8 +1,8 @@
 using System.Numerics;
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Ui;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Ui;
+using HellionChat.Util;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Addon.Lifecycle.AddonArgTypes;
 using Dalamud.Game.ClientState.Objects.SubKinds;
@@ -22,9 +22,9 @@ using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Action = System.Action;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
-using ChatTwoPartyFinderPayload = ChatTwo.Util.PartyFinderPayload;
+using ChatTwoPartyFinderPayload = HellionChat.Util.PartyFinderPayload;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 public sealed class PayloadHandler
 {

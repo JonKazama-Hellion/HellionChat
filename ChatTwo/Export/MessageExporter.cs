@@ -1,8 +1,8 @@
 using System.Globalization;
 using System.Text;
-using ChatTwo.Code;
+using HellionChat.Code;
 
-namespace ChatTwo.Export;
+namespace HellionChat.Export;
 
 internal enum ExportFormat
 {

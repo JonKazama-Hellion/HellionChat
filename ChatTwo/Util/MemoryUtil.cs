@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 public static class MemoryUtil
 {

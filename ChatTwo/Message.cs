@@ -1,6 +1,6 @@
 using System.Text;
-using ChatTwo.Code;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using System.Text.RegularExpressions;
@@ -8,7 +8,7 @@ using Dalamud.Game.Text;
 using Dalamud.Utility;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 public partial class Message
 {

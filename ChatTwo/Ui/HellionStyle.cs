@@ -1,8 +1,8 @@
-using ChatTwo.Util;
+using HellionChat.Util;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 /// <summary>
 /// ImGui style override for Hellion Chat. Industrial HUD palette with three

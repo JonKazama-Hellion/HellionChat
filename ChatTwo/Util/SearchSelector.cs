@@ -4,7 +4,7 @@ using Dalamud.Bindings.ImGui;
 using System.Collections;
 using Dalamud.Interface.Utility.Raii;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 // Modified from: https://github.com/UnknownX7/Hypostasis/blob/master/ImGui/ExcelSheet.cs
 public static class SearchSelector

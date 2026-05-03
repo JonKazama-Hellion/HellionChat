@@ -1,6 +1,6 @@
 using Dalamud.Plugin.Ipc;
 
-namespace ChatTwo.Ipc;
+namespace HellionChat.Ipc;
 
 public sealed class ExtraChat : IDisposable
 {

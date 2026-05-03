@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 // From Kizer: https://github.com/Soreepeong/Dalamud/blob/feature/log-wordwrap/Dalamud/Interface/Spannables/Internal/GfdFileView.cs
 public readonly unsafe ref struct GfdFileView

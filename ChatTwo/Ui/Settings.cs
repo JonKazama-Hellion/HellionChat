@@ -1,13 +1,13 @@
 using System.Numerics;
-using ChatTwo.Resources;
-using ChatTwo.Ui.SettingsTabs;
-using ChatTwo.Util;
+using HellionChat.Resources;
+using HellionChat.Ui.SettingsTabs;
+using HellionChat.Util;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Utility;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 {

@@ -1,8 +1,8 @@
 using System.Collections;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud;
 using Dalamud.Configuration;
 using Dalamud.Game.ClientState.Keys;
@@ -10,7 +10,7 @@ using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.FontIdentifier;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 [Serializable]
 public class ConfigKeyBind

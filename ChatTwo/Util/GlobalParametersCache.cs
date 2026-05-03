@@ -2,7 +2,7 @@
 using FFXIVClientStructs.FFXIV.Client.UI.Misc;
 using FFXIVClientStructs.FFXIV.Component.Text;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 public static class GlobalParametersCache
 {

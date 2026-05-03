@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Config;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Hooking;
@@ -22,7 +22,7 @@ using Lumina.Text.ReadOnly;
 
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 internal sealed unsafe class Chat : IDisposable
 {

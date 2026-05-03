@@ -1,6 +1,6 @@
 using Lumina.Excel.Sheets;
 
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 internal static class InputChannelExt
 {

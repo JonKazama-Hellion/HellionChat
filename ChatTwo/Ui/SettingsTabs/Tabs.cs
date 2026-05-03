@@ -1,12 +1,12 @@
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.ClientState.Objects.SubKinds;
 
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 internal sealed class Tabs : ISettingsTab
 {

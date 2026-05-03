@@ -6,7 +6,7 @@ using Dalamud.Interface.ManagedFontAtlas;
 using Dalamud.Interface.Utility;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 public class FontManager
 {

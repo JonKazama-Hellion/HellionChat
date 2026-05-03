@@ -1,4 +1,4 @@
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 internal interface ISettingsTab
 {

@@ -1,4 +1,4 @@
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 public enum InputChannel : uint
 {

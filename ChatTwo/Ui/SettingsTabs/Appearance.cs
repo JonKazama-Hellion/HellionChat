@@ -1,6 +1,6 @@
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud;
 using Dalamud.Interface;
 using Dalamud.Interface.FontIdentifier;
@@ -9,7 +9,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 internal sealed class Appearance : ISettingsTab
 {

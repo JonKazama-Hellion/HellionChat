@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using ChatTwo.Code;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Util;
 
-namespace ChatTwo.Resources;
+namespace HellionChat.Resources;
 
 // Hellion Chat — v0.6.0 built-in colour presets for the ChatColours
 // settings section. Read-only static data; users apply a preset via the

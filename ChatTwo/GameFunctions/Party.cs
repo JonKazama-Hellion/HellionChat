@@ -1,10 +1,10 @@
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface.ImGuiNotification;
 using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using FFXIVClientStructs.FFXIV.Client.UI.Info;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 internal static unsafe class Party
 {

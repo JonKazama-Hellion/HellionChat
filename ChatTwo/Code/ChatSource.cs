@@ -1,6 +1,6 @@
 using Dalamud.Game.Text;
 
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 [Flags]
 public enum ChatSource : ushort

@@ -2,10 +2,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
-using ChatTwo.Ipc;
-using ChatTwo.Resources;
-using ChatTwo.Ui;
-using ChatTwo.Util;
+using HellionChat.Ipc;
+using HellionChat.Resources;
+using HellionChat.Ui;
+using HellionChat.Util;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
@@ -14,7 +14,7 @@ using Dalamud.Plugin.Services;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.ImGuiFileDialog;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class Plugin : IDalamudPlugin

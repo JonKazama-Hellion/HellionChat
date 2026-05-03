@@ -1,7 +1,7 @@
 using System.Diagnostics;
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.ImGuiNotification;
@@ -9,7 +9,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Game.Text;
 
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 internal sealed class Database : ISettingsTab
 {

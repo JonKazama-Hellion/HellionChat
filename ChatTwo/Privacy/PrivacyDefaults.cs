@@ -1,6 +1,6 @@
-using ChatTwo.Code;
+using HellionChat.Code;
 
-namespace ChatTwo.Privacy;
+namespace HellionChat.Privacy;
 
 internal static class PrivacyDefaults
 {

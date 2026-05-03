@@ -1,9 +1,9 @@
 using System.Numerics;
 using System.Text;
 using System.Text.RegularExpressions;
-using ChatTwo.Code;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
@@ -12,7 +12,7 @@ using Dalamud.Interface.Windowing;
 using Dalamud.Plugin.Services;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public partial class InputPreview : Window
 {

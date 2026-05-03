@@ -1,6 +1,6 @@
 ﻿using System.Numerics;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 public static class MathUtil
 {

@@ -1,5 +1,5 @@
 ﻿using System.Numerics;
-using ChatTwo.Code;
+using HellionChat.Code;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Windowing;
@@ -7,7 +7,7 @@ using FFXIVClientStructs.FFXIV.Client.UI.Agent;
 using Dalamud.Bindings.ImGui;
 using Lumina.Text.ReadOnly;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public class DebuggerWindow : Window
 {

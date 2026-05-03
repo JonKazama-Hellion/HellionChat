@@ -1,6 +1,6 @@
-using ChatTwo.Resources;
+using HellionChat.Resources;
 
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 internal static class ChatSourceExt
 {

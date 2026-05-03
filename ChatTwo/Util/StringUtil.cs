@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal static class StringUtil
 {

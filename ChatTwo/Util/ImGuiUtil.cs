@@ -1,9 +1,9 @@
 using System.Buffers;
 using System.Numerics;
 using System.Text;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Resources;
+using HellionChat.Code;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Resources;
 using Dalamud.Game.ClientState.Keys;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Interface;
@@ -15,7 +15,7 @@ using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal static class ImGuiUtil
 {

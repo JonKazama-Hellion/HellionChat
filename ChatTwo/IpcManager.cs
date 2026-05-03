@@ -2,7 +2,7 @@ using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Plugin.Ipc;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 internal sealed class IpcManager : IDisposable
 {

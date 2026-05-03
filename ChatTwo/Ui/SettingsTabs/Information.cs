@@ -1,12 +1,12 @@
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 // Information-Tab vereint die früheren About- und Changelog-Tabs in
 // drei kollabierbaren Sektionen. Der About-Inhalt ist 1:1 aus About.cs

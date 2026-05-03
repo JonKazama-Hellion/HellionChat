@@ -1,8 +1,8 @@
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Config;
 
-namespace ChatTwo.Code;
+namespace HellionChat.Code;
 
 internal static class ChatTypeExt
 {

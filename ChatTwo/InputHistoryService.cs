@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 // Hellion Chat — v0.6.0 shared input history. Replaces the embedded
 // ChatLogWindow.InputBacklog so that pop-out windows with their own

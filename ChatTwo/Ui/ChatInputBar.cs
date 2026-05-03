@@ -1,11 +1,11 @@
 using System;
 using System.Numerics;
-using ChatTwo.Code;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Util;
 using Dalamud.Bindings.ImGui;
 using Dalamud.Interface.Utility.Raii;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 // Hellion Chat — v0.6.0 input bar component for pop-out windows.
 //

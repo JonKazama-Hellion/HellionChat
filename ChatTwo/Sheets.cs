@@ -2,7 +2,7 @@
 using Lumina.Excel;
 using Lumina.Excel.Sheets;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 public static class Sheets
 {

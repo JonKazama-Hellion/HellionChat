@@ -1,7 +1,7 @@
 using Dalamud.Game.ClientState.Objects.SubKinds;
 using FFXIVClientStructs.FFXIV.Client.Game.Character;
 
-namespace ChatTwo.GameFunctions.Types;
+namespace HellionChat.GameFunctions.Types;
 
 [Serializable]
 public class TellTarget

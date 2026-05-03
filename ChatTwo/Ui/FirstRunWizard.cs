@@ -1,13 +1,13 @@
 using System.Numerics;
-using ChatTwo.Code;
-using ChatTwo.Privacy;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Privacy;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public sealed class FirstRunWizard : Window
 {

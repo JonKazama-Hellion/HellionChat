@@ -1,9 +1,9 @@
 ﻿using System.Buffers;
 using System.Collections;
 using System.Data.Common;
-using ChatTwo.Code;
-using ChatTwo.Ui;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Ui;
+using HellionChat.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using MessagePack;
 using MessagePack.Formatters;
@@ -13,7 +13,7 @@ using Microsoft.Data.Sqlite;
 using DalamudUtil = Dalamud.Utility.Util;
 using Encoding = System.Text.Encoding;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 internal static class DbExtensions
 {

@@ -3,11 +3,11 @@ using System.Globalization;
 using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.GameFunctions;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Addon.Lifecycle;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
@@ -22,7 +22,7 @@ using Dalamud.Bindings.ImGui;
 using Lumina.Excel.Sheets;
 using Lumina.Extensions;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public sealed class ChatLogWindow : Window
 {

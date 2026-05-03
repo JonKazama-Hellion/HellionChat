@@ -12,7 +12,7 @@ using Pidgin;
 using static Pidgin.Parser;
 using static Pidgin.Parser<char>;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal static class AutoTranslate
 {

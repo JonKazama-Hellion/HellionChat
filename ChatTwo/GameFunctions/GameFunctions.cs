@@ -16,7 +16,7 @@ using Lumina.Excel;
 using Lumina.Excel.Sheets;
 using ValueType = FFXIVClientStructs.FFXIV.Component.GUI.AtkValueType;
 
-namespace ChatTwo.GameFunctions;
+namespace HellionChat.GameFunctions;
 
 internal unsafe class GameFunctions : IDisposable
 {

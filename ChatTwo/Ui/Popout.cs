@@ -4,7 +4,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Interface.Windowing;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 internal class Popout : Window
 {

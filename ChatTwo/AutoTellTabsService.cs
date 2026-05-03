@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ChatTwo.Code;
-using ChatTwo.GameFunctions.Types;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.GameFunctions.Types;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Game.Text;
 using Dalamud.Game.Text.SeStringHandling;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 // Hellion Chat — Auto-Tell-Tabs.
 //

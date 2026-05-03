@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Numerics;
 using System.Text;
-using ChatTwo.Util;
+using HellionChat.Util;
 using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Game.Text.SeStringHandling.Payloads;
 using Dalamud.Interface.Utility.Raii;
@@ -10,7 +10,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Utility;
 using DalamudPartyFinderPayload = Dalamud.Game.Text.SeStringHandling.Payloads.PartyFinderPayload;
 
-namespace ChatTwo.Ui;
+namespace HellionChat.Ui;
 
 public class SeStringDebugger : Window
 {

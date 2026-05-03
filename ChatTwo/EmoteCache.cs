@@ -8,7 +8,7 @@ using Dalamud.Bindings.ImGui;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 public static class EmoteCache
 {

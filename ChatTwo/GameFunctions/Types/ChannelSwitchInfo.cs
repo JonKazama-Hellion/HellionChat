@@ -1,6 +1,6 @@
-using ChatTwo.Code;
+using HellionChat.Code;
 
-namespace ChatTwo.GameFunctions.Types;
+namespace HellionChat.GameFunctions.Types;
 
 internal class ChannelSwitchInfo {
     internal InputChannel? Channel { get; }

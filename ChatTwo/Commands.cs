@@ -1,6 +1,6 @@
 using Dalamud.Game.Command;
 
-namespace ChatTwo;
+namespace HellionChat;
 
 internal sealed class Commands : IDisposable
 {

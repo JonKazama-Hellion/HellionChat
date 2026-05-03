@@ -1,7 +1,7 @@
-using ChatTwo.Code;
-using ChatTwo.Resources;
+using HellionChat.Code;
+using HellionChat.Resources;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 public static class TabsUtil
 {

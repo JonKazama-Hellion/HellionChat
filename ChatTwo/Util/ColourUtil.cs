@@ -1,7 +1,7 @@
 using System.Buffers.Binary;
 using System.Numerics;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 internal static class ColourUtil {
     private static (byte r, byte g, byte b) RgbaToRgbComponents(uint rgba)

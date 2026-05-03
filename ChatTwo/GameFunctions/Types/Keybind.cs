@@ -1,6 +1,6 @@
 using Dalamud.Game.ClientState.Keys;
 
-namespace ChatTwo.GameFunctions.Types;
+namespace HellionChat.GameFunctions.Types;
 
 internal class Keybind
 {

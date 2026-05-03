@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Numerics;
-using ChatTwo.Resources;
+using HellionChat.Resources;
 using Dalamud.Interface;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
@@ -9,7 +9,7 @@ using Dalamud.Interface.Utility.Raii;
 using Dalamud.Utility;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Util;
+namespace HellionChat.Util;
 
 // From https://github.com/Flix01/imgui/blob/imgui_with_addons/addons/imguidatechooser/imguidatechooser.cpp
 public static class DateWidget

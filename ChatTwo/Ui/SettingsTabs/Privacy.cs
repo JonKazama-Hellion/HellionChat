@@ -1,15 +1,15 @@
-using ChatTwo.Code;
-using ChatTwo.Export;
-using ChatTwo.Privacy;
-using ChatTwo.Resources;
-using ChatTwo.Util;
+using HellionChat.Code;
+using HellionChat.Export;
+using HellionChat.Privacy;
+using HellionChat.Resources;
+using HellionChat.Util;
 using Dalamud.Interface.Colors;
 using Dalamud.Interface.ImGuiNotification;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
-namespace ChatTwo.Ui.SettingsTabs;
+namespace HellionChat.Ui.SettingsTabs;
 
 internal sealed class Privacy : ISettingsTab
 {

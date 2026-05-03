@@ -1,7 +1,7 @@
-using ChatTwo.Code;
+using HellionChat.Code;
 using Dalamud.Plugin.Ipc;
 
-namespace ChatTwo.Ipc;
+namespace HellionChat.Ipc;
 
 using ChatInputState = (bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType);
 
