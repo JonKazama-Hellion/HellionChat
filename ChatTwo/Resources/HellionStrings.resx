@@ -406,6 +406,12 @@
   <data name="ChatLog_AutoTellTabs_GreetedToggle_Description" xml:space="preserve">
     <value>Adds a click-to-toggle button next to each auto tell tab to mark a partner as already greeted, dimming the tab name when set. Useful for club greeters tracking many parallel conversations; off by default.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Name" xml:space="preserve">
+    <value>Open new /tell tabs directly as pop-out</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Description" xml:space="preserve">
+    <value>When enabled, each newly created /tell tab opens directly as its own window. Closing the window returns the tab to the sidebar.</value>
+  </data>
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>The number of preloaded tells is configured in the Privacy tab.</value>
   </data>
@@ -593,5 +599,14 @@
   </data>
   <data name="Popout_v060_HintOpenSettings" xml:space="preserve">
     <value>Open window settings</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Body" xml:space="preserve">
+    <value>You can pop out any chat tab into its own window. Click the window icon in the top right or right-click the tab. Pop-out input is now enabled by default (can be turned off under Settings → Window).</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Ack" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_OpenSettings" xml:space="preserve">
+    <value>Open Settings</value>
   </data>
 </root>
