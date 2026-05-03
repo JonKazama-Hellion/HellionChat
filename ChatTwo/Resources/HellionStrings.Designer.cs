@@ -249,6 +249,8 @@ internal class HellionStrings
     internal static string ChatColourPresets_Pastell => Get(nameof(ChatColourPresets_Pastell));
     internal static string ChatColourPresets_DarkModeTuned => Get(nameof(ChatColourPresets_DarkModeTuned));
     internal static string ChatColourPresets_Hellion => Get(nameof(ChatColourPresets_Hellion));
+    internal static string ChatColourPresets_NightBlue => Get(nameof(ChatColourPresets_NightBlue));
+    internal static string ChatColourPresets_IndigoViolet => Get(nameof(ChatColourPresets_IndigoViolet));
 
     // Hellion Chat — v0.6.0 chat colour presets section copy
     internal static string Settings_Appearance_Colours_PresetsHint => Get(nameof(Settings_Appearance_Colours_PresetsHint));

@@ -570,6 +570,12 @@
   <data name="ChatColourPresets_Hellion" xml:space="preserve">
     <value>Hellion</value>
   </data>
+  <data name="ChatColourPresets_NightBlue" xml:space="preserve">
+    <value>Night Blue</value>
+  </data>
+  <data name="ChatColourPresets_IndigoViolet" xml:space="preserve">
+    <value>Indigo Violet</value>
+  </data>
   <data name="Settings_Appearance_Colours_PresetsHint" xml:space="preserve">
     <value>Tip: presets overwrite your current channel colours immediately.</value>
   </data>

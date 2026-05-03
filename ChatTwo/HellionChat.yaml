@@ -68,11 +68,12 @@ changelog: |-
 
   Chat colour presets:
 
-  - Five built-in presets above the per-channel colour list in
+  - Seven built-in presets above the per-channel colour list in
     Settings → Appearance → Colours: ChatTwo Default, High-Contrast,
-    Pastell, Dark-Mode-Tuned, and Hellion (brand-coloured, blue/orange
+    Pastell, Dark-Mode-Tuned, Hellion (brand-coloured, blue/orange
     Arctic Cyan + Ember Glow palette from the Hellion Online Media
-    branding spec)
+    branding spec), plus two bonus mood presets — Night Blue (royal
+    blue, classic-cool) and Indigo Violet (royal violet, glitter-mystic)
   - Apply is immediate and overwrites the channels covered by the
     preset; battle-channel colours are left alone so combat tuning
     stays intact

@@ -48,6 +48,16 @@ public static class ChatColourPresets
                 LocalizationKey: "ChatColourPresets_Hellion",
                 IsBrandPreset: true,
                 Colours: BuildHellion()),
+            ["NightBlue"] = new(
+                DisplayName: "Night Blue",
+                LocalizationKey: "ChatColourPresets_NightBlue",
+                IsBrandPreset: false,
+                Colours: BuildNightBlue()),
+            ["IndigoViolet"] = new(
+                DisplayName: "Indigo Violet",
+                LocalizationKey: "ChatColourPresets_IndigoViolet",
+                IsBrandPreset: false,
+                Colours: BuildIndigoViolet()),
         };
     }
 
@@ -210,6 +220,97 @@ public static class ChatColourPresets
             [ChatType.CrossLinkshell6] = ColourUtil.ComponentsToRgba(0, 110, 130),   // Cyan-darker
             [ChatType.CrossLinkshell7] = ColourUtil.ComponentsToRgba(220, 90, 30),   // Ember-medium
             [ChatType.CrossLinkshell8] = ColourUtil.ComponentsToRgba(170, 60, 60),   // Danger-dark
+        };
+    }
+
+    // Bonus preset — Night Blue, KAZAMA-Stimmungs-Theme aus
+    // /mnt/HDD-Data1/Obsidian/Vault/Systeme/KAZAMA/Theming/Night Blue + Indigo Violet Themes.md
+    // Klassisch, kühl, technisch — Marineblau-Tiefe ohne Lila-Anteil.
+    // Bewusst NICHT als Brand-Preset markiert (Vault-Boundary): die KAZAMA-Themes
+    // sind persönliche Stimmungs-Themes, nicht Teil des Hellion-Brand-Systems.
+    private static IReadOnlyDictionary<ChatType, uint> BuildNightBlue()
+    {
+        return new Dictionary<ChatType, uint>
+        {
+            // Standard / Tell — Royal Blue Akzent-Familie
+            [ChatType.Say] = ColourUtil.ComponentsToRgba(230, 237, 247),         // text-primary
+            [ChatType.TellIncoming] = ColourUtil.ComponentsToRgba(106, 176, 255),// akzent-hot
+            [ChatType.TellOutgoing] = ColourUtil.ComponentsToRgba(74, 144, 226), // akzent-primary
+
+            // Laute Channels — Warning/Danger Status-Töne
+            [ChatType.Yell] = ColourUtil.ComponentsToRgba(255, 184, 74),         // warning
+            [ChatType.Shout] = ColourUtil.ComponentsToRgba(255, 92, 122),        // danger
+
+            // Gruppen — Success/Akzent-Variations
+            [ChatType.Party] = ColourUtil.ComponentsToRgba(61, 220, 151),        // success
+            [ChatType.Alliance] = ColourUtil.ComponentsToRgba(255, 144, 100),    // warm-orange-light
+            [ChatType.FreeCompany] = ColourUtil.ComponentsToRgba(74, 144, 226),  // akzent-primary
+            [ChatType.NoviceNetwork] = ColourUtil.ComponentsToRgba(140, 160, 191),// text-dim
+
+            // Linkshells 1-8 — über Spektrum verteilt
+            [ChatType.Linkshell1] = ColourUtil.ComponentsToRgba(255, 184, 74),
+            [ChatType.Linkshell2] = ColourUtil.ComponentsToRgba(255, 144, 100),
+            [ChatType.Linkshell3] = ColourUtil.ComponentsToRgba(255, 220, 130),
+            [ChatType.Linkshell4] = ColourUtil.ComponentsToRgba(130, 220, 100),
+            [ChatType.Linkshell5] = ColourUtil.ComponentsToRgba(61, 220, 151),
+            [ChatType.Linkshell6] = ColourUtil.ComponentsToRgba(100, 200, 220),
+            [ChatType.Linkshell7] = ColourUtil.ComponentsToRgba(106, 176, 255),
+            [ChatType.Linkshell8] = ColourUtil.ComponentsToRgba(140, 160, 191),
+
+            // CrossWorld-Linkshells — gedämpfte Variants
+            [ChatType.CrossLinkshell1] = ColourUtil.ComponentsToRgba(200, 130, 50),
+            [ChatType.CrossLinkshell2] = ColourUtil.ComponentsToRgba(220, 110, 80),
+            [ChatType.CrossLinkshell3] = ColourUtil.ComponentsToRgba(200, 180, 60),
+            [ChatType.CrossLinkshell4] = ColourUtil.ComponentsToRgba(90, 180, 80),
+            [ChatType.CrossLinkshell5] = ColourUtil.ComponentsToRgba(30, 170, 110),
+            [ChatType.CrossLinkshell6] = ColourUtil.ComponentsToRgba(50, 130, 170),
+            [ChatType.CrossLinkshell7] = ColourUtil.ComponentsToRgba(50, 110, 180),
+            [ChatType.CrossLinkshell8] = ColourUtil.ComponentsToRgba(90, 100, 130),
+        };
+    }
+
+    // Bonus preset — Indigo Violet, KAZAMA-Stimmungs-Theme aus demselben
+    // Vault-Doc. Warm-mystisch, "Galaxy/Glitter/Nordlicht" — tiefes Indigo
+    // mit kräftigem Violet-Akzent. Persönlicher Favorit (siehe Vault).
+    // Auch nicht als Brand-Preset (siehe NightBlue-Note oben).
+    private static IReadOnlyDictionary<ChatType, uint> BuildIndigoViolet()
+    {
+        return new Dictionary<ChatType, uint>
+        {
+            // Standard / Tell — Royal Violet Akzent-Familie
+            [ChatType.Say] = ColourUtil.ComponentsToRgba(240, 230, 255),         // text-primary (light lavender)
+            [ChatType.TellIncoming] = ColourUtil.ComponentsToRgba(176, 124, 255),// akzent-hot
+            [ChatType.TellOutgoing] = ColourUtil.ComponentsToRgba(139, 77, 222), // akzent-primary
+
+            // Laute Channels — geteilt mit Night Blue (Status-Farben)
+            [ChatType.Yell] = ColourUtil.ComponentsToRgba(255, 184, 74),
+            [ChatType.Shout] = ColourUtil.ComponentsToRgba(255, 92, 122),
+
+            // Gruppen
+            [ChatType.Party] = ColourUtil.ComponentsToRgba(61, 220, 151),
+            [ChatType.Alliance] = ColourUtil.ComponentsToRgba(255, 144, 100),
+            [ChatType.FreeCompany] = ColourUtil.ComponentsToRgba(139, 77, 222),  // akzent-primary
+            [ChatType.NoviceNetwork] = ColourUtil.ComponentsToRgba(168, 144, 208),// text-dim
+
+            // Linkshells 1-8
+            [ChatType.Linkshell1] = ColourUtil.ComponentsToRgba(255, 184, 74),
+            [ChatType.Linkshell2] = ColourUtil.ComponentsToRgba(255, 144, 100),
+            [ChatType.Linkshell3] = ColourUtil.ComponentsToRgba(255, 220, 130),
+            [ChatType.Linkshell4] = ColourUtil.ComponentsToRgba(200, 124, 255),
+            [ChatType.Linkshell5] = ColourUtil.ComponentsToRgba(176, 124, 255),
+            [ChatType.Linkshell6] = ColourUtil.ComponentsToRgba(139, 77, 222),
+            [ChatType.Linkshell7] = ColourUtil.ComponentsToRgba(130, 90, 200),
+            [ChatType.Linkshell8] = ColourUtil.ComponentsToRgba(168, 144, 208),
+
+            // CrossWorld-Linkshells
+            [ChatType.CrossLinkshell1] = ColourUtil.ComponentsToRgba(200, 130, 50),
+            [ChatType.CrossLinkshell2] = ColourUtil.ComponentsToRgba(220, 110, 80),
+            [ChatType.CrossLinkshell3] = ColourUtil.ComponentsToRgba(200, 180, 60),
+            [ChatType.CrossLinkshell4] = ColourUtil.ComponentsToRgba(130, 80, 180),
+            [ChatType.CrossLinkshell5] = ColourUtil.ComponentsToRgba(100, 60, 160),
+            [ChatType.CrossLinkshell6] = ColourUtil.ComponentsToRgba(91, 42, 154),
+            [ChatType.CrossLinkshell7] = ColourUtil.ComponentsToRgba(80, 50, 130),
+            [ChatType.CrossLinkshell8] = ColourUtil.ComponentsToRgba(117, 96, 160),
         };
     }
 }
