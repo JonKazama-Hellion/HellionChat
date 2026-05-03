@@ -152,19 +152,18 @@ public sealed class Plugin : IDalamudPlugin
                 });
             }
 
-            // Hellion Chat v10 → v11 — adds Tab.PopOutInputEnabled and
-            // Configuration.SeenPopOutInputHint for the v0.6.0 pop-out input
-            // feature. Lightweight migration: defaults the new fields, no
-            // user-facing notification because the change is opt-in only.
+            // Hellion Chat v10 → v11 — adds the global Configuration.PopOutInputEnabled
+            // master switch and SeenPopOutInputHint flag for the v0.6.0 pop-out
+            // input feature. Lightweight migration: defaults both fields,
+            // no user-facing notification because the change is opt-in only.
             if (Config.Version < 11)
             {
-                foreach (var tab in Config.Tabs)
-                    tab.PopOutInputEnabled = false;
+                Config.PopOutInputEnabled = false;
                 Config.SeenPopOutInputHint = false;
                 Config.Version = 11;
                 SaveConfig();
                 Log.Information(
-                    "Migrated config v10 → v11: PopOutInputEnabled added per tab (default off), " +
+                    "Migrated config v10 → v11: PopOutInputEnabled added (global, default off), " +
                     "SeenPopOutInputHint added (default false)");
             }
 

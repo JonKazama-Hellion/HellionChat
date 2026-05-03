@@ -108,6 +108,13 @@ public class Configuration : IPluginConfiguration
     // pop-out window; never reset after that.
     public bool SeenPopOutInputHint;
 
+    // Hellion Chat — v0.6.0 master switch for the pop-out input bar.
+    // Global on purpose: per-tab makes no sense for Auto-Tell-Tabs which
+    // are session-only and would force the user to re-enable it for every
+    // new conversation. Default OFF so existing users see no behavior
+    // change after the v10→v11 migration.
+    public bool PopOutInputEnabled;
+
     public int GetRetentionDays(ChatType type)
     {
         if (RetentionPerChannelDays.TryGetValue(type, out var userOverride))
@@ -303,6 +310,7 @@ public class Configuration : IPluginConfiguration
         AutoTellTabsShowGreetedToggle = other.AutoTellTabsShowGreetedToggle;
 
         SeenPopOutInputHint = other.SeenPopOutInputHint;
+        PopOutInputEnabled = other.PopOutInputEnabled;
     }
 }
 
@@ -350,10 +358,6 @@ public class Tab
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
     public bool PopOut;
-    // Hellion Chat — v0.6.0 opt-in input bar inside the pop-out window for
-    // this tab. Independent text buffer and channel state per pop-out;
-    // history is shared with the main window via InputHistoryService.
-    public bool PopOutInputEnabled;
     public bool IndependentOpacity;
     public float Opacity = 100f;
     public bool InputDisabled;
@@ -434,7 +438,6 @@ public class Tab
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,
             PopOut = PopOut,
-            PopOutInputEnabled = PopOutInputEnabled,
             IndependentOpacity = IndependentOpacity,
             Opacity = Opacity,
             Identifier = Identifier,

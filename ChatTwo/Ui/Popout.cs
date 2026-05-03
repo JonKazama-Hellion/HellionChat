@@ -107,9 +107,9 @@ internal class Popout : Window
 
         // v0.6.0 — pop-out optional input bar. Reserve height first so the
         // message log draws into the right region; only shown when the
-        // per-tab toggle is on. Toggle-OFF resets InputBar so the next
-        // toggle-ON gives a fresh buffer (no stale text persists).
-        var inputEnabled = Tab.PopOutInputEnabled;
+        // global master switch is on. Toggle-OFF resets InputBar so the
+        // next toggle-ON gives a fresh buffer (no stale text persists).
+        var inputEnabled = Plugin.Config.PopOutInputEnabled;
         if (!inputEnabled && InputBar != null)
         {
             InputBar = null;
@@ -145,7 +145,7 @@ internal class Popout : Window
             return 0f;
 
         // Inline strings — i18n keys follow in Task 29 (Phase E).
-        const string hintText = "Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Pro Tab in den Tab-Settings aktivieren.";
+        const string hintText = "Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Master-Switch in den Fenster-Settings aktivieren.";
         const string ackLabel = "Verstanden";
         const string openLabel = "Tab-Settings öffnen";
 
