@@ -1583,8 +1583,9 @@ public sealed class ChatLogWindow : Window
 
     // Hellion Chat v0.6.1 — height the v0.6.1 hint banner consumed in the
     // current frame, read by GetRemainingHeightForMessageLog so the message
-    // log can shrink. Reset to 0 each frame; positive only when the banner
-    // actually rendered.
+    // log can shrink. Unconditionally reassigned at the top of DrawChatLog
+    // (before any tab-area render) so the value is always in sync with the
+    // current frame. Returns 0 once the banner is dismissed.
     private float _v061HintBannerHeight;
 
     // v0.6.0 — live enumeration of all active Popout windows so the
