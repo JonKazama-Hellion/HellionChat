@@ -1,7 +1,12 @@
 # Context Menu IPC Integration
 
 If you want to display custom menu items in the chat context menu, you can use
-Chat 2's IPC.
+Hellion Chat's IPC.
+
+> **Migrating from Chat 2:** the channel-name prefix changed from `ChatTwo.*` to
+> `HellionChat.*` in v1.0.0. If you previously bound to `ChatTwo.Register` etc.,
+> rename to `HellionChat.Register` etc. Tuple shapes and call semantics are
+> unchanged.
 
 Here's an example.
 
@@ -14,7 +19,7 @@ public class ContextMenuIntegration {
     // when your plugin is unloaded.
     private ICallGateSubscriber<string, object?> Unregister { get; }
     // You should subscribe to this event in order to receive a notification
-    // when Chat 2 is loaded or updated, so you can re-register.
+    // when Hellion Chat is loaded or updated, so you can re-register.
     private ICallGateSubscriber<object?> Available { get; }
     // Subscribe to this to draw your custom context menu items.
     private ICallGateSubscriber<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?> Invoke { get; }
@@ -22,18 +27,18 @@ public class ContextMenuIntegration {
     // The registration ID.
     private string? _id;
 
-    public ChatTwoIpc(DalamudPluginInterface @interface) {
-        this.Register = @interface.GetIpcSubscriber<string>("ChatTwo.Register");
-        this.Unregister = @interface.GetIpcSubscriber<string, object?>("ChatTwo.Unregister");
-        this.Invoke = @interface.GetIpcSubscriber<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("ChatTwo.Invoke");
-        this.Available = @interface.GetIpcSubscriber<object?>("ChatTwo.Available");
+    public HellionChatIpc(DalamudPluginInterface @interface) {
+        this.Register = @interface.GetIpcSubscriber<string>("HellionChat.Register");
+        this.Unregister = @interface.GetIpcSubscriber<string, object?>("HellionChat.Unregister");
+        this.Invoke = @interface.GetIpcSubscriber<string, PlayerPayload?, ulong, Payload?, SeString?, SeString?, object?>("HellionChat.Invoke");
+        this.Available = @interface.GetIpcSubscriber<object?>("HellionChat.Available");
     }
 
     public void Enable() {
-        // When Chat 2 becomes available (if it loads after this plugin) or when
-        // Chat 2 is updated, register automatically.
+        // When Hellion Chat becomes available (if it loads after this plugin) or
+        // when Hellion Chat is updated, register automatically.
         this.Available.Subscribe(() => this.Register());
-        // Register if Chat 2 is already loaded.
+        // Register if Hellion Chat is already loaded.
         this.Register();
 
         // Listen for context menu events.
@@ -75,36 +80,37 @@ public class ContextMenuIntegration {
 
 # Typing State IPC
 
-If you need to know whether the player is currently interacting with Chat 2's
-input box, subscribe to the typing IPC.
-- `ChatTwo.GetChatInputState`: call this function to retrieve the current state.
-- `ChatTwo.ChatInputStateChanged`: subscribe to this event to receive updates
+If you need to know whether the player is currently interacting with Hellion
+Chat's input box, subscribe to the typing IPC.
+- `HellionChat.GetChatInputState`: call this function to retrieve the current state.
+- `HellionChat.ChatInputStateChanged`: subscribe to this event to receive updates
   whenever the state changes (and once immediately after subscribing).
 Both IPC endpoints use the same tuple payload:
 ```
 (bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)
 ```
-- `InputVisible`: `true` when Chat 2 is not hidden by user/cutscene/battle
+- `InputVisible`: `true` when Hellion Chat is not hidden by user/cutscene/battle
   settings.
-- `InputFocused`: `true` while the Chat 2 input box currently has keyboard focus.
+- `InputFocused`: `true` while the Hellion Chat input box currently has keyboard
+  focus.
 - `HasText`: `true` when the input buffer contains more than whitespace.
 - `IsTyping`: convenience flag (`InputFocused && HasText`).
 - `TextLength`: length of the raw input buffer.
-- `ChannelType`: the `ChatTwo.Code.ChatType` representing the channel/mode that
-  will be used if the buffer is submitted. This value comes from the current
-  tab's `UsedChannel` (`ChatTwo/Configuration.cs`) which the plugin keeps in
-  sync by hooking the in-game shell (`ChatTwo/GameFunctions/Chat.cs`) and by
-  resolving temporary overrides inside the chat UI
-  (`ChatTwo/Ui/ChatLogWindow.cs:597`). `InputChannel` values are converted into
-  the exported `ChatType` via `ChatTwo/Code/InputChannelExt.ToChatType`.
+- `ChannelType`: the `HellionChat.Code.ChatType` representing the channel/mode
+  that will be used if the buffer is submitted. This value comes from the
+  current tab's `UsedChannel` (`HellionChat/Configuration.cs`) which the plugin
+  keeps in sync by hooking the in-game shell (`HellionChat/GameFunctions/Chat.cs`)
+  and by resolving temporary overrides inside the chat UI
+  (`HellionChat/Ui/ChatLogWindow.cs:597`). `InputChannel` values are converted
+  into the exported `ChatType` via `HellionChat/Code/InputChannelExt.ToChatType`.
 Example usage:
 ```cs
 public sealed class TypingIntegration {
     private ICallGateSubscriber<(bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)> GetChatInputState { get; }
     private ICallGateSubscriber<(bool InputVisible, bool InputFocused, bool HasText, bool IsTyping, int TextLength, ChatType ChannelType)> ChatInputStateChanged { get; }
     public TypingIntegration(DalamudPluginInterface @interface) {
-        this.GetChatInputState = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("ChatTwo.GetChatInputState");
-        this.ChatInputStateChanged = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("ChatTwo.ChatInputStateChanged");
+        this.GetChatInputState = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("HellionChat.GetChatInputState");
+        this.ChatInputStateChanged = @interface.GetIpcSubscriber<(bool, bool, bool, bool, int, ChatType)>("HellionChat.ChatInputStateChanged");
     }
     public void Enable() {
         this.ChatInputStateChanged.Subscribe(OnChatInputStateChanged);
