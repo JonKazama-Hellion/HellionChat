@@ -31,6 +31,10 @@ description: |-
     so Hellion Chat does not share state with the upstream plugin
 
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
+
+  Modding & support: join the Hellion Forge Discord at
+  https://discord.gg/X9V7Kcv5gR — community for Hellion Chat and
+  other Hellion Online Media plugins/tools.
 repo_url: https://github.com/JonKazama-Hellion/HellionChat
 accepts_feedback: true
 icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/icon.png
@@ -44,6 +48,26 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.6.1 — Pop-Out Discoverability & /tell Auto-Pop-Out**
+
+  - Pop-out button now visible in the chat header (no more hunting
+    through the right-click menu)
+  - One-time hint banner explains pop-out tabs and the right-click
+    shortcut
+  - New setting: open new /tell tabs directly as pop-out windows
+    (Settings → Chat → Auto-Tell-Tabs)
+  - Pop-out input is now enabled by default — closing a pop-out still
+    returns the tab to the sidebar
+  - Bugfix: dropping or logging out with an LRU/popped auto-tell tab
+    now also closes its pop-out window (no more ghost windows)
+  - Bugfix: dead zone below the chat input bar when the v0.6.0 pop-out
+    hint banner was visible (also fixed retroactively for the v0.6.0
+    banner inside pop-outs)
+
+  Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.6.0 — UX Polish: Pop-Out Input + Colour Presets**
 
   Two opt-in UX features land in the same release. Existing users see
@@ -114,26 +138,6 @@ changelog: |-
   encoded byte buffer length via GetByteCount before pointer
   arithmetic. Single-fix patch on top of v0.5.2.
 
-  **Hellion Chat 0.5.2 — Bugfix patch**
-
-  Auto-Tell-Tabs history-separator landed below the live tell instead
-  of above (preload now excludes the trigger message). Plugin icon
-  packaging fixed by removing a stale DalamudPackager.targets override
-  that conflicted with the SDK 15 default. Default config aligned to
-  the maintainer's daily driver: HellionThemeWindowOpacity 0.5,
-  Use24HourClock true, Gruppe tab no longer auto-routes /party. Two
-  earlier CodeQL findings closed (workflow permissions, empty-input
-  pointer arithmetic).
-
-  **Hellion Chat 0.5.1 — Backlog Sweep**
-
-  Pure hardening and polish. Eight backlog items from the v0.5.0
-  codebase review collected into one patch: cleanup-preview-stale
-  detection, greeted-tab dim background, Performance HelpMarker
-  consistency, Tabs/Database tab names from HellionStrings,
-  FontChooser framework-thread marshalling, async-void on
-  EmoteCache.LoadData, parameterised SQL via BindIntList helper.
-
   ---
 
-  Earlier history at https://github.com/JonKazama-Hellion/HellionChat/releases.
+  Earlier history: https://github.com/JonKazama-Hellion/HellionChat/releases

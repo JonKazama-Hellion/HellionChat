@@ -32,9 +32,12 @@ that document:
 
 ## Quick questions and casual feedback
 
-Discord DM `@j.j_kazama`. Bug reports still go through the issue
-tracker so they can be tracked, but a quick "is this a bug or am I
-holding it wrong" message is fine.
+- **Hellion Forge Discord** — community for HellionChat and other
+  Hellion Online Media plugins/tools: https://discord.gg/X9V7Kcv5gR
+- Discord DM `@j.j_kazama`
+
+Bug reports still go through the issue tracker so they can be tracked,
+but a quick "is this a bug or am I holding it wrong" message is fine.
 
 ## Upstream Chat 2 issues
 
