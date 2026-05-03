@@ -347,14 +347,12 @@ public sealed class ChatLogWindow : Window
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
             height -= Plugin.InputPreview.PreviewHeight;
 
-        // Hellion Chat v0.6.1 — subtract the chat header toolbar (single icon
-        // button) from the message-log height budget so the bottom of the log
-        // does not get clipped by the new toolbar row.
-        height -= ImGui.GetFrameHeightWithSpacing();
-
-        // Hellion Chat v0.6.1 — der Hint-Banner verbraucht Höhe wenn sichtbar
-        // (0 wenn dismissed). Field wird in DrawChatLog vor Tab-Render gesetzt.
-        height -= _v061HintBannerHeight;
+        // Hellion Chat v0.6.1 — kein expliziter Abzug mehr für die Header-
+        // Toolbar (Task 7) und den Hint-Banner (Task 8): beide rendern VOR
+        // diesem Aufruf, daher ist GetContentRegionAvail().Y oben bereits um
+        // ihre verbrauchte Höhe reduziert. Der vorherige doppelte Subtrahier
+        // hat unter dem Eingabefeld eine tote Zone von Toolbar+Banner-Höhe
+        // erzeugt sobald der Banner sichtbar war.
 
         return height;
     }
