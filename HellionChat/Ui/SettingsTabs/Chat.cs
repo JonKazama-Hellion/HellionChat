@@ -169,6 +169,13 @@ internal sealed class Chat : ISettingsTab
             using (Plugin.FontManager.FontAwesome.Push())
                 ImGui.Button(FontAwesomeIcon.Plus.ToIconString(), new Vector2(buttonWidth, 0));
 
+            // Open the selector popup on left-click; SelectorPopup uses
+            // ImRaii.ContextPopupItem internally which only opens on right-
+            // click otherwise — without this OpenPopup the button looked
+            // active but the popup never appeared on a normal click.
+            if (ImGui.IsItemClicked())
+                ImGui.OpenPopup("WordAddPopup");
+
             if (SearchSelector.SelectorPopup("WordAddPopup", out var newWord, WordPopupOptions))
             {
                 Mutable.BlockedEmotes.Add(newWord);

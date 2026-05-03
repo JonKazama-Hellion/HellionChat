@@ -84,7 +84,11 @@ public static class SearchSelector
             foreach (var i in clipper.Rows)
             {
                 var searched = FilteredSearchSheet[i];
-                using var pushedId = ImRaii.PushId(id);
+                // Mix the row index into the ImGui ID so each Selectable in
+                // the loop has a distinct ID — using the same id for every
+                // row collapsed all rows to a single ID-stack entry and made
+                // selection ambiguous.
+                using var pushedId = ImRaii.PushId($"{id}##{i}");
                 if (!drawSelectable(searched, options.IsSelected(searched)))
                     continue;
 
