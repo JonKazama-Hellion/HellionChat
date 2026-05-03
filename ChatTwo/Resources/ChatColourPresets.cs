@@ -165,39 +165,51 @@ public static class ChatColourPresets
         };
     }
 
-    // Hellion brand preset — blau-violetter Akzent passend zum
-    // Event-Horizon-Theme. Source-of-Truth für Brand-Farben dokumentiert
-    // im Vault unter Systeme/KAZAMA. Bei Theme-Updates hier mit-anpassen
-    // und ein Plugin-Release rausgeben.
+    // Hellion brand preset — Arctic Cyan + Ember Orange palette aus
+    // /mnt/ssd-fast/Projekte/hellion-media/hellion-media-website/BRANDING.md
+    // (Schema-Stand 2026-04-16). Channels sind über das ganze Brand-Spektrum
+    // verteilt damit jede Zeile auf einen Glance unterscheidbar ist:
+    // Cyan-Familie für Standard/Tell, Ember + Warning für laute Channels,
+    // Status-Farben (Success, Danger) für Linkshells. CrossLinkshells
+    // nutzen die dunkleren/sattersten Varianten derselben Hue-Familien.
     private static IReadOnlyDictionary<ChatType, uint> BuildHellion()
     {
         return new Dictionary<ChatType, uint>
         {
-            [ChatType.Say] = ColourUtil.ComponentsToRgba(224, 224, 248),
-            [ChatType.Yell] = ColourUtil.ComponentsToRgba(200, 168, 255),
-            [ChatType.Shout] = ColourUtil.ComponentsToRgba(160, 128, 255),
-            [ChatType.TellIncoming] = ColourUtil.ComponentsToRgba(255, 160, 232),
-            [ChatType.TellOutgoing] = ColourUtil.ComponentsToRgba(255, 160, 232),
-            [ChatType.Party] = ColourUtil.ComponentsToRgba(128, 176, 255),
-            [ChatType.Alliance] = ColourUtil.ComponentsToRgba(192, 144, 255),
-            [ChatType.FreeCompany] = ColourUtil.ComponentsToRgba(96, 144, 255),
-            [ChatType.NoviceNetwork] = ColourUtil.ComponentsToRgba(176, 224, 255),
-            [ChatType.Linkshell1] = ColourUtil.ComponentsToRgba(192, 160, 255),
-            [ChatType.Linkshell2] = ColourUtil.ComponentsToRgba(160, 160, 255),
-            [ChatType.Linkshell3] = ColourUtil.ComponentsToRgba(128, 160, 255),
-            [ChatType.Linkshell4] = ColourUtil.ComponentsToRgba(128, 192, 255),
-            [ChatType.Linkshell5] = ColourUtil.ComponentsToRgba(128, 224, 255),
-            [ChatType.Linkshell6] = ColourUtil.ComponentsToRgba(160, 224, 255),
-            [ChatType.Linkshell7] = ColourUtil.ComponentsToRgba(192, 224, 255),
-            [ChatType.Linkshell8] = ColourUtil.ComponentsToRgba(224, 192, 255),
-            [ChatType.CrossLinkshell1] = ColourUtil.ComponentsToRgba(176, 128, 255),
-            [ChatType.CrossLinkshell2] = ColourUtil.ComponentsToRgba(144, 128, 255),
-            [ChatType.CrossLinkshell3] = ColourUtil.ComponentsToRgba(128, 128, 255),
-            [ChatType.CrossLinkshell4] = ColourUtil.ComponentsToRgba(128, 160, 255),
-            [ChatType.CrossLinkshell5] = ColourUtil.ComponentsToRgba(128, 192, 255),
-            [ChatType.CrossLinkshell6] = ColourUtil.ComponentsToRgba(160, 192, 255),
-            [ChatType.CrossLinkshell7] = ColourUtil.ComponentsToRgba(192, 160, 255),
-            [ChatType.CrossLinkshell8] = ColourUtil.ComponentsToRgba(224, 160, 255),
+            // Standard / Tell — Cyan-Familie (Brand-Primary)
+            [ChatType.Say] = ColourUtil.ComponentsToRgba(77, 217, 232),         // Cyan-light #4DD9E8
+            [ChatType.TellIncoming] = ColourUtil.ComponentsToRgba(0, 190, 210), // Brand Cyan #00BED2
+            [ChatType.TellOutgoing] = ColourUtil.ComponentsToRgba(0, 151, 167), // Cyan-dark #0097A7
+
+            // Laute Channels — Ember/Warning
+            [ChatType.Yell] = ColourUtil.ComponentsToRgba(240, 173, 78),    // Warning #F0AD4E
+            [ChatType.Shout] = ColourUtil.ComponentsToRgba(249, 115, 22),   // Brand Ember #F97316
+
+            // Gruppen-Channels — Success/Ember-dark/Cyan
+            [ChatType.Party] = ColourUtil.ComponentsToRgba(92, 184, 92),         // Success #5CB85C
+            [ChatType.Alliance] = ColourUtil.ComponentsToRgba(232, 93, 4),       // Ember-dark #E85D04
+            [ChatType.FreeCompany] = ColourUtil.ComponentsToRgba(0, 190, 210),   // Brand Cyan
+            [ChatType.NoviceNetwork] = ColourUtil.ComponentsToRgba(77, 217, 232),// Cyan-light
+
+            // Linkshells 1-8 — über das ganze Brand-Spektrum verteilt
+            [ChatType.Linkshell1] = ColourUtil.ComponentsToRgba(251, 146, 60),  // Ember-light #FB923C
+            [ChatType.Linkshell2] = ColourUtil.ComponentsToRgba(240, 173, 78),  // Warning
+            [ChatType.Linkshell3] = ColourUtil.ComponentsToRgba(92, 184, 92),   // Success
+            [ChatType.Linkshell4] = ColourUtil.ComponentsToRgba(77, 217, 232),  // Cyan-light
+            [ChatType.Linkshell5] = ColourUtil.ComponentsToRgba(0, 190, 210),   // Brand Cyan
+            [ChatType.Linkshell6] = ColourUtil.ComponentsToRgba(0, 151, 167),   // Cyan-dark
+            [ChatType.Linkshell7] = ColourUtil.ComponentsToRgba(249, 115, 22),  // Brand Ember
+            [ChatType.Linkshell8] = ColourUtil.ComponentsToRgba(217, 83, 79),   // Danger #D9534F
+
+            // CrossWorld-Linkshells 1-8 — dunklere/sattersere Varianten
+            [ChatType.CrossLinkshell1] = ColourUtil.ComponentsToRgba(232, 93, 4),    // Ember-dark
+            [ChatType.CrossLinkshell2] = ColourUtil.ComponentsToRgba(200, 140, 50),  // Warning-dark
+            [ChatType.CrossLinkshell3] = ColourUtil.ComponentsToRgba(60, 140, 60),   // Success-dark
+            [ChatType.CrossLinkshell4] = ColourUtil.ComponentsToRgba(0, 190, 210),   // Brand Cyan
+            [ChatType.CrossLinkshell5] = ColourUtil.ComponentsToRgba(0, 151, 167),   // Cyan-dark
+            [ChatType.CrossLinkshell6] = ColourUtil.ComponentsToRgba(0, 110, 130),   // Cyan-darker
+            [ChatType.CrossLinkshell7] = ColourUtil.ComponentsToRgba(220, 90, 30),   // Ember-medium
+            [ChatType.CrossLinkshell8] = ColourUtil.ComponentsToRgba(170, 60, 60),   // Danger-dark
         };
     }
 }
