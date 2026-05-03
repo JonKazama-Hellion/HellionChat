@@ -601,7 +601,7 @@
     <value>Fenster-Settings öffnen</value>
   </data>
   <data name="Hint_v061_PopOutHeader_Body" xml:space="preserve">
-    <value>Du kannst jeden Chat-Tab als eigenes Fenster rauspoppen. Klick auf das Fenster-Symbol oben rechts oder mache einen Rechtsklick auf den Tab. Pop-Out-Eingabe ist jetzt standardmäßig aktiv (abschaltbar unter Einstellungen → Fenster).</value>
+    <value>Du kannst jeden Chat-Tab als eigenes Fenster öffnen. Klicke auf das Fenster-Symbol oben rechts oder rechtsklicke den Tab. Neu in v0.6.1: die Pop-Out-Eingabe ist standardmäßig aktiv (abschaltbar unter Einstellungen → Fenster).</value>
   </data>
   <data name="Hint_v061_PopOutHeader_Ack" xml:space="preserve">
     <value>Verstanden</value>

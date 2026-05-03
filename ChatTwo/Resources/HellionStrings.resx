@@ -601,7 +601,7 @@
     <value>Open window settings</value>
   </data>
   <data name="Hint_v061_PopOutHeader_Body" xml:space="preserve">
-    <value>You can pop out any chat tab into its own window. Click the window icon in the top right or right-click the tab. Pop-out input is now enabled by default (can be turned off under Settings → Window).</value>
+    <value>You can open any chat tab as its own window. Click the window icon in the top right or right-click the tab. New in v0.6.1: pop-out input is enabled by default (can be turned off under Settings → Window).</value>
   </data>
   <data name="Hint_v061_PopOutHeader_Ack" xml:space="preserve">
     <value>Got it</value>
