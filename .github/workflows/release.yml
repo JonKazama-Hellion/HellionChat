@@ -16,6 +16,16 @@ on:
   push:
     tags:
       - 'v*'
+  # Manual recovery trigger. Use when a tag was pushed but the auto-run
+  # was missed or failed: `gh workflow run release.yml -f tag=v0.6.1`.
+  # The tag input is validated against the same semver regex as the
+  # auto-trigger before any string interpolation happens.
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to (re)release, e.g. v0.6.1'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -27,8 +37,14 @@ jobs:
     timeout-minutes: 20
 
     steps:
+      # On push:tags, github.ref_name is the tag — checkout default works.
+      # On workflow_dispatch, ref defaults to the branch the action was
+      # invoked from; we need to explicitly check out the tag the user
+      # supplied so the build comes from the tagged commit, not main.
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
 
       - name: Setup .NET 10
         uses: actions/setup-dotnet@v4
@@ -71,7 +87,12 @@ jobs:
       - name: Generate release body
         shell: pwsh
         env:
-          TAG_NAME: ${{ github.ref_name }}
+          # workflow_dispatch carries the user-supplied tag in inputs.tag;
+          # push:tags carries it in github.ref_name. Either way the value
+          # is treated as a PowerShell variable (env-var pass), not as
+          # inline shell text, and validated against the semver regex
+          # below before any string interpolation.
+          TAG_NAME: ${{ github.event.inputs.tag || github.ref_name }}
         run: |
           $tag = $env:TAG_NAME
           if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
@@ -112,34 +133,14 @@ jobs:
               $currentBlock = $rest.TrimEnd()
           }
 
-          $footer = @'
-
----
-
-## How to install
-
-This release is distributed via the HellionChat custom repository, not the
-Dalamud main plugin repo. To install:
-
-1. In XIVLauncher: **Settings → Experimental → Custom Plugin Repositories**
-2. Add the URL:
-   `https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json`
-3. Enable, save, then `/xlplugins` → search **Hellion Chat** → install
-
-## Project documents
-
-- [README](https://github.com/JonKazama-Hellion/HellionChat/blob/main/README.md) — features, architecture, build
-- [Privacy notice](https://github.com/JonKazama-Hellion/HellionChat/blob/main/PRIVACY.md) — what the plugin stores and sends
-- [Third-party notices](https://github.com/JonKazama-Hellion/HellionChat/blob/main/THIRD_PARTY_NOTICES.md) — dependencies and licences
-- [Security policy](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SECURITY.md) — vulnerability reporting
-- [Support](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SUPPORT.md) — bug reports, questions, contact paths
-
-## Licence
-
-[EUPL-1.2](https://github.com/JonKazama-Hellion/HellionChat/blob/main/LICENSE).
-Based on [Chat 2](https://github.com/Infiziert90/ChatTwo) by Infi and Anna,
-also EUPL-1.2.
-'@
+          # Static install / docs / licence footer is maintained as a
+          # separate file so the workflow YAML stays clean (no embedded
+          # heredoc that would have to be indented under the run-block).
+          $footerPath = ".github/release-footer.md"
+          if (-not (Test-Path $footerPath)) {
+              throw "Release footer template not found: $footerPath"
+          }
+          $footer = Get-Content -Path $footerPath -Raw
 
           $body = $currentBlock + "`n" + $footer
           $body | Out-File -FilePath release-body.md -Encoding utf8 -NoNewline
@@ -152,6 +153,11 @@ also EUPL-1.2.
       - name: Attach to GitHub release
         uses: softprops/action-gh-release@v3
         with:
+          # Explicit tag_name so the action targets the correct release in
+          # both push:tags (auto) and workflow_dispatch (manual recovery)
+          # modes. Without this, dispatch runs would default to the branch
+          # ref (main) and fail to find the release.
+          tag_name: ${{ github.event.inputs.tag || github.ref_name }}
           files: ${{ steps.locate.outputs.path }}
           body_path: release-body.md
           fail_on_unmatched_files: true

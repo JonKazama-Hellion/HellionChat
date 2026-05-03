@@ -22,6 +22,11 @@ internal class Popout : Window
     public ChatInputBar? InputBar { get; private set; }
     public bool HasFocusedInputBar => InputBar?.IsFocused ?? false;
 
+    // Hellion Chat — v0.6.1 expose just the tab identifier (not the whole Tab
+    // reference) so AutoTellTabsService.DropOldestTempTab can locate the
+    // matching pop-out window when an LRU temp tab gets evicted.
+    internal Guid TabIdentifier => Tab.Identifier;
+
     public Popout(ChatLogWindow chatLogWindow, Tab tab, int idx) : base($"{tab.Name}##popout")
     {
         ChatLogWindow = chatLogWindow;

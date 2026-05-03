@@ -167,6 +167,23 @@ public sealed class Plugin : IDalamudPlugin
                     "SeenPopOutInputHint added (default false)");
             }
 
+            // Hellion Chat v11 → v12 — flips Configuration.PopOutInputEnabled from
+            // the v0.6.0 opt-in default (false) to opt-out (true) per v0.6.1 UX
+            // polish. Hard-flip is a deliberate design call (see Spec section 5.7);
+            // users are notified via the v0.6.1 hint banner (SeenPopOutHeaderHint
+            // reset). Re-toggle after migration is preserved because this block
+            // only fires for Version < 12.
+            if (Config.Version < 12)
+            {
+                Config.PopOutInputEnabled = true;
+                Config.SeenPopOutHeaderHint = false;
+                Config.Version = 12;
+                SaveConfig();
+                Log.Information(
+                    "Migrated config v11 → v12: PopOutInputEnabled hard-flipped to true (v0.6.1 default), " +
+                    "SeenPopOutHeaderHint reset to false (v0.6.1 banner re-armed)");
+            }
+
             // Hellion default tab layout for first-run and v10-wipe.
             // General catches player chat plus active gameplay events; the
             // System tab takes the technical noise so it does not bury real

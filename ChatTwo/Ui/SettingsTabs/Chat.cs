@@ -73,6 +73,9 @@ internal sealed class Chat : ISettingsTab
             ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_Compact_Name, ref Mutable.AutoTellTabsCompactDisplay);
             ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_Compact_Description);
 
+            ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_OpenAsPopout_Name, ref Mutable.AutoTellTabsOpenAsPopout);
+            ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_OpenAsPopout_Description);
+
             ImGui.Checkbox(HellionStrings.ChatLog_AutoTellTabs_GreetedToggle_Name, ref Mutable.AutoTellTabsShowGreetedToggle);
             ImGuiUtil.HelpMarker(HellionStrings.ChatLog_AutoTellTabs_GreetedToggle_Description);
 

@@ -8,7 +8,7 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
 
-**Version 0.6.0** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.6.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
@@ -251,7 +251,7 @@ Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig 
 
 ## Projektstatus
 
-**Version 0.6.0** | Stand: 2026-05-03
+**Version 0.6.1** | Stand: 2026-05-03
 
 Alle Bootstrap-Phasen abgeschlossen:
 
@@ -280,6 +280,14 @@ Phase 3 (offen, kein festes Datum):
 - [ ] Hand-gezeichnetes Hellion-Logo (Platzhalter aus Hellion-Online-Media-Brand-Repo)
 - [ ] GitHub-Actions für reproduzierbaren Build und automatischen `repo.json`-Sync
 - [ ] Submission ans Dalamud-Main-Plugin-Repo
+
+---
+
+## Community & Support
+
+- **Hellion Forge Discord** (Modding- und Plugin-Community von Hellion Online Media): https://discord.gg/X9V7Kcv5gR
+- Bug-Reports und Feature-Requests: [GitHub Issues](https://github.com/JonKazama-Hellion/HellionChat/issues)
+- Weitere Kontaktwege (Security, Privacy, Quick-Questions): siehe [SUPPORT.md](SUPPORT.md)
 
 ---
 

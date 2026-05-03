@@ -183,6 +183,22 @@ internal sealed class AutoTellTabsService : IDisposable
             return;
         }
 
+        // v0.6.1 — if the victim is currently popped out, tear down the
+        // matching Popout window first. Otherwise the window stays in
+        // PopOutWindows + WindowSystem and renders empty / re-spawns on the
+        // next AddPopOutsToDraw tick. Latent since pop-outs were introduced;
+        // becomes visible with AutoTellTabsOpenAsPopout where dropping a
+        // popped tab is now a routine code path.
+        if (victim.Tab.PopOut)
+        {
+            var popout = _plugin.ChatLogWindow.ActivePopouts
+                .FirstOrDefault(p => p.TabIdentifier == victim.Tab.Identifier);
+            if (popout != null)
+            {
+                popout.IsOpen = false;
+            }
+        }
+
         Plugin.Config.Tabs.RemoveAt(victim.Index);
 
         // Re-anchor the active tab so the user does not silently end up on
@@ -207,6 +223,17 @@ internal sealed class AutoTellTabsService : IDisposable
         PreloadHistory(tab, partner.Name, partner.World, currentMessage.Id);
 
         tab.AddMessage(currentMessage, unread: true);
+
+        // Hellion Chat v0.6.1 — opt-in: open new /tell tabs directly as a
+        // pop-out window. Set BEFORE Tabs.Add so the next render-tick's
+        // AddPopOutsToDraw() sees PopOut=true and spawns the Popout window
+        // alongside the tab going into the list. No SaveConfig() because
+        // auto-tell tabs are IsTempTab (session-only, never persisted).
+        if (Plugin.Config.AutoTellTabsOpenAsPopout)
+        {
+            tab.PopOut = true;
+        }
+
         Plugin.Config.Tabs.Add(tab);
     }
 
@@ -354,6 +381,27 @@ internal sealed class AutoTellTabsService : IDisposable
             var lastIndex = _plugin.LastTab;
             var lastIndexValid = lastIndex >= 0 && lastIndex < Plugin.Config.Tabs.Count;
             var currentWasTempTab = lastIndexValid && Plugin.Config.Tabs[lastIndex].IsTempTab;
+
+            // v0.6.1 — symmetric to DropOldestTempTab cleanup: tear down any
+            // popped-out temp tab windows before removing the tabs themselves,
+            // otherwise PopOutWindows + WindowSystem keep ghost entries until
+            // the next plugin reload. Especially relevant once Auto-Pop-Out is
+            // enabled — every logout would otherwise leak as many ghosts as
+            // there were active /tell pop-outs.
+            var poppedTempTabIds = Plugin.Config.Tabs
+                .Where(t => t.IsTempTab && t.PopOut)
+                .Select(t => t.Identifier)
+                .ToList();
+            if (poppedTempTabIds.Count > 0)
+            {
+                var poppedSet = poppedTempTabIds.ToHashSet();
+                foreach (var popout in _plugin.ChatLogWindow.ActivePopouts
+                             .Where(p => poppedSet.Contains(p.TabIdentifier))
+                             .ToList())
+                {
+                    popout.IsOpen = false;
+                }
+            }
 
             Plugin.Config.Tabs.RemoveAll(t => t.IsTempTab);
 

@@ -179,6 +179,8 @@ internal class HellionStrings
     internal static string ChatLog_AutoTellTabs_Compact_Description => Get(nameof(ChatLog_AutoTellTabs_Compact_Description));
     internal static string ChatLog_AutoTellTabs_GreetedToggle_Name => Get(nameof(ChatLog_AutoTellTabs_GreetedToggle_Name));
     internal static string ChatLog_AutoTellTabs_GreetedToggle_Description => Get(nameof(ChatLog_AutoTellTabs_GreetedToggle_Description));
+    internal static string ChatLog_AutoTellTabs_OpenAsPopout_Name => Get(nameof(ChatLog_AutoTellTabs_OpenAsPopout_Name));
+    internal static string ChatLog_AutoTellTabs_OpenAsPopout_Description => Get(nameof(ChatLog_AutoTellTabs_OpenAsPopout_Description));
     internal static string ChatLog_AutoTellTabs_PreloadHint => Get(nameof(ChatLog_AutoTellTabs_PreloadHint));
     internal static string ChatLog_AutoTellTabs_ConflictHint => Get(nameof(ChatLog_AutoTellTabs_ConflictHint));
 
@@ -263,4 +265,9 @@ internal class HellionStrings
     internal static string Popout_v060_HintText => Get(nameof(Popout_v060_HintText));
     internal static string Popout_v060_HintAck => Get(nameof(Popout_v060_HintAck));
     internal static string Popout_v060_HintOpenSettings => Get(nameof(Popout_v060_HintOpenSettings));
+
+    // Hellion Chat — v0.6.1 pop-out header hint banner (discoverability)
+    internal static string Hint_v061_PopOutHeader_Body => Get(nameof(Hint_v061_PopOutHeader_Body));
+    internal static string Hint_v061_PopOutHeader_Ack => Get(nameof(Hint_v061_PopOutHeader_Ack));
+    internal static string Hint_v061_PopOutHeader_OpenSettings => Get(nameof(Hint_v061_PopOutHeader_OpenSettings));
 }

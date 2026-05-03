@@ -347,6 +347,14 @@ public sealed class ChatLogWindow : Window
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
             height -= Plugin.InputPreview.PreviewHeight;
 
+        // Hellion Chat v0.6.1 — Header-Toolbar rendert auf Window-Ebene über
+        // einem horizontalen Layout-Pfad und wird von GetContentRegionAvail
+        // hier drin NICHT automatisch berücksichtigt, daher expliziter Abzug.
+        // Banner dagegen rendert in DrawChatLog VOR diesem ganzen Block und
+        // ImGui zieht seine Höhe automatisch von GetContentRegionAvail ab,
+        // weil der Cursor schon weiter unten steht — kein eigener Abzug.
+        height -= ImGui.GetFrameHeightWithSpacing();
+
         return height;
     }
 
@@ -542,6 +550,12 @@ public sealed class ChatLogWindow : Window
 
         if (IsChatMode && Plugin.InputPreview.IsDrawable)
             Plugin.InputPreview.CalculatePreview();
+
+        // Hellion Chat v0.6.1 — render the one-time hint banner first so it
+        // sits above the tab area / sidebar in full window width. Stash the
+        // height for GetRemainingHeightForMessageLog so the message log
+        // shrinks accordingly while the banner is visible.
+        _v061HintBannerHeight = DrawV061HintBannerIfNeeded();
 
         if (Plugin.Config.SidebarTabView)
             DrawTabSidebar();
@@ -1295,6 +1309,7 @@ public sealed class ChatLogWindow : Window
                 TabSwitched(tab, previousTab);
 
             tab.Unread = 0;
+            DrawChatHeaderToolbar(tab);
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), hasTabSwitched);
         }
 
@@ -1427,9 +1442,83 @@ public sealed class ChatLogWindow : Window
         }
 
         if (currentTab > -1)
+        {
+            DrawChatHeaderToolbar(Plugin.Config.Tabs[currentTab]);
             DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, hasTabSwitched);
+        }
 
         Plugin.WantedTab = null;
+    }
+
+    // Hellion Chat v0.6.1 — visible pop-out trigger right above the message
+    // log so users discover the feature without having to right-click the tab.
+    // Renders only for the active tab in the main ChatLogWindow; pop-out
+    // windows have their own render path and skip this toolbar.
+    private void DrawChatHeaderToolbar(Tab tab)
+    {
+        var avail = ImGui.GetContentRegionAvail().X;
+        var iconWidth = ImGui.GetFrameHeight();
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + avail - iconWidth);
+
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.WindowRestore, tooltip: Language.ChatLog_Tabs_PopOut))
+        {
+            tab.PopOut = true;
+            Plugin.SaveConfig();
+        }
+    }
+
+    // Hellion Chat v0.6.1 — One-Time-Hint-Banner introducing the chat header
+    // pop-out toolbar button and the right-click pathway. Reuses the visual
+    // pattern from Popout.cs DrawHintBannerIfNeeded so users see a familiar
+    // dismiss-affordance. Returns the vertical space the banner consumed
+    // (0 when not shown) so the message log can shrink accordingly.
+    private float DrawV061HintBannerIfNeeded()
+    {
+        if (Plugin.Config.SeenPopOutHeaderHint)
+            return 0f;
+
+        var hintText = Resources.HellionStrings.Hint_v061_PopOutHeader_Body;
+        var ackLabel = Resources.HellionStrings.Hint_v061_PopOutHeader_Ack;
+        var openLabel = Resources.HellionStrings.Hint_v061_PopOutHeader_OpenSettings;
+
+        var startY = ImGui.GetCursorPosY();
+
+        var bg = new System.Numerics.Vector4(0.16f, 0.20f, 0.28f, 1f);
+        ImGui.PushStyleColor(ImGuiCol.ChildBg, bg);
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+
+        var dismiss = false;
+        var openSettings = false;
+        using (var child = ImRaii.Child("##v061-pop-out-header-hint", new System.Numerics.Vector2(0f, 84f), true))
+        {
+            if (child)
+            {
+                ImGui.TextWrapped(hintText);
+                if (ImGui.Button(ackLabel))
+                    dismiss = true;
+                ImGui.SameLine();
+                if (ImGui.Button(openLabel))
+                {
+                    dismiss = true;
+                    openSettings = true;
+                }
+            }
+        }
+
+        ImGui.PopStyleVar();
+        ImGui.PopStyleColor();
+        ImGui.Spacing();
+
+        if (dismiss)
+        {
+            Plugin.Config.SeenPopOutHeaderHint = true;
+            Plugin.SaveConfig();
+            Plugin.Log.Debug("v0.6.1 pop-out header hint dismissed");
+            if (openSettings)
+                Plugin.SettingsWindow.Toggle();
+        }
+
+        return ImGui.GetCursorPosY() - startY;
     }
 
     private void DrawTabContextMenu(Tab tab, int i)
@@ -1490,6 +1579,13 @@ public sealed class ChatLogWindow : Window
 
     internal readonly List<bool> PopOutDocked = [];
     internal readonly HashSet<Guid> PopOutWindows = [];
+
+    // Hellion Chat v0.6.1 — height the v0.6.1 hint banner consumed in the
+    // current frame, read by GetRemainingHeightForMessageLog so the message
+    // log can shrink. Unconditionally reassigned at the top of DrawChatLog
+    // (before any tab-area render) so the value is always in sync with the
+    // current frame. Returns 0 once the banner is dismissed.
+    private float _v061HintBannerHeight;
 
     // v0.6.0 — live enumeration of all active Popout windows so the
     // KeybindManager can find a focused ChatInputBar to forward tab-cycle

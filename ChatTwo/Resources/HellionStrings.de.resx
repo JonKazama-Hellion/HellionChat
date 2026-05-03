@@ -406,6 +406,12 @@
   <data name="ChatLog_AutoTellTabs_GreetedToggle_Description" xml:space="preserve">
     <value>Fügt neben jedem Auto-Tell-Tab einen Klick-Button hinzu, um einen Gesprächspartner als bereits begrüßt zu markieren — der Tab-Name wird dann gedimmt. Nützlich für Club-Greeter, die parallel viele Konversationen führen. Standardmäßig aus.</value>
   </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Name" xml:space="preserve">
+    <value>Neue /tell-Tabs direkt als Pop-Out öffnen</value>
+  </data>
+  <data name="ChatLog_AutoTellTabs_OpenAsPopout_Description" xml:space="preserve">
+    <value>Wenn aktiv, wird jeder neu angelegte /tell-Tab sofort als eigenes Fenster geöffnet. Beim Schließen des Fensters kehrt der Tab in die Seitenleiste zurück.</value>
+  </data>
   <data name="ChatLog_AutoTellTabs_PreloadHint" xml:space="preserve">
     <value>Die Anzahl der vorgeladenen Tells lässt sich im Datenschutz-Tab einstellen.</value>
   </data>
@@ -593,5 +599,14 @@
   </data>
   <data name="Popout_v060_HintOpenSettings" xml:space="preserve">
     <value>Fenster-Settings öffnen</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Body" xml:space="preserve">
+    <value>Du kannst jeden Chat-Tab als eigenes Fenster öffnen. Klicke auf das Fenster-Symbol oben rechts oder rechtsklicke den Tab. Neu in v0.6.1: die Pop-Out-Eingabe ist standardmäßig aktiv (abschaltbar unter Einstellungen → Fenster).</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_Ack" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="Hint_v061_PopOutHeader_OpenSettings" xml:space="preserve">
+    <value>Einstellungen öffnen</value>
   </data>
 </root>
