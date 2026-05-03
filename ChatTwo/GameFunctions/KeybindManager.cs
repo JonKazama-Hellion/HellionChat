@@ -414,13 +414,13 @@ internal unsafe class KeybindManager : IDisposable {
         if (ConfigKeybindPressed(source, Plugin.Config.ChatTabForward))
         {
             Plugin.KeyState[Plugin.Config.ChatTabForward!.Key] = false;
-            Plugin.ChatLogWindow.ChangeTabDelta(1);
+            DispatchTabDelta(1);
             return;
         }
         if (ConfigKeybindPressed(source, Plugin.Config.ChatTabBackward))
         {
             Plugin.KeyState[Plugin.Config.ChatTabBackward!.Key] = false;
-            Plugin.ChatLogWindow.ChangeTabDelta(-1);
+            DispatchTabDelta(-1);
             return;
         }
 
@@ -463,6 +463,15 @@ internal unsafe class KeybindManager : IDisposable {
         {
             Plugin.Log.Error(ex, "Error in chat Activated event");
         }
+    }
+
+    // v0.6.0 — central dispatch for ChatTabForward/Backward so Task 25
+    // can extend it with focus-aware routing to pop-out ChatInputBars.
+    // Right now both windows share the main ChatLogWindow.ChangeTabDelta,
+    // identical to v0.5.x behavior.
+    private void DispatchTabDelta(int delta)
+    {
+        Plugin.ChatLogWindow.ChangeTabDelta(delta);
     }
 
     private static Keybind GetKeybind(string id)
