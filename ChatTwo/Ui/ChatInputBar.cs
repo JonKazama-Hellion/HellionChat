@@ -41,11 +41,17 @@ public sealed class ChatInputBar
 
     // Compact rendering for pop-out windows.
     //
-    // Layout A (klassisch): Channel-Icon-Button links (Background-Farbe
-    // aus ChatColours), Text-Input mittig, Auto-Translate-Icon-Button
-    // rechts. Channel-Switch wirkt via Plugin.Functions.Chat global (das
-    // ist eine FFXIV-API-Eigenschaft, kein Bug). Pro Pop-Out unabhängig
-    // bleibt aber der Text-Buffer und der History-Cursor.
+    // v0.6.0 Compact-Layout: Channel-Icon-Button links (Background-Farbe
+    // aus ChatColours), Text-Input rechts daneben. Auto-Translate-Picker
+    // ist bewusst NICHT im Compact-Mode (Spec-Abweichung Layout D → A).
+    // Rechtfertigung: das Hauptfenster-Auto-Complete-Popup ist nicht ohne
+    // grossen Refactor pro Window instanzierbar; typische Pop-Out-Use-Cases
+    // (FC-Greeter, Club-Hostess) brauchen Auto-Translate selten dort.
+    // Eigene Compact-Auto-Complete-Implementation kann ein späterer
+    // Cycle nachreichen wenn Tester-Feedback das verlangt.
+    //
+    // Channel-Switch wirkt via Plugin.Functions.Chat global (FFXIV-API).
+    // Pro Pop-Out unabhängig bleiben Text-Buffer und History-Cursor.
     public void RenderCompact()
     {
         var tab = _activeTabAccessor();
@@ -55,16 +61,13 @@ public sealed class ChatInputBar
         DrawChannelIconButton(tab);
         ImGui.SameLine();
         DrawCompactInput(tab);
-        ImGui.SameLine();
-        // Task 23 ergänzt hier den Auto-Translate-Icon-Button.
-        ImGui.TextDisabled("[at]");
     }
 
     private void DrawCompactInput(Tab tab)
     {
-        // Reserve room for the auto-translate icon button on the right.
-        const float reservedRightWidth = 32f;
-        var inputWidth = ImGui.GetContentRegionAvail().X - reservedRightWidth;
+        // Input takes the whole remaining width — no auto-translate button
+        // reserved on the right side in v0.6.0 (see RenderCompact comment).
+        var inputWidth = ImGui.GetContentRegionAvail().X;
         if (inputWidth < 60f)
             inputWidth = 60f;
 
