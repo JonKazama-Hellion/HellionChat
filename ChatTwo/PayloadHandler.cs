@@ -28,7 +28,7 @@ namespace ChatTwo;
 
 public sealed class PayloadHandler
 {
-    private const string PopupId = "chat2-context-popup";
+    private const string PopupId = "hellionchat-context-popup";
 
     private ChatLogWindow LogWindow { get; }
     private (Chunk, Payload?)? Popup { get; set; }
