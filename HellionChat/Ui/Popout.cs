@@ -80,7 +80,10 @@ internal class Popout : Window
         if (!Tab.CanResize)
             Flags |= ImGuiWindowFlags.NoResize;
 
-        if (!ChatLogWindow.PopOutDocked[Idx])
+        // Idx may point past the end if PopOutDocked was resized (e.g., a tab
+        // dropped) between the AddPopOutsToDraw() snapshot and this frame.
+        // Guard the read so we don't index into stale state.
+        if (Idx >= 0 && Idx < ChatLogWindow.PopOutDocked.Count && !ChatLogWindow.PopOutDocked[Idx])
         {
             if (Tab.IndependentOpacity)
             {
@@ -195,7 +198,8 @@ internal class Popout : Window
 
     public override void PostDraw()
     {
-        ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
+        if (Idx >= 0 && Idx < ChatLogWindow.PopOutDocked.Count)
+            ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
 
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
             StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();

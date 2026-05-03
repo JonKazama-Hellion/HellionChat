@@ -181,28 +181,39 @@ internal sealed class Tabs : ISettingsTab
 
                         ImGui.SameLine();
 
-                        var selectedWorld = worlds.FindIndex(world => world.RowId == tab.TellTarget.World);
-                        if (selectedWorld == -1)
-                            selectedWorld = 0;
-
-                        using (var combo = ImRaii.Combo("###player-world", worlds[selectedWorld].Name.ToString()))
+                        // Guard against an empty worlds list — can happen briefly
+                        // when switching characters or if the datacenter sheet
+                        // has not yet populated. Without the guard the indexed
+                        // access into worlds[selectedWorld] would crash.
+                        if (worlds.Count == 0)
                         {
-                            if (combo.Success)
+                            ImGui.TextDisabled("(no worlds available)");
+                        }
+                        else
+                        {
+                            var selectedWorld = worlds.FindIndex(world => world.RowId == tab.TellTarget.World);
+                            if (selectedWorld == -1)
+                                selectedWorld = 0;
+
+                            using (var combo = ImRaii.Combo("###player-world", worlds[selectedWorld].Name.ToString()))
                             {
-                                var lastDc = worlds.First().DataCenter.RowId;
-                                foreach (var (idx, world) in worlds.Index())
+                                if (combo.Success)
                                 {
-                                    if (ImGui.Selectable(world.Name.ToString(), selectedWorld == idx))
+                                    var lastDc = worlds.First().DataCenter.RowId;
+                                    foreach (var (idx, world) in worlds.Index())
                                     {
-                                        selectedWorld = idx;
-                                        tab.TellTarget.World = worlds[selectedWorld].RowId;
+                                        if (ImGui.Selectable(world.Name.ToString(), selectedWorld == idx))
+                                        {
+                                            selectedWorld = idx;
+                                            tab.TellTarget.World = worlds[selectedWorld].RowId;
+                                        }
+
+                                        if (lastDc == world.DataCenter.RowId)
+                                            continue;
+
+                                        lastDc = world.DataCenter.RowId;
+                                        ImGui.Separator();
                                     }
-
-                                    if (lastDc == world.DataCenter.RowId)
-                                        continue;
-
-                                    lastDc = world.DataCenter.RowId;
-                                    ImGui.Separator();
                                 }
                             }
                         }
