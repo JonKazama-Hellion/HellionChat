@@ -242,4 +242,25 @@ internal class HellionStrings
     internal static string Tabs_Presets_Beginner => Get(nameof(Tabs_Presets_Beginner));
     internal static string Tabs_Presets_Linkshell => Get(nameof(Tabs_Presets_Linkshell));
     internal static string Tabs_Presets_Linkshell_Hint => Get(nameof(Tabs_Presets_Linkshell_Hint));
+
+    // Hellion Chat — v0.6.0 chat colour presets (display labels)
+    internal static string ChatColourPresets_Default => Get(nameof(ChatColourPresets_Default));
+    internal static string ChatColourPresets_HighContrast => Get(nameof(ChatColourPresets_HighContrast));
+    internal static string ChatColourPresets_Pastell => Get(nameof(ChatColourPresets_Pastell));
+    internal static string ChatColourPresets_DarkModeTuned => Get(nameof(ChatColourPresets_DarkModeTuned));
+    internal static string ChatColourPresets_Hellion => Get(nameof(ChatColourPresets_Hellion));
+    internal static string ChatColourPresets_NightBlue => Get(nameof(ChatColourPresets_NightBlue));
+    internal static string ChatColourPresets_IndigoViolet => Get(nameof(ChatColourPresets_IndigoViolet));
+
+    // Hellion Chat — v0.6.0 chat colour presets section copy
+    internal static string Settings_Appearance_Colours_PresetsHint => Get(nameof(Settings_Appearance_Colours_PresetsHint));
+
+    // Hellion Chat — v0.6.0 pop-out input master switch
+    internal static string Settings_Window_PopOutInputEnabled_Name => Get(nameof(Settings_Window_PopOutInputEnabled_Name));
+    internal static string Settings_Window_PopOutInputEnabled_Description => Get(nameof(Settings_Window_PopOutInputEnabled_Description));
+
+    // Hellion Chat — v0.6.0 one-time hint banner shown inside pop-outs
+    internal static string Popout_v060_HintText => Get(nameof(Popout_v060_HintText));
+    internal static string Popout_v060_HintAck => Get(nameof(Popout_v060_HintAck));
+    internal static string Popout_v060_HintOpenSettings => Get(nameof(Popout_v060_HintOpenSettings));
 }

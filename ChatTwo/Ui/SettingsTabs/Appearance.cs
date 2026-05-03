@@ -230,6 +230,12 @@ internal sealed class Appearance : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
+            DrawColourPresetButtons();
+            ImGui.TextDisabled(HellionStrings.Settings_Appearance_Colours_PresetsHint);
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
             foreach (var (_, types) in ChatTypeExt.SortOrder)
             {
                 foreach (var type in types)
@@ -261,6 +267,63 @@ internal sealed class Appearance : ISettingsTab
 
             ImGui.Spacing();
         }
+    }
+
+    // Hellion Chat — v0.6.0 preset-buttons row above the per-channel colour
+    // editors. Apply is immediate and overwrites every channel covered by
+    // the preset; channels not in the preset keep their current colour.
+    private void DrawColourPresetButtons()
+    {
+        var first = true;
+        foreach (var (_, preset) in ChatColourPresets.All)
+        {
+            if (!first)
+            {
+                ImGui.SameLine();
+            }
+            first = false;
+
+            if (preset.IsBrandPreset)
+            {
+                // Hellion-Brand visuell hervorheben — blau-violetter Frame-Akzent
+                var border = ColourUtil.RgbaToVector3(ColourUtil.ComponentsToRgba(255, 128, 200));
+                var btn = ColourUtil.RgbaToVector3(ColourUtil.ComponentsToRgba(74, 42, 106));
+                ImGui.PushStyleColor(ImGuiCol.Border, new System.Numerics.Vector4(border.X, border.Y, border.Z, 1f));
+                ImGui.PushStyleColor(ImGuiCol.Button, new System.Numerics.Vector4(btn.X, btn.Y, btn.Z, 1f));
+                ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1.5f);
+            }
+
+            if (ImGui.Button(GetPresetLabel(preset)))
+            {
+                ApplyPreset(preset);
+            }
+
+            if (preset.IsBrandPreset)
+            {
+                ImGui.PopStyleVar();
+                ImGui.PopStyleColor(2);
+            }
+        }
+    }
+
+    // Localized label for a preset; falls back to DisplayName if the i18n
+    // key is missing (defensive — the resource manager returns the key
+    // string itself when a lookup fails).
+    private static string GetPresetLabel(ChatColourPreset preset)
+    {
+        var localized = HellionStrings.ResourceManager.GetString(preset.LocalizationKey, HellionStrings.Culture);
+        return string.IsNullOrEmpty(localized) ? preset.DisplayName : localized;
+    }
+
+    private void ApplyPreset(ChatColourPreset preset)
+    {
+        foreach (var (channel, colour) in preset.Colours)
+        {
+            Mutable.ChatColours[channel] = colour;
+        }
+        Plugin.SaveConfig();
+        GlobalParametersCache.Refresh();
+        Plugin.Log.Debug($"Applied chat colour preset: {preset.DisplayName}");
     }
 
     private void DrawTimestampsSection()

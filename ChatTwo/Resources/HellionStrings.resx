@@ -555,4 +555,43 @@
   <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
     <value>If you use multiple linkshells, the maintainer recommends one tab per shell for cleaner readability. Duplicate this tab and narrow the channel selection per copy.</value>
   </data>
+  <data name="ChatColourPresets_Default" xml:space="preserve">
+    <value>ChatTwo Default</value>
+  </data>
+  <data name="ChatColourPresets_HighContrast" xml:space="preserve">
+    <value>High-Contrast</value>
+  </data>
+  <data name="ChatColourPresets_Pastell" xml:space="preserve">
+    <value>Pastell</value>
+  </data>
+  <data name="ChatColourPresets_DarkModeTuned" xml:space="preserve">
+    <value>Dark-Mode-Tuned</value>
+  </data>
+  <data name="ChatColourPresets_Hellion" xml:space="preserve">
+    <value>Hellion</value>
+  </data>
+  <data name="ChatColourPresets_NightBlue" xml:space="preserve">
+    <value>Night Blue</value>
+  </data>
+  <data name="ChatColourPresets_IndigoViolet" xml:space="preserve">
+    <value>Indigo Violet</value>
+  </data>
+  <data name="Settings_Appearance_Colours_PresetsHint" xml:space="preserve">
+    <value>Tip: presets overwrite your current channel colours immediately.</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Name" xml:space="preserve">
+    <value>Enable input in pop-outs</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Description" xml:space="preserve">
+    <value>Master switch: lets you type and send messages directly inside every pop-out window (including auto-tell tabs). Channel changes inside a pop-out apply globally just like in the main window; the text buffer and history cursor stay independent per pop-out.</value>
+  </data>
+  <data name="Popout_v060_HintText" xml:space="preserve">
+    <value>New in v0.6.0: you can type directly inside pop-out windows. Toggle the master switch in the window settings to enable it.</value>
+  </data>
+  <data name="Popout_v060_HintAck" xml:space="preserve">
+    <value>Got it</value>
+  </data>
+  <data name="Popout_v060_HintOpenSettings" xml:space="preserve">
+    <value>Open window settings</value>
+  </data>
 </root>

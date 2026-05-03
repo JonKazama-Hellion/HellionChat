@@ -15,6 +15,13 @@ internal class Popout : Window
     private long FrameTime; // set every frame
     private long LastActivityTime = Environment.TickCount64;
 
+    // v0.6.0 — optional input bar inside the pop-out window. Lazy-allocated
+    // when the user enables Tab.PopOutInputEnabled and torn down when the
+    // toggle is turned off (independent text buffer is intentionally
+    // discarded — see v0.6.0 spec edge-case P1).
+    public ChatInputBar? InputBar { get; private set; }
+    public bool HasFocusedInputBar => InputBar?.IsFocused ?? false;
+
     public Popout(ChatLogWindow chatLogWindow, Tab tab, int idx) : base($"{tab.Name}##popout")
     {
         ChatLogWindow = chatLogWindow;
@@ -93,11 +100,92 @@ internal class Popout : Window
             ImGui.Separator();
         }
 
+        // v0.6.0 — one-time hint banner explaining the new pop-out input
+        // feature. Shown once per user; "Got it" or "Open settings"
+        // dismisses it and persists the flag.
+        var hintBannerHeight = DrawHintBannerIfNeeded();
+
+        // v0.6.0 — pop-out optional input bar. Reserve height first so the
+        // message log draws into the right region; only shown when the
+        // global master switch is on. Toggle-OFF resets InputBar so the
+        // next toggle-ON gives a fresh buffer (no stale text persists).
+        var inputEnabled = Plugin.Config.PopOutInputEnabled;
+        if (!inputEnabled && InputBar != null)
+        {
+            InputBar = null;
+        }
+        if (inputEnabled)
+        {
+            InputBar ??= new ChatInputBar(ChatLogWindow.Plugin, ChatLogWindow, () => Tab);
+        }
+
+        var inputBarHeight = inputEnabled
+            ? ImGui.GetFrameHeightWithSpacing() + ImGui.GetStyle().ItemSpacing.Y
+            : 0f;
+
         var handler = ChatLogWindow.HandlerLender.Borrow();
-        ChatLogWindow.DrawMessageLog(Tab, handler, ImGui.GetContentRegionAvail().Y, false);
+        var logHeight = ImGui.GetContentRegionAvail().Y - inputBarHeight - hintBannerHeight;
+        ChatLogWindow.DrawMessageLog(Tab, handler, logHeight, false);
+
+        if (inputEnabled && InputBar != null)
+        {
+            ImGui.Separator();
+            InputBar.RenderCompact();
+        }
 
         if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
             LastActivityTime = FrameTime;
+    }
+
+    // Returns the vertical space the banner consumed (0 when not shown)
+    // so the message log can shrink accordingly.
+    private float DrawHintBannerIfNeeded()
+    {
+        if (Plugin.Config.SeenPopOutInputHint)
+            return 0f;
+
+        var hintText = Resources.HellionStrings.Popout_v060_HintText;
+        var ackLabel = Resources.HellionStrings.Popout_v060_HintAck;
+        var openLabel = Resources.HellionStrings.Popout_v060_HintOpenSettings;
+
+        var startY = ImGui.GetCursorPosY();
+
+        var bg = new System.Numerics.Vector4(0.16f, 0.20f, 0.28f, 1f);
+        ImGui.PushStyleColor(ImGuiCol.ChildBg, bg);
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+
+        var dismiss = false;
+        var openSettings = false;
+        using (var child = ImRaii.Child("##v060-pop-out-hint", new System.Numerics.Vector2(0f, 64f), true))
+        {
+            if (child)
+            {
+                ImGui.TextWrapped(hintText);
+                if (ImGui.Button(ackLabel))
+                    dismiss = true;
+                ImGui.SameLine();
+                if (ImGui.Button(openLabel))
+                {
+                    dismiss = true;
+                    openSettings = true;
+                }
+            }
+        }
+
+        ImGui.PopStyleVar();
+        ImGui.PopStyleColor();
+        ImGui.Spacing();
+
+        if (dismiss)
+        {
+            Plugin.Config.SeenPopOutInputHint = true;
+            ChatLogWindow.Plugin.SaveConfig();
+            Plugin.Log.Debug("Pop-Out input hint dismissed");
+            if (openSettings)
+                ChatLogWindow.Plugin.SettingsWindow.Toggle();
+        }
+
+        return ImGui.GetCursorPosY() - startY;
     }
 
     public override void PostDraw()
