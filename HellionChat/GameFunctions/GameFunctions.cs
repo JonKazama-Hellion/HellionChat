@@ -249,9 +249,15 @@ internal unsafe class GameFunctions : IDisposable
 
     private nint ResolveTextCommandPlaceholderDetour(nint a1, byte* placeholderText, byte a3, byte a4)
     {
+        // The detour is only invoked through the hook, so the hook should
+        // never be null here, but the nullable field declaration forces us
+        // to handle the theoretical race during teardown.
+        if (ResolveTextCommandPlaceholderHook is null)
+            return nint.Zero;
+
         var placeholder = MemoryHelper.ReadStringNullTerminated((nint) placeholderText);
         if (ReplacementName == null || placeholder != Placeholder)
-            return ResolveTextCommandPlaceholderHook!.Original(a1, placeholderText, a3, a4);
+            return ResolveTextCommandPlaceholderHook.Original(a1, placeholderText, a3, a4);
 
         MemoryHelper.WriteString(PlaceholderNamePtr, ReplacementName);
         ReplacementName = null;

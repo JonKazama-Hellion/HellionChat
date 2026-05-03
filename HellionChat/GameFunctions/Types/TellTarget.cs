@@ -30,6 +30,9 @@ public class TellTarget
 
     public unsafe void FromTarget(IPlayerCharacter target)
     {
+        if (target.Address == nint.Zero)
+            return;
+
         Name = target.Name.TextValue;
         World = target.HomeWorld.RowId;
         ContentId = ((Character*)target.Address)->ContentId;
