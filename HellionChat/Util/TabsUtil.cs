@@ -14,48 +14,20 @@ public static class TabsUtil
         return channels;
     }
 
-    // Hellion-tuned General preset. The pure player-talk catch-all plus
-    // the active-gameplay event streams (loot, crafting, gathering, NPC
-    // dialogue, party-finder pings). Pure technical noise (System, Error,
-    // Login/Logout spam, retainer sales, alarms, sign messages) lives in
-    // the dedicated System tab so it doesn't bury actual conversation.
+    // Hellion-tuned General preset (v1.0.0 — sharpened defaults).
+    // Public-chat-only, the bare three channels you encounter in open
+    // world. Group/FC/Linkshell traffic moves to dedicated tabs, gameplay
+    // events (loot, crafting, gathering, NPC dialogue, PF pings) move to
+    // the System tab where they belong — keeps the General view focused
+    // on actual conversation in the immediate surroundings.
     public static Tab VanillaGeneral => new()
     {
         Name = Language.Tabs_Presets_General,
         SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
         {
-            // Player chat
             [ChatType.Say] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Yell] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Shout] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Party] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossParty] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Alliance] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.FreeCompany] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.PvpTeam] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell1] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell2] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell3] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell4] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell5] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.CrossLinkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell1] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell2] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell3] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell4] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell5] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell6] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell7] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Linkshell8] = (ChatSourceExt.All, ChatSourceExt.All),
-            // Active-gameplay events
-            [ChatType.NpcDialogue] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Crafting] = (ChatSourceExt.All, ChatSourceExt.All),
-            [ChatType.Gathering] = (ChatSource.LocalPlayer, ChatSource.LocalPlayer),
-            [ChatType.PeriodicRecruitmentNotification] = (ChatSourceExt.All, ChatSourceExt.All),
         }
     };
 
@@ -130,6 +102,7 @@ public static class TabsUtil
         Name = HellionStrings.Tabs_Presets_System,
         SelectedChannels = new Dictionary<ChatType, (ChatSource, ChatSource)>
         {
+            // Plain system noise
             [ChatType.Debug] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Urgent] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Notice] = (ChatSourceExt.All, ChatSourceExt.All),
@@ -138,10 +111,22 @@ public static class TabsUtil
             [ChatType.Echo] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.GatheringSystem] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.NoviceNetworkSystem] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.BattleSystem] = (ChatSourceExt.All, ChatSourceExt.All),
+            // Login / logout / announcement noise
             [ChatType.NpcAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.FreeCompanyAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.FreeCompanyLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PvpTeamAnnouncement] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.PvpTeamLoginLogout] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.RetainerSale] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.PeriodicRecruitmentNotification] = (ChatSourceExt.All, ChatSourceExt.All),
+            // Gameplay-event streams (moved out of General in v1.0.0)
+            [ChatType.NpcDialogue] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.LootNotice] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.LootRoll] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Crafting] = (ChatSourceExt.All, ChatSourceExt.All),
+            [ChatType.Gathering] = (ChatSourceExt.All, ChatSourceExt.All),
+            // Misc
             [ChatType.Progress] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.RandomNumber] = (ChatSourceExt.All, ChatSourceExt.All),
             [ChatType.Orchestrion] = (ChatSourceExt.All, ChatSourceExt.All),

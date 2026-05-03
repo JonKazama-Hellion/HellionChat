@@ -190,22 +190,68 @@ public sealed class Plugin : IDalamudPlugin
                     "SeenPopOutHeaderHint reset to false (v0.6.1 banner re-armed)");
             }
 
-            // Hellion default tab layout for first-run and v10-wipe.
-            // General catches player chat plus active gameplay events; the
-            // System tab takes the technical noise so it does not bury real
-            // conversation. Beginner tab only appears when the Novice
-            // Network is enabled in Audio and Notifications, otherwise it
-            // would just sit empty.
+            // Hellion Chat v12 → v13 — hard-resets the tab layout to the
+            // sharpened v1.0.0 defaults (5 thematic tabs, see TabsUtil and
+            // the default-fill block below). Existing tab state is wiped
+            // because per-channel mapping from the old General preset to
+            // the new General/System split would be ambiguous and would
+            // produce subtly wrong results for users who tweaked the old
+            // layout. A timestamped backup of the live config is written
+            // alongside it as a manual restore safety net. The wipe scope
+            // is intentionally narrow: only Config.Tabs is reset; Privacy,
+            // Retention, Theme and every other knob keeps its current value.
+            if (Config.Version < 13)
+            {
+                var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+                if (pluginConfigsDir is not null)
+                {
+                    var liveConfigPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json");
+                    var backupPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json.pre-v13-backup");
+
+                    try
+                    {
+                        if (File.Exists(liveConfigPath))
+                            File.Copy(liveConfigPath, backupPath, overwrite: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "HellionChat: pre-v13 config backup failed");
+                    }
+                }
+
+                Config.Tabs.Clear();
+                Config.Version = 13;
+                SaveConfig();
+
+                Log.Information(
+                    "Migrated config v12 → v13: tab layout hard-reset to v1.0.0 defaults; " +
+                    "pre-v13 config backup written next to the live file. " +
+                    "Default tabs will be populated by the Tabs.Count == 0 block.");
+
+                Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                {
+                    Title = HellionStrings.SettingsRefactor_Migration_Title,
+                    Content = HellionStrings.SettingsRefactor_Migration_Content,
+                    Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                    InitialDuration = TimeSpan.FromSeconds(25),
+                });
+            }
+
+            // Hellion v1.0.0 default tab layout. Five thematically separated
+            // tabs: General catches the immediate-surroundings public chat
+            // (Say/Yell/Shout) only; System absorbs the rest of the technical
+            // and gameplay-event noise; FreeCompany, Group and Linkshell each
+            // own their respective channel set. Tells are not in a static
+            // tab anymore — Auto-Tell-Tabs spawns dedicated per-conversation
+            // tabs on demand. Novice-Network gets no preset tab; users who
+            // want it can add HellionBeginner from Settings → Tabs.
             if (Config.Tabs.Count == 0)
             {
                 Config.Tabs.Add(TabsUtil.VanillaGeneral);
                 Config.Tabs.Add(TabsUtil.HellionSystem);
                 Config.Tabs.Add(TabsUtil.HellionFreeCompany);
                 Config.Tabs.Add(TabsUtil.HellionParty);
-                if (Config.ShowNoviceNetwork)
-                    Config.Tabs.Add(TabsUtil.HellionBeginner);
                 Config.Tabs.Add(TabsUtil.HellionLinkshell);
-                Config.Tabs.Add(TabsUtil.VanillaTellExclusive);
             }
 
             LanguageChanged(Interface.UiLanguage);
