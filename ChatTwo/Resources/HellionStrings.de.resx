@@ -19,7 +19,7 @@
     <value>Datenschutz-Filter aktivieren</value>
   </data>
   <data name="Privacy_FilterEnabled_Description" xml:space="preserve">
-    <value>Wenn aktiviert, werden nur Nachrichten aus den erlaubten Kanälen in die Datenbank gespeichert. Beim Deaktivieren gilt wieder das Standard-Verhalten von ChatTwo, also alles außer Battle-Logs wird gespeichert.</value>
+    <value>Wenn aktiviert, werden nur Nachrichten aus den erlaubten Kanälen in die Datenbank gespeichert. Beim Deaktivieren gilt wieder das Standardverhalten, also alles außer Battle-Logs wird gespeichert.</value>
   </data>
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
     <value>Der Filter steuert nur, was in die lokale Datenbank geschrieben wird. Im Chat-Log siehst du weiterhin jede Nachricht live, ausgeschlossene Kanäle werden nur nicht mehr gespeichert. Wenn du Kanäle auch aus der sichtbaren Anzeige entfernen willst, nutze die normalen Chat-Tab-Filter im Spiel.</value>
@@ -211,7 +211,7 @@
     <value>Volle Historie</value>
   </data>
   <data name="Wizard_Profile_FullHistory_Description" xml:space="preserve">
-    <value>Deaktiviert den Datenschutz-Filter komplett. Speichert alles außer Battle-Logs, wie das Original-Chat 2. Aufbewahrung ist AUS, die Historie wächst dauerhaft.</value>
+    <value>Deaktiviert den Datenschutz-Filter komplett. Speichert alles außer Battle-Logs (das ursprüngliche Voll-Historie-Verhalten). Aufbewahrung ist AUS, die Historie wächst dauerhaft.</value>
   </data>
   <data name="Wizard_Profile_FullHistory_GdprWarning" xml:space="preserve">
     <value>DSGVO-Hinweis: Wenn du Nachrichten Dritter (Sagen/Schreien/Rufen fremder Spieler, NPC-Dialoge mit Spielernamen usw.) zeitlich unbegrenzt speicherst, kann das die Ausnahme für rein persönliche oder familiäre Tätigkeiten (Art. 2 Abs. 2 Buchst. c) sprengen. Nutze dieses Profil nur, wenn du einen klaren Grund hast, das volle Archiv zu behalten.</value>
@@ -562,7 +562,7 @@
     <value>Wenn du mehrere Linkshells benutzt, empfiehlt der Maintainer einen Tab pro Shell für eine sauberere Übersicht. Tab duplizieren und je Kopie die Kanalauswahl einschränken.</value>
   </data>
   <data name="ChatColourPresets_Default" xml:space="preserve">
-    <value>ChatTwo Standard</value>
+    <value>Klassik (Chat 2 Default)</value>
   </data>
   <data name="ChatColourPresets_HighContrast" xml:space="preserve">
     <value>Hoher Kontrast</value>

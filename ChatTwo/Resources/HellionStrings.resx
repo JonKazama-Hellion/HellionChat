@@ -19,7 +19,7 @@
     <value>Enable privacy filter</value>
   </data>
   <data name="Privacy_FilterEnabled_Description" xml:space="preserve">
-    <value>When enabled, only messages from whitelisted channels are persisted to the database. Disabling restores upstream ChatTwo behavior (everything except battle messages is stored).</value>
+    <value>When enabled, only messages from whitelisted channels are persisted to the database. Disabling restores the original behavior (everything except battle messages is stored).</value>
   </data>
   <data name="Privacy_FilterEnabled_StorageOnly_Help" xml:space="preserve">
     <value>The filter only controls what is written to the local database. The chat log itself keeps showing every message live, disallowed channels just stop being saved. Use the channel hide options in your in-game chat tabs if you want to remove channels from the visible chat.</value>
@@ -211,7 +211,7 @@
     <value>Full History</value>
   </data>
   <data name="Wizard_Profile_FullHistory_Description" xml:space="preserve">
-    <value>Disables the privacy filter entirely. Stores everything except battle logs, just like upstream Chat 2. Retention is OFF, history grows forever.</value>
+    <value>Disables the privacy filter entirely. Stores everything except battle logs (the original full-history behavior). Retention is OFF, history grows forever.</value>
   </data>
   <data name="Wizard_Profile_FullHistory_GdprWarning" xml:space="preserve">
     <value>GDPR notice: storing third-party messages (Say/Shout/Yell of strangers, NPC dialogue with player names, etc.) for an unlimited time may exceed the personal/household exemption (Art. 2(2)(c)). Use this profile only if you have a clear reason to keep the full archive.</value>
@@ -562,7 +562,7 @@
     <value>If you use multiple linkshells, the maintainer recommends one tab per shell for cleaner readability. Duplicate this tab and narrow the channel selection per copy.</value>
   </data>
   <data name="ChatColourPresets_Default" xml:space="preserve">
-    <value>ChatTwo Default</value>
+    <value>Klassik (Chat 2 Default)</value>
   </data>
   <data name="ChatColourPresets_HighContrast" xml:space="preserve">
     <value>High-Contrast</value>
