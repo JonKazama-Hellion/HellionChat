@@ -50,7 +50,7 @@ to Chat 2 or to anything Infi or Anna would want flagged:
 
 - **GitHub Issues:** [JonKazama-Hellion/HellionChat/issues](https://github.com/JonKazama-Hellion/HellionChat/issues)
 - **Discord:** `@j.j_kazama`
-- **Email (business):** maintainer@hellion-media.de
+- **Email (business):** kontakt@hellion-media.de
 
 I respond on weekdays during European business hours. For anything
 urgent (security, attribution, takedown), email is the fastest path.

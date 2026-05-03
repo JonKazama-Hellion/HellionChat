@@ -8,7 +8,7 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
 
-**Version 0.5.1** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
+**Version 0.5.4** — DSGVO-bewusste Erweiterung von [Chat 2](https://github.com/Infiziert90/ChatTwo) für FINAL FANTASY XIV / Dalamud.
 
 Hellion Chat baut auf Chat 2 auf und ergänzt es um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle Chat-2-Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
@@ -29,7 +29,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 | Build           | Dalamud.NET.Sdk 15.0.0, DalamudPackager 15.0.0       |
 | UI              | Dear ImGui (Dalamud-Bindings)                        |
 | Datenbank       | SQLite (Microsoft.Data.Sqlite, MessagePack-Storage)  |
-| Lokalisierung   | ResX (HellionStrings.resx, .de.resx) + Crowdin-Sync  |
+| Lokalisierung   | ResX (HellionStrings.resx, .de.resx; PR-basiert)     |
 | Schriftart      | Exo 2 (SIL Open Font License 1.1, gebündelt)         |
 | Toolchain       | dotnet 10 SDK, VS Code mit C# Dev Kit                |
 | Deployment      | GitHub Releases + Custom-Repo (`repo.json`)          |
@@ -44,6 +44,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 - **Aufbewahrungsdauer pro Kanal** mit täglicher Background-Bereinigung. Tells 365 Tage, eigene Konversations-Kanäle 90 Tage, globaler Default 30 Tage. Standard ist AUS, das Plugin löscht ohne ausdrückliche Zustimmung nichts.
 - **Retroaktive Säuberung** mit Vorschau und Strg+Umschalt-Bestätigung. Wendet die aktuelle Whitelist auf eine bestehende Datenbank an, läuft im Hintergrund, ruft danach VACUUM auf.
 - **Export** nach Markdown, JSON oder CSV via Dalamud-Datei-Dialog (DSGVO Art. 15 Auskunftsrecht). Filter nach Kanal, Datums-Bereich oder Sender-Substring.
+- **Vollständige Datenschutz-Übersicht** in [`PRIVACY.md`](PRIVACY.md): was gespeichert wird, welche zwei Outbound-Calls existieren (BetterTTV opt-out, Square-Enix-Lodestone-Font), explizite Telemetry-None-Zusage und das Mapping der DSGVO-Rechte (Art. 15/17/18/20/21) auf konkrete Plugin-Funktionen.
 
 ### Onboarding
 
@@ -102,7 +103,7 @@ ChatTwo/
 
 - **Code-Namespace bleibt `ChatTwo.*`** — Cherry-Picks von Upstream-Bugfixes bleiben damit konfliktarm.
 - **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigene Datei-Manifest, kein Shared State mit Chat 2.
-- **Hellion-eigene Strings nur in `HellionStrings.*.resx`** — die Upstream-`Language.*.resx` bleiben unverändert für sauberen Crowdin-Sync.
+- **Hellion-eigene Strings nur in `HellionStrings.*.resx`** — die Upstream-`Language.*.resx` bleiben unverändert, damit Cherry-Picks aus Chat 2 (inklusive deren Übersetzungs-Updates aus dem Upstream-Crowdin) konfliktarm bleiben.
 - **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager` — Font-Fallback und Hellion-Font laufen zentral.
 
 ---
@@ -181,7 +182,7 @@ Spiel starten, Hellion Chat aktivieren, Verlauf ist zurück.
 
 ### Updates
 
-Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `v0.1.x`-Tag mit GitHub-Release publiziert ist. Keine Neu-Installation nötig.
+Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `v0.X.Y`-Tag mit GitHub-Release publiziert ist. Keine Neu-Installation nötig.
 
 ---
 
@@ -225,7 +226,7 @@ git log --oneline HEAD..upstream/main          # Welche Commits gibt es?
 git cherry-pick -x <commit>                    # Selektiv übernehmen
 ```
 
-Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig vor weil Crowdin sie regelmäßig anfasst. Pragmatisch mit `git checkout --theirs` auflösen, da wir sie selbst nicht editieren.
+Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig vor, weil Upstream-Übersetzungen (über das Chat-2-Crowdin-Projekt, nicht unseres) regelmäßig nachkommen. Pragmatisch mit `git checkout --theirs` auflösen, da wir sie selbst nicht editieren.
 
 ---
 
@@ -243,7 +244,7 @@ Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig 
 
 ## Projektstatus
 
-**Version 0.3.1** | Stand: Mai 2026
+**Version 0.5.4** | Stand: 2026-05-03
 
 Alle Bootstrap-Phasen abgeschlossen:
 
@@ -295,6 +296,22 @@ FINAL FANTASY XIV © SQUARE ENIX CO., LTD. Alle Rechte vorbehalten. Hellion Chat
 ### KI-Unterstützung
 
 Siehe [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) für die Pair-Level-Disclosure.
+
+---
+
+## Projekt-Dokumente
+
+| Dokument | Inhalt |
+| --- | --- |
+| [`PRIVACY.md`](PRIVACY.md) | Datenschutz-Übersicht: lokale Speicherung, Outbound-Calls, Telemetry-Status, DSGVO-Rechte und ihre Plugin-Entsprechungen. |
+| [`SECURITY.md`](SECURITY.md) | Vulnerability-Reporting via Private Advisory, Scope und Disclosure-Fenster. |
+| [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) | NuGet-Dependencies mit Lizenzen, Bundled Assets, Network-Status pro Komponente. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Was ich akzeptiere bzw. ablehne, Workflow, Build-Anleitung, EUPL-1.2-Bestätigung. |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Verhaltens-Erwartungen und Reporting-Pfad. |
+| [`SUPPORT.md`](SUPPORT.md) | Wegweiser für Bugs, Security, Privacy, Quick-Questions. |
+| [`UPSTREAM_SYNC.md`](UPSTREAM_SYNC.md) | Cherry-Pick-Policy gegenüber Chat 2. |
+| [`NOTICE.md`](NOTICE.md) | Attribution an Upstream-Maintainer und Komponenten-Credits. |
+| [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) | Offenlegung der KI-Unterstützung im Entwicklungsprozess. |
 
 ---
 

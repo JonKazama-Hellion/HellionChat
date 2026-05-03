@@ -16,7 +16,7 @@ body:
     attributes:
       label: HellionChat version
       description: From Settings → Information → Version
-      placeholder: "0.5.1"
+      placeholder: "0.5.4"
     validations:
       required: true
 

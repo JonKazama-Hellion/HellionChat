@@ -3,9 +3,14 @@ name: Release
 # Triggered when a vX.Y.Z tag is pushed. Builds the plugin against the
 # current Dalamud staging branch, locates the latest.zip produced by
 # DalamudPackager and attaches it to the matching GitHub Release.
-# Does not consume any user-controlled event payload, only the tag name
-# (validated by the on.tags filter) and the steps output of the locate
-# step (path string from Get-ChildItem on a controlled directory).
+#
+# User-controlled inputs touched by this workflow:
+#   - the tag name (filtered by on.tags = v*, validated again at runtime
+#     against ^v\d+\.\d+\.\d+$ before being used in any string)
+# All other values are either repo-controlled (paths under
+# ChatTwo/bin/Release derived from Get-ChildItem) or pinned URLs to
+# goatcorp / GitHub. Nothing from a webhook event payload (issue/PR
+# titles, commit messages, etc.) flows into a run-step.
 
 on:
   push:
@@ -53,9 +58,101 @@ jobs:
           Write-Host "Found: $($zip.FullName)"
           "path=$($zip.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
 
+      # Build a release body from the matching changelog block in
+      # HellionChat.yaml plus a static install / docs footer. Fails the
+      # workflow if no block exists for the tagged version, which is the
+      # automated counterpart to the "yaml + repo.json + release body
+      # kept in sync" rule.
+      #
+      # GITHUB_REF_NAME is read via env: (not ${{ }} interpolation) so the
+      # tag value is treated as a PowerShell variable, not as inline shell
+      # text. The strict regex below rejects anything that is not a clean
+      # semver tag before it is used to build a string.
+      - name: Generate release body
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.ref_name }}
+        run: |
+          $tag = $env:TAG_NAME
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
+              throw "Refusing to generate release body for non-semver tag: $tag"
+          }
+          $version = $tag.Substring(1)
+
+          $yamlPath = "ChatTwo/HellionChat.yaml"
+          $raw = Get-Content -Path $yamlPath -Raw
+
+          $marker = "changelog: |-"
+          $idx = $raw.IndexOf($marker)
+          if ($idx -lt 0) { throw "changelog block not found in $yamlPath" }
+
+          # changelog: is the last top-level key in the manifest, so
+          # everything after the marker is the literal block. Strip the
+          # 2-space yaml indent from each line.
+          $afterMarker = $raw.Substring($idx + $marker.Length)
+          $changelogBody = (($afterMarker -split "`r?`n") | ForEach-Object {
+              if ($_ -match '^  ') { $_.Substring(2) } else { $_ }
+          }) -join "`n"
+
+          $header = "**Hellion Chat $version"
+          $start = $changelogBody.IndexOf($header)
+          if ($start -lt 0) {
+              throw "No changelog entry for version $version found in $yamlPath. Update the changelog block before tagging a release."
+          }
+
+          $rest = $changelogBody.Substring($start)
+          $nextHdr = $rest.IndexOf("`n`n**Hellion Chat ", 1)
+          $trailer = $rest.IndexOf("`n`n---")
+
+          if ($nextHdr -ge 0 -and ($trailer -lt 0 -or $nextHdr -lt $trailer)) {
+              $currentBlock = $rest.Substring(0, $nextHdr).TrimEnd()
+          } elseif ($trailer -ge 0) {
+              $currentBlock = $rest.Substring(0, $trailer).TrimEnd()
+          } else {
+              $currentBlock = $rest.TrimEnd()
+          }
+
+          $footer = @'
+
+---
+
+## How to install
+
+This release is distributed via the HellionChat custom repository, not the
+Dalamud main plugin repo. To install:
+
+1. In XIVLauncher: **Settings → Experimental → Custom Plugin Repositories**
+2. Add the URL:
+   `https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json`
+3. Enable, save, then `/xlplugins` → search **Hellion Chat** → install
+
+## Project documents
+
+- [README](https://github.com/JonKazama-Hellion/HellionChat/blob/main/README.md) — features, architecture, build
+- [Privacy notice](https://github.com/JonKazama-Hellion/HellionChat/blob/main/PRIVACY.md) — what the plugin stores and sends
+- [Third-party notices](https://github.com/JonKazama-Hellion/HellionChat/blob/main/THIRD_PARTY_NOTICES.md) — dependencies and licences
+- [Security policy](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SECURITY.md) — vulnerability reporting
+- [Support](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SUPPORT.md) — bug reports, questions, contact paths
+
+## Licence
+
+[EUPL-1.2](https://github.com/JonKazama-Hellion/HellionChat/blob/main/LICENSE).
+Based on [Chat 2](https://github.com/Infiziert90/ChatTwo) by Infi and Anna,
+also EUPL-1.2.
+'@
+
+          $body = $currentBlock + "`n" + $footer
+          $body | Out-File -FilePath release-body.md -Encoding utf8 -NoNewline
+
+          Write-Host "Generated release body for $tag :"
+          Write-Host "----------------------------------------"
+          Write-Host $body
+          Write-Host "----------------------------------------"
+
       - name: Attach to GitHub release
         uses: softprops/action-gh-release@v3
         with:
           files: ${{ steps.locate.outputs.path }}
+          body_path: release-body.md
           fail_on_unmatched_files: true
           generate_release_notes: false

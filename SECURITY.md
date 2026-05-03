@@ -12,7 +12,7 @@ through GitHub's Security Advisories. This routes the report directly to
 me and keeps the conversation off the public timeline.
 
 **Alternative:**
-- Email: `maintainer@hellion-media.de`
+- Email: `kontakt@hellion-media.de`
 - Discord: `@j.j_kazama`
 
 I respond on weekdays during European business hours. For urgent
