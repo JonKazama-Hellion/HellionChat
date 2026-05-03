@@ -53,10 +53,94 @@ public sealed class ChatInputBar
             return;
 
         DrawChannelIconButton(tab);
-
-        // Task 22 / 23 fügen Text-Input und Auto-Translate-Icon hier an.
         ImGui.SameLine();
-        ImGui.TextDisabled("[input + auto-translate stubs]");
+        DrawCompactInput(tab);
+        ImGui.SameLine();
+        // Task 23 ergänzt hier den Auto-Translate-Icon-Button.
+        ImGui.TextDisabled("[at]");
+    }
+
+    private void DrawCompactInput(Tab tab)
+    {
+        // Reserve room for the auto-translate icon button on the right.
+        const float reservedRightWidth = 32f;
+        var inputWidth = ImGui.GetContentRegionAvail().X - reservedRightWidth;
+        if (inputWidth < 60f)
+            inputWidth = 60f;
+
+        ImGui.SetNextItemWidth(inputWidth);
+
+        // CallbackHistory wires up Up/Down navigation against the shared
+        // InputHistoryService. Submit is detected the same way the main
+        // window does it: via IsItemDeactivated + Enter, NOT EnterReturnsTrue
+        // (matching v0.5.x ChatLogWindow.cs behavior).
+        const ImGuiInputTextFlags flags = ImGuiInputTextFlags.CallbackHistory;
+        ImGui.InputText($"##chat-compact-input-{tab.Identifier}", ref _state.Buffer, 500, flags, CompactCallback);
+
+        IsFocused = ImGui.IsItemActive();
+
+        if (ImGui.IsItemDeactivated()
+            && (ImGui.IsKeyDown(ImGuiKey.Enter) || ImGui.IsKeyDown(ImGuiKey.KeypadEnter)))
+        {
+            SubmitCompact(tab);
+        }
+    }
+
+    private void SubmitCompact(Tab tab)
+    {
+        if (string.IsNullOrWhiteSpace(_state.Buffer))
+            return;
+
+        var text = _state.Buffer;
+        _state.Buffer = string.Empty;
+        _state.HistoryCursor = -1;
+        _host.SendChatBoxFromExternal(tab, text);
+    }
+
+    // History-navigation callback for the compact input. Mirrors the main
+    // window's logic but operates on _state.HistoryCursor and the shared
+    // InputHistoryService. Index semantics match v0.5.x InputBacklog:
+    // 0 = oldest, Count-1 = newest.
+    private unsafe int CompactCallback(scoped ref ImGuiInputTextCallbackData data)
+    {
+        if (data.EventFlag != ImGuiInputTextFlags.CallbackHistory)
+            return 0;
+
+        var prev = _state.HistoryCursor;
+        switch (data.EventKey)
+        {
+            case ImGuiKey.UpArrow:
+                switch (_state.HistoryCursor)
+                {
+                    case -1:
+                        var offset = 0;
+                        if (!string.IsNullOrWhiteSpace(_state.Buffer))
+                        {
+                            InputHistoryService.Push(_state.Buffer);
+                            offset = 1;
+                        }
+                        _state.HistoryCursor = InputHistoryService.Count - 1 - offset;
+                        break;
+                    case > 0:
+                        _state.HistoryCursor--;
+                        break;
+                }
+                break;
+            case ImGuiKey.DownArrow:
+                if (_state.HistoryCursor != -1)
+                    if (++_state.HistoryCursor >= InputHistoryService.Count)
+                        _state.HistoryCursor = -1;
+                break;
+        }
+
+        if (prev == _state.HistoryCursor)
+            return 0;
+
+        var historyStr = InputHistoryService.GetByCursor(_state.HistoryCursor) ?? string.Empty;
+        data.DeleteChars(0, data.BufTextLen);
+        data.InsertChars(0, historyStr);
+
+        return 0;
     }
 
     private void DrawChannelIconButton(Tab tab)

@@ -922,6 +922,18 @@ public sealed class ChatLogWindow : Window
         ];
     }
 
+    // v0.6.0 — pop-out windows route submission through this wrapper.
+    // The main-window Chat buffer is briefly used as a vehicle for
+    // SendChatBox (which reads it directly) and restored afterwards so
+    // the main window does not visibly lose any half-typed input.
+    internal void SendChatBoxFromExternal(Tab tab, string text)
+    {
+        var saved = Chat;
+        Chat = text;
+        SendChatBox(tab);
+        Chat = saved;
+    }
+
     internal void SendChatBox(Tab activeTab)
     {
         if (!string.IsNullOrWhiteSpace(Chat))
