@@ -96,6 +96,12 @@ internal sealed class Tabs : ISettingsTab
             if (tab.PopOut)
             {
                 using var _ = ImRaii.PushIndent(10.0f);
+                // v0.6.0 — Pop-Out optional input bar. Inline strings; i18n
+                // keys follow in Task 29 (Phase E).
+                ImGui.Checkbox("Eingabe im Pop-Out aktivieren", ref tab.PopOutInputEnabled);
+                ImGuiUtil.HelpMarker("Erlaubt direktes Tippen und Absenden im Pop-Out-Fenster dieses Tabs. Jedes Pop-Out hat einen eigenen Text-Buffer; Channel-Wechsel wirkt global wie im Hauptfenster.");
+                ImGui.Spacing();
+
                 ImGui.Checkbox(Language.Options_Tabs_IndependentOpacity, ref tab.IndependentOpacity);
                 if (tab.IndependentOpacity)
                     ImGuiUtil.DragFloatVertical(Language.Options_Tabs_Opacity, ref tab.Opacity, 0.25f, 0f, 100f, $"{tab.Opacity:N2}%%", ImGuiSliderFlags.AlwaysClamp);
