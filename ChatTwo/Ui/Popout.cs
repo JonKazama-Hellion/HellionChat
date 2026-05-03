@@ -100,6 +100,11 @@ internal class Popout : Window
             ImGui.Separator();
         }
 
+        // v0.6.0 — one-time hint banner explaining the new pop-out input
+        // feature. Shown once per user; "Got it" or "Open settings"
+        // dismisses it and persists the flag.
+        var hintBannerHeight = DrawHintBannerIfNeeded();
+
         // v0.6.0 — pop-out optional input bar. Reserve height first so the
         // message log draws into the right region; only shown when the
         // per-tab toggle is on. Toggle-OFF resets InputBar so the next
@@ -119,7 +124,7 @@ internal class Popout : Window
             : 0f;
 
         var handler = ChatLogWindow.HandlerLender.Borrow();
-        var logHeight = ImGui.GetContentRegionAvail().Y - inputBarHeight;
+        var logHeight = ImGui.GetContentRegionAvail().Y - inputBarHeight - hintBannerHeight;
         ChatLogWindow.DrawMessageLog(Tab, handler, logHeight, false);
 
         if (inputEnabled && InputBar != null)
@@ -130,6 +135,58 @@ internal class Popout : Window
 
         if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
             LastActivityTime = FrameTime;
+    }
+
+    // Returns the vertical space the banner consumed (0 when not shown)
+    // so the message log can shrink accordingly.
+    private float DrawHintBannerIfNeeded()
+    {
+        if (Plugin.Config.SeenPopOutInputHint)
+            return 0f;
+
+        // Inline strings — i18n keys follow in Task 29 (Phase E).
+        const string hintText = "Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Pro Tab in den Tab-Settings aktivieren.";
+        const string ackLabel = "Verstanden";
+        const string openLabel = "Tab-Settings öffnen";
+
+        var startY = ImGui.GetCursorPosY();
+
+        var bg = new System.Numerics.Vector4(0.16f, 0.20f, 0.28f, 1f);
+        ImGui.PushStyleColor(ImGuiCol.ChildBg, bg);
+        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
+
+        var dismiss = false;
+        var openSettings = false;
+        using (var child = ImRaii.Child("##v060-pop-out-hint", new System.Numerics.Vector2(0f, 64f), true))
+        {
+            if (child)
+            {
+                ImGui.TextWrapped(hintText);
+                if (ImGui.Button(ackLabel))
+                    dismiss = true;
+                ImGui.SameLine();
+                if (ImGui.Button(openLabel))
+                {
+                    dismiss = true;
+                    openSettings = true;
+                }
+            }
+        }
+
+        ImGui.PopStyleVar();
+        ImGui.PopStyleColor();
+        ImGui.Spacing();
+
+        if (dismiss)
+        {
+            Plugin.Config.SeenPopOutInputHint = true;
+            ChatLogWindow.Plugin.SaveConfig();
+            Plugin.Log.Debug("Pop-Out input hint dismissed");
+            if (openSettings)
+                ChatLogWindow.Plugin.SettingsWindow.Toggle();
+        }
+
+        return ImGui.GetCursorPosY() - startY;
     }
 
     public override void PostDraw()
