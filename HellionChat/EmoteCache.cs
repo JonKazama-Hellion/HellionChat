@@ -192,7 +192,7 @@ public static class EmoteCache
             }
             else
             {
-                var content = await new HttpClient().GetAsync(EmotePath.Format(emote.Id));
+                var content = await Client.GetAsync(EmotePath.Format(emote.Id));
                 RawData = await content.Content.ReadAsByteArrayAsync();
 
                 await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);

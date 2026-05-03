@@ -39,11 +39,18 @@ public class FontManager
         }
         else
         {
-            GameSymFont = new HttpClient().GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
-                .Result
-                .Content
-                .ReadAsByteArrayAsync()
-                .Result;
+            // Dispose HttpClient and HttpResponseMessage to avoid socket
+            // exhaustion on repeated cold-start downloads. GetAwaiter().GetResult()
+            // unwraps AggregateException so failures surface cleanly. A full
+            // async refactor of the constructor would be cleaner but is out of
+            // scope for v1.0.0 — tracked in the backlog.
+            using var client = new HttpClient();
+            using var response = client
+                .GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
+                .GetAwaiter()
+                .GetResult();
+            response.EnsureSuccessStatusCode();
+            GameSymFont = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
 
             Dalamud.Utility.FilesystemUtil.WriteAllBytesSafe(filePath, GameSymFont);
         }
