@@ -183,6 +183,22 @@ internal sealed class AutoTellTabsService : IDisposable
             return;
         }
 
+        // v0.6.1 — if the victim is currently popped out, tear down the
+        // matching Popout window first. Otherwise the window stays in
+        // PopOutWindows + WindowSystem and renders empty / re-spawns on the
+        // next AddPopOutsToDraw tick. Latent since pop-outs were introduced;
+        // becomes visible with AutoTellTabsOpenAsPopout where dropping a
+        // popped tab is now a routine code path.
+        if (victim.Tab.PopOut)
+        {
+            var popout = _plugin.ChatLogWindow.ActivePopouts
+                .FirstOrDefault(p => p.TabIdentifier == victim.Tab.Identifier);
+            if (popout != null)
+            {
+                popout.IsOpen = false;
+            }
+        }
+
         Plugin.Config.Tabs.RemoveAt(victim.Index);
 
         // Re-anchor the active tab so the user does not silently end up on
