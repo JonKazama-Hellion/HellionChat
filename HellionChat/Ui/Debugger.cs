@@ -9,7 +9,7 @@ using Lumina.Text.ReadOnly;
 
 namespace HellionChat.Ui;
 
-public class DebuggerWindow : Window
+public class DebuggerWindow : Window, IDisposable
 {
     private readonly Plugin Plugin;
     private readonly ChatLogWindow ChatLogWindow;
