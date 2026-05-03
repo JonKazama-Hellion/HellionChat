@@ -47,7 +47,7 @@ internal sealed class IpcManager : IDisposable
 
     public void Dispose()
     {
-        UnregisterGate.UnregisterFunc();
+        UnregisterGate.UnregisterAction();
         RegisterGate.UnregisterFunc();
         Registered.Clear();
     }
