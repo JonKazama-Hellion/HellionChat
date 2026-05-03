@@ -26,10 +26,10 @@
     "DownloadLinkUpdate": "https://github.com/JonKazama-Hellion/HellionChat/releases/download/v0.6.1/latest.zip",
     "DownloadLinkTesting": "https://github.com/JonKazama-Hellion/HellionChat/releases/download/v0.6.1/latest.zip",
     "TestingAssemblyVersion": "0.6.1.0",
-    "IconUrl": "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/icon.png",
+    "IconUrl": "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png",
     "ImageUrls": [
-      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/chatWindow.png",
-      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/withSimpleTweaks.png"
+      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png",
+      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png"
     ],
     "DownloadCount": 0,
     "IsHide": false,

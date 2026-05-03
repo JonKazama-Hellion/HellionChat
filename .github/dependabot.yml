@@ -5,7 +5,7 @@ updates:
   # noise down while still catching transitive security advisories within
   # a few days of disclosure.
   - package-ecosystem: nuget
-    directory: /ChatTwo
+    directory: /HellionChat
     schedule:
       interval: weekly
       day: monday

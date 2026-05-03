@@ -62,10 +62,10 @@ jobs:
           queries: security-extended
 
       - name: Restore
-        run: dotnet restore ChatTwo/ChatTwo.csproj
+        run: dotnet restore HellionChat/HellionChat.csproj
 
       - name: Build (Release)
-        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release --no-restore
+        run: dotnet build HellionChat/HellionChat.csproj --configuration Release --no-restore
 
       - name: Perform CodeQL analysis
         uses: github/codeql-action/analyze@v3

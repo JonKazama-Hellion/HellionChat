@@ -38,10 +38,10 @@ description: |-
   other Hellion Online Media plugins/tools.
 repo_url: https://github.com/JonKazama-Hellion/HellionChat
 accepts_feedback: true
-icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/icon.png
+icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png
 image_urls:
-  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/chatWindow.png
-  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/ChatTwo/images/withSimpleTweaks.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png
 tags:
   - Social
   - UI

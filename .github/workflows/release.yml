@@ -8,7 +8,7 @@ name: Release
 #   - the tag name (filtered by on.tags = v*, validated again at runtime
 #     against ^v\d+\.\d+\.\d+$ before being used in any string)
 # All other values are either repo-controlled (paths under
-# ChatTwo/bin/Release derived from Get-ChildItem) or pinned URLs to
+# HellionChat/bin/Release derived from Get-ChildItem) or pinned URLs to
 # goatcorp / GitHub. Nothing from a webhook event payload (issue/PR
 # titles, commit messages, etc.) flows into a run-step.
 
@@ -60,16 +60,16 @@ jobs:
           Expand-Archive -Force -Path dalamud.zip -DestinationPath $hooks
 
       - name: Build (Release)
-        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release
+        run: dotnet build HellionChat/HellionChat.csproj --configuration Release
 
       - name: Locate latest.zip
         id: locate
         shell: pwsh
         run: |
-          $zip = Get-ChildItem -Path ChatTwo\bin\Release -Recurse -Filter latest.zip | Select-Object -First 1
+          $zip = Get-ChildItem -Path HellionChat\bin\Release -Recurse -Filter latest.zip | Select-Object -First 1
           if (-not $zip)
           {
-              throw "latest.zip not found under ChatTwo\bin\Release"
+              throw "latest.zip not found under HellionChat\bin\Release"
           }
           Write-Host "Found: $($zip.FullName)"
           "path=$($zip.FullName)" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
@@ -100,7 +100,7 @@ jobs:
           }
           $version = $tag.Substring(1)
 
-          $yamlPath = "ChatTwo/HellionChat.yaml"
+          $yamlPath = "HellionChat/HellionChat.yaml"
           $raw = Get-Content -Path $yamlPath -Raw
 
           $marker = "changelog: |-"

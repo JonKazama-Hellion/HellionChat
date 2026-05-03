@@ -42,15 +42,15 @@ jobs:
           Expand-Archive -Force -Path dalamud.zip -DestinationPath $hooks
 
       - name: Restore
-        run: dotnet restore ChatTwo/ChatTwo.csproj
+        run: dotnet restore HellionChat/HellionChat.csproj
 
       - name: Build (Release)
-        run: dotnet build ChatTwo/ChatTwo.csproj --configuration Release --no-restore
+        run: dotnet build HellionChat/HellionChat.csproj --configuration Release --no-restore
 
       - name: Upload build output
         uses: actions/upload-artifact@v7
         with:
           name: HellionChat-build-${{ github.run_number }}
-          path: ChatTwo/bin/Release/**/HellionChat/**
+          path: HellionChat/bin/Release/**/HellionChat/**
           if-no-files-found: warn
           retention-days: 14
