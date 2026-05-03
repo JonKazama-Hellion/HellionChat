@@ -223,6 +223,17 @@ internal sealed class AutoTellTabsService : IDisposable
         PreloadHistory(tab, partner.Name, partner.World, currentMessage.Id);
 
         tab.AddMessage(currentMessage, unread: true);
+
+        // Hellion Chat v0.6.1 — opt-in: open new /tell tabs directly as a
+        // pop-out window. Set BEFORE Tabs.Add so the next render-tick's
+        // AddPopOutsToDraw() sees PopOut=true and spawns the Popout window
+        // alongside the tab going into the list. No SaveConfig() because
+        // auto-tell tabs are IsTempTab (session-only, never persisted).
+        if (Plugin.Config.AutoTellTabsOpenAsPopout)
+        {
+            tab.PopOut = true;
+        }
+
         Plugin.Config.Tabs.Add(tab);
     }
 
