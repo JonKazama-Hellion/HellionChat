@@ -49,6 +49,38 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.0.0 — Standalone Major Release**
+
+  First fully standalone release. Internal cleanup, no user action
+  required — auto-update applies cleanly, configuration and database
+  paths unchanged.
+
+  Internal changes:
+
+  - Code namespace consolidated from ChatTwo.* to HellionChat.* across
+    all source files
+  - IPC channels migrated from ChatTwo.* to HellionChat.* (6 channels:
+    Register, Available, Unregister, Invoke, GetChatInputState,
+    ChatInputStateChanged) — third-party plugins that bound to the old
+    channels need to be updated; none known at release time
+  - ImGui popup ID renamed to hellionchat-context-popup
+  - Repository folder restructured (ChatTwo/ → HellionChat/), all CI
+    and build paths updated accordingly
+  - Plugin now refuses to load when upstream Chat 2 is also active —
+    bilingual conflict message in EN/DE, throw before any subsystem
+    initialization, prevents the runtime crash that previously occurred
+    when both plugins replaced the same chat window in parallel
+
+  Branding:
+
+  - Public-facing descriptions reworded from upstream-fork framing to
+    standalone framing (Chat 2 attribution preserved per EUPL-1.2)
+  - Colour preset 'ChatTwo Default' is now 'Klassik (Chat 2 Default)'
+  - License attribution (NOTICE.md, COPYRIGHT, THIRD_PARTY_NOTICES.md
+    and the Credits section in README) is unchanged
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.6.1 — Pop-Out Discoverability & /tell Auto-Pop-Out**
 
   - Pop-out button now visible in the chat header (no more hunting
