@@ -31,7 +31,6 @@ public static class MathUtil
             => $"X: {X} Y: {Y} Width: {Width} Height: {Height}";
     }
 
-    // From: https://stackoverflow.com/a/306379
     /// <summary>
     /// Checks if two rectangles overlap at any point.
     /// </summary>
@@ -40,12 +39,11 @@ public static class MathUtil
     /// <returns>True if overlapping</returns>
     public static bool HasOverlap(this Rectangle a, Rectangle b)
     {
-        bool ValueInRange(int value, int min, int max)
-            => value > min && value < max;
-
-        var xOverlap = ValueInRange(a.X, b.X, b.X + b.Width) || ValueInRange(b.X, a.X, a.X + a.Width);
-        var yOverlap = ValueInRange(a.Y, b.Y, b.Y + b.Height) || ValueInRange(b.Y, a.Y, a.Y + a.Height);
-
-        return xOverlap && yOverlap;
+        // Standard AABB overlap test: two rectangles overlap iff they
+        // overlap on both axes. The previous nested ValueInRange approach
+        // used strict inequalities at both ends, which dropped identical
+        // rectangles and shared-edge cases as false negatives.
+        return a.X < b.X + b.Width && a.X + a.Width > b.X &&
+               a.Y < b.Y + b.Height && a.Y + a.Height > b.Y;
     }
 }
