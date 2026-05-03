@@ -44,7 +44,10 @@ public sealed class ChatLogWindow : Window
     internal bool InputFocused { get; private set; }
     private int ActivatePos = -1;
     internal string Chat = string.Empty;
-    private readonly List<string> InputBacklog = [];
+    // Hellion Chat — v0.6.0 input history was extracted into
+    // InputHistoryService so pop-out windows with their own ChatInputBar
+    // share the same Up/Down history with the main window. The cursor
+    // stays window-local because each window navigates independently.
     private int InputBacklogIdx = -1;
     public bool TellSpecial;
     private readonly Stopwatch LastResize = new();
@@ -330,16 +333,10 @@ public sealed class ChatLogWindow : Window
 
     private void AddBacklog(string message)
     {
-        for (var i = 0; i < InputBacklog.Count; i++)
-        {
-            if (InputBacklog[i] != message)
-                continue;
-
-            InputBacklog.RemoveAt(i);
-            break;
-        }
-
-        InputBacklog.Add(message);
+        // v0.6.0 — delegates to the shared InputHistoryService so pop-out
+        // ChatInputBar instances see the same history. Move-to-newest
+        // deduplication lives inside the service.
+        InputHistoryService.Push(message);
     }
 
     private float GetRemainingHeightForMessageLog()
@@ -1757,7 +1754,7 @@ public sealed class ChatLogWindow : Window
                             offset = 1;
                         }
 
-                        InputBacklogIdx = InputBacklog.Count - 1 - offset;
+                        InputBacklogIdx = InputHistoryService.Count - 1 - offset;
                         break;
                     case > 0:
                         InputBacklogIdx--;
@@ -1766,7 +1763,7 @@ public sealed class ChatLogWindow : Window
                 break;
             case ImGuiKey.DownArrow:
                 if (InputBacklogIdx != -1)
-                    if (++InputBacklogIdx >= InputBacklog.Count)
+                    if (++InputBacklogIdx >= InputHistoryService.Count)
                         InputBacklogIdx = -1;
                 break;
         }
@@ -1774,7 +1771,7 @@ public sealed class ChatLogWindow : Window
         if (prevPos == InputBacklogIdx)
             return 0;
 
-        var historyStr = InputBacklogIdx >= 0 ? InputBacklog[InputBacklogIdx] : string.Empty;
+        var historyStr = InputHistoryService.GetByCursor(InputBacklogIdx) ?? string.Empty;
         data.DeleteChars(0, data.BufTextLen);
         data.InsertChars(0, historyStr);
 
