@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 11;
+    private const int LatestVersion = 12;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -111,9 +111,24 @@ public class Configuration : IPluginConfiguration
     // Hellion Chat — v0.6.0 master switch for the pop-out input bar.
     // Global on purpose: per-tab makes no sense for Auto-Tell-Tabs which
     // are session-only and would force the user to re-enable it for every
-    // new conversation. Default OFF so existing users see no behavior
-    // change after the v10→v11 migration.
-    public bool PopOutInputEnabled;
+    // new conversation. Default flipped to ON in v0.6.1 (was OFF in v0.6.0)
+    // because tester feedback called the manual toggle "umständlich, wirkt
+    // unfertig". v11 → v12 migration applies the same flip to existing users.
+    public bool PopOutInputEnabled = true;
+
+    // Hellion Chat — v0.6.1 One-Time-Hint-Banner that introduces the
+    // chat-header pop-out toolbar button and reminds about the pop-out
+    // input default flip. Set to true once the user dismisses the banner
+    // from the main chat window; never reset after that.
+    public bool SeenPopOutHeaderHint;
+
+    // Hellion Chat — v0.6.1 opt-in: when true, AutoTellTabsService.SpawnTempTab
+    // sets tab.PopOut = true on every new auto-tell tab so the conversation
+    // pops out as its own window directly. Closing the pop-out returns the
+    // tab to the sidebar via the standard Popout.OnClose() flow. Default OFF
+    // because the existing sidebar workflow is what most users (especially
+    // club greeters tracking many parallel tells) expect by default.
+    public bool AutoTellTabsOpenAsPopout;
 
     public int GetRetentionDays(ChatType type)
     {
@@ -311,6 +326,8 @@ public class Configuration : IPluginConfiguration
 
         SeenPopOutInputHint = other.SeenPopOutInputHint;
         PopOutInputEnabled = other.PopOutInputEnabled;
+        SeenPopOutHeaderHint = other.SeenPopOutHeaderHint;
+        AutoTellTabsOpenAsPopout = other.AutoTellTabsOpenAsPopout;
     }
 }
 
