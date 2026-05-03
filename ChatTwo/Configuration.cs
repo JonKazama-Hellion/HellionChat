@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 10;
+    private const int LatestVersion = 11;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -102,6 +102,11 @@ public class Configuration : IPluginConfiguration
     // workflow is specific to club-greeter use cases — most users just
     // want the auto tabs themselves without the extra UI affordance.
     public bool AutoTellTabsShowGreetedToggle;
+
+    // Hellion Chat — One-Time-Hint-Banner that introduces the v0.6.0 pop-out
+    // input feature. Set to true once the user dismisses the banner from a
+    // pop-out window; never reset after that.
+    public bool SeenPopOutInputHint;
 
     public int GetRetentionDays(ChatType type)
     {
@@ -296,6 +301,8 @@ public class Configuration : IPluginConfiguration
         AutoTellTabsCompactDisplay = other.AutoTellTabsCompactDisplay;
         AutoTellTabsHistoryPreload = other.AutoTellTabsHistoryPreload;
         AutoTellTabsShowGreetedToggle = other.AutoTellTabsShowGreetedToggle;
+
+        SeenPopOutInputHint = other.SeenPopOutInputHint;
     }
 }
 
@@ -343,6 +350,10 @@ public class Tab
     public bool DisplayTimestamp = true;
     public InputChannel? Channel;
     public bool PopOut;
+    // Hellion Chat — v0.6.0 opt-in input bar inside the pop-out window for
+    // this tab. Independent text buffer and channel state per pop-out;
+    // history is shared with the main window via InputHistoryService.
+    public bool PopOutInputEnabled;
     public bool IndependentOpacity;
     public float Opacity = 100f;
     public bool InputDisabled;
@@ -423,6 +434,7 @@ public class Tab
             DisplayTimestamp = DisplayTimestamp,
             Channel = Channel,
             PopOut = PopOut,
+            PopOutInputEnabled = PopOutInputEnabled,
             IndependentOpacity = IndependentOpacity,
             Opacity = Opacity,
             Identifier = Identifier,
