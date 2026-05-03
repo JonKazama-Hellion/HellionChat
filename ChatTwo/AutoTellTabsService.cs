@@ -371,6 +371,27 @@ internal sealed class AutoTellTabsService : IDisposable
             var lastIndexValid = lastIndex >= 0 && lastIndex < Plugin.Config.Tabs.Count;
             var currentWasTempTab = lastIndexValid && Plugin.Config.Tabs[lastIndex].IsTempTab;
 
+            // v0.6.1 — symmetric to DropOldestTempTab cleanup: tear down any
+            // popped-out temp tab windows before removing the tabs themselves,
+            // otherwise PopOutWindows + WindowSystem keep ghost entries until
+            // the next plugin reload. Especially relevant once Auto-Pop-Out is
+            // enabled — every logout would otherwise leak as many ghosts as
+            // there were active /tell pop-outs.
+            var poppedTempTabIds = Plugin.Config.Tabs
+                .Where(t => t.IsTempTab && t.PopOut)
+                .Select(t => t.Identifier)
+                .ToList();
+            if (poppedTempTabIds.Count > 0)
+            {
+                var poppedSet = poppedTempTabIds.ToHashSet();
+                foreach (var popout in _plugin.ChatLogWindow.ActivePopouts
+                             .Where(p => poppedSet.Contains(p.TabIdentifier))
+                             .ToList())
+                {
+                    popout.IsOpen = false;
+                }
+            }
+
             Plugin.Config.Tabs.RemoveAll(t => t.IsTempTab);
 
             // Force a switch to tab 0 if the active tab was a temp tab OR
