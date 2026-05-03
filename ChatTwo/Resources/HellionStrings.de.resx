@@ -555,4 +555,37 @@
   <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
     <value>Wenn du mehrere Linkshells benutzt, empfiehlt der Maintainer einen Tab pro Shell für eine sauberere Übersicht. Tab duplizieren und je Kopie die Kanalauswahl einschränken.</value>
   </data>
+  <data name="ChatColourPresets_Default" xml:space="preserve">
+    <value>ChatTwo Standard</value>
+  </data>
+  <data name="ChatColourPresets_HighContrast" xml:space="preserve">
+    <value>Hoher Kontrast</value>
+  </data>
+  <data name="ChatColourPresets_Pastell" xml:space="preserve">
+    <value>Pastell</value>
+  </data>
+  <data name="ChatColourPresets_DarkModeTuned" xml:space="preserve">
+    <value>Dunkelmodus-optimiert</value>
+  </data>
+  <data name="ChatColourPresets_Hellion" xml:space="preserve">
+    <value>Hellion</value>
+  </data>
+  <data name="Settings_Appearance_Colours_PresetsHint" xml:space="preserve">
+    <value>Tipp: Presets überschreiben deine aktuellen Channel-Farben sofort.</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Name" xml:space="preserve">
+    <value>Eingabe in Pop-Outs aktivieren</value>
+  </data>
+  <data name="Settings_Window_PopOutInputEnabled_Description" xml:space="preserve">
+    <value>Master-Switch: erlaubt direktes Tippen und Absenden in jedem Pop-Out-Fenster (inkl. Auto-Tell-Tabs). Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster; Text-Buffer und History-Cursor sind pro Pop-Out unabhängig.</value>
+  </data>
+  <data name="Popout_v060_HintText" xml:space="preserve">
+    <value>Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Master-Switch in den Fenster-Settings aktivieren.</value>
+  </data>
+  <data name="Popout_v060_HintAck" xml:space="preserve">
+    <value>Verstanden</value>
+  </data>
+  <data name="Popout_v060_HintOpenSettings" xml:space="preserve">
+    <value>Fenster-Settings öffnen</value>
+  </data>
 </root>

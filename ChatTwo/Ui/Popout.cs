@@ -144,10 +144,9 @@ internal class Popout : Window
         if (Plugin.Config.SeenPopOutInputHint)
             return 0f;
 
-        // Inline strings — i18n keys follow in Task 29 (Phase E).
-        const string hintText = "Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Master-Switch in den Fenster-Settings aktivieren.";
-        const string ackLabel = "Verstanden";
-        const string openLabel = "Tab-Settings öffnen";
+        var hintText = Resources.HellionStrings.Popout_v060_HintText;
+        var ackLabel = Resources.HellionStrings.Popout_v060_HintAck;
+        var openLabel = Resources.HellionStrings.Popout_v060_HintOpenSettings;
 
         var startY = ImGui.GetCursorPosY();
 

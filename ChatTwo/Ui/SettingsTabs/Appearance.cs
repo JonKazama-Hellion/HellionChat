@@ -231,9 +231,7 @@ internal sealed class Appearance : ISettingsTab
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
             DrawColourPresetButtons();
-            // i18n key follows in Task 29 (Phase E); inline for now so the
-            // build stays green while we ship the colour preset feature.
-            ImGui.TextDisabled("Tipp: Presets überschreiben deine aktuellen Channel-Farben sofort.");
+            ImGui.TextDisabled(HellionStrings.Settings_Appearance_Colours_PresetsHint);
             ImGui.Spacing();
             ImGui.Separator();
             ImGui.Spacing();

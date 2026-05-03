@@ -134,9 +134,8 @@ internal sealed class Window : ISettingsTab
             ImGui.Checkbox(Language.Options_ShowPopOutTitleBar_Name, ref Mutable.ShowPopOutTitleBar);
 
             // v0.6.0 — global master switch for the pop-out input bar.
-            // Inline strings; i18n keys follow in Task 29 (Phase E).
-            ImGui.Checkbox("Eingabe in Pop-Outs aktivieren", ref Mutable.PopOutInputEnabled);
-            ImGuiUtil.HelpMarker("Master-Switch: erlaubt direktes Tippen und Absenden in jedem Pop-Out-Fenster (inkl. Auto-Tell-Tabs). Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster; Text-Buffer und History-Cursor sind pro Pop-Out unabhängig.");
+            ImGui.Checkbox(HellionStrings.Settings_Window_PopOutInputEnabled_Name, ref Mutable.PopOutInputEnabled);
+            ImGuiUtil.HelpMarker(HellionStrings.Settings_Window_PopOutInputEnabled_Description);
 
             ImGui.Checkbox(Language.Options_ShowHideButton_Name, ref Mutable.ShowHideButton);
             ImGuiUtil.HelpMarker(Language.Options_ShowHideButton_Description);
