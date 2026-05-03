@@ -19,6 +19,12 @@ internal static class AutoTranslate
     private static readonly Dictionary<ClientLanguage, List<AutoTranslateEntry>> Entries = new();
     private static readonly HashSet<(uint, uint)> ValidEntries = [];
 
+    // Serializes all reads and writes against Entries / ValidEntries.
+    // PreloadCache spawns a worker thread that fills both, while the main
+    // thread reads them via Matching / ReplaceWithPayload / StartsWithCommand
+    // — without this lock the HashSet/Dictionary access is undefined.
+    private static readonly object EntriesLock = new();
+
     private static Parser<char, (string name, Maybe<IEnumerable<ISelectorPart>> selector)> Parser()
     {
         var sheetName = Any
@@ -68,9 +74,17 @@ internal static class AutoTranslate
 
     private static List<AutoTranslateEntry> AllEntries()
     {
-        if (Entries.TryGetValue(Plugin.DataManager.Language, out var entries))
-            return entries;
+        lock (EntriesLock)
+        {
+            if (Entries.TryGetValue(Plugin.DataManager.Language, out var entries))
+                return entries;
 
+            return BuildEntriesLocked();
+        }
+    }
+
+    private static List<AutoTranslateEntry> BuildEntriesLocked()
+    {
         var shouldAdd = ValidEntries.Count == 0;
 
         var parser = Parser();
@@ -229,7 +243,10 @@ internal static class AutoTranslate
             return;
 
         // populate the list of valid entries
-        if (ValidEntries.Count == 0)
+        bool needBuild;
+        lock (EntriesLock)
+            needBuild = ValidEntries.Count == 0;
+        if (needBuild)
             AllEntries();
 
         var start = -1;
@@ -244,7 +261,10 @@ internal static class AutoTranslate
                 var parts = tag[4..^1].Split(',', 2);
                 if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
                 {
-                    var payload = ValidEntries.Contains((group, key)) ? CreateFixedTranslation(group, key) : [];
+                    bool isValid;
+                    lock (EntriesLock)
+                        isValid = ValidEntries.Contains((group, key));
+                    var payload = isValid ? CreateFixedTranslation(group, key) : [];
 
                     var oldBytes = bytes.ToArray();
                     var lengthDiff = payload.Length - (i - start);
@@ -271,7 +291,10 @@ internal static class AutoTranslate
             return false;
 
         // populate the list of valid entries
-        if (ValidEntries.Count == 0)
+        bool needBuild;
+        lock (EntriesLock)
+            needBuild = ValidEntries.Count == 0;
+        if (needBuild)
             AllEntries();
 
         for (var i = 0; i < search.Length; i++)
@@ -289,7 +312,10 @@ internal static class AutoTranslate
             var parts = tag[4..^1].Split(',', 2);
             if (parts.Length == 2 && uint.TryParse(parts[0], out var group) && uint.TryParse(parts[1], out var key))
             {
-                if (!ValidEntries.Contains((group, key)))
+                bool isValid;
+                lock (EntriesLock)
+                    isValid = ValidEntries.Contains((group, key));
+                if (!isValid)
                     return false;
 
                 var evaluated = Plugin.Evaluator.Evaluate(new ReadOnlySeString(CreateFixedTranslation(group, key))).ToString();

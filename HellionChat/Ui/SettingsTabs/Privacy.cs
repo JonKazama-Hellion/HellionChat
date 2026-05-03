@@ -455,11 +455,18 @@ internal sealed class Privacy : ISettingsTab
 
                 if (deleted > 0)
                 {
-                    Plugin.Framework.Run(() =>
+                    // Bound the wait so a hung framework tick can't deadlock
+                    // the background retention worker. Five seconds is well
+                    // beyond a normal frame; if we time out we log and let
+                    // the next FilterAllTabsAsync call recover the state.
+                    if (!Plugin.Framework.Run(() =>
+                        {
+                            Plugin.MessageManager.ClearAllTabs();
+                            Plugin.MessageManager.FilterAllTabsAsync();
+                        }).Wait(TimeSpan.FromSeconds(5)))
                     {
-                        Plugin.MessageManager.ClearAllTabs();
-                        Plugin.MessageManager.FilterAllTabsAsync();
-                    }).Wait();
+                        Plugin.Log.Warning("Retention sweep: framework refresh timed out after 5s.");
+                    }
                 }
 
                 WrapperUtil.AddNotification(string.Format(HellionStrings.Retention_Success, deleted), NotificationType.Success);
@@ -615,11 +622,17 @@ internal sealed class Privacy : ISettingsTab
                 var deleted = Plugin.MessageManager.Store.CleanupRetainOnly(allowed);
                 Plugin.Log.Information($"Privacy cleanup: deleted {deleted} messages");
 
-                Plugin.Framework.Run(() =>
+                // Bound the wait so a hung framework tick can't deadlock
+                // the background cleanup worker. See the matching comment in
+                // the retention path above for rationale.
+                if (!Plugin.Framework.Run(() =>
+                    {
+                        Plugin.MessageManager.ClearAllTabs();
+                        Plugin.MessageManager.FilterAllTabsAsync();
+                    }).Wait(TimeSpan.FromSeconds(5)))
                 {
-                    Plugin.MessageManager.ClearAllTabs();
-                    Plugin.MessageManager.FilterAllTabsAsync();
-                }).Wait();
+                    Plugin.Log.Warning("Privacy cleanup: framework refresh timed out after 5s.");
+                }
 
                 WrapperUtil.AddNotification(string.Format(HellionStrings.Cleanup_Success, deleted), NotificationType.Success);
             }
