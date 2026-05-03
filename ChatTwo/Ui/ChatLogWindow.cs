@@ -347,6 +347,11 @@ public sealed class ChatLogWindow : Window
         if (Plugin.Config.PreviewPosition is PreviewPosition.Inside)
             height -= Plugin.InputPreview.PreviewHeight;
 
+        // Hellion Chat v0.6.1 — subtract the chat header toolbar (single icon
+        // button) from the message-log height budget so the bottom of the log
+        // does not get clipped by the new toolbar row.
+        height -= ImGui.GetFrameHeightWithSpacing();
+
         return height;
     }
 
@@ -1295,6 +1300,7 @@ public sealed class ChatLogWindow : Window
                 TabSwitched(tab, previousTab);
 
             tab.Unread = 0;
+            DrawChatHeaderToolbar(tab);
             DrawMessageLog(tab, PayloadHandler, GetRemainingHeightForMessageLog(), hasTabSwitched);
         }
 
@@ -1427,9 +1433,29 @@ public sealed class ChatLogWindow : Window
         }
 
         if (currentTab > -1)
+        {
+            DrawChatHeaderToolbar(Plugin.Config.Tabs[currentTab]);
             DrawMessageLog(Plugin.Config.Tabs[currentTab], PayloadHandler, childHeight, hasTabSwitched);
+        }
 
         Plugin.WantedTab = null;
+    }
+
+    // Hellion Chat v0.6.1 — visible pop-out trigger right above the message
+    // log so users discover the feature without having to right-click the tab.
+    // Renders only for the active tab in the main ChatLogWindow; pop-out
+    // windows have their own render path and skip this toolbar.
+    private void DrawChatHeaderToolbar(Tab tab)
+    {
+        var avail = ImGui.GetContentRegionAvail().X;
+        var iconWidth = ImGui.GetFrameHeight();
+        ImGui.SetCursorPosX(ImGui.GetCursorPosX() + avail - iconWidth);
+
+        if (ImGuiUtil.IconButton(FontAwesomeIcon.WindowRestore, tooltip: Language.ChatLog_Tabs_PopOut))
+        {
+            tab.PopOut = true;
+            Plugin.SaveConfig();
+        }
     }
 
     private void DrawTabContextMenu(Tab tab, int i)
