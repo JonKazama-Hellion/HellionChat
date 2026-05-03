@@ -83,6 +83,26 @@ changelog: |-
   - NuGet restore now honors packages.lock.json so transitive
     dependencies don't drift between machines or CI runs
 
+  Default tab layout sharpened (one-time tab reset on first start):
+
+  The first-run tab layout is reorganized into five thematic tabs
+  based on external tester feedback. General contains only Say,
+  Yell and Shout (immediate-surroundings public chat). System
+  absorbs the gameplay-event streams (NpcDialogue, Loot, Crafting,
+  Gathering, PF recruitment pings) and announcement noise
+  (BattleSystem, FreeCompanyAnnouncement, PvpTeamAnnouncement)
+  that previously lived in General. FreeCompany, Group and
+  Linkshell each own their channel set. The static Tell tab is
+  gone — Auto-Tell-Tabs spawns per-conversation tabs on demand.
+  The Beginner / Novice-Network preset is no longer added by
+  default but is still available via Settings, Tabs.
+
+  This is a one-time tab-layout reset for users on config version
+  12 or older. Privacy, Retention, Theme and every other setting
+  is preserved. Your previous tab configuration is written to
+  pluginConfigs/HellionChat.json.pre-v13-backup so you can restore
+  it manually if you prefer the old layout.
+
   Crash-class fixes (formerly latent in upstream):
 
   - MathUtil.HasOverlap now uses a correct AABB test; identical or
