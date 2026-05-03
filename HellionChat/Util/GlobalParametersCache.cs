@@ -10,10 +10,14 @@ public static class GlobalParametersCache
 
     public static int GetValue(int index)
     {
-        if (index < 0 || index >= Cache.Length)
+        // Capture the array reference once so the bounds check and the
+        // indexed read operate on the same instance, even if Refresh
+        // reassigns Cache between the two operations.
+        var cache = Cache;
+        if (index < 0 || index >= cache.Length)
             return 0;
 
-        return Cache[index];
+        return cache[index];
     }
 
     /// <summary>

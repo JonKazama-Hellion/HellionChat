@@ -59,8 +59,14 @@ public readonly unsafe ref struct GfdFileView
             return false;
         }
 
+        if (entries.Length == 0)
+        {
+            entry = default;
+            return false;
+        }
+
         var lo = 0;
-        var hi = entries.Length;
+        var hi = entries.Length - 1;
         while (lo <= hi)
         {
             var i = lo + ((hi - lo) >> 1);
@@ -70,7 +76,7 @@ public readonly unsafe ref struct GfdFileView
                 {
                     iconId = entries[i].Redirect;
                     lo = 0;
-                    hi = entries.Length;
+                    hi = entries.Length - 1;
                     continue;
                 }
 

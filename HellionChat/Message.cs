@@ -49,7 +49,10 @@ public partial class Message
         ExtraChatChannel = extraChatChannel;
         Hash = GenerateHash();
 
-        foreach (var chunk in sender.Concat(content))
+        // Iterate the processed Content list (returned by CheckMessageContent)
+        // rather than the raw constructor parameter — chunks added or replaced
+        // by CheckMessageContent must also have their back-reference set.
+        foreach (var chunk in Sender.Concat(Content))
             chunk.Message = this;
     }
 
