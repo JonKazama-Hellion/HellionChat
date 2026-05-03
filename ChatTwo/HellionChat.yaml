@@ -44,6 +44,44 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 0.6.0 — UX Polish: Pop-Out Input + Colour Presets**
+
+  Two opt-in UX features land in the same release. Existing users see
+  no change unless they enable the new toggles.
+
+  Pop-out input bar:
+
+  - New global master switch in Settings → Window → Frame: "Enable input
+    in pop-outs". Default OFF so existing behaviour is preserved
+  - When enabled, every pop-out window grows a compact input bar at the
+    bottom (channel-coloured icon button left, text input right). The
+    auto-translate picker is intentionally not part of the compact bar
+    in v0.6.0 — typical pop-out workflows (FC greeter, club hostess)
+    rarely need it there
+  - Each pop-out keeps an independent text buffer and history cursor;
+    channel changes still apply globally because that is how the FFXIV
+    channel API works
+  - Up/Down navigates a shared input history singleton across the main
+    window and every open pop-out
+  - First pop-out opening after the upgrade shows a one-time hint
+    banner pointing users to the new toggle
+
+  Chat colour presets:
+
+  - Five built-in presets above the per-channel colour list in
+    Settings → Appearance → Colours: ChatTwo Default, High-Contrast,
+    Pastell, Dark-Mode-Tuned, and Hellion (brand-coloured, blue/orange
+    Arctic Cyan + Ember Glow palette from the Hellion Online Media
+    branding spec)
+  - Apply is immediate and overwrites the channels covered by the
+    preset; battle-channel colours are left alone so combat tuning
+    stays intact
+
+  Configuration migrates from v10 to v11 with a diagnostic log entry;
+  no data is reset. Bilingual (English/German) for both new sections.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 0.5.4 — WrapText hardening**
 
   Replaces the unsafe pointer-arithmetic in ImGuiUtil.WrapText with
