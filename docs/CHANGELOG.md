@@ -12,7 +12,7 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
-## [1.0.2] — 2026-05-04 — Polish patch
+## [1.0.3] — 2026-05-04 — Polish patch
 
 Vier kleine Polish-Items aus dem Backlog gebündelt:
 
@@ -37,7 +37,7 @@ Vier kleine Polish-Items aus dem Backlog gebündelt:
   auf Verbose-Level. Aus by default, Aktivierung via
   `/xllog set HellionChat verbose` für Bug-Report-Diagnose.
 
-[Release-Notes 1.0.2](https://github.com/JonKazama-Hellion/HellionChat/releases/tag/v1.0.2)
+[Release-Notes 1.0.3](https://github.com/JonKazama-Hellion/HellionChat/releases/tag/v1.0.3)
 
 ## [1.0.1] — 2026-05-04 — Window Position Recovery
 

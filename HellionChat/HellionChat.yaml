@@ -49,7 +49,7 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
-  **Hellion Chat 1.0.2 — Polish patch**
+  **Hellion Chat 1.0.3 — Polish patch**
 
   - New: optionally hide chat (and every other plugin window) while the
     New Game+ menu is open. Toggle in Settings → Window → Frame, default
