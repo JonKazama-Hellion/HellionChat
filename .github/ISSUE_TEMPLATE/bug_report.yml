@@ -59,7 +59,7 @@ body:
     id: log
     attributes:
       label: Relevant /xllog excerpt
-      description: Filter for "HellionChat" or "ChatTwo" if the log is huge
+      description: Filter for "HellionChat" if the log is huge
       render: text
 
   - type: checkboxes
