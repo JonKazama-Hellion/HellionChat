@@ -49,7 +49,7 @@ comfortable with Dalamud and plugin development in general.
 
 Upstream Chat 2 (by Infi & Anna, EUPL-1.2) is the foundation and was not
 produced with AI assistance. Hellion-specific code lives in
-`ChatTwo/Privacy/`, `ChatTwo/Export/`, `Resources/HellionStrings*`,
+`HellionChat/Privacy/`, `HellionChat/Export/`, `HellionChat/Resources/HellionStrings*`,
 `Ui/SettingsTabs/Privacy.cs`, `Ui/FirstRunWizard.cs`, `Ui/HellionStyle.cs`,
 plus the Migrate3 recovery and plugin layout migration in `MessageStore.cs`
 and `Plugin.cs`. These were developed with Pair-level assistance as

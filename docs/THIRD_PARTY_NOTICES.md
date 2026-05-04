@@ -10,7 +10,7 @@ Last reviewed: 2026-05-03 (HellionChat v0.5.4).
 
 ## Direct NuGet dependencies
 
-Pinned in `ChatTwo/ChatTwo.csproj`. Versions reflect the v0.5.4 build.
+Pinned in `HellionChat/HellionChat.csproj`. Versions reflect the v1.0.0 build.
 
 | Package | Version | Licence | Network | Purpose |
 | --- | --- | --- | --- | --- |
@@ -50,7 +50,7 @@ HellionChat is a fork of [Chat 2](https://github.com/Infiziert90/ChatTwo)
 by Infiziert90 (Infi) and Anna Clemens, also licensed under EUPL-1.2.
 The bulk of the code, including the message store architecture, the
 channel logic, the hook system and the ImGui chat window, originates
-from upstream. See `NOTICE.md` and `UPSTREAM_SYNC.md` for the
+from upstream. See `../NOTICE.md` and `UPSTREAM_SYNC.md` for the
 attribution and the cherry-pick policy.
 
 ---
@@ -62,8 +62,8 @@ components opens network connections on their own. All outbound
 traffic is initiated explicitly by HellionChat's own source files
 and is documented in `PRIVACY.md` under "Outbound network calls":
 
-- `ChatTwo/EmoteCache.cs` → BetterTTV API + CDN (opt-out via setting)
-- `ChatTwo/FontManager.cs` → Square Enix Lodestone font CDN (one-time
+- `HellionChat/EmoteCache.cs` → BetterTTV API + CDN (opt-out via setting)
+- `HellionChat/FontManager.cs` → Square Enix Lodestone font CDN (one-time
   download)
 
 ---
@@ -73,7 +73,7 @@ and is documented in `PRIVACY.md` under "Outbound network calls":
 To regenerate the dependency inventory after a version bump:
 
 ```bash
-dotnet list ChatTwo.sln package --include-transitive
+dotnet list HellionChat.sln package --include-transitive
 ```
 
 The "direct NuGet dependencies" table above only lists direct
@@ -85,7 +85,7 @@ To re-audit the network-call inventory:
 
 ```bash
 grep -rn -E "HttpClient|HttpRequest|new Uri\(|https?://" \
-  --include="*.cs" ChatTwo/
+  --include="*.cs" HellionChat/
 ```
 
 Any new hit that is not a click-through (`Util.OpenLink`) or a

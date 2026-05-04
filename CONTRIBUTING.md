@@ -10,7 +10,7 @@ what I am not, and how to make a contribution land smoothly.
 - Read the [README](README.md) so you understand the scope: this is a
   privacy-focused, EUPL-1.2-licensed Dalamud plugin that intentionally
   removes the upstream webinterface and ships smaller defaults.
-- Read [UPSTREAM_SYNC.md](UPSTREAM_SYNC.md). Cherry-picks from upstream
+- Read [UPSTREAM_SYNC.md](docs/UPSTREAM_SYNC.md). Cherry-picks from upstream
   Chat 2 are selective and conscious; not everything that lands there
   belongs here.
 - Read [SECURITY.md](SECURITY.md). Anything security-sensitive goes
@@ -22,7 +22,7 @@ what I am not, and how to make a contribution land smoothly.
 - Bug fixes for behaviour documented in the README, the in-plugin
   settings or the changelog.
 - Translation contributions for Hellion-specific strings via direct
-  pull requests against `ChatTwo/Resources/HellionStrings.*.resx`.
+  pull requests against `HellionChat/Resources/HellionStrings.*.resx`.
   Translations for the upstream Chat 2 strings (`Language.*.resx`) are
   not handled here; they go through the upstream Chat 2 project.
 - Documentation improvements (README, comments, this file).
@@ -40,7 +40,7 @@ what I am not, and how to make a contribution land smoothly.
   They make selective upstream cherry-picks much harder and the
   maintenance cost outweighs the benefit for a one-person project.
 - AI-generated code dropped in without disclosure or human review. See
-  [AI_DISCLOSURE.md](AI_DISCLOSURE.md) for how I handle AI assistance
+  [AI_DISCLOSURE.md](docs/AI_DISCLOSURE.md) for how I handle AI assistance
   on my side; I expect comparable transparency from contributors.
 
 If you are unsure whether an idea fits, open a feature-request issue
@@ -60,7 +60,7 @@ proposal than to a finished pull request.
    easier to review than one big one. Squash-on-merge happens at the
    PR level if needed.
 5. If your change touches user-visible behaviour, update the README
-   and/or the changelog block in `ChatTwo/HellionChat.yaml` and
+   and/or the changelog block in `HellionChat/HellionChat.yaml` and
    `repo.json` for the next version. I bump the version number myself
    at release time, so you do not need to.
 6. Open the pull request against `main`. The PR template will ask
@@ -79,13 +79,12 @@ locally you need:
 
 ```
 dotnet restore
-dotnet build ChatTwo.sln -c Release
-dotnet test  ChatTwo.sln -c Release
+dotnet build HellionChat.sln -c Release
 ```
 
-The test project is `ChatTwo.Tests`. New behaviour should come with a
-test where the existing test infrastructure makes that practical
-(privacy filter, configuration migration, message store).
+Tests are not part of the current `HellionChat.sln`. If you add a test
+project, point it at the relevant subsystems (privacy filter,
+configuration migration, message store) and mention it in the PR.
 
 For a smoke test in-game: build, copy the output into your Dalamud
 `devPlugins/HellionChat/` directory and load it through `/xlplugins`.
@@ -114,11 +113,11 @@ There is no separate CLA.
 
 ## Translations
 
-Hellion-specific strings live in `ChatTwo/Resources/HellionStrings.resx`
+Hellion-specific strings live in `HellionChat/Resources/HellionStrings.resx`
 (English source) and `HellionStrings.<lang>.resx` (per-language).
 Translations are accepted as direct pull requests against those files.
 
-The upstream Chat 2 strings in `ChatTwo/Resources/Language.*.resx` are
+The upstream Chat 2 strings in `HellionChat/Resources/Language.*.resx` are
 **not** translated in this repository. They are owned by the upstream
 Chat 2 project and synced in via cherry-pick. Please contribute
 upstream-string translations to

@@ -15,7 +15,7 @@ Dalamud main plugin repo. To install:
 
 - [README](https://github.com/JonKazama-Hellion/HellionChat/blob/main/README.md) — features, architecture, build
 - [Privacy notice](https://github.com/JonKazama-Hellion/HellionChat/blob/main/PRIVACY.md) — what the plugin stores and sends
-- [Third-party notices](https://github.com/JonKazama-Hellion/HellionChat/blob/main/THIRD_PARTY_NOTICES.md) — dependencies and licences
+- [Third-party notices](https://github.com/JonKazama-Hellion/HellionChat/blob/main/docs/THIRD_PARTY_NOTICES.md) — dependencies and licences
 - [Security policy](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SECURITY.md) — vulnerability reporting
 - [Support](https://github.com/JonKazama-Hellion/HellionChat/blob/main/SUPPORT.md) — bug reports, questions, contact paths
 

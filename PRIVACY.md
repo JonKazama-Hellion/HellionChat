@@ -112,7 +112,7 @@ on your behalf.
   and no requests to BetterTTV are made for the rest of the session.
 - **BetterTTV's privacy policy:** <https://betterttv.com/privacy>
 
-Source: `ChatTwo/EmoteCache.cs`.
+Source: `HellionChat/EmoteCache.cs`.
 
 ### 2. Square Enix Lodestone font (`img.finalfantasyxiv.com`)
 
@@ -131,7 +131,7 @@ Source: `ChatTwo/EmoteCache.cs`.
   If a user-facing opt-out for this would be useful for you, please
   open a feature-request issue.
 
-Source: `ChatTwo/FontManager.cs`.
+Source: `HellionChat/FontManager.cs`.
 
 ### Links you click yourself (no automatic traffic)
 
@@ -149,7 +149,7 @@ traffic.
 - **No telemetry.** Source verified: no calls to AppInsights, Sentry,
   PostHog, Plausible, Google Analytics, Microsoft Clarity or any
   comparable service exist in the codebase, nor in the direct
-  dependencies the plugin pulls in. See `THIRD_PARTY_NOTICES.md`.
+  dependencies the plugin pulls in. See `docs/THIRD_PARTY_NOTICES.md`.
 - **No crash reporting.** Crashes go to Dalamud's local `xllog`,
   not to a remote endpoint controlled by HellionChat.
 - **No usage counters.** The plugin does not count installs, sessions,
@@ -222,7 +222,7 @@ or Dalamud, and BetterTTV is opt-out via settings.
 
 ## Dependencies that touch the network
 
-For a full dependency inventory see `THIRD_PARTY_NOTICES.md`. Of the
+For a full dependency inventory see `docs/THIRD_PARTY_NOTICES.md`. Of the
 direct dependencies the plugin pulls in:
 
 - `MessagePack` — local serialisation, no network.

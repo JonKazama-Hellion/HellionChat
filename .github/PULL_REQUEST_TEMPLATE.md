@@ -53,7 +53,7 @@ new commands, new translations, removed behaviour. If none, write
   bump and is it covered by the existing migration tests?
 - Does this change the schema in MessageStore?
 - Does this change the repo.json or HellionChat.yaml manifest fields?
-- Does this affect the upstream cherry-pick path? See UPSTREAM_SYNC.md.
+- Does this affect the upstream cherry-pick path? See docs/UPSTREAM_SYNC.md.
 -->
 
 ## Checklist
@@ -67,6 +67,6 @@ new commands, new translations, removed behaviour. If none, write
 - [ ] I updated the README, in-plugin strings or documentation if my
       change is user-visible.
 - [ ] I did not include any AI-generated code without disclosing it
-      in the PR description (see [AI_DISCLOSURE.md](../AI_DISCLOSURE.md)).
+      in the PR description (see [AI_DISCLOSURE.md](../docs/AI_DISCLOSURE.md)).
 - [ ] I confirm my contribution is released under the
       [EUPL-1.2](../LICENSE).

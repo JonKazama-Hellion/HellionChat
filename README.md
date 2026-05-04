@@ -12,7 +12,7 @@
 
 Hellion Chat ergänzt das ursprüngliche Chat-2-Fundament um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle aus Chat 2 übernommenen Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
 
-Eigenständiges Repository, EUPL-1.2-lizenziert. Distribution über Custom-Repo. Selektive Cherry-Picks von Upstream-Chat-2 nach Bedarf, dokumentiert in [UPSTREAM_SYNC.md](UPSTREAM_SYNC.md).
+Eigenständiges Repository, EUPL-1.2-lizenziert. Mit v1.0.0 ist der Standalone-Cut abgeschlossen: eigener Namespace `HellionChat.*`, eigene IPC-Kanäle, eigene Source-Tree-Struktur. Distribution über Custom-Repo. Selektive Cherry-Picks von Upstream-Chat-2 nach Bedarf, dokumentiert in [`docs/UPSTREAM_SYNC.md`](docs/UPSTREAM_SYNC.md).
 
 ## Acknowledgements
 
@@ -44,12 +44,12 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 - **Aufbewahrungsdauer pro Kanal** mit täglicher Background-Bereinigung. Tells 365 Tage, eigene Konversations-Kanäle 90 Tage, globaler Default 30 Tage. Standard ist AUS, das Plugin löscht ohne ausdrückliche Zustimmung nichts.
 - **Retroaktive Säuberung** mit Vorschau und Strg+Umschalt-Bestätigung. Wendet die aktuelle Whitelist auf eine bestehende Datenbank an, läuft im Hintergrund, ruft danach VACUUM auf.
 - **Export** nach Markdown, JSON oder CSV via Dalamud-Datei-Dialog (DSGVO Art. 15 Auskunftsrecht). Filter nach Kanal, Datums-Bereich oder Sender-Substring.
-- **Vollständige Datenschutz-Übersicht** in [`PRIVACY.md`](PRIVACY.md): was gespeichert wird, welche zwei Outbound-Calls existieren (BetterTTV opt-out, Square-Enix-Lodestone-Font), explizite Telemetry-None-Zusage und das Mapping der DSGVO-Rechte (Art. 15/17/18/20/21) auf konkrete Plugin-Funktionen.
+- **Vollständige Datenschutz-Übersicht** in [`PRIVACY.md`](PRIVACY.md) und Drittanbieter-Komponenten in [`docs/THIRD_PARTY_NOTICES.md`](docs/THIRD_PARTY_NOTICES.md): was gespeichert wird, welche zwei Outbound-Calls existieren (BetterTTV opt-out, Square-Enix-Lodestone-Font), explizite Telemetry-None-Zusage und das Mapping der DSGVO-Rechte (Art. 15/17/18/20/21) auf konkrete Plugin-Funktionen.
 
 ### Onboarding
 
 - **First-Run-Wizard** mit drei Profilen (Privacy-First, Locker, Volle Historie) und DSGVO-Hinweis bei der "Volle Historie"-Option.
-- **Konfigurations-Migration v6→v7** seedet Privacy-Defaults bei Bestand-Usern und zeigt eine Benachrichtigung beim Ersten Plugin-Start nach Update.
+- **Konfigurations-Migration** seedet Privacy-Defaults bei Bestands-Usern und zeigt eine Benachrichtigung beim ersten Plugin-Start nach Update. Mit v1.0.0 wird zusätzlich für User auf Config-Version 12 oder älter ein einmaliger Tab-Layout-Reset durchgeführt; die alte Tab-Konfiguration wird als `pluginConfigs/HellionChat.json.pre-v13-backup` gesichert.
 - **Layout-Migration aus Chat 2** verschiebt Konfiguration und Datenbank in `pluginConfigs/HellionChat/` ohne Datenverlust. Robust gegen blockierte Dateien (Warnung beim User wenn Chat 2 noch geladen ist).
 - **Migrate3-Recovery** heilt halb-migrierte Datenbanken aus alten Chat-2-Installationen.
 
@@ -83,7 +83,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 ## Architektur
 
 ```
-ChatTwo/
+HellionChat/
 ├── Privacy/
 │   └── PrivacyDefaults.cs       # Whitelist-Sets, Spec-Retention-Tabelle
 ├── Export/
@@ -92,6 +92,7 @@ ChatTwo/
 │   ├── HellionStrings.resx      # Hellion-eigene UI-Strings (EN)
 │   ├── HellionStrings.de.resx   # Deutsche Übersetzung
 │   ├── HellionStrings.Designer.cs # Hand-maintained Accessor
+│   ├── ChatColourPresets.cs     # Sieben Built-in-Color-Presets (v0.6.0)
 │   ├── HellionFont.ttf          # Exo 2 Variable Font
 │   ├── HellionFont-OFL.txt      # OFL-1.1 Lizenztext (mit Font gebundelt)
 │   └── Language*.resx           # Upstream-Lokalisierung (Crowdin)
@@ -100,16 +101,19 @@ ChatTwo/
 │   ├── HellionStyle.cs          # ImGui-Theme-Push (lokal + global)
 │   └── SettingsTabs/
 │       └── Privacy.cs           # Datenschutz-Tab (Filter, Retention, Cleanup, Export)
+├── Ipc/                         # IPC-Kanäle, in v1.0.0 auf HellionChat.* migriert
+├── ChatTwoConflictDetector.cs   # Verweigert Plugin-Start wenn Upstream Chat 2 aktiv
 ├── images/
 │   └── icon.png                 # Hellion-Logo (256×256)
-├── DalamudPackager.targets      # Override für ImagesPath / HandleImages
+├── HellionChat.csproj           # SDK Dalamud.NET.Sdk/15.0.0
 └── HellionChat.yaml             # Plugin-Manifest (DalamudPackager-Source)
 ```
 
 ### Regeln
 
-- **Code-Namespace ist `HellionChat.*`** — seit v1.0.0 vollständig konsolidiert auf den Plugin-Namen.
-- **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigene Datei-Manifest, kein Shared State mit Chat 2.
+- **Code-Namespace ist `HellionChat.*`** — seit v1.0.0 vollständig konsolidiert auf den Plugin-Namen, kein verbleibender `ChatTwo.*`-Bestand im Source-Tree.
+- **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigenes Datei-Manifest, kein Shared State mit Chat 2. Parallel-Load mit Upstream Chat 2 wird beim Start aktiv geblockt (bilinguale Konflikt-Meldung).
+- **IPC-Kanäle sind `HellionChat.*`** — sechs Kanäle für Drittplugin-Anbindung (`Register`, `Available`, `Unregister`, `Invoke`, `GetChatInputState`, `ChatInputStateChanged`). Details in [`docs/IPC.md`](docs/IPC.md).
 - **Hellion-eigene Strings in `HellionStrings.*.resx`**, übernommene Strings aus dem Chat-2-Bestand in `Language.*.resx` — die Original-`Language.*.resx` bleibt strukturell erhalten, weil die existierenden Übersetzungen aus dem Crowdin-Bestand der Upstream-Community weiter wertvoll sind.
 - **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager` — Font-Fallback und Hellion-Font laufen zentral.
 
@@ -193,93 +197,50 @@ Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `v0.X.Y`-Ta
 
 ---
 
-## Entwicklung
-
-### Voraussetzungen
-
-- .NET 10 SDK (`10.0.104+`) und .NET 9 SDK (`9.0.115+` parallel)
-- Dalamud-Hooks im XIVLauncher-`addon`-Verzeichnis
-- VS Code mit C# Dev Kit (oder Rider, JetBrains)
-- Linux: WireGuard-Mount für Test-Spiel-Setup falls Remote-DB
-
-### Setup
-
-```bash
-git clone --recurse-submodules https://github.com/JonKazama-Hellion/HellionChat.git
-cd HellionChat
-git remote add upstream https://github.com/Infiziert90/ChatTwo.git
-
-# Linux: DALAMUD_HOME exportieren falls Hooks nicht im Standardpfad
-cp .env.example .env
-set -a; source .env; set +a
-
-dotnet build ChatTwo/ChatTwo.csproj
-```
-
-Output: `ChatTwo/bin/Debug/HellionChat.dll`. Den Ordner `ChatTwo/bin/Debug` in Dalamud unter Experimental → Dev Plugin Locations eintragen.
-
-### Build-Konfigurationen
-
-| Configuration | Output                                                | Zweck                            |
-| ------------- | ----------------------------------------------------- | -------------------------------- |
-| Debug         | `bin/Debug/HellionChat.dll`                           | Dev-Plugin-Loading               |
-| Release       | `bin/Release/HellionChat/latest.zip` + Manifest       | Custom-Repo / GitHub Release     |
-
-### Upstream-Sync
-
-```bash
-git fetch upstream
-git log --oneline HEAD..upstream/main          # Welche Commits gibt es?
-git cherry-pick -x <commit>                    # Selektiv übernehmen
-```
-
-Konflikte in Upstream-Sprach-Ressourcen (`Language.<lang>.resx`) kommen häufig vor, weil Upstream-Übersetzungen (über das Chat-2-Crowdin-Projekt, nicht unseres) regelmäßig nachkommen. Pragmatisch mit `git checkout --theirs` auflösen, da wir sie selbst nicht editieren.
-
----
-
 ## Distribution
 
-| Phase           | Version       | Distribution                                       |
-| --------------- | ------------- | -------------------------------------------------- |
-| Bootstrap       | v0.1.x        | Eigenes Custom-Repo (`repo.json` im Repo-Root)     |
-| Stable          | v1.0          | Eigenes Custom-Repo                                |
-| Optional        | v1.1+         | Submission ans Dalamud-Main-Plugin-Repo (zusätzlich) |
+Hellion Chat wird über ein eigenes Dalamud-Custom-Repository verteilt
+(`repo.json` im Repo-Root). Tag-Pushes auf `vX.Y.Z` lösen den
+[`release.yml`](.github/workflows/release.yml)-Workflow aus, der den
+Build-Output (`HellionChat/bin/Release/HellionChat/latest.zip`) plus den
+passenden Changelog-Block aus `HellionChat.yaml` an das GitHub-Release
+hängt. Manueller Recovery-Pfad bei verpasstem Auto-Trigger:
+`gh workflow run release.yml -f tag=vX.Y.Z`.
 
-`repo.json` wird beim Versions-Bump per Hand aus dem generierten `HellionChat.json` plus den GitHub-Release-Download-Links zusammengebaut. Skript-Automatisierung via GitHub Actions ist geplant aber noch nicht eingerichtet.
+Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum
+eigenen Custom-Repo) steht in der [Roadmap](docs/ROADMAP.md).
 
 ---
 
 ## Projektstatus
 
-**Version 0.6.1** | Stand: 2026-05-03
+**Version 1.0.0** — Standalone-Cut live (Stand: 2026-05-04).
 
-Alle Bootstrap-Phasen abgeschlossen:
+Mit v1.0.0 ist Hellion Chat ein eigenständiges Plugin, kein Fork mehr im
+Repository-Sinne. Vollständig abgeschlossen:
 
-- [x] Privacy-Filter (Whitelist + Retention + Cleanup + Export)
-- [x] First-Run-Wizard mit drei Profilen
-- [x] Plugin-Identity (eigener Slot, Layout-Migration, Recovery)
-- [x] Bilinguale UI (EN + DE) mit Live-Sprachwechsel
-- [x] Hellion-Theme + Hellion-Logo + gebündelter Exo-2-Font
-- [x] Custom-Repo-Pipeline mit GitHub-Release-Distribution
-- [x] About-Tab im Hellion-Branding mit License + Disclaimer
-- [x] AI-Disclosure dokumentiert (Pair-Klassifikation)
-- [x] Webinterface entfernt (Phase 1.5, Audit-Konsequenz aus 2026-05-02)
-- [x] Audit-Hardening Phase 2 (Path-Traversal, Retention-Race, DbViewer-Konsistenz, Privacy-Filter-Help-Text)
-- [x] Slash-Commands auf `/hellion`-Familie umbenannt
-- [x] Theme auf Hellion-Online-Media-Brand-Palette aligned (Arctic Cyan + Ember Orange)
-- [x] About-Tab vollständig lokalisiert (EN + DE) mit Mission-Statement und neutraler Tonart
+- Privacy-Filter (Whitelist, Retention, retroaktive Cleanup, Export)
+- First-Run-Wizard mit drei Profilen
+- Plugin-Identity: eigener `HellionChat`-Slot, Layout-Migration aus Chat 2, Migrate3-Recovery
+- Bilinguale UI (EN + DE) mit Live-Sprachwechsel
+- Hellion-Theme, Hellion-Logo, gebündelter Exo-2-Font
+- Custom-Repo-Pipeline mit automatisierter GitHub-Release-Distribution
+- Slash-Commands auf die `/hellion`-Familie konsolidiert
+- Webinterface entfernt (v0.2.0)
+- Audit-Hardening (Path-Traversal, Retention-Race, DbViewer-Konsistenz)
+- About-Tab im Hellion-Branding, EN + DE lokalisiert, mit License und Disclaimer
+- AI-Disclosure dokumentiert (siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md))
+- Standalone-Cut: Namespace `HellionChat.*`, IPC-Kanäle `HellionChat.*`, Source-Tree-Restructure, Conflict-Detection gegen Upstream Chat 2, SQLite-CVE-Härtung (3.50.3)
 
-Phase 3 (offen, kein festes Datum):
+Was als Nächstes geplant ist und welche Themen langfristig auf der Liste
+stehen, steht in [`docs/ROADMAP.md`](docs/ROADMAP.md). Konkrete
+eingeplante Items werden zusätzlich im
+[GitHub-Issue-Tracker](https://github.com/JonKazama-Hellion/HellionChat/issues)
+mit dem `roadmap`-Label geführt.
 
-- [ ] MySQL/MariaDB-Backend mit Drei-Stufen-Bestätigung
-- [ ] PostgreSQL-Backend
-- [ ] Encryption für sensible Channels (AES-256, lokaler Key)
-- [ ] WireGuard-Network-Detection (optionaler Filter)
-- [ ] libnotify-Integration (native Linux-Toasts)
-- [ ] XDG-Compliance (komplex unter Wine)
-- [ ] Hand-gezeichnetes Hellion-Logo (Platzhalter aus Hellion-Online-Media-Brand-Repo)
-- [ ] GitHub-Actions für reproduzierbaren Build und automatischen `repo.json`-Sync
-- [ ] Submission ans Dalamud-Main-Plugin-Repo
+### Zur Release-Kadenz
+
+Wer den Repo zum ersten Mal sieht, bemerkt schnell viele Releases und sehr viele Commits in kurzer Zeit. Beides ist eine bewusste Entscheidung, keine KI-Slop-Symptomatik: Vorarbeit vor dem Fork (Issues und Commits gelesen, Chat 2 ingame genutzt), eine sauber strukturierte Upstream-Codebase als Fundament, atomare Commits im Stil des Upstream und AI-gestütztes Review-Sparring, das ich nicht blind übernehme. Die volle Begründung steht in [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md), Sektion "Wie ich so schnell release".
 
 ---
 
@@ -310,23 +271,40 @@ FINAL FANTASY XIV © SQUARE ENIX CO., LTD. Alle Rechte vorbehalten. Hellion Chat
 
 ### KI-Unterstützung
 
-Siehe [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) für die Pair-Level-Disclosure.
+Siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md) für die Pair-Level-Disclosure.
 
 ---
 
 ## Projekt-Dokumente
 
+Im Repo-Root liegen die Standard-Repository-Dokumente, vertiefende
+Dokumentation lebt unter [`docs/`](docs/).
+
+### Repo-Root
+
 | Dokument | Inhalt |
 | --- | --- |
 | [`PRIVACY.md`](PRIVACY.md) | Datenschutz-Übersicht: lokale Speicherung, Outbound-Calls, Telemetry-Status, DSGVO-Rechte und ihre Plugin-Entsprechungen. |
 | [`SECURITY.md`](SECURITY.md) | Vulnerability-Reporting via Private Advisory, Scope und Disclosure-Fenster. |
-| [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) | NuGet-Dependencies mit Lizenzen, Bundled Assets, Network-Status pro Komponente. |
-| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Was ich akzeptiere bzw. ablehne, Workflow, Build-Anleitung, EUPL-1.2-Bestätigung. |
-| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Verhaltens-Erwartungen und Reporting-Pfad. |
 | [`SUPPORT.md`](SUPPORT.md) | Wegweiser für Bugs, Security, Privacy, Quick-Questions. |
-| [`UPSTREAM_SYNC.md`](UPSTREAM_SYNC.md) | Cherry-Pick-Policy gegenüber Chat 2. |
+| [`CONTRIBUTING.md`](CONTRIBUTING.md) | Was ich akzeptiere bzw. ablehne, Workflow, EUPL-1.2-Bestätigung. |
+| [`CODE_OF_CONDUCT.md`](CODE_OF_CONDUCT.md) | Verhaltens-Erwartungen und Reporting-Pfad. |
 | [`NOTICE.md`](NOTICE.md) | Attribution an Upstream-Maintainer und Komponenten-Credits. |
-| [`AI_DISCLOSURE.md`](AI_DISCLOSURE.md) | Offenlegung der KI-Unterstützung im Entwicklungsprozess. |
+| [`COPYRIGHT`](COPYRIGHT) | Copyright-Notes mit Dual-Holder-Block. |
+| [`LICENSE`](LICENSE) | EUPL-1.2 Volltext. |
+
+### `docs/`
+
+| Dokument | Inhalt |
+| --- | --- |
+| [`docs/ROADMAP.md`](docs/ROADMAP.md) | Geplante Cycles, mittelfristige und langfristige Themen. |
+| [`docs/CHANGELOG.md`](docs/CHANGELOG.md) | Kuratierte Versions-Übersicht mit Verweis auf die GitHub-Release-Pages. |
+| [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md) | Tester, Übersetzer und Code-Beiträger der Hellion-Seite. |
+| [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md) | Entwicklungsgeschichte, vom Web-Stack zu C# / Dalamud, was ich aus dem Fork gelernt habe. |
+| [`docs/IPC.md`](docs/IPC.md) | IPC-Kanal-Reference, Tuple-Payload-Felder, Migrations-Diff für Drittplugins. |
+| [`docs/UPSTREAM_SYNC.md`](docs/UPSTREAM_SYNC.md) | Cherry-Pick-Policy gegenüber Chat 2. |
+| [`docs/THIRD_PARTY_NOTICES.md`](docs/THIRD_PARTY_NOTICES.md) | NuGet-Dependencies mit Lizenzen, Bundled Assets, Network-Status pro Komponente. |
+| [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md) | Offenlegung der KI-Unterstützung im Entwicklungsprozess. |
 
 ---
 
