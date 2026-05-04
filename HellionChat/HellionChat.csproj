@@ -28,7 +28,7 @@
              without a major bump on the managed wrapper. -->
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
         <PackageReference Include="morelinq" Version="4.4.0" />
-        <PackageReference Include="Pidgin" Version="3.3.0" />
+        <PackageReference Include="Pidgin" Version="3.5.1" />
         <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
     </ItemGroup>
 
