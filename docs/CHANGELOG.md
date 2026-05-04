@@ -12,6 +12,22 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## [1.0.1] — 2026-05-04 — Window Position Recovery
+
+Fixes an off-screen-window scenario the user could end up in after a
+monitor disconnect or display layout change between sessions. An
+automatic one-shot bounds check on the first draw after plugin load
+snaps the window back into the visible viewport, and a new
+"Reset Window Position" button in Settings → Window → Frame serves as
+the manual escape hatch for edge cases.
+
+Bundled housekeeping since v1.0.0: documentation restructured into
+`docs/`, stale ChatTwo/* paths in repo configs cleaned up, Pidgin
+parser library bumped from 3.3.0 to 3.5.1, GitHub Actions bumps for
+`actions/setup-dotnet` (4 → 5) and `github/codeql-action` (3 → 4).
+
+[Release-Notes 1.0.1](https://github.com/JonKazama-Hellion/HellionChat/releases/tag/v1.0.1)
+
 ## [1.0.0] — 2026-05-03 — Standalone Major Release
 
 Erste vollständig eigenständige Version. Code-Namespace, IPC-Kanäle und

@@ -49,6 +49,32 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.0.1 — Window Position Recovery**
+
+  - Automatic bounds check on the first draw after plugin load.
+    When the persisted window position has no overlap with the
+    primary viewport, the window snaps to a safe top-left default.
+    Helpful after a monitor disconnect, resolution change or
+    multi-monitor layout switch between sessions.
+  - New "Reset Window Position" button in Settings → Window → Frame
+    as a manual escape hatch for edge cases the automatic check
+    doesn't catch.
+
+  Tested on Linux/Wayland with a hard-cut three-monitor reduction;
+  window recovers cleanly without manual JSON editing.
+
+  Housekeeping carried over since v1.0.0:
+
+  - Documentation restructured into docs/ folder. New CHANGELOG,
+    CONTRIBUTORS, LEARNING-JOURNEY and ROADMAP added
+  - Stale ChatTwo/* paths in repo configs updated to HellionChat/*
+  - Pidgin parser library bumped from 3.3.0 to 3.5.1 (CIString
+    Unicode fix relevant for non-ASCII channel/tab names)
+  - GitHub Actions: actions/setup-dotnet bumped 4 → 5,
+    github/codeql-action bumped 3 → 4
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.0.0 — Standalone Major Release**
 
   First fully standalone release. Internal cleanup plus a sweep of
