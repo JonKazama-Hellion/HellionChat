@@ -145,6 +145,7 @@ public class Configuration : IPluginConfiguration
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
+    public bool HideInNewGamePlusMenu;
     public bool HideWhenInactive;
     public int InactivityHideTimeout = 10;
     public bool InactivityHideActiveDuringBattle = true;
@@ -221,6 +222,7 @@ public class Configuration : IPluginConfiguration
     public float TooltipOffset;
     public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
+    public bool ColorSelectedInputChannelButton = true;
     public List<Tab> Tabs = [];
 
     public bool OverrideStyle;
@@ -241,6 +243,7 @@ public class Configuration : IPluginConfiguration
         HideWhenUiHidden = other.HideWhenUiHidden;
         HideInLoadingScreens = other.HideInLoadingScreens;
         HideInBattle = other.HideInBattle;
+        HideInNewGamePlusMenu = other.HideInNewGamePlusMenu;
         HideWhenInactive = other.HideWhenInactive;
         InactivityHideTimeout = other.InactivityHideTimeout;
         InactivityHideActiveDuringBattle = other.InactivityHideActiveDuringBattle;
@@ -288,6 +291,7 @@ public class Configuration : IPluginConfiguration
         TooltipOffset = other.TooltipOffset;
         WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
+        ColorSelectedInputChannelButton = other.ColorSelectedInputChannelButton;
 
         // Hellion Chat — Auto-Tell-Tabs are session-only and therefore
         // never present in a disk-loaded copy. Keep the live temp tabs of

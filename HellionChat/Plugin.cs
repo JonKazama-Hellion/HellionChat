@@ -571,6 +571,16 @@ public sealed class Plugin : IDalamudPlugin
             return;
         }
 
+        // v1.0.2 — global skip while the New Game+ menu (QuestRedo addon) is
+        // open. Hides every plugin window in one shot (chat log, pop-outs,
+        // settings, db viewer, etc.), matching the LoadingScreens pattern.
+        if (Config.HideInNewGamePlusMenu && GameFunctions.GameFunctions.IsAddonInteractable(GameFunctions.GameFunctions.NewGamePlusAddonName))
+        {
+            ChatLogWindow.FinalizeFrame();
+            TypingIpc.Update();
+            return;
+        }
+
         ChatLogWindow.HideStateCheck();
 
         Interface.UiBuilder.DisableUserUiHide = !Config.HideWhenUiHidden;

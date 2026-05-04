@@ -208,6 +208,12 @@
     <data name="Options_ChatColours_Import">
         <value>Import from game</value>
     </data>
+    <data name="Options_ColorSelectedInputChannelButton_Name" xml:space="preserve">
+        <value>Tint channel selector with channel colour</value>
+    </data>
+    <data name="Options_ColorSelectedInputChannelButton_Description" xml:space="preserve">
+        <value>The channel selector button next to the input field is tinted with the currently active channel's colour. Matches the tinting of the input text itself.</value>
+    </data>
     <data name="Options_Tabs_Tab">
         <value>Tabs</value>
     </data>
@@ -1188,6 +1194,12 @@
     </data>
     <data name="Options_HideInBattle_Description" xml:space="preserve">
         <value>Hide the chat during battles.</value>
+    </data>
+    <data name="Options_HideInNewGamePlusMenu_Name" xml:space="preserve">
+        <value>Hide while New Game+ menu is open</value>
+    </data>
+    <data name="Options_HideInNewGamePlusMenu_Description" xml:space="preserve">
+        <value>Hide the chat while the New Game+ menu is open. Closing the menu shows the chat again.</value>
     </data>
     <data name="Options_Emote_EmoteStats" xml:space="preserve">
         <value>Emote Stats</value>

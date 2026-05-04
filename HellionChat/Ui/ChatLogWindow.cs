@@ -278,9 +278,11 @@ public sealed class ChatLogWindow : Window
         {
             case "hide":
                 CurrentHideState = HideState.User;
+                Plugin.Log.Verbose("HideState: → User (chat hide command)");
                 break;
             case "show":
                 CurrentHideState = HideState.None;
+                Plugin.Log.Verbose("HideState: → None (chat show command)");
                 break;
             case "toggle":
                 CurrentHideState = CurrentHideState switch
@@ -290,6 +292,7 @@ public sealed class ChatLogWindow : Window
                     HideState.None => HideState.User,
                     _ => CurrentHideState,
                 };
+                Plugin.Log.Verbose($"HideState: → {CurrentHideState} (chat toggle command)");
                 break;
         }
     }
@@ -406,30 +409,48 @@ public sealed class ChatLogWindow : Window
     {
         // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
         if (Plugin.Config.HideInBattle && CurrentHideState == HideState.None && Plugin.InBattle)
+        {
             CurrentHideState = HideState.Battle;
+            Plugin.Log.Verbose("HideState: None → Battle");
+        }
 
         // If the chat is hidden because of battle, we reset it here
         if (CurrentHideState is HideState.Battle && !Plugin.InBattle)
+        {
             CurrentHideState = HideState.None;
+            Plugin.Log.Verbose("HideState: Battle → None");
+        }
 
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (Plugin.Config.HideDuringCutscenes && CurrentHideState == HideState.None && (Plugin.CutsceneActive || Plugin.GposeActive))
         {
             if (Plugin.Functions.Chat.CheckHideFlags())
+            {
                 CurrentHideState = HideState.Cutscene;
+                Plugin.Log.Verbose("HideState: None → Cutscene");
+            }
         }
 
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
         if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !Plugin.CutsceneActive && !Plugin.GposeActive)
+        {
+            Plugin.Log.Verbose($"HideState: {CurrentHideState} → None (cutscene/gpose ended)");
             CurrentHideState = HideState.None;
+        }
 
         // if the chat is hidden because of a cutscene and the chat has been activated, show chat
         if (CurrentHideState == HideState.Cutscene && Activate)
+        {
             CurrentHideState = HideState.CutsceneOverride;
+            Plugin.Log.Verbose("HideState: Cutscene → CutsceneOverride (user activate)");
+        }
 
         // if the user hid the chat and is now activating chat, reset the hide state
         if (CurrentHideState == HideState.User && Activate)
+        {
             CurrentHideState = HideState.None;
+            Plugin.Log.Verbose("HideState: User → None (activate)");
+        }
 
         if (CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (Plugin.Config.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn))
         {
@@ -600,9 +621,40 @@ public sealed class ChatLogWindow : Window
             DrawChannelName(activeTab);
         }
 
+        // v1.0.2 — compute inputColour up front so the channel selector button
+        // can also tint with it (existing input-text push remains below).
+        var inputType = activeTab.CurrentChannel.UseTempChannel ? activeTab.CurrentChannel.TempChannel.ToChatType() : activeTab.CurrentChannel.Channel.ToChatType();
+        var isCommand = Chat.Trim().StartsWith('/');
+        if (isCommand)
+        {
+            var command = Chat.Split(' ')[0];
+            if (TextCommandChannels.TryGetValue(command, out var channel))
+                inputType = channel;
+
+            if (!IsValidCommand(command))
+                inputType = ChatType.Error;
+        }
+
+        var inputColour = Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol) ? inputCol : inputType.DefaultColor();
+
+        if (!isCommand && Plugin.ExtraChat.ChannelOverride is var (_, overrideColour))
+            inputColour = overrideColour;
+
+        if (isCommand && Plugin.ExtraChat.ChannelCommandColours.TryGetValue(Chat.Split(' ')[0], out var ecColour))
+            inputColour = ecColour;
+
         var beforeIcon = ImGui.GetCursorPos();
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab.Channel is null)
-            ImGui.OpenPopup(ChatChannelPicker);
+
+        var tintSelector = Plugin.Config.ColorSelectedInputChannelButton && inputColour.HasValue;
+        var selectorAbgr = tintSelector ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0u;
+
+        using (ImRaii.PushColor(ImGuiCol.Button, selectorAbgr, tintSelector))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, ColourUtil.AdjustBrightness(selectorAbgr, 1.15f), tintSelector))
+        using (ImRaii.PushColor(ImGuiCol.ButtonActive, ColourUtil.AdjustBrightness(selectorAbgr, 0.85f), tintSelector))
+        {
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Comment) && activeTab.Channel is null)
+                ImGui.OpenPopup(ChatChannelPicker);
+        }
 
         if (activeTab.Channel is not null && ImGui.IsItemHovered())
             ImGuiUtil.Tooltip(Language.ChatLog_SwitcherDisabled);
@@ -626,27 +678,7 @@ public sealed class ChatLogWindow : Window
         var buttonsRight = (showNovice ? 1 : 0) + (Plugin.Config.ShowHideButton ? 1 : 0);
         var inputWidth = ImGui.GetContentRegionAvail().X - buttonWidth * (1 + buttonsRight);
 
-        var inputType = activeTab.CurrentChannel.UseTempChannel ? activeTab.CurrentChannel.TempChannel.ToChatType() : activeTab.CurrentChannel.Channel.ToChatType();
-        var isCommand = Chat.Trim().StartsWith('/');
-        if (isCommand)
-        {
-            var command = Chat.Split(' ')[0];
-            if (TextCommandChannels.TryGetValue(command, out var channel))
-                inputType = channel;
-
-            if (!IsValidCommand(command))
-                inputType = ChatType.Error;
-        }
-
         var normalColor = ImGui.GetColorU32(ImGuiCol.Text);
-        var inputColour = Plugin.Config.ChatColours.TryGetValue(inputType, out var inputCol) ? inputCol : inputType.DefaultColor();
-
-        if (!isCommand && Plugin.ExtraChat.ChannelOverride is var (_, overrideColour))
-            inputColour = overrideColour;
-
-        if (isCommand && Plugin.ExtraChat.ChannelCommandColours.TryGetValue(Chat.Split(' ')[0], out var ecColour))
-            inputColour = ecColour;
-
         var push = inputColour != null;
         using (ImRaii.PushColor(ImGuiCol.Text, push ? ColourUtil.RgbaToAbgr(inputColour!.Value) : 0, push))
         {

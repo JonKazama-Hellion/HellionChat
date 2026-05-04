@@ -2149,6 +2149,24 @@ namespace HellionChat.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The channel selector button next to the input field is tinted with the currently active channel's colour. Matches the tinting of the input text itself..
+        /// </summary>
+        internal static string Options_ColorSelectedInputChannelButton_Description {
+            get {
+                return ResourceManager.GetString("Options_ColorSelectedInputChannelButton_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Tint channel selector with channel colour.
+        /// </summary>
+        internal static string Options_ColorSelectedInputChannelButton_Name {
+            get {
+                return ResourceManager.GetString("Options_ColorSelectedInputChannelButton_Name", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to Chat colours.
         /// </summary>
         internal static string Options_ChatColours_Tab {
@@ -2660,7 +2678,25 @@ namespace HellionChat.Resources {
                 return ResourceManager.GetString("Options_HideInBattle_Name", resourceCulture);
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide the chat while the New Game+ menu is open. Closing the menu shows the chat again..
+        /// </summary>
+        internal static string Options_HideInNewGamePlusMenu_Description {
+            get {
+                return ResourceManager.GetString("Options_HideInNewGamePlusMenu_Description", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to Hide while New Game+ menu is open.
+        /// </summary>
+        internal static string Options_HideInNewGamePlusMenu_Name {
+            get {
+                return ResourceManager.GetString("Options_HideInNewGamePlusMenu_Name", resourceCulture);
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized string similar to Hide {0} during loading screens..
         /// </summary>

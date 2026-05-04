@@ -12,6 +12,33 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## [1.0.2] — 2026-05-04 — Polish patch
+
+Vier kleine Polish-Items aus dem Backlog gebündelt:
+
+- **Hide bei New Game+ Menü**: Optionaler globaler Toggle der Hellion
+  Chat (und alle weiteren Plugin-Fenster wie Settings, DB-Viewer,
+  Pop-Outs) ausblendet, solange das NG+-Menü offen ist. Settings →
+  Fenster → Rahmen, Default aus. Skipt analog zum bestehenden
+  LoadingScreens-Pattern den gesamten `WindowSystem.Draw()`-Pfad.
+- **Channel-Selector-Färbung**: Optionales Tinting des
+  Channel-Auswahl-Knopfs (Comment-Icon) neben dem Eingabefeld in der
+  aktuellen Channel-Farbe. Settings → Aussehen → Chat-Farben, Default
+  an. Konsistent zur bestehenden Eingabetext-Färbung, ExtraChat-Override
+  wird übernommen.
+- **(De)Buff-Icon Aspect-Ratio-Fix**: `PayloadHandler.InlineIcon` quetschte
+  alle Hover-Icons auf 32×32. Status-Icons mit nicht-quadratischen
+  Dimensionen (Debuffs mit Pfeil-Indikator) sind jetzt aspekt-erhaltend
+  geshrinkt. Eigenständige Float-Math-Implementierung mit Zero-Size-Guard
+  statt Cherry-Pick aus dem offenen ChatTwo PR #157 (der hatte eine
+  int-Division-Falle).
+- **HideState-Logging-Sweep**: Alle HideState-Transitions
+  (Battle/Cutscene/User/Override plus die Pop-Out-Spiegelung) loggen sich
+  auf Verbose-Level. Aus by default, Aktivierung via
+  `/xllog set HellionChat verbose` für Bug-Report-Diagnose.
+
+[Release-Notes 1.0.2](https://github.com/JonKazama-Hellion/HellionChat/releases/tag/v1.0.2)
+
 ## [1.0.1] — 2026-05-04 — Window Position Recovery
 
 Fixes an off-screen-window scenario the user could end up in after a

@@ -332,10 +332,19 @@ public sealed class PayloadHandler
         atkBase->SetPosition((short) x, (short) y);
     }
 
+    private const float MaxInlineIconSize = 32f;
+
     private static void InlineIcon(IDalamudTextureWrap icon)
     {
+        if (icon.Size.X <= 0 || icon.Size.Y <= 0)
+            return;
+
+        var width = (float) icon.Size.X;
+        var height = (float) icon.Size.Y;
+        var scale = Math.Min(1f, Math.Min(MaxInlineIconSize / width, MaxInlineIconSize / height));
+        var size = ImGuiHelpers.ScaledVector2(width * scale, height * scale);
+
         var cursor = ImGui.GetCursorPos();
-        var size = ImGuiHelpers.ScaledVector2(32, 32);
         ImGui.Image(icon.Handle, size);
         ImGui.SameLine();
         ImGui.SetCursorPos(cursor + new Vector2(size.X + 4, size.Y - ImGui.GetTextLineHeightWithSpacing()));
