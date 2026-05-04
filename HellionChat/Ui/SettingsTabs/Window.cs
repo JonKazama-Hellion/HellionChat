@@ -142,6 +142,15 @@ internal sealed class Window : ISettingsTab
 
             ImGui.Checkbox(Language.Options_SidebarTabView_Name, ref Mutable.SidebarTabView);
             ImGuiUtil.HelpMarker(string.Format(Language.Options_SidebarTabView_Description, Plugin.PluginName));
+
+            ImGui.Spacing();
+
+            // Manual escape hatch for off-screen windows. The plugin already
+            // runs an automatic bounds check once per session, but a button
+            // is the user-friendly fallback after a display layout change.
+            if (ImGui.Button(HellionStrings.Settings_Window_ResetPosition_Name))
+                Plugin.ChatLogWindow.RequestPositionReset = true;
+            ImGuiUtil.HelpMarker(HellionStrings.Settings_Window_ResetPosition_Description);
         }
     }
 

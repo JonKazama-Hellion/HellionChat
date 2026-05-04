@@ -66,6 +66,14 @@ public sealed class ChatLogWindow : Window
     public Vector2 LastWindowPos { get; private set; } = Vector2.Zero;
     public Vector2 LastWindowSize { get; private set; } = Vector2.Zero;
 
+    // Window position recovery: guards against off-screen positions after a
+    // display layout change (monitor disconnected, resolution changed). On
+    // the first draw after plugin load we run a one-shot bounds check to see
+    // whether the stored position still overlaps any visible viewport area.
+    // The manual reset button in the settings forces the position regardless.
+    private bool DidOnLoadBoundsCheck;
+    internal bool RequestPositionReset { get; set; }
+
     public unsafe ImGuiViewport* LastViewport;
     private bool WasDocked;
 
@@ -541,6 +549,22 @@ public sealed class ChatLogWindow : Window
         var resized = LastWindowSize != currentSize;
         LastWindowSize = currentSize;
         LastWindowPos = ImGui.GetWindowPos();
+
+        // Window position recovery. Manual reset takes precedence and snaps
+        // the window to the safe default unconditionally; the one-shot
+        // on-load check only fires when the persisted position has no
+        // overlap with any visible viewport area.
+        if (RequestPositionReset)
+        {
+            RequestPositionReset = false;
+            DidOnLoadBoundsCheck = true;
+            ApplySafeDefaultPosition("manual-reset");
+        }
+        else if (!DidOnLoadBoundsCheck)
+        {
+            DidOnLoadBoundsCheck = true;
+            EnsureWindowOnScreen("on-load");
+        }
 
         if (resized)
             LastResize.Restart();
@@ -2034,5 +2058,48 @@ public sealed class ChatLogWindow : Window
     {
         var hashCode = $"{Salt}{playerName}{worldId}".GetHashCode();
         return $"Player {hashCode:X8}";
+    }
+
+    // Snap threshold in pixels: at least this much of the window must overlap
+    // a visible viewport so the user can still grab the first tab header.
+    // Below the threshold the window is considered off-screen.
+    private const int OnScreenMinOverlapX = 100;
+    private const int OnScreenMinOverlapY = 40;
+
+    // Default snap position relative to the primary viewport (top-left with a
+    // safety margin from the game title bar).
+    private static readonly Vector2 SafeDefaultOffset = new(50, 50);
+
+    private void EnsureWindowOnScreen(string source)
+    {
+        if (LastWindowSize.X < 1 || LastWindowSize.Y < 1)
+            return;
+
+        var viewport = ImGui.GetMainViewport();
+        var visibleMin = viewport.WorkPos;
+        var visibleMax = viewport.WorkPos + viewport.WorkSize;
+
+        var overlapMin = Vector2.Max(LastWindowPos, visibleMin);
+        var overlapMax = Vector2.Min(LastWindowPos + LastWindowSize, visibleMax);
+        var overlap = overlapMax - overlapMin;
+
+        if (overlap.X >= OnScreenMinOverlapX && overlap.Y >= OnScreenMinOverlapY)
+            return;
+
+        ApplySafeDefaultPosition(source);
+    }
+
+    private void ApplySafeDefaultPosition(string source)
+    {
+        var viewport = ImGui.GetMainViewport();
+        var safePos = viewport.WorkPos + SafeDefaultOffset;
+        Position = safePos;
+        Plugin.Log.Info(
+            $"[Window-Recovery] {source}: snapping main window from {LastWindowPos} (size {LastWindowSize}) to {safePos}.");
+
+        // Pop-outs are intentionally non-persistent (cleared on plugin reload),
+        // so an off-screen pop-out can never survive a session boundary. The
+        // main window above is the only persistence target that needs an
+        // explicit recovery path.
     }
 }

@@ -591,6 +591,12 @@
   <data name="Settings_Window_PopOutInputEnabled_Description" xml:space="preserve">
     <value>Master-Switch: erlaubt direktes Tippen und Absenden in jedem Pop-Out-Fenster (inkl. Auto-Tell-Tabs). Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster; Text-Buffer und History-Cursor sind pro Pop-Out unabhängig.</value>
   </data>
+  <data name="Settings_Window_ResetPosition_Name" xml:space="preserve">
+    <value>Fenster-Position zurücksetzen</value>
+  </data>
+  <data name="Settings_Window_ResetPosition_Description" xml:space="preserve">
+    <value>Holt das Chat-Fenster und alle aktiven Pop-Outs zurück in die linke obere Ecke des Hauptmonitors. Hilfreich wenn ein Fenster nach einem Display-Layout-Wechsel außerhalb des sichtbaren Bereichs gelandet ist (Monitor abgezogen, Auflösung geändert). Das Plugin macht außerdem einmal pro Session einen automatischen Bounds-Check, dieser Button ist der manuelle Notausgang falls trotzdem etwas unerreichbar bleibt.</value>
+  </data>
   <data name="Popout_v060_HintText" xml:space="preserve">
     <value>Neu in v0.6.0: Du kannst jetzt direkt im Pop-Out tippen. Master-Switch in den Fenster-Settings aktivieren.</value>
   </data>

@@ -261,6 +261,10 @@ internal class HellionStrings
     internal static string Settings_Window_PopOutInputEnabled_Name => Get(nameof(Settings_Window_PopOutInputEnabled_Name));
     internal static string Settings_Window_PopOutInputEnabled_Description => Get(nameof(Settings_Window_PopOutInputEnabled_Description));
 
+    // Hellion Chat — Window position recovery (off-screen safety net)
+    internal static string Settings_Window_ResetPosition_Name => Get(nameof(Settings_Window_ResetPosition_Name));
+    internal static string Settings_Window_ResetPosition_Description => Get(nameof(Settings_Window_ResetPosition_Description));
+
     // Hellion Chat — v0.6.0 one-time hint banner shown inside pop-outs
     internal static string Popout_v060_HintText => Get(nameof(Popout_v060_HintText));
     internal static string Popout_v060_HintAck => Get(nameof(Popout_v060_HintAck));
