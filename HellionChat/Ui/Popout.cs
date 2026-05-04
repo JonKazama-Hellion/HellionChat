@@ -229,30 +229,48 @@ internal class Popout : Window
     {
         // if the chat has no hide state set, and the player has entered battle, we hide chat if they have configured it
         if (Tab.HideInBattle && CurrentHideState == HideState.None && Plugin.InBattle)
+        {
             CurrentHideState = HideState.Battle;
+            Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: None → Battle");
+        }
 
         // If the chat is hidden because of battle, we reset it here
         if (CurrentHideState is HideState.Battle && !Plugin.InBattle)
+        {
             CurrentHideState = HideState.None;
+            Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: Battle → None");
+        }
 
         // if the chat has no hide state and in a cutscene, set the hide state to cutscene
         if (Tab.HideDuringCutscenes && CurrentHideState == HideState.None && (Plugin.CutsceneActive || Plugin.GposeActive))
         {
             if (ChatLogWindow.Plugin.Functions.Chat.CheckHideFlags())
+            {
                 CurrentHideState = HideState.Cutscene;
+                Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: None → Cutscene");
+            }
         }
 
         // if the chat is hidden because of a cutscene and no longer in a cutscene, set the hide state to none
         if (CurrentHideState is HideState.Cutscene or HideState.CutsceneOverride && !Plugin.CutsceneActive && !Plugin.GposeActive)
+        {
+            Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: {CurrentHideState} → None (cutscene/gpose ended)");
             CurrentHideState = HideState.None;
+        }
 
         // if the chat is hidden because of a cutscene and the chat has been activated, show chat
         if (CurrentHideState == HideState.Cutscene && ChatLogWindow.Activate)
+        {
             CurrentHideState = HideState.CutsceneOverride;
+            Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: Cutscene → CutsceneOverride (user activate)");
+        }
 
         // if the user hid the chat and is now activating chat, reset the hide state
         if (CurrentHideState == HideState.User && ChatLogWindow.Activate)
+        {
             CurrentHideState = HideState.None;
+            Plugin.Log.Verbose($"Popout HideState [{Tab.Name}]: User → None (activate)");
+        }
 
         return CurrentHideState is HideState.Cutscene or HideState.User or HideState.Battle || (Tab.HideWhenNotLoggedIn && !Plugin.ClientState.IsLoggedIn);
     }

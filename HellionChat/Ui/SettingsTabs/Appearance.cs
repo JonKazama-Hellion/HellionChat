@@ -236,6 +236,10 @@ internal sealed class Appearance : ISettingsTab
             ImGui.Separator();
             ImGui.Spacing();
 
+            ImGui.Checkbox(Language.Options_ColorSelectedInputChannelButton_Name, ref Mutable.ColorSelectedInputChannelButton);
+            ImGuiUtil.HelpMarker(Language.Options_ColorSelectedInputChannelButton_Description);
+            ImGui.Spacing();
+
             foreach (var (_, types) in ChatTypeExt.SortOrder)
             {
                 foreach (var type in types)

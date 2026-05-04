@@ -20,6 +20,8 @@ namespace HellionChat.GameFunctions;
 
 internal unsafe class GameFunctions : IDisposable
 {
+    internal const string NewGamePlusAddonName = "QuestRedo";
+
     #region Hooks
     [Signature("E8 ?? ?? ?? ?? 48 85 C0 0F 84 ?? ?? ?? ?? 48 8B D0 49 8D 4F", DetourName = nameof(ResolveTextCommandPlaceholderDetour))]
     private Hook<ResolveTextCommandPlaceholderDelegate>? ResolveTextCommandPlaceholderHook = null!;

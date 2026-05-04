@@ -56,6 +56,9 @@ internal sealed class Window : ISettingsTab
 
             ImGui.Checkbox(Language.Options_HideInBattle_Name, ref Mutable.HideInBattle);
             ImGuiUtil.HelpMarker(Language.Options_HideInBattle_Description);
+
+            ImGui.Checkbox(Language.Options_HideInNewGamePlusMenu_Name, ref Mutable.HideInNewGamePlusMenu);
+            ImGuiUtil.HelpMarker(Language.Options_HideInNewGamePlusMenu_Description);
         }
     }
 

@@ -48,4 +48,18 @@ internal static class ColourUtil {
 
     internal static uint ComponentsToRgba(byte red, byte green, byte blue, byte alpha = 0xFF)
         => alpha | (uint) (red << 24) | (uint) (green << 16) | (uint) (blue << 8);
+
+    internal static uint AdjustBrightness(uint abgr, float factor)
+    {
+        var a = (byte) ((abgr & 0xFF000000) >> 24);
+        var b = (byte) ((abgr & 0x00FF0000) >> 16);
+        var g = (byte) ((abgr & 0x0000FF00) >> 8);
+        var r = (byte)  (abgr & 0x000000FF);
+
+        var nr = (byte) Math.Clamp(r * factor, 0f, 255f);
+        var ng = (byte) Math.Clamp(g * factor, 0f, 255f);
+        var nb = (byte) Math.Clamp(b * factor, 0f, 255f);
+
+        return ((uint) a << 24) | ((uint) nb << 16) | ((uint) ng << 8) | nr;
+    }
 }

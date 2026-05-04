@@ -208,6 +208,12 @@
   <data name="Options_ChatColours_Import">
     <value>Vom Spiel importieren</value>
   </data>
+  <data name="Options_ColorSelectedInputChannelButton_Name" xml:space="preserve">
+        <value>Channel-Auswahl-Knopf in Channel-Farbe</value>
+    </data>
+  <data name="Options_ColorSelectedInputChannelButton_Description" xml:space="preserve">
+        <value>Der Channel-Auswahl-Knopf neben dem Eingabefeld bekommt die Farbe des aktuell aktiven Channels. Konsistent zur Färbung des Eingabetextes selbst.</value>
+    </data>
   <data name="Options_Tabs_Tab">
     <value>Kanäle</value>
   </data>
@@ -1189,6 +1195,12 @@ Sie wurden gewarnt.</value>
     </data>
   <data name="Options_HideInBattle_Description" xml:space="preserve">
         <value>Blende den Chat während der Kämpfe aus.</value>
+    </data>
+  <data name="Options_HideInNewGamePlusMenu_Name" xml:space="preserve">
+        <value>Während des New-Game+ Menüs ausblenden</value>
+    </data>
+  <data name="Options_HideInNewGamePlusMenu_Description" xml:space="preserve">
+        <value>Blendet den Chat aus, solange das New-Game+ Menü geöffnet ist. Schließen des Menüs blendet den Chat wieder ein.</value>
     </data>
   <data name="Options_Emote_EmoteStats" xml:space="preserve">
         <value>Emote-Statistik</value>
