@@ -60,6 +60,13 @@ internal sealed class SettingsOverview
         var draw = ImGui.GetWindowDrawList();
         draw.AddRectFilled(cursorBefore, cursorBefore + new Vector2(w, h), bgColor, 4f);
 
+        // ImGui hat den Cursor nach dem InvisibleButton bereits korrekt
+        // weitergesetzt (für die Layout-Engine). Wir merken uns die Position,
+        // verschieben den Cursor temporär für die Inhalts-Beschriftung und
+        // restoren ihn am Ende — sonst kollidieren manuelle Cursor-Sets mit
+        // SameLine im Caller und die Cards stapeln sich diagonal.
+        var cursorAfterButton = ImGui.GetCursorScreenPos();
+
         var textPos = cursorBefore + new Vector2(16f, 12f);
         ImGui.SetCursorScreenPos(textPos);
         // Plugin ist hier Instanz, nicht Static-Type — daher über _window
@@ -79,8 +86,9 @@ internal sealed class SettingsOverview
             ImGui.TextUnformatted(subtext);
         }
 
-        // Cursor unter die Card setzen für nächsten Item-Pass
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(0f, h + 8f));
+        // Restore cursor to post-button position, so SameLine + Wrap im Caller
+        // wieder mit dem ImGui-Layout-Flow arbeiten.
+        ImGui.SetCursorScreenPos(cursorAfterButton);
 
         if (clicked)
         {
