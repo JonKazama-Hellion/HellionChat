@@ -624,4 +624,76 @@
   <data name="ChatTwoConflictAction" xml:space="preserve">
     <value>Chat 2 in /xlplugins deaktivieren, danach Hellion Chat erneut aktivieren.</value>
   </data>
+  <data name="Settings_Card_General_Title" xml:space="preserve">
+    <value>Allgemein</value>
+  </data>
+  <data name="Settings_Card_General_Subtext" xml:space="preserve">
+    <value>Sprache und grundlegendes Verhalten</value>
+  </data>
+  <data name="Settings_Card_Appearance_Title" xml:space="preserve">
+    <value>Erscheinungsbild</value>
+  </data>
+  <data name="Settings_Card_Appearance_Subtext" xml:space="preserve">
+    <value>Fensterdeckkraft, Schriften, Bewegung</value>
+  </data>
+  <data name="Settings_Card_Themes_Title" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Settings_Card_Themes_Subtext" xml:space="preserve">
+    <value>Theme wählen oder eigenes importieren</value>
+  </data>
+  <data name="Settings_Card_Window_Title" xml:space="preserve">
+    <value>Fenster</value>
+  </data>
+  <data name="Settings_Card_Window_Subtext" xml:space="preserve">
+    <value>Fensterposition, Rahmen, Hide-Zustände</value>
+  </data>
+  <data name="Settings_Card_Chat_Title" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Settings_Card_Chat_Subtext" xml:space="preserve">
+    <value>Chat-Verhalten, Emotes, Auto-Tells</value>
+  </data>
+  <data name="Settings_Card_Tabs_Title" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Settings_Card_Tabs_Subtext" xml:space="preserve">
+    <value>Tab-Layout, Kanäle, eigene Tabs</value>
+  </data>
+  <data name="Settings_Card_Privacy_Title" xml:space="preserve">
+    <value>Datenschutz</value>
+  </data>
+  <data name="Settings_Card_Privacy_Subtext" xml:space="preserve">
+    <value>Filter, Aufbewahrung, Bereinigung, Export</value>
+  </data>
+  <data name="Settings_Card_Database_Title" xml:space="preserve">
+    <value>Datenbank</value>
+  </data>
+  <data name="Settings_Card_Database_Subtext" xml:space="preserve">
+    <value>Speicher, Migration, alte Bereinigung</value>
+  </data>
+  <data name="Settings_Card_Information_Title" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Settings_Card_Information_Subtext" xml:space="preserve">
+    <value>Über, Mitwirkende, Support</value>
+  </data>
+  <data name="Settings_Tab_Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Settings_Themes_Active" xml:space="preserve">
+    <value>Aktiv: {0}</value>
+  </data>
+  <data name="Settings_Themes_BuiltIns" xml:space="preserve">
+    <value>Eingebaute Themes</value>
+  </data>
+  <data name="Settings_Themes_Custom" xml:space="preserve">
+    <value>Eigene Themes</value>
+  </data>
+  <data name="Settings_Themes_OpenFolder" xml:space="preserve">
+    <value>Themes-Ordner öffnen</value>
+  </data>
+  <data name="Settings_Themes_ExportActive" xml:space="preserve">
+    <value>Aktives exportieren...</value>
+  </data>
 </root>
