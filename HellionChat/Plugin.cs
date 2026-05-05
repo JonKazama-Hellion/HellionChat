@@ -64,6 +64,7 @@ public sealed class Plugin : IDalamudPlugin
     internal TypingIpc TypingIpc { get; }
     internal FontManager FontManager { get; }
     internal Themes.ThemeRegistry ThemeRegistry { get; private set; } = null!;
+    internal Ui.StatusBar StatusBar { get; private set; } = null!;
 
     internal int DeferredSaveFrames = -1;
 
@@ -246,9 +247,8 @@ public sealed class Plugin : IDalamudPlugin
             if (Config.Version < 14)
             {
                 Config.Theme = "hellion-arctic";
-                #pragma warning disable CS0612, CS0618 // Obsolete: HellionThemeWindowOpacity bleibt readable bis v1.2.0
-                Config.WindowOpacity = Config.HellionThemeWindowOpacity;
-                #pragma warning restore CS0612, CS0618
+                // v1.2.0: alter Opacity-Wert wird nicht mehr migriert (Field entfernt).
+                // User die direkt v13 → v15 springen bekommen den Default 0.85.
                 Config.ReduceMotion = false;
                 Config.UseCompactDensity = false;
                 Config.ShowThemeQuickPicker = false;
@@ -257,6 +257,20 @@ public sealed class Plugin : IDalamudPlugin
                 Log.Information(
                     "Migrated config v13 → v14: theme engine introduced, all users land on hellion-arctic; " +
                     "pick chat2-classic in Settings → Themes for the upstream look");
+            }
+
+            if (Config.Version < 15)
+            {
+                // v1.2.0 — keine Datenmigration nötig. Removal der deprecated
+                // Theme-Felder ist reine Schema-Bereinigung (System.Text.Json
+                // ignoriert unbekannte Felder im JSON, daher kein Crash bei
+                // Configs die noch HellionThemeEnabled/HellionThemeWindowOpacity
+                // serialisiert haben — die Werte verfallen einfach).
+                Config.Version = 15;
+                SaveConfig();
+                Log.Information(
+                    "Migrated config v14 → v15: legacy theme fields removed " +
+                    "(HellionThemeEnabled, HellionThemeWindowOpacity)");
             }
 
             // Hellion v1.0.0 default tab layout. Five thematically separated
@@ -295,6 +309,8 @@ public sealed class Plugin : IDalamudPlugin
             SeedExampleThemeIfEmpty(customThemesDir);
             ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
             ThemeRegistry.Switch(Config.Theme);
+
+            StatusBar = new Ui.StatusBar();
 
             MessageManager = new MessageManager(this); // Does it require UI?
 

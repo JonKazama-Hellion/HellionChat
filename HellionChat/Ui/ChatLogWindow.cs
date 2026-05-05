@@ -375,6 +375,9 @@ public sealed class ChatLogWindow : Window
         // weil der Cursor schon weiter unten steht — kein eigener Abzug.
         height -= ImGui.GetFrameHeightWithSpacing();
 
+        // v1.2.0 — Status-Bar am Window-Boden reserviert 22 px + 2 px Spacing.
+        height -= StatusBar.Height + 2;
+
         return height;
     }
 
@@ -790,13 +793,17 @@ public sealed class ChatLogWindow : Window
         if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
             LastActivityTime = FrameTime;
 
-        if (!showNovice)
-            return;
+        if (showNovice)
+        {
+            ImGui.SameLine();
 
-        ImGui.SameLine();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
+                GameFunctions.GameFunctions.ClickNoviceNetworkButton();
+        }
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
-            GameFunctions.GameFunctions.ClickNoviceNetworkButton();
+        // v1.2.0 — Bottom-Status-Bar. Letzter Render-Step in DrawChatLog,
+        // damit alle Zeilen-Operationen davor keine Layout-Sprünge auslösen.
+        Plugin.StatusBar.Draw(Plugin);
     }
 
     internal Dictionary<string, InputChannel> GetValidChannels()
@@ -1316,17 +1323,63 @@ public sealed class ChatLogWindow : Window
                     ImGui.TableNextColumn();
 
                 var lineWidth = ImGui.GetContentRegionAvail().X;
-                if (message.Sender.Count > 0)
-                {
-                    DrawChunks(message.Sender, true, handler, lineWidth);
-                    ImGui.SameLine();
-                }
 
-                // We need to draw something otherwise the item visibility check below won't work.
-                if (message.Content.Count == 0)
-                    DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                // v1.2.0 — Card-Rows als Default, Compact-Density als Opt-Out.
+                // Card-Mode: Sender-Header in Channel-Color auf eigener Zeile,
+                // dann Body, dann subtile Border-Bottom als Card-Trenner.
+                // Compact-Mode: bisheriges Verhalten — Sender + Space + Content
+                // auf einer Zeile via SameLine.
+                var useCard = !Plugin.Config.UseCompactDensity;
+                if (useCard)
+                {
+                    if (message.Sender.Count > 0)
+                    {
+                        var theme = Plugin.ThemeRegistry.Active;
+                        var senderColor = Plugin.Functions.Chat.GetChannelColor(message.Code.Type)
+                                          ?? theme.Colors.TextPrimary;
+                        using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(senderColor)))
+                        {
+                            DrawChunks(message.Sender, true, handler, lineWidth);
+                        }
+                        // KEIN SameLine — Body landet auf eigener Zeile.
+                    }
+
+                    // We need to draw something otherwise the item visibility check below won't work.
+                    if (message.Content.Count == 0)
+                        DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                    else
+                        DrawChunks(message.Content, true, handler, lineWidth);
+
+                    // Subtile Border-Bottom als Card-Trenner. Border-Farbe mit
+                    // reduzierter Alpha (RGBA → 0x33) für dezente Trennung.
+                    {
+                        var theme = Plugin.ThemeRegistry.Active;
+                        var rowEndY = ImGui.GetCursorScreenPos().Y;
+                        var winLeft = ImGui.GetWindowPos().X;
+                        var winRight = winLeft + ImGui.GetWindowSize().X;
+                        var borderRgba = (theme.Colors.Border & 0xFFFFFF00u) | 0x33u;
+                        ImGui.GetWindowDrawList().AddLine(
+                            new Vector2(winLeft + 4, rowEndY - 1),
+                            new Vector2(winRight - 4, rowEndY - 1),
+                            ColourUtil.RgbaToAbgr(borderRgba),
+                            1f);
+                        ImGui.Dummy(new Vector2(0, 2));
+                    }
+                }
                 else
-                    DrawChunks(message.Content, true, handler, lineWidth);
+                {
+                    if (message.Sender.Count > 0)
+                    {
+                        DrawChunks(message.Sender, true, handler, lineWidth);
+                        ImGui.SameLine();
+                    }
+
+                    // We need to draw something otherwise the item visibility check below won't work.
+                    if (message.Content.Count == 0)
+                        DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                    else
+                        DrawChunks(message.Content, true, handler, lineWidth);
+                }
 
                 message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
             }
@@ -1366,6 +1419,20 @@ public sealed class ChatLogWindow : Window
             if (!tabItem.Success)
                 continue;
 
+            // v1.2.0 — Active-Tab-Underline-Pill (2 px Akzent statt Background-Fill).
+            // Bewusst direkt nach TabItem-Setup; GetItemRectMin/Max referenziert noch
+            // das Tab. ImGui hat keine native Underline-API, daher direkter DrawList-Pass.
+            {
+                var theme = Plugin.ThemeRegistry.Active;
+                var min = ImGui.GetItemRectMin();
+                var max = ImGui.GetItemRectMax();
+                const float pillHeight = 2f;
+                ImGui.GetWindowDrawList().AddRectFilled(
+                    new Vector2(min.X, max.Y - pillHeight),
+                    new Vector2(max.X, max.Y),
+                    ColourUtil.RgbaToAbgr(theme.Colors.Accent));
+            }
+
             var hasTabSwitched = Plugin.LastTab != tabI;
             Plugin.LastTab = tabI;
 
@@ -1383,21 +1450,36 @@ public sealed class ChatLogWindow : Window
     private void DrawTabSidebar()
     {
         var currentTab = -1;
-        using var tabTable = ImRaii.Table("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.Resizable);
+        // v1.2.0 — Sidebar fix 44 px, kein Resize. Mehr Platz fürs Chat-Log.
+        using var tabTable = ImRaii.Table("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingFixedFit);
         if (!tabTable.Success)
             return;
 
-        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.WidthStretch, 1);
-        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.WidthStretch, 4);
+        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.WidthFixed, 44f);
+        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.WidthStretch, 1);
 
         ImGui.TableNextColumn();
 
         var hasTabSwitched = false;
         var childHeight = GetRemainingHeightForMessageLog();
+        // v1.2.0 — Sidebar-Child ohne Theme-ChildBg, sonst füllt das
+        // bläuliche Frame-Rect auch den oberen HeaderToolbar-Padding-Bereich
+        // aus (sieht aus wie ein angeschnittener Block oberhalb der Buttons).
+        // Vertikale Trennung zur Message-Spalte bleibt durch BordersInnerV
+        // der Tab-Table erhalten.
+        using (ImRaii.PushColor(ImGuiCol.ChildBg, 0u))
         using (var child = ImRaii.Child("##chat2-tab-sidebar", new Vector2(-1, childHeight)))
         {
             if (child)
             {
+                // v1.2.0 — Top-Padding spiegelt die HeaderToolbar-Höhe der
+                // rechten Spalte (DrawChatHeaderToolbar wird dort als erstes
+                // gerendert, eine Frame-Zeile + ItemSpacing). Ohne diesen
+                // Padding würden die Sidebar-Buttons oben am Window-Top
+                // kleben, während die Messages erst unter der Toolbar
+                // beginnen — vertikales Mismatch.
+                ImGui.Dummy(new Vector2(0, ImGui.GetFrameHeightWithSpacing()));
+
                 var previousTab = Plugin.CurrentTab;
                 // Hellion Chat — auto-tell-tabs section divider rendered
                 // exactly once before the first temp tab, with a live unit
@@ -1422,7 +1504,6 @@ public sealed class ChatLogWindow : Window
                     }
 
                     var unread = tabI == Plugin.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                    var selectableLabel = $"{tab.Name}{unread}###log-tab-{tabI}";
                     var isCurrentTab = Plugin.LastTab == tabI || Plugin.WantedTab == tabI;
 
                     var showGreetedAffordance = tab.IsTempTab && Plugin.Config.AutoTellTabsShowGreetedToggle;
@@ -1457,33 +1538,106 @@ public sealed class ChatLogWindow : Window
                         ImGui.SameLine();
                     }
 
-                    bool clicked;
-                    if (showGreetedAffordance && tab.IsGreeted)
+                    // v1.2.0 — Icon-only Sidebar mit Tooltip beim Hover.
+                    // Active-Tab kriegt Akzent-Color am Icon, Greeted-Tabs
+                    // werden auf TextDim gedimmt (löst den alten Header-
+                    // Dim-Trick ab, da wir keine Selectable mehr nutzen).
+                    var theme = Plugin.ThemeRegistry.Active;
+                    var icon = TabIconMapping.Resolve(tab);
+                    uint iconColor;
+                    if (isCurrentTab)
                     {
-                        // Dim the tab name once the user marked the partner
-                        // as greeted, so a glance at the sidebar tells them
-                        // who still needs attention. Selectable has no idle
-                        // background slot in ImGui, so the dim only applies
-                        // to the selected and hovered states — the text dim
-                        // alone signals greeted in the idle state.
-                        var headerBase = ImGui.GetColorU32(ImGuiCol.Header);
-                        var hoverBase = ImGui.GetColorU32(ImGuiCol.HeaderHovered);
-                        var dimHeader = (headerBase & 0xFF000000u) | ((headerBase & 0x00FEFEFEu) >> 1);
-                        var dimHover = (hoverBase & 0xFF000000u) | ((hoverBase & 0x00FEFEFEu) >> 1);
-
-                        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.TextDisabled)))
-                        using (ImRaii.PushColor(ImGuiCol.Header, dimHeader))
-                        using (ImRaii.PushColor(ImGuiCol.HeaderHovered, dimHover))
-                        {
-                            clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
-                        }
+                        iconColor = theme.Colors.Accent;
+                    }
+                    else if (showGreetedAffordance && tab.IsGreeted)
+                    {
+                        iconColor = theme.Colors.TextDim;
+                    }
+                    else if (tab.IsTempTab && tab.TellTarget != null && tab.TellTarget.IsSet())
+                    {
+                        // v1.2.0 — Hash-Color-Tint differenziert parallele Auto-Tell-Tabs
+                        // visuell ohne dass User pro Tab manuell ein Custom-Icon setzen muss.
+                        iconColor = AutoTellTabTint.For(tab.TellTarget.Name, tab.TellTarget.World);
                     }
                     else
                     {
-                        clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
+                        iconColor = theme.Colors.TextPrimary;
+                    }
+
+                    bool clicked;
+                    using (ImRaii.PushColor(ImGuiCol.Button, 0u))
+                    using (ImRaii.PushColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(theme.Colors.SurfaceHover)))
+                    using (ImRaii.PushColor(ImGuiCol.ButtonActive, ColourUtil.RgbaToAbgr(theme.Colors.Surface)))
+                    using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(iconColor)))
+                    using (Plugin.FontManager.FontAwesome.Push())
+                    {
+                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, ImGui.GetFrameHeight()));
+                    }
+
+                    if (isCurrentTab)
+                    {
+                        // v1.2.0 — Vertikale Akzent-Pill an der linken Window-Kante.
+                        // 3 px breit, halbe Tab-Höhe, vertikal zentriert. ImGui hat keine
+                        // native Pill-API, daher direkter DrawList-Pass.
+                        var min = ImGui.GetItemRectMin();
+                        var max = ImGui.GetItemRectMax();
+                        const float pillWidth = 3f;
+                        var pillHeight = (max.Y - min.Y) * 0.5f;
+                        var pillCenterY = (min.Y + max.Y) * 0.5f;
+                        ImGui.GetWindowDrawList().AddRectFilled(
+                            new Vector2(min.X, pillCenterY - pillHeight * 0.5f),
+                            new Vector2(min.X + pillWidth, pillCenterY + pillHeight * 0.5f),
+                            ColourUtil.RgbaToAbgr(theme.Colors.Accent),
+                            1.5f); // leichter Rounding
+                    }
+
+                    // v1.2.0 — Unread-Dot oben rechts am Icon. Sichtbar ohne Hover, damit
+                    // User Tabs mit ungelesenen Messages sofort erkennt. Aktive Tabs haben
+                    // per Konvention Unread = 0 (LastTab-Branch in ChatLogWindow), daher
+                    // kollidiert der Dot nicht mit der Active-Pill.
+                    if (!isCurrentTab && tab.UnreadMode != UnreadMode.None && tab.Unread > 0)
+                    {
+                        var min = ImGui.GetItemRectMin();
+                        var max = ImGui.GetItemRectMax();
+                        const float dotRadius = 4f;
+                        const float dotPadding = 3f;
+                        var dotCenter = new Vector2(
+                            max.X - dotRadius - dotPadding,
+                            min.Y + dotRadius + dotPadding);
+
+                        // v1.2.0 — Sanfter Pulse-Effekt: Alpha schwankt zwischen 60% und
+                        // 100% mit ~2-Sekunden-Cycle (subtil, nicht hektisch).
+                        // Plugin.Config.ReduceMotion (Field seit v1.1.0) skipt den Pulse
+                        // und rendert statisch — Default ist Animation an.
+                        var dotColor = theme.Colors.StatusDanger;
+                        if (!Plugin.Config.ReduceMotion)
+                        {
+                            // Sin-basierter 2s-Cycle: -1..1 → 0..1 → 0.6..1.0 Alpha-Skala.
+                            var phase = (float)((Math.Sin(Environment.TickCount64 / 1000.0 * Math.PI) + 1.0) * 0.5);
+                            var alphaScale = 0.6f + 0.4f * phase;
+                            var origAlpha = dotColor & 0xFFu;
+                            var pulsedAlpha = (uint)(origAlpha * alphaScale);
+                            dotColor = (dotColor & 0xFFFFFF00u) | pulsedAlpha;
+                        }
+
+                        ImGui.GetWindowDrawList().AddCircleFilled(
+                            dotCenter,
+                            dotRadius,
+                            ColourUtil.RgbaToAbgr(dotColor),
+                            12);
+                    }
+
+                    // Tooltip mit Tab-Name + Unread-Counter beim Hover.
+                    if (ImGui.IsItemHovered())
+                    {
+                        using var tt = ImRaii.Tooltip();
+                        ImGui.TextUnformatted($"{tab.Name}{unread}");
                     }
 
                     DrawTabContextMenu(tab, tabI);
+
+                    if (clicked)
+                        Plugin.WantedTab = tabI;
 
                     if (!clicked && Plugin.WantedTab != tabI)
                         continue;

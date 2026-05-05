@@ -45,32 +45,11 @@ internal sealed class Appearance : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
-            // v1.1.0 — Diese Settings-UI wird in Phase J durch den dedizierten
-            // Themes-Tab ersetzt. Bis dahin bleiben die alten Toggles erhalten,
-            // damit die Settings-Seite kompiliert; sie schreiben in die mit
-            // [Obsolete] markierten Felder, die bis v1.2.0 als JSON-Safety-Net
-            // bestehen bleiben. Das pragma unterdrückt die CS0612-Warnungen
-            // gezielt für diesen Übergangs-Block.
-#pragma warning disable CS0612, CS0618
-            ImGui.Checkbox(HellionStrings.Theme_Enabled_Name, ref Mutable.HellionThemeEnabled);
-            ImGuiUtil.HelpMarker(HellionStrings.Theme_Enabled_Description);
-
-            // Clamp 0.5–1.0 stays consistent with Privacy.cs which already
-            // shipped this slider; lower values would let chat windows
-            // disappear behind game UI.
-            using (ImRaii.Disabled(!Mutable.HellionThemeEnabled))
-            {
-                ImGui.SetNextItemWidth(200f * ImGuiHelpers.GlobalScale);
-                var opacity = Mutable.HellionThemeWindowOpacity;
-                if (ImGui.SliderFloat($"{HellionStrings.Theme_WindowOpacity_Label}##theme-opacity", ref opacity, 0.5f, 1.0f, "%.2f"))
-                {
-                    Mutable.HellionThemeWindowOpacity = Math.Clamp(opacity, 0.5f, 1.0f);
-                }
-                ImGuiUtil.HelpMarker(HellionStrings.Theme_WindowOpacity_Help);
-            }
-
-            ImGui.Spacing();
-
+            // v1.2.0 — Legacy HellionThemeEnabled/HellionThemeWindowOpacity-Bindings
+            // entfernt. Theme-Auswahl + globale Window-Opacity leben jetzt in
+            // Settings → Themes (eingeführt mit v1.1.0). Hier verbleibt nur der
+            // klassische OverrideStyle-Toggle plus der Bestand-WindowAlpha-Slider
+            // für das Chat-Log-Fenster.
             ImGui.Checkbox(Language.Options_OverrideStyle_Name, ref Mutable.OverrideStyle);
             ImGuiUtil.HelpMarker(Language.Options_OverrideStyle_Name_Desc);
 
@@ -79,16 +58,7 @@ internal sealed class Appearance : ISettingsTab
                 DrawStyleCombo();
             }
 
-            // The Bestand-Slider WindowAlpha targets the chat log window's
-            // background only. The Hellion theme opacity above already covers
-            // every plugin window globally, so the two sliders fight each
-            // other when the theme is active. Disable the legacy slider in
-            // that case to make Hellion theme the single source of truth.
-            using (ImRaii.Disabled(Mutable.HellionThemeEnabled))
-            {
-                ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
-            }
-#pragma warning restore CS0612, CS0618
+            ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
         }
     }
 
@@ -139,7 +109,22 @@ internal sealed class Appearance : ISettingsTab
             ImGuiUtil.HelpMarker(HellionStrings.Theme_UseHellionFont_Description);
             ImGui.Spacing();
 
-            using var fontDisabled = ImRaii.Disabled(Mutable.UseHellionFont);
+            // v1.2.0 — Schriftgröße muss auch bei aktiver Hellion-Schrift
+            // editierbar sein (Exo 2 ist Variable-Font, FontSizeV2 wird in
+            // FontManager als SizePt angewendet). Disabled-Wrap nur noch
+            // um den Bestand-Custom-Font-Stack (FontsEnabled-Toggle und
+            // die Font-Chooser) — der ist weiter exclusive zu HellionFont.
+            if (Mutable.UseHellionFont)
+            {
+                ImGuiUtil.FontSizeCombo(Language.Options_FontSize_Name, ref Mutable.FontSizeV2);
+                ImGui.Spacing();
+
+                ImGuiUtil.FontSizeCombo(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSizeV2);
+                ImGuiUtil.HelpMarker(Language.Options_SymbolsFontSize_Description);
+
+                ImGui.Spacing();
+                return;
+            }
 
             ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
             ImGui.Spacing();
@@ -355,6 +340,11 @@ internal sealed class Appearance : ISettingsTab
             {
                 ImGui.Checkbox(Language.Options_MoreCompactPretty_Name, ref Mutable.MoreCompactPretty);
                 ImGuiUtil.HelpMarker(Language.Options_MoreCompactPretty_Description);
+
+                // v1.2.0 — Card-Rows als Default. Compact-Density schaltet auf den
+                // klassischen Single-Line-Mode `[HH:mm] Sender: Text` zurück.
+                ImGui.Checkbox(HellionStrings.Appearance_UseCompactDensity_Name, ref Mutable.UseCompactDensity);
+                ImGuiUtil.HelpMarker(HellionStrings.Appearance_UseCompactDensity_Description);
 
                 ImGui.Checkbox(Language.Options_HideSameTimestamps_Name, ref Mutable.HideSameTimestamps);
                 ImGuiUtil.HelpMarker(Language.Options_HideSameTimestamps_Description);

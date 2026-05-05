@@ -151,7 +151,13 @@ internal class MessageManager : IAsyncDisposable
 
     internal void ClearAllTabs()
     {
-        foreach (var tab in Plugin.Config.Tabs)
+        // Hellion Chat — TempTabs haben keine DB-Persistenz (session-only,
+        // direkt vom AutoTellTabsService befüllt). Ein Clear+Refilter würde
+        // sie leer hinterlassen weil FilterAllTabs nichts aus der DB
+        // findet — Tells sind oft durch Privacy-Filter blockiert oder
+        // schlicht session-flüchtig. TempTabs vom Clear-Pfad ausschließen
+        // damit Settings-Save den Tell-Verlauf nicht zerstört.
+        foreach (var tab in Plugin.Config.Tabs.Where(t => !t.IsTempTab))
             tab.Clear();
     }
 
@@ -165,7 +171,11 @@ internal class MessageManager : IAsyncDisposable
 
         // We store the pending messages to be added to the chat log in a
         // temporary list, and apply them all at once after filtering.
-        var pendingTabs = Plugin.Config.Tabs.Select(tab => (tab, new List<Message>())).ToList();
+        // TempTabs werden ausgeschlossen — sie bleiben live-state aus dem
+        // AutoTellTabsService, ein DB-Refilter würde sie nur partial
+        // wiederherstellen falls Tells in DB liegen, oder leer lassen wenn
+        // Privacy-Filter sie blockiert hat.
+        var pendingTabs = Plugin.Config.Tabs.Where(t => !t.IsTempTab).Select(tab => (tab, new List<Message>())).ToList();
         foreach (var message in messages)
             foreach (var (_, pendingMessages) in pendingTabs.Where(ptab => ptab.Item1.Matches(message)))
                 pendingMessages.Add(message);

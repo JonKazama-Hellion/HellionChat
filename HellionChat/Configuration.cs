@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 14;
+    private const int LatestVersion = 15;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -79,19 +79,6 @@ public class Configuration : IPluginConfiguration
     // Hellion Chat first-run wizard — opens once on a fresh install. Existing
     // ChatTwo users skip it because the v6→v7 migration sets the flag.
     public bool FirstRunCompleted;
-
-    // Hellion Chat global ImGui theme — applied to every plugin window in
-    // Plugin.Draw. Default ON; users who prefer the upstream Dalamud look
-    // can flip this off in the Privacy tab.
-    [Obsolete("Replaced by Theme slug + WindowOpacity in v14")]
-    public bool HellionThemeEnabled = true;
-
-    // Window background opacity, 0.5–1.0. Lower values make the plugin
-    // panes more glass-like so the game shines through. Default 0.5
-    // matches the maintainer's daily-driver preference; users who want
-    // a less translucent look bump it up in Aussehen → Theme.
-    [Obsolete("Replaced by WindowOpacity in v14")]
-    public float HellionThemeWindowOpacity = 0.5f;
 
     // Use the bundled Exo 2 font (OFL-1.1) for the regular plugin font
     // instead of whatever GlobalFontV2.FontId points at. Default ON so a
@@ -315,10 +302,33 @@ public class Configuration : IPluginConfiguration
         // never present in a disk-loaded copy. Keep the live temp tabs of
         // *this* configuration alive across an UpdateFrom so a settings
         // save (or sidebar-mode toggle) does not silently destroy the
-        // user's open tell conversations. Persistent tabs from `other`
-        // still get the regular clone-replace treatment.
+        // user's open tell conversations.
+        //
+        // For persistent tabs we go through Tab.Clone() which intentionally
+        // does NOT copy the NonSerialized Messages list (avoids shared
+        // mutable state on disk-load). On a settings save that means the
+        // chat history for every persistent tab would be wiped — bug
+        // reported by Flo 2026-05-05. We work around it by capturing the
+        // live MessageList (and LastSendUnread counter) by Identifier
+        // before the replace, then restoring it onto the freshly cloned
+        // tabs whose Identifier survives Tab.Clone(). New tabs added in
+        // settings get a fresh empty MessageList; deleted tabs lose their
+        // history (intended).
         var liveTempTabs = Tabs.Where(t => t.IsTempTab).ToList();
-        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t => t.Clone()).ToList();
+        var livePersistentSession = Tabs
+            .Where(t => !t.IsTempTab)
+            .ToDictionary(t => t.Identifier, t => (t.Messages, t.LastSendUnread));
+
+        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t =>
+        {
+            var clone = t.Clone();
+            if (livePersistentSession.TryGetValue(clone.Identifier, out var live))
+            {
+                clone.Messages = live.Messages;
+                clone.LastSendUnread = live.LastSendUnread;
+            }
+            return clone;
+        }).ToList();
         Tabs.AddRange(liveTempTabs);
 
         OverrideStyle = other.OverrideStyle;
@@ -336,10 +346,6 @@ public class Configuration : IPluginConfiguration
         RetentionLastRunAt = other.RetentionLastRunAt;
 
         FirstRunCompleted = other.FirstRunCompleted;
-#pragma warning disable CS0612, CS0618 // Obsolete-Felder bleiben bis v1.2.0 als JSON-Safety-Net erhalten
-        HellionThemeEnabled = other.HellionThemeEnabled;
-        HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
-#pragma warning restore CS0612, CS0618
         UseHellionFont = other.UseHellionFont;
 
         // v1.1.0 theme engine fields
@@ -393,6 +399,11 @@ public static class UnreadModeExt
 public class Tab
 {
     public string Name = Language.Tab_DefaultName;
+
+    // v1.2.0 — optionaler FontAwesome-Glyph-Name. Null bedeutet:
+    // Default-Mapping aus TabIconMapping greift (basiert auf Tab-Name).
+    // User können hier per Settings → Tabs einen eigenen Glyph setzen.
+    public string? Icon = null;
 
     [Obsolete("Removed in favor of SelectedChannels")]
     public Dictionary<ChatType, ChatSource> ChatCodes = new();
@@ -595,6 +606,20 @@ public class Tab
             {
                 TrackedMessageIds.Remove(Messages[0].Id);
                 Messages.RemoveAt(0);
+            }
+        }
+
+        /// <summary>
+        /// Aktuelle Anzahl der gespeicherten Messages. Lock-acquire pro Read
+        /// ist OK für 1×/sec Status-Bar-Polling (v1.2.0).
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                LockSlim.Wait(-1);
+                try { return Messages.Count; }
+                finally { LockSlim.Release(); }
             }
         }
 

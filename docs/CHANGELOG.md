@@ -12,6 +12,33 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## v1.2.0 — Layout Refresh (2026-05-05)
+
+### Added
+- Sidebar tab modernization: icon-only at fixed 44 px, tooltip on hover, vertical accent pill for active tab
+- Top tabs: accent underline pill replaces background fill on active tab
+- Per-tab custom icons in Settings → Tabs (15-glyph FontAwesome picker)
+- Bottom status bar (22 px): channel indicator, privacy badge, counters, tells, version — updates 1×/sec
+- Card rows as default message render: sender header in channel color, subtle border between cards
+- Compact-Density toggle in Appearance: switches back to single-line `[HH:mm] Sender: Text` layout
+- Auto-Tell tabs: per-partner hashed icon (7-glyph pool: envelope/star/heart/bell/bookmark/flag/fire) plus hashed color (12-color palette) — 84 distinct icon+color combinations
+- Unread indicator: pulsing red dot in the top-right corner of any sidebar tab icon with unread messages, 2-second sine-wave pulse, respects `Configuration.ReduceMotion`
+
+### Changed
+- Migration v14 → v15: deprecated Configuration fields `HellionThemeEnabled` and `HellionThemeWindowOpacity` removed
+- Appearance settings cleaned: legacy theme-engine bindings replaced by Themes tab (introduced in v1.1.0)
+
+### Fixed
+- Settings save no longer wipes chat history by default — the heavy `ClearAllTabs + FilterAllTabsAsync` cycle now only runs when a filter-relevant setting actually changed (Privacy filter, persisted channels, per-tab channel selection). Cosmetic changes keep the in-session chat intact
+- Identifier-based `MessageList` restore in `Configuration.UpdateFrom` plus TempTab skip in `ClearAllTabs`/`FilterAllTabs` ensure persistent tabs and Auto-Tell tabs both survive the save
+- Sidebar buttons now align vertically with the first message row (top padding mirrors the chat header toolbar height)
+- Sidebar child window no longer paints the top padding area with its frame background
+- Status bar version slot (`vX.Y.Z · Hellion`) no longer clips its rightmost character
+
+### Notes
+- Polish phase (animations, theme crossfade, header quick-picker) follows in v1.3.0
+- Top-Tab icon prefixes were considered but dropped: Dalamud's default font atlas does not include FontAwesome codepoints, so mixed-font in a single TabItem label renders as tofu. Underline pill alone is the v1.2.0 visual treatment for top tabs. Resolution would require Font-Atlas merge at FontManager level — out of scope.
+
 ## [1.1.0] — 2026-05-05 — Theme Foundation
 
 Erster großer UI-Cycle nach v1.0.0. Theme-Engine, fünf Built-In-Themes,
