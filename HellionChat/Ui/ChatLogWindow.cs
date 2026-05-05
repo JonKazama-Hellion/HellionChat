@@ -1604,10 +1604,26 @@ public sealed class ChatLogWindow : Window
                         var dotCenter = new Vector2(
                             max.X - dotRadius - dotPadding,
                             min.Y + dotRadius + dotPadding);
+
+                        // v1.2.0 — Sanfter Pulse-Effekt: Alpha schwankt zwischen 60% und
+                        // 100% mit ~2-Sekunden-Cycle (subtil, nicht hektisch).
+                        // Plugin.Config.ReduceMotion (Field seit v1.1.0) skipt den Pulse
+                        // und rendert statisch — Default ist Animation an.
+                        var dotColor = theme.Colors.StatusDanger;
+                        if (!Plugin.Config.ReduceMotion)
+                        {
+                            // Sin-basierter 2s-Cycle: -1..1 → 0..1 → 0.6..1.0 Alpha-Skala.
+                            var phase = (float)((Math.Sin(Environment.TickCount64 / 1000.0 * Math.PI) + 1.0) * 0.5);
+                            var alphaScale = 0.6f + 0.4f * phase;
+                            var origAlpha = dotColor & 0xFFu;
+                            var pulsedAlpha = (uint)(origAlpha * alphaScale);
+                            dotColor = (dotColor & 0xFFFFFF00u) | pulsedAlpha;
+                        }
+
                         ImGui.GetWindowDrawList().AddCircleFilled(
                             dotCenter,
                             dotRadius,
-                            ColourUtil.RgbaToAbgr(theme.Colors.StatusDanger),
+                            ColourUtil.RgbaToAbgr(dotColor),
                             12);
                     }
 
