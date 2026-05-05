@@ -203,6 +203,37 @@ internal class HellionStrings
     internal static string Settings_Tab_Database => Get(nameof(Settings_Tab_Database));
     internal static string Settings_Tab_Information => Get(nameof(Settings_Tab_Information));
 
+    // v1.1.0 — Settings card-grid overview
+    internal static string Settings_Card_General_Title => Get(nameof(Settings_Card_General_Title));
+    internal static string Settings_Card_General_Subtext => Get(nameof(Settings_Card_General_Subtext));
+    internal static string Settings_Card_Appearance_Title => Get(nameof(Settings_Card_Appearance_Title));
+    internal static string Settings_Card_Appearance_Subtext => Get(nameof(Settings_Card_Appearance_Subtext));
+    internal static string Settings_Card_Themes_Title => Get(nameof(Settings_Card_Themes_Title));
+    internal static string Settings_Card_Themes_Subtext => Get(nameof(Settings_Card_Themes_Subtext));
+    internal static string Settings_Card_Window_Title => Get(nameof(Settings_Card_Window_Title));
+    internal static string Settings_Card_Window_Subtext => Get(nameof(Settings_Card_Window_Subtext));
+    internal static string Settings_Card_Chat_Title => Get(nameof(Settings_Card_Chat_Title));
+    internal static string Settings_Card_Chat_Subtext => Get(nameof(Settings_Card_Chat_Subtext));
+    internal static string Settings_Card_Tabs_Title => Get(nameof(Settings_Card_Tabs_Title));
+    internal static string Settings_Card_Tabs_Subtext => Get(nameof(Settings_Card_Tabs_Subtext));
+    internal static string Settings_Card_Privacy_Title => Get(nameof(Settings_Card_Privacy_Title));
+    internal static string Settings_Card_Privacy_Subtext => Get(nameof(Settings_Card_Privacy_Subtext));
+    internal static string Settings_Card_Database_Title => Get(nameof(Settings_Card_Database_Title));
+    internal static string Settings_Card_Database_Subtext => Get(nameof(Settings_Card_Database_Subtext));
+    internal static string Settings_Card_Information_Title => Get(nameof(Settings_Card_Information_Title));
+    internal static string Settings_Card_Information_Subtext => Get(nameof(Settings_Card_Information_Subtext));
+
+    // v1.1.0 — Themes-Settings-Tab
+    internal static string Settings_Tab_Themes => Get(nameof(Settings_Tab_Themes));
+    internal static string Settings_Themes_Active => Get(nameof(Settings_Themes_Active));
+    internal static string Settings_Themes_BuiltIns => Get(nameof(Settings_Themes_BuiltIns));
+    internal static string Settings_Themes_Custom => Get(nameof(Settings_Themes_Custom));
+    internal static string Settings_Themes_OpenFolder => Get(nameof(Settings_Themes_OpenFolder));
+    internal static string Settings_Themes_ExportActive => Get(nameof(Settings_Themes_ExportActive));
+    internal static string Settings_Themes_ApplyChatColors_Hint => Get(nameof(Settings_Themes_ApplyChatColors_Hint));
+    internal static string Settings_Themes_ApplyChatColors_Apply => Get(nameof(Settings_Themes_ApplyChatColors_Apply));
+    internal static string Settings_Themes_ApplyChatColors_Keep => Get(nameof(Settings_Themes_ApplyChatColors_Keep));
+
     // Hellion Chat — General-Tab section headings
     internal static string Settings_General_Input_Heading => Get(nameof(Settings_General_Input_Heading));
     internal static string Settings_General_Audio_Heading => Get(nameof(Settings_General_Audio_Heading));

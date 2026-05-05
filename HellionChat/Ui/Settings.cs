@@ -9,13 +9,21 @@ using Dalamud.Bindings.ImGui;
 
 namespace HellionChat.Ui;
 
+internal enum SettingsView
+{
+    Overview,
+    Detail,
+}
+
 public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 {
-    private readonly Plugin Plugin;
+    internal readonly Plugin Plugin;
 
     private Configuration Mutable { get; }
     private List<ISettingsTab> Tabs { get; }
     private int CurrentTab;
+    private SettingsView View = SettingsView.Overview;
+    private readonly SettingsOverview Overview;
 
     internal SettingsWindow(Plugin plugin) : base($"{Language.Settings_Title.Format(Plugin.PluginName)}###chat2-settings")
     {
@@ -31,10 +39,13 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
         Plugin = plugin;
         Mutable = new Configuration();
 
+        Overview = new SettingsOverview(this);
+
         Tabs =
         [
             new General(Plugin, Mutable),
             new Appearance(Plugin, Mutable),
+            new SettingsTabs.Themes(Plugin, Mutable),
             new SettingsTabs.Window(Plugin, Mutable),
             new Chat(Plugin, Mutable),
             new SettingsTabs.Tabs(Plugin, Mutable),
@@ -72,40 +83,81 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
     public override void Draw()
     {
         if (ImGui.IsWindowAppearing())
-            Initialise();
-
-        using (var table = ImRaii.Table("##chat2-settings-table", 2))
         {
-            if (table.Success)
-            {
-                ImGui.TableSetupColumn("tab", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("settings", ImGuiTableColumnFlags.WidthStretch);
-
-                ImGui.TableNextColumn();
-
-                var changed = false;
-                for (var i = 0; i < Tabs.Count; i++)
-                {
-                    if (!ImGui.Selectable($"{Tabs[i].Name}###tab-{i}", CurrentTab == i))
-                        continue;
-
-                    CurrentTab = i;
-                    changed = true;
-                }
-
-                ImGui.TableNextColumn();
-
-                var style = ImGui.GetStyle();
-                var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2 - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
-
-                using var child = ImRaii.Child("##chat2-settings", new Vector2(-1, height));
-                if (child.Success)
-                    Tabs[CurrentTab].Draw(changed);
-            }
+            Initialise();
+            View = SettingsView.Overview;
         }
 
-        ImGui.Separator();
+        // ESC im Detail-View kehrt zur Overview zurück. Window-Focus-Check ist
+        // Pflicht — sonst triggert ESC auch wenn der User ein anderes Fenster
+        // fokussiert hat und ESC fürs Game-Menü drückt (Codebase-Pattern siehe
+        // Util/SearchSelector.cs:37).
+        if (View == SettingsView.Detail
+            && ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows)
+            && ImGui.IsKeyPressed(ImGuiKey.Escape))
+        {
+            View = SettingsView.Overview;
+            return;
+        }
 
+        if (View == SettingsView.Overview)
+            Overview.Draw();
+        else
+            DrawDetail();
+
+        ImGui.Separator();
+        DrawSaveButtons();
+    }
+
+    internal void OpenSection(int tabIndex)
+    {
+        CurrentTab = tabIndex;
+        View = SettingsView.Detail;
+    }
+
+    internal void OpenOverview()
+    {
+        View = SettingsView.Overview;
+    }
+
+    private void DrawDetail()
+    {
+        // Breadcrumb-Header — Akzent-Cyan, klickbar, führt zurück zur Overview
+        using (ImRaii.PushColor(ImGuiCol.Text, 0xFF00BED2u))
+        using (ImRaii.PushColor(ImGuiCol.Button, 0u))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, 0x33FFFFFFu))
+        using (ImRaii.PushColor(ImGuiCol.ButtonActive, 0x55FFFFFFu))
+        {
+            if (ImGui.SmallButton("← Settings"))
+            {
+                View = SettingsView.Overview;
+                return;
+            }
+        }
+        ImGui.SameLine();
+        ImGui.TextUnformatted("·");
+        ImGui.SameLine();
+        ImGui.TextUnformatted(Tabs[CurrentTab].Name.Split("###")[0]);
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        // Section-Content in voller Breite. Die Tab-Liste links ist überholt:
+        // der User ist bereits über die Card-Übersicht navigiert, eine zweite
+        // Tab-Liste daneben würde nur den Vanilla-Look zurückbringen. Falls
+        // der User in eine andere Section will, geht er zurück zur Overview
+        // (Breadcrumb / ESC).
+        var style = ImGui.GetStyle();
+        var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2 - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
+
+        using var child = ImRaii.Child("##chat2-settings-detail", new Vector2(-1, height));
+        if (child.Success)
+            Tabs[CurrentTab].Draw(false);
+    }
+
+    private void DrawSaveButtons()
+    {
         var save = ImGui.Button(Language.Settings_Save);
 
         ImGui.SameLine();

@@ -12,22 +12,39 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.1.0)
+## Nächster Cycle (v1.2.0)
+
+**Layout Refresh** — sichtbare Modernisierung des Chat-Windows selbst.
+
+- Top-Tabs-Refresh mit Akzent-Pill-Underline statt Background-Fill
+- Sidebar-Tabs (existing) bekommen Icons + vertikale Pill am Window-Rand
+- Bottom-Status-Bar (Channel-Indikator, Privacy-Badge, Tab-Count,
+  Tells, Version)
+- Card-Rows als Default-Message-Rendering, mit Compact-Density-Toggle
+- Per-Tab Custom-Icons im Tabs-Settings-Dialog
+- Removal des deprecated `HellionThemeEnabled`/`HellionThemeWindowOpacity`
+  Configuration-Felder
+
+Spec liegt in [[Hellion Chat UI Modernisierung Spec]] (Vault).
+
+## v1.1.0 — Theme Foundation (released 2026-05-05)
+
+Theme-Engine mit fünf Built-In-Themes, Settings-Card-Grid, Custom-
+Themes via JSON, Theme-Authoring-Doku. Plugin-Icon auf Hellion Forge.
+Siehe `docs/CHANGELOG.md` für Details.
+
+Aus dem ursprünglichen v1.1.0-Plan (Ad-Block / Spam-Filter, Receive-
+Suppressed-Tells-Toggle) wurden zugunsten der Theme-Engine zurück­
+gestellt — beide Items leben weiter im Mittelfrist-Block.
+
+## Mittelfristig (v1.2.x – v1.3.0)
 
 - **Ad-Block / Spam-Filter** — Hybrid-Konzept aus eigenem Light-Filter und
   optionaler `NoSoliciting`-IPC-Integration. Adressiert Werbe-Spam in
-  öffentlichen Channels und Tells. Größter Block des Cycles.
+  öffentlichen Channels und Tells. Aus dem v1.1.0-Plan zurückgestellt.
 - **Receive-Suppressed-Tells-Toggle** — Auto-Tell-Tabs greift auch wenn ein
   Drittplugin (z.B. XIVMessenger) die /tell-Anzeige global suppressed.
   Gleicher Hook-Layer wie Ad-Block, deshalb gebündelt.
-
-## Mittelfristig (v1.1.x – v1.2.0)
-
-- **Plugin-weite Theme-Varianten** — über die ChatColours-Presets aus v0.6.0
-  hinaus. Mehrere komplette Window-Themes (Frame, Surface, Border, Text)
-  inkl. Farbfamilien mit Helligkeits-Abstufungen. Anknüpfung an
-  Hellion-Online-Media-Brand-Themes (Event Horizon, Night Blue, Indigo Violet
-  und weitere).
 - **Database-Viewer Inline-Search** — Volltext-Suche im DB-Viewer via
   SQLite FTS5. Aktuell gibt es nur Datums- und Channel-Filter.
 - **TempTell Persistence** — Pin-Toggle auf TempTell-Tabs damit ausgewählte

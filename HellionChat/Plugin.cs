@@ -63,6 +63,7 @@ public sealed class Plugin : IDalamudPlugin
     internal ExtraChat ExtraChat { get; }
     internal TypingIpc TypingIpc { get; }
     internal FontManager FontManager { get; }
+    internal Themes.ThemeRegistry ThemeRegistry { get; private set; } = null!;
 
     internal int DeferredSaveFrames = -1;
 
@@ -237,6 +238,27 @@ public sealed class Plugin : IDalamudPlugin
                 });
             }
 
+            // Hellion Chat v13 → v14 — theme-engine migration. Alle User landen
+            // auf "hellion-arctic" als neues Default-Theme; die alte
+            // HellionThemeEnabled-Flag wird deprecated und nur noch ein Release
+            // als Safety-Net im JSON behalten. Window-Opacity wandert von
+            // HellionThemeWindowOpacity in das neue WindowOpacity-Feld.
+            if (Config.Version < 14)
+            {
+                Config.Theme = "hellion-arctic";
+                #pragma warning disable CS0612, CS0618 // Obsolete: HellionThemeWindowOpacity bleibt readable bis v1.2.0
+                Config.WindowOpacity = Config.HellionThemeWindowOpacity;
+                #pragma warning restore CS0612, CS0618
+                Config.ReduceMotion = false;
+                Config.UseCompactDensity = false;
+                Config.ShowThemeQuickPicker = false;
+                Config.Version = 14;
+                SaveConfig();
+                Log.Information(
+                    "Migrated config v13 → v14: theme engine introduced, all users land on hellion-arctic; " +
+                    "pick chat2-classic in Settings → Themes for the upstream look");
+            }
+
             // Hellion v1.0.0 default tab layout. Five thematically separated
             // tabs: General catches the immediate-surroundings public chat
             // (Say/Yell/Shout) only; System absorbs the rest of the technical
@@ -265,6 +287,14 @@ public sealed class Plugin : IDalamudPlugin
             TypingIpc = new TypingIpc(this);
             ExtraChat = new ExtraChat();
             FontManager = new FontManager();
+
+            // v1.1.0 — Theme-Engine init. Custom-Themes liegen in
+            // pluginConfigs/HellionChat/themes/, lazy geladen beim ersten Get.
+            var customThemesDir = Path.Combine(Interface.ConfigDirectory.FullName, "themes");
+            Directory.CreateDirectory(customThemesDir);
+            SeedExampleThemeIfEmpty(customThemesDir);
+            ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
+            ThemeRegistry.Switch(Config.Theme);
 
             MessageManager = new MessageManager(this); // Does it require UI?
 
@@ -559,13 +589,10 @@ public sealed class Plugin : IDalamudPlugin
 
     private void Draw()
     {
-        // Hellion theme is pushed once per frame here so every plugin window
-        // (chat log, settings, viewers, wizard, file dialog) renders with
-        // the same palette. Skipping the push leaves the upstream Dalamud
-        // look untouched for users who flipped the toggle off.
-        using IDisposable? _style = Config.HellionThemeEnabled
-            ? HellionStyle.PushGlobal(Config.HellionThemeWindowOpacity)
-            : null;
+        // Theme-Engine ist ab v14 immer aktiv; Klassik ist jetzt ein eigenes
+        // Theme statt einem deaktivierten Hellion-Theme. Active wird einmal
+        // pro Frame aus der Registry gelesen.
+        using IDisposable _style = HellionStyle.PushGlobal(ThemeRegistry.Active, Config.WindowOpacity);
 
         ChatLogWindow.BeginFrame();
 
@@ -650,4 +677,36 @@ public sealed class Plugin : IDalamudPlugin
     public static bool InBattle => Condition[ConditionFlag.InCombat];
     public static bool GposeActive => Condition[ConditionFlag.WatchingCutscene];
     public static bool CutsceneActive => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
+
+    // v1.1.0 — wenn der themes/-Ordner leer ist, schreiben wir die embedded
+    // example-theme.json als Vorlage rein. Bestehende User-Customs werden
+    // nicht angefasst (existing JSONs lassen den Block überspringen).
+    private static void SeedExampleThemeIfEmpty(string dir)
+    {
+        if (Directory.EnumerateFiles(dir, "*.json").Any())
+            return;
+
+        var examplePath = Path.Combine(dir, "example-theme.json");
+        var resourceStream = typeof(Plugin).Assembly.GetManifestResourceStream("HellionChat.Themes.Builtin.example-theme.json");
+        if (resourceStream is null)
+        {
+            Log.Warning("Themes example template not found in assembly resources; skipping seed.");
+            return;
+        }
+
+        try
+        {
+            using var fileStream = File.Create(examplePath);
+            resourceStream.CopyTo(fileStream);
+            Log.Information($"Seeded example-theme.json into {dir}");
+        }
+        catch (IOException ex)
+        {
+            Log.Warning(ex, "Failed to seed example-theme.json; user can create custom themes manually.");
+        }
+        finally
+        {
+            resourceStream.Dispose();
+        }
+    }
 }

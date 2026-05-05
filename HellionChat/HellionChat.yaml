@@ -31,6 +31,11 @@ description: |-
   - Independent plugin state — own config file and database directory,
     so Hellion Chat does not share state with upstream Chat 2
 
+  v1.1.0 — Theme engine with five built-in themes (Hellion Arctic,
+  Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove) plus
+  JSON-based custom-theme authoring. Settings rebuilt around a card
+  grid with section detail views. See docs/THEME-AUTHORING.md.
+
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
   Modding & support: join the Hellion Forge Discord at
@@ -41,7 +46,8 @@ accepts_feedback: true
 icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png
 image_urls:
   - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png
-  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/settingsOverview.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/themesPicker.png
 tags:
   - Social
   - UI
@@ -49,6 +55,64 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.1.0 — Theme Foundation**
+
+  First major UI cycle after the standalone v1.0.0 cut. Theme engine,
+  five built-in themes, customisable JSON themes, modernised settings
+  layout.
+
+  New themes (Settings → Themes):
+
+  - **Hellion Arctic** — the brand default, Arctic Cyan + Ember Glow
+    on industrial slate.
+  - **Chat 2 Klassik** — Steel Blue on neutral grey, eckige Kanten.
+    The upstream Chat 2 look on the new engine.
+  - **Event Horizon** — Cosmic Purple on near-black. Deep-space mood.
+  - **Moonlit Bloom** — Bloom Magenta + Soft Sage on deep-violet
+    night.
+  - **Mint Grove** — Mint Green + Honey Amber on deep forest. First
+    member of the Grove family.
+
+  Theme engine highlights:
+
+  - Slug-based selection in Settings → Themes with mini-mockup
+    previews per theme.
+  - Click a theme card and the whole plugin (chat, settings,
+    pop-outs, viewer) repaints instantly.
+  - Custom themes via JSON in pluginConfigs/HellionChat/themes/.
+    Example template seeded on first launch.
+  - Optional per-theme chat-channel colours. When a theme proposes
+    its own chat colours and yours differ, a dezent banner offers
+    Apply / Keep — never auto-overwriting.
+  - Migration v13 → v14: existing users land on Hellion Arctic. Pick
+    Chat 2 Klassik to keep the upstream look.
+
+  Settings layout:
+
+  - New card-grid overview on Settings open. Click a card to drill
+    into the section.
+  - Breadcrumb back to overview, ESC also returns.
+  - Detail view drops the redundant tab list — section content uses
+    the full width.
+
+  Branding:
+
+  - Plugin icon swapped from the ChatTwo derivative to the Hellion
+    Forge hammer.
+  - New docs/THEME-AUTHORING.md walks you through writing your own
+    themes with the Forge logo on top.
+
+  Technical:
+
+  - HellionStyle.PushGlobal is now theme-driven. Configuration.
+    HellionThemeEnabled is deprecated and will be removed in v1.2.0.
+  - New ThemeRegistry singleton with LastWriteTime-cached custom-
+    theme loader.
+  - 51 local unit tests cover the data model, registry, JSON round-
+    trip and built-in sanity checks.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.0.3 — Polish patch**
 
   - New: optionally hide chat (and every other plugin window) while the

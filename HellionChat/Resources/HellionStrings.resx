@@ -624,4 +624,85 @@
   <data name="ChatTwoConflictAction" xml:space="preserve">
     <value>Disable Chat 2 in /xlplugins, then re-enable Hellion Chat.</value>
   </data>
+  <data name="Settings_Card_General_Title" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="Settings_Card_General_Subtext" xml:space="preserve">
+    <value>Language and basic behaviour</value>
+  </data>
+  <data name="Settings_Card_Appearance_Title" xml:space="preserve">
+    <value>Appearance</value>
+  </data>
+  <data name="Settings_Card_Appearance_Subtext" xml:space="preserve">
+    <value>Window opacity, fonts, motion</value>
+  </data>
+  <data name="Settings_Card_Themes_Title" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Settings_Card_Themes_Subtext" xml:space="preserve">
+    <value>Choose a theme or import your own</value>
+  </data>
+  <data name="Settings_Card_Window_Title" xml:space="preserve">
+    <value>Window</value>
+  </data>
+  <data name="Settings_Card_Window_Subtext" xml:space="preserve">
+    <value>Window position, frame, hide states</value>
+  </data>
+  <data name="Settings_Card_Chat_Title" xml:space="preserve">
+    <value>Chat</value>
+  </data>
+  <data name="Settings_Card_Chat_Subtext" xml:space="preserve">
+    <value>Chat behaviour, emotes, auto-tells</value>
+  </data>
+  <data name="Settings_Card_Tabs_Title" xml:space="preserve">
+    <value>Tabs</value>
+  </data>
+  <data name="Settings_Card_Tabs_Subtext" xml:space="preserve">
+    <value>Tab layout, channels, custom tabs</value>
+  </data>
+  <data name="Settings_Card_Privacy_Title" xml:space="preserve">
+    <value>Privacy</value>
+  </data>
+  <data name="Settings_Card_Privacy_Subtext" xml:space="preserve">
+    <value>Filter, retention, cleanup, export</value>
+  </data>
+  <data name="Settings_Card_Database_Title" xml:space="preserve">
+    <value>Database</value>
+  </data>
+  <data name="Settings_Card_Database_Subtext" xml:space="preserve">
+    <value>Storage, migration, legacy cleanup</value>
+  </data>
+  <data name="Settings_Card_Information_Title" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Settings_Card_Information_Subtext" xml:space="preserve">
+    <value>About, credits, support</value>
+  </data>
+  <data name="Settings_Tab_Themes" xml:space="preserve">
+    <value>Themes</value>
+  </data>
+  <data name="Settings_Themes_Active" xml:space="preserve">
+    <value>Active: {0}</value>
+  </data>
+  <data name="Settings_Themes_BuiltIns" xml:space="preserve">
+    <value>Built-in themes</value>
+  </data>
+  <data name="Settings_Themes_Custom" xml:space="preserve">
+    <value>Custom themes</value>
+  </data>
+  <data name="Settings_Themes_OpenFolder" xml:space="preserve">
+    <value>Open themes folder</value>
+  </data>
+  <data name="Settings_Themes_ExportActive" xml:space="preserve">
+    <value>Export active...</value>
+  </data>
+  <data name="Settings_Themes_ApplyChatColors_Hint" xml:space="preserve">
+    <value>This theme suggests its own chat channel colours.</value>
+  </data>
+  <data name="Settings_Themes_ApplyChatColors_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Settings_Themes_ApplyChatColors_Keep" xml:space="preserve">
+    <value>Keep current</value>
+  </data>
 </root>

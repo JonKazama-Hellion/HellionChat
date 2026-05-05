@@ -494,9 +494,7 @@ public sealed class ChatLogWindow : Window
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
         if (LastViewport == ImGuiHelpers.MainViewport.Handle && !WasDocked)
-            BgAlpha = Plugin.Config.HellionThemeEnabled
-                ? Plugin.Config.HellionThemeWindowOpacity
-                : Plugin.Config.WindowAlpha / 100f;
+            BgAlpha = Plugin.Config.WindowOpacity;
 
         LastViewport = ImGui.GetWindowViewport().Handle;
         WasDocked = ImGui.IsWindowDocked();
@@ -523,28 +521,16 @@ public sealed class ChatLogWindow : Window
         return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
-    // Tracks the style instance pushed in PreDraw so PostDraw can pop the same
-    // one even if the user toggled OverrideStyle / ChosenStyle mid-frame.
-    // Without this, a config change between PreDraw and PostDraw could either
-    // leak a Push (no matching Pop) or pop nothing while we still have a frame
-    // pushed onto the ImGui stack.
-    private StyleModel? _pushedStyle;
-
     public override void PreDraw()
     {
         if (Plugin.Config.KeepInputFocus && Activate)
             ImGui.SetWindowFocus(WindowName);
 
-        _pushedStyle = null;
-        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-        {
-            var style = StyleModel.GetConfiguredStyles()?.FirstOrDefault(s => s.Name == Plugin.Config.ChosenStyle);
-            if (style != null)
-            {
-                style.Push();
-                _pushedStyle = style;
-            }
-        }
+        // Hellion Chat v1.1.0+ — Theme-Engine ist Source-of-Truth, kein
+        // zusätzlicher Dalamud-StyleModel-Override mehr pro Window. Plugin.Draw
+        // pusht das aktive Hellion-Theme global; ChatLogWindow zeichnet sich
+        // damit konsistent zu Settings/Pop-Out/Wizard. Wer den Upstream-Look
+        // will, wählt das Built-In-Theme "Chat 2 Klassik" in Settings → Themes.
     }
 
     public override void PostDraw()
@@ -555,12 +541,6 @@ public sealed class ChatLogWindow : Window
         // doesn't get called if the input is disabled.
         if (Plugin.CurrentTab.InputDisabled)
             Activate = false;
-
-        if (_pushedStyle != null)
-        {
-            _pushedStyle.Pop();
-            _pushedStyle = null;
-        }
     }
 
     public override void OnClose()

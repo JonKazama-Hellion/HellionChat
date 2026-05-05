@@ -62,4 +62,20 @@ internal static class ColourUtil {
 
         return ((uint) a << 24) | ((uint) nb << 16) | ((uint) ng << 8) | nr;
     }
+
+    public static uint HexToRgba(string hex)
+    {
+        ArgumentNullException.ThrowIfNull(hex);
+        var s = hex.StartsWith('#') ? hex[1..] : hex;
+        if (s.Length != 6 && s.Length != 8)
+            throw new FormatException($"Hex colour must be 6 or 8 hex digits, got {s.Length}: '{hex}'");
+
+        if (!uint.TryParse(s, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out var value))
+            throw new FormatException($"Hex colour '{hex}' is not a valid hexadecimal value");
+
+        if (s.Length == 6)
+            value = (value << 8) | 0xFFu;  // RRGGBB → RRGGBBFF
+
+        return value;
+    }
 }

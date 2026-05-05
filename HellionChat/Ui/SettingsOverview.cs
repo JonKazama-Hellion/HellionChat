@@ -1,0 +1,95 @@
+using System.Numerics;
+using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
+using Dalamud.Interface.Utility.Raii;
+using HellionChat.Resources;
+using HellionChat.Util;
+
+namespace HellionChat.Ui;
+
+internal sealed class SettingsOverview
+{
+    private readonly SettingsWindow _window;
+
+    // Card-Reihenfolge entspricht 1:1 dem Tabs-Index in SettingsWindow.
+    // Themes ist Card-Index 2, eingeschoben zwischen Appearance und Window.
+    private static readonly (FontAwesomeIcon Icon, string TitleKey, string SubtextKey)[] CardDefs =
+    [
+        (FontAwesomeIcon.SlidersH,        "Settings_Card_General_Title",     "Settings_Card_General_Subtext"),
+        (FontAwesomeIcon.Palette,         "Settings_Card_Appearance_Title",  "Settings_Card_Appearance_Subtext"),
+        (FontAwesomeIcon.Swatchbook,      "Settings_Card_Themes_Title",      "Settings_Card_Themes_Subtext"),
+        (FontAwesomeIcon.WindowMaximize,  "Settings_Card_Window_Title",      "Settings_Card_Window_Subtext"),
+        (FontAwesomeIcon.Comments,        "Settings_Card_Chat_Title",        "Settings_Card_Chat_Subtext"),
+        (FontAwesomeIcon.FolderTree,      "Settings_Card_Tabs_Title",        "Settings_Card_Tabs_Subtext"),
+        (FontAwesomeIcon.ShieldAlt,       "Settings_Card_Privacy_Title",     "Settings_Card_Privacy_Subtext"),
+        (FontAwesomeIcon.Database,        "Settings_Card_Database_Title",    "Settings_Card_Database_Subtext"),
+        (FontAwesomeIcon.InfoCircle,      "Settings_Card_Information_Title", "Settings_Card_Information_Subtext"),
+    ];
+
+    public SettingsOverview(SettingsWindow window)
+    {
+        _window = window;
+    }
+
+    public void Draw()
+    {
+        var avail = ImGui.GetContentRegionAvail();
+        var columns = avail.X >= 700f ? 3 : 2;
+        var cardWidth = (avail.X - (columns - 1) * 8f) / columns;
+        var cardHeight = 96f;
+
+        for (var i = 0; i < CardDefs.Length; i++)
+        {
+            var (icon, titleKey, subtextKey) = CardDefs[i];
+            var title = HellionStrings.ResourceManager.GetString(titleKey) ?? titleKey;
+            var subtext = HellionStrings.ResourceManager.GetString(subtextKey) ?? subtextKey;
+            DrawCard(i, icon, title, subtext, cardWidth, cardHeight);
+
+            if ((i + 1) % columns != 0 && i != CardDefs.Length - 1)
+                ImGui.SameLine();
+        }
+    }
+
+    private void DrawCard(int index, FontAwesomeIcon icon, string title, string subtext, float w, float h)
+    {
+        // BeginGroup macht den Card-Bereich zu einem einzelnen ImGui-Layout-Item.
+        // Damit funktioniert SameLine() im Caller-Loop — sonst tracked ImGui die
+        // einzelnen InvisibleButton/Text-Items separat und das Wrapping bricht.
+        ImGui.BeginGroup();
+
+        var cursorBefore = ImGui.GetCursorScreenPos();
+        var clicked = ImGui.InvisibleButton($"##settings-card-{index}", new Vector2(w, h));
+        var hovered = ImGui.IsItemHovered();
+        var bgColor = hovered ? 0xFF22303Fu : 0xFF1A2538u;
+
+        var draw = ImGui.GetWindowDrawList();
+        draw.AddRectFilled(cursorBefore, cursorBefore + new Vector2(w, h), bgColor, 4f);
+
+        // Inhalts-Overlay: Icon + Title + Subtext direkt mit DrawList in den
+        // Card-Bereich zeichnen, statt Cursor-Hopping mit SetCursorScreenPos.
+        // DrawList-Overlays ändern den Cursor nicht, BeginGroup/EndGroup
+        // hält den Layout-Anker stabil für SameLine.
+        var iconPos = cursorBefore + new Vector2(16f, 12f);
+        var titlePos = cursorBefore + new Vector2(16f, 40f);
+        var subtextPos = cursorBefore + new Vector2(16f, 62f);
+
+        var titleColor = ColourUtil.RgbaToAbgr(0xE6F4F1FFu);
+        var subtextColor = ColourUtil.RgbaToAbgr(0x8FA3B5FFu);
+
+        // Icon via FontAwesome — temporär den Font pushen, mit DrawList zeichnen
+        using (_window.Plugin.FontManager.FontAwesome.Push())
+        {
+            draw.AddText(iconPos, titleColor, icon.ToIconString());
+        }
+
+        draw.AddText(titlePos, titleColor, title);
+        draw.AddText(subtextPos, subtextColor, subtext);
+
+        ImGui.EndGroup();
+
+        if (clicked)
+        {
+            _window.OpenSection(index);
+        }
+    }
+}
