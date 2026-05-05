@@ -52,6 +52,11 @@ internal sealed class SettingsOverview
 
     private void DrawCard(int index, FontAwesomeIcon icon, string title, string subtext, float w, float h)
     {
+        // BeginGroup macht den Card-Bereich zu einem einzelnen ImGui-Layout-Item.
+        // Damit funktioniert SameLine() im Caller-Loop — sonst tracked ImGui die
+        // einzelnen InvisibleButton/Text-Items separat und das Wrapping bricht.
+        ImGui.BeginGroup();
+
         var cursorBefore = ImGui.GetCursorScreenPos();
         var clicked = ImGui.InvisibleButton($"##settings-card-{index}", new Vector2(w, h));
         var hovered = ImGui.IsItemHovered();
@@ -60,35 +65,27 @@ internal sealed class SettingsOverview
         var draw = ImGui.GetWindowDrawList();
         draw.AddRectFilled(cursorBefore, cursorBefore + new Vector2(w, h), bgColor, 4f);
 
-        // ImGui hat den Cursor nach dem InvisibleButton bereits korrekt
-        // weitergesetzt (für die Layout-Engine). Wir merken uns die Position,
-        // verschieben den Cursor temporär für die Inhalts-Beschriftung und
-        // restoren ihn am Ende — sonst kollidieren manuelle Cursor-Sets mit
-        // SameLine im Caller und die Cards stapeln sich diagonal.
-        var cursorAfterButton = ImGui.GetCursorScreenPos();
+        // Inhalts-Overlay: Icon + Title + Subtext direkt mit DrawList in den
+        // Card-Bereich zeichnen, statt Cursor-Hopping mit SetCursorScreenPos.
+        // DrawList-Overlays ändern den Cursor nicht, BeginGroup/EndGroup
+        // hält den Layout-Anker stabil für SameLine.
+        var iconPos = cursorBefore + new Vector2(16f, 12f);
+        var titlePos = cursorBefore + new Vector2(16f, 40f);
+        var subtextPos = cursorBefore + new Vector2(16f, 62f);
 
-        var textPos = cursorBefore + new Vector2(16f, 12f);
-        ImGui.SetCursorScreenPos(textPos);
-        // Plugin ist hier Instanz, nicht Static-Type — daher über _window
-        // referenzieren (Codebase-Konvention, siehe ImGuiUtil.cs:22 für die
-        // alternative Static-Init-Pattern, das wir hier nicht nutzen).
+        var titleColor = ColourUtil.RgbaToAbgr(0xE6F4F1FFu);
+        var subtextColor = ColourUtil.RgbaToAbgr(0x8FA3B5FFu);
+
+        // Icon via FontAwesome — temporär den Font pushen, mit DrawList zeichnen
         using (_window.Plugin.FontManager.FontAwesome.Push())
         {
-            ImGui.Text(icon.ToIconString());
+            draw.AddText(iconPos, titleColor, icon.ToIconString());
         }
 
-        ImGui.SetCursorScreenPos(textPos + new Vector2(0f, 28f));
-        ImGui.TextUnformatted(title);
+        draw.AddText(titlePos, titleColor, title);
+        draw.AddText(subtextPos, subtextColor, subtext);
 
-        ImGui.SetCursorScreenPos(textPos + new Vector2(0f, 50f));
-        using (ImRaii.PushColor(ImGuiCol.Text, 0xFF8FA3B5u))
-        {
-            ImGui.TextUnformatted(subtext);
-        }
-
-        // Restore cursor to post-button position, so SameLine + Wrap im Caller
-        // wieder mit dem ImGui-Layout-Flow arbeiten.
-        ImGui.SetCursorScreenPos(cursorAfterButton);
+        ImGui.EndGroup();
 
         if (clicked)
         {

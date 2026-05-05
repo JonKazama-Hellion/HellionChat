@@ -143,36 +143,17 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
         ImGui.Separator();
         ImGui.Spacing();
 
-        // Tab-Liste + Content (wie vorher)
-        using (var table = ImRaii.Table("##chat2-settings-table", 2))
-        {
-            if (table.Success)
-            {
-                ImGui.TableSetupColumn("tab", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("settings", ImGuiTableColumnFlags.WidthStretch);
+        // Section-Content in voller Breite. Die Tab-Liste links ist überholt:
+        // der User ist bereits über die Card-Übersicht navigiert, eine zweite
+        // Tab-Liste daneben würde nur den Vanilla-Look zurückbringen. Falls
+        // der User in eine andere Section will, geht er zurück zur Overview
+        // (Breadcrumb / ESC).
+        var style = ImGui.GetStyle();
+        var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2 - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
 
-                ImGui.TableNextColumn();
-
-                var changed = false;
-                for (var i = 0; i < Tabs.Count; i++)
-                {
-                    if (!ImGui.Selectable($"{Tabs[i].Name}###tab-{i}", CurrentTab == i))
-                        continue;
-
-                    CurrentTab = i;
-                    changed = true;
-                }
-
-                ImGui.TableNextColumn();
-
-                var style = ImGui.GetStyle();
-                var height = ImGui.GetContentRegionAvail().Y - style.FramePadding.Y * 2 - style.ItemSpacing.Y - style.ItemInnerSpacing.Y * 2 - ImGui.CalcTextSize("A").Y;
-
-                using var child = ImRaii.Child("##chat2-settings", new Vector2(-1, height));
-                if (child.Success)
-                    Tabs[CurrentTab].Draw(changed);
-            }
-        }
+        using var child = ImRaii.Child("##chat2-settings-detail", new Vector2(-1, height));
+        if (child.Success)
+            Tabs[CurrentTab].Draw(false);
     }
 
     private void DrawSaveButtons()
