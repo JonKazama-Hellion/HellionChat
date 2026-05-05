@@ -12,6 +12,58 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## [1.1.0] — 2026-05-05 — Theme Foundation
+
+Erster großer UI-Cycle nach v1.0.0. Theme-Engine, fünf Built-In-Themes,
+Custom-Themes via JSON, Settings-Card-Grid.
+
+### Hinzugefügt
+
+- **Theme-Engine** mit fünf Built-In-Themes: Hellion Arctic (Default),
+  Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove.
+- **Settings → Themes** mit Mini-Mockup-Preview pro Theme. Klick auf
+  eine Card switcht sofort das ganze Plugin (Chat, Settings, Pop-Out).
+- **Custom-Themes via JSON** in `pluginConfigs/HellionChat/themes/`.
+  Beim ersten Start wird `example-theme.json` als Vorlage abgelegt.
+- **Optional Theme-Chat-Channel-Colors**: Themes können eigene
+  Channel-Farben mitliefern. Beim Switch erscheint ein Banner mit
+  *Übernehmen / Behalten* — nie automatisch.
+- **Settings-Card-Grid**: neue Übersicht beim Öffnen, Card-Klick führt
+  in die Detail-Ansicht der Section. Breadcrumb + ESC führen zurück.
+- **`docs/THEME-AUTHORING.md`** als Anleitung zum Schreiben eigener
+  Themes, mit Hellion-Forge-Branding.
+
+### Geändert
+
+- **Plugin-Icon** auf Hellion Forge Hammer (vorher ChatTwo-Derivat).
+- **Settings-Detail-View** verwendet die volle Breite — die zweite
+  Tab-Liste links ist weg, weil die Card-Übersicht den Wechsel
+  übernimmt.
+- **`HellionStyle.PushGlobal`** ist jetzt theme-driven (`PushGlobal(theme,
+  opacity)`) statt const-palette-driven.
+- **Configuration v13 → v14**: alle User landen auf `hellion-arctic`.
+  Wer den Upstream-Look will, wählt `chat2-classic` in Settings →
+  Themes.
+
+### Veraltet
+
+- `Configuration.HellionThemeEnabled` und `HellionThemeWindowOpacity`
+  bleiben für ein Release lesbar als Safety-Net, werden aber nicht
+  mehr ausgewertet. Entfernung geplant in v1.2.0.
+
+### Sicherheit
+
+- Custom-Theme-JSON-Loader prüft `schemaVersion`, Pflichtfelder und
+  Hex-Format. Ungültige Themes werden mit Warning übersprungen, das
+  Plugin lädt mit Built-Ins weiter.
+
+### Intern
+
+- 51 lokale Unit-Tests (Theme-Records, Registry, JSON-Round-Trip,
+  Sanity pro Built-In-Theme). Tests sind gitignored.
+
+---
+
 ## [1.0.3] — 2026-05-04 — Polish patch
 
 Vier kleine Polish-Items aus dem Backlog gebündelt:

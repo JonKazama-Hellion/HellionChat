@@ -12,7 +12,7 @@ because no data ever leaves your machine on the maintainer's
 infrastructure. Independently of that, the plugin is built so that
 you can act on your own data the way the GDPR expects.
 
-Last reviewed: 2026-05-05 (HellionChat v1.0.3).
+Last reviewed: 2026-05-05 (HellionChat v1.1.0).
 
 ---
 

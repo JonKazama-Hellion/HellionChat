@@ -4,13 +4,13 @@ HellionChat ships and depends on a number of third-party components.
 This document lists them, their licences and which of them touch the
 network. It is the inventory referenced by `PRIVACY.md`.
 
-Last reviewed: 2026-05-05 (HellionChat v1.0.3).
+Last reviewed: 2026-05-05 (HellionChat v1.1.0).
 
 ---
 
 ## Direct NuGet dependencies
 
-Pinned in `HellionChat/HellionChat.csproj`. Versions reflect the v1.0.3 build.
+Pinned in `HellionChat/HellionChat.csproj`. Versions reflect the v1.1.0 build.
 
 | Package | Version | Licence | Network | Purpose |
 | --- | --- | --- | --- | --- |
