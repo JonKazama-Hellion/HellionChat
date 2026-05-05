@@ -319,4 +319,8 @@ internal class HellionStrings
     // Hellion Chat — v1.2.0 Bottom-Status-Bar Privacy-Badge labels
     internal static string StatusBar_Privacy_Enabled => Get(nameof(StatusBar_Privacy_Enabled));
     internal static string StatusBar_Privacy_Open => Get(nameof(StatusBar_Privacy_Open));
+
+    // Hellion Chat — v1.2.0 Appearance / Compact-Density toggle
+    internal static string Appearance_UseCompactDensity_Name => Get(nameof(Appearance_UseCompactDensity_Name));
+    internal static string Appearance_UseCompactDensity_Description => Get(nameof(Appearance_UseCompactDensity_Description));
 }

@@ -356,6 +356,11 @@ internal sealed class Appearance : ISettingsTab
                 ImGui.Checkbox(Language.Options_MoreCompactPretty_Name, ref Mutable.MoreCompactPretty);
                 ImGuiUtil.HelpMarker(Language.Options_MoreCompactPretty_Description);
 
+                // v1.2.0 — Card-Rows als Default. Compact-Density schaltet auf den
+                // klassischen Single-Line-Mode `[HH:mm] Sender: Text` zurück.
+                ImGui.Checkbox(HellionStrings.Appearance_UseCompactDensity_Name, ref Mutable.UseCompactDensity);
+                ImGuiUtil.HelpMarker(HellionStrings.Appearance_UseCompactDensity_Description);
+
                 ImGui.Checkbox(Language.Options_HideSameTimestamps_Name, ref Mutable.HideSameTimestamps);
                 ImGuiUtil.HelpMarker(Language.Options_HideSameTimestamps_Description);
             }
