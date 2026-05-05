@@ -37,6 +37,13 @@
     </ItemGroup>
 
     <ItemGroup>
+        <!-- Pure-function test suites in HellionChat.Tests need access to
+             the internal helper classes (StringUtil, UriPayload, Tokenizer
+             etc.). Test assembly does not get redistributed. -->
+        <InternalsVisibleTo Include="HellionChat.Tests" />
+    </ItemGroup>
+
+    <ItemGroup>
         <Compile Update="Resources\Language.Designer.cs">
             <DesignTime>True</DesignTime>
             <AutoGen>True</AutoGen>

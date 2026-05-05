@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 
 namespace HellionChat.Util;
@@ -24,7 +25,8 @@ internal static class StringUtil
         var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
         var num = Math.Round(bytes / Math.Pow(1024, place), 1);
         // "0.#" keeps the rounded fractional digit (1.5 GB stays "1.5GB"); "N0"
-        // would truncate it back to integer.
-        return (Math.Sign(byteCount) * num).ToString("0.#") + suf[place];
+        // would truncate it back to integer. InvariantCulture pins the decimal
+        // separator to '.' so a German locale doesn't render "1,5GB".
+        return (Math.Sign(byteCount) * num).ToString("0.#", CultureInfo.InvariantCulture) + suf[place];
     }
 }

@@ -11,6 +11,10 @@
 .vscode/
 scripts/
 
+# Local test project (stays out of the published plugin repo;
+# pure-function safety net for refactor cycles)
+HellionChat.Tests/
+
 # Packaging
 pack/
 
