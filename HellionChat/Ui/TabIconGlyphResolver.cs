@@ -58,17 +58,18 @@ internal static class TabIconGlyphResolver
     ///    a) bekannter Glyph → diesen Glyph
     ///    b) unbekannter Glyph → harter Fallback "hashtag" (User hat
     ///       bewusst etwas gesetzt, also überstimmt das die Defaults)
-    /// 2. Auto-Tell-Tab → "clock"
+    /// 2. Auto-Tell-Tab → <paramref name="autoTellGlyph"/> falls
+    ///    übergeben, sonst "clock".
     /// 3. Tab-Name-Default (<see cref="NameDefaults"/>-Lookup)
     /// 4. Fallback "hashtag"
     /// </summary>
-    public static string ResolveGlyphName(Tab tab)
+    public static string ResolveGlyphName(Tab tab, string? autoTellGlyph = null)
     {
         if (!string.IsNullOrWhiteSpace(tab.Icon))
             return KnownGlyphs.Contains(tab.Icon) ? tab.Icon : "hashtag";
 
         if (tab.IsTempTab)
-            return "clock";
+            return autoTellGlyph ?? "clock";
 
         if (tab.Name is { } name && NameDefaults.TryGetValue(name, out var byName))
             return byName;

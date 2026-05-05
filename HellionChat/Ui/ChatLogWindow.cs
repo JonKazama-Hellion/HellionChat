@@ -1591,6 +1591,26 @@ public sealed class ChatLogWindow : Window
                             1.5f); // leichter Rounding
                     }
 
+                    // v1.2.0 — Unread-Dot oben rechts am Icon. Sichtbar ohne Hover, damit
+                    // User Tabs mit ungelesenen Messages sofort erkennt. Aktive Tabs haben
+                    // per Konvention Unread = 0 (LastTab-Branch in ChatLogWindow), daher
+                    // kollidiert der Dot nicht mit der Active-Pill.
+                    if (!isCurrentTab && tab.UnreadMode != UnreadMode.None && tab.Unread > 0)
+                    {
+                        var min = ImGui.GetItemRectMin();
+                        var max = ImGui.GetItemRectMax();
+                        const float dotRadius = 4f;
+                        const float dotPadding = 3f;
+                        var dotCenter = new Vector2(
+                            max.X - dotRadius - dotPadding,
+                            min.Y + dotRadius + dotPadding);
+                        ImGui.GetWindowDrawList().AddCircleFilled(
+                            dotCenter,
+                            dotRadius,
+                            ColourUtil.RgbaToAbgr(theme.Colors.StatusDanger),
+                            12);
+                    }
+
                     // Tooltip mit Tab-Name + Unread-Counter beim Hover.
                     if (ImGui.IsItemHovered())
                     {

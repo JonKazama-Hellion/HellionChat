@@ -53,7 +53,18 @@ internal static class TabIconMapping
     /// </summary>
     public static FontAwesomeIcon Resolve(Tab tab)
     {
-        var glyph = TabIconGlyphResolver.ResolveGlyphName(tab);
+        // v1.2.0 — Auto-Tell-Tabs bekommen ein per-Partner gehashtes
+        // Icon aus dem Tell-Pool. Damit unterscheiden sich parallele
+        // Tells nicht nur über die Color (For), sondern auch über die
+        // Glyph-Form. Berechnung bleibt hier (Dalamud-bound), weil
+        // TellTarget Dalamud-Imports hat.
+        string? autoTellGlyph = null;
+        if (tab.IsTempTab && tab.TellTarget != null && tab.TellTarget.IsSet())
+        {
+            autoTellGlyph = AutoTellTabTint.IconFor(tab.TellTarget.Name, tab.TellTarget.World);
+        }
+
+        var glyph = TabIconGlyphResolver.ResolveGlyphName(tab, autoTellGlyph);
         return GlyphLookup.TryGetValue(glyph, out var icon)
             ? icon
             : FontAwesomeIcon.Hashtag;

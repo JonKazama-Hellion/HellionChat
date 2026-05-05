@@ -61,4 +61,47 @@ internal static class AutoTellTabTint
         var hash = (uint)(key.GetHashCode() & 0x7FFFFFFF);
         return Palette[(int)(hash % Palette.Count)];
     }
+
+    /// <summary>
+    /// Tell-spezifischer Icon-Pool. 7 visuell distinkte FontAwesome-Glyphen
+    /// die im Tell-Kontext sinnvoll wirken (envelope = Tell-Default, star/
+    /// heart/bell = personalisiert, bookmark/flag/fire = markiert/wichtig).
+    /// Bewusst kein cog/comment/users — die wären für System-/Group-Tabs
+    /// reserviert und würden im Tell-Bereich verwirrend wirken.
+    /// </summary>
+    public static readonly IReadOnlyList<string> IconPool = new[]
+    {
+        "envelope",
+        "star",
+        "heart",
+        "bell",
+        "bookmark",
+        "flag",
+        "fire",
+    };
+
+    /// <summary>
+    /// Fallback-Icon bei ungültigem Input. "envelope" passt semantisch zum
+    /// Tell-Kontext besser als das alte hardcoded "clock".
+    /// </summary>
+    public const string IconFallback = "envelope";
+
+    /// <summary>
+    /// Liefert ein konsistentes Icon-Glyph für einen Tell-Partner.
+    /// Nutzt einen anderen Hash-Bias als For() (Color), damit Icon und
+    /// Color unabhängig variieren — gibt 7 × 12 = 84 distinct Combinations.
+    /// </summary>
+    public static string IconFor(string name, uint world)
+    {
+        if (string.IsNullOrEmpty(name) || world == 0)
+            return IconFallback;
+
+        // Anderer Hash-Bias als For() (verschiedene Modulo-Basis): wir
+        // nutzen "world@name" statt "name@world" damit Icon und Color
+        // nicht synchron variieren. Ohne Bias-Trennung würden alle Tells
+        // mit derselben Color auch dasselbe Icon haben.
+        var key = $"{world}@{name}";
+        var hash = (uint)(key.GetHashCode() & 0x7FFFFFFF);
+        return IconPool[(int)(hash % IconPool.Count)];
+    }
 }
