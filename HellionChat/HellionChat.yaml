@@ -46,7 +46,8 @@ accepts_feedback: true
 icon_url: https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png
 image_urls:
   - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png
-  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/settingsOverview.png
+  - https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/themesPicker.png
 tags:
   - Social
   - UI

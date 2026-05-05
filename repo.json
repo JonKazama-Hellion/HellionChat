@@ -29,7 +29,8 @@
     "IconUrl": "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png",
     "ImageUrls": [
       "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/chatWindow.png",
-      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/withSimpleTweaks.png"
+      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/settingsOverview.png",
+      "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/themesPicker.png"
     ],
     "DownloadCount": 0,
     "IsHide": false,
