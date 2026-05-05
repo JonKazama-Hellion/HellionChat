@@ -1462,6 +1462,12 @@ public sealed class ChatLogWindow : Window
 
         var hasTabSwitched = false;
         var childHeight = GetRemainingHeightForMessageLog();
+        // v1.2.0 — Sidebar-Child ohne Theme-ChildBg, sonst füllt das
+        // bläuliche Frame-Rect auch den oberen HeaderToolbar-Padding-Bereich
+        // aus (sieht aus wie ein angeschnittener Block oberhalb der Buttons).
+        // Vertikale Trennung zur Message-Spalte bleibt durch BordersInnerV
+        // der Tab-Table erhalten.
+        using (ImRaii.PushColor(ImGuiCol.ChildBg, 0u))
         using (var child = ImRaii.Child("##chat2-tab-sidebar", new Vector2(-1, childHeight)))
         {
             if (child)
