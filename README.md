@@ -62,6 +62,13 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 - **Mitgelieferte Hellion-Schrift** (Exo 2, OFL-1.1) als optionaler Default statt System-Font.
 - **Hellion-Logo** im Plugin-Bundle und in der Dalamud-Plugin-Liste.
 
+#### Custom Themes (v1.1.0)
+
+HellionChat 1.1.0 bringt eine Theme-Engine mit fünf eingebauten Themes
+(Hellion Arctic, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove)
+und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und
+Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md).
+
 ### Pop-Out Convenience (v0.6.0)
 
 - **Eingabe-Bar in Pop-Out-Fenstern** als globaler Opt-In in Settings → Fenster → Fenster-Rahmen. Wenn aktiv hat jedes Pop-Out-Window unten einen kompakten Input mit kanal-farbigem Icon-Button und Text-Eingabe — kein Wechsel mehr ins Hauptfenster für eine schnelle Antwort.
@@ -302,6 +309,7 @@ Dokumentation lebt unter [`docs/`](docs/).
 | [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md) | Tester, Übersetzer und Code-Beiträger der Hellion-Seite. |
 | [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md) | Entwicklungsgeschichte, vom Web-Stack zu C# / Dalamud, was ich aus dem Fork gelernt habe. |
 | [`docs/IPC.md`](docs/IPC.md) | IPC-Kanal-Reference, Tuple-Payload-Felder, Migrations-Diff für Drittplugins. |
+| [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md) | Theme-Engine-Authoring-Guide (EN): JSON-Schema, Color-/Layout-Slots, Channel-Identity-Regeln, Validierung. |
 | [`docs/UPSTREAM_SYNC.md`](docs/UPSTREAM_SYNC.md) | Cherry-Pick-Policy gegenüber Chat 2. |
 | [`docs/THIRD_PARTY_NOTICES.md`](docs/THIRD_PARTY_NOTICES.md) | NuGet-Dependencies mit Lizenzen, Bundled Assets, Network-Status pro Komponente. |
 | [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md) | Offenlegung der KI-Unterstützung im Entwicklungsprozess. |
