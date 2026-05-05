@@ -8,15 +8,23 @@
 [![.NET](https://img.shields.io/badge/.NET-10.0-512BD4)](https://dotnet.microsoft.com/)
 [![FFXIV](https://img.shields.io/badge/FFXIV-Dawntrail-c3a37f)](https://www.finalfantasyxiv.com/)
 
-**Version 1.1.0** — DSGVO-bewusster Chat-Ersatz für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+<p align="center">
+  <img src="docs/images/hellion-forge.png" alt="Hellion Forge" width="180" />
+</p>
 
-Hellion Chat ergänzt das ursprüngliche Chat-2-Fundament um Datenschutz- und Daten-Handling-Kontrollen, die mit den Datenschutz-Regeln in der EU, den USA und Japan im Einklang sind. Alle aus Chat 2 übernommenen Funktionen, Befehle und Tastenkürzel funktionieren unverändert. Eigenständiger Plugin-Slot, eigene Konfiguration, eigene Datenbank.
+**Version 1.1.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+
+Hellion Chat ist ein Privacy-First-Plugin auf dem Chat-2-Fundament. Der größte Teil der Engine kommt aus Chat 2 (Message-Store, Channel-Logik, Hook-System), die meisten Tastenkürzel funktionieren weiterhin wie gewohnt. Was sich ändert: schärfere Privacy-Defaults von Haus aus, eigene Slash-Commands unter `/hellionchat`, kein Webinterface mehr, und mit v1.1.0 eine Theme-Engine als Schritt in Richtung eigenes UI-Look-and-Feel.
+
+Der Daten-Handling-Fokus liegt auf den DSGVO/EU-, US- und JP-Regelungen, soweit für ein Chat-Plugin praktisch umsetzbar: Speicherzeit pro Kanal, granulare Filter, Selbstauskunft per Export. Eine ausführliche Auflistung steht in [`PRIVACY.md`](PRIVACY.md).
 
 Eigenständiges Repository, EUPL-1.2-lizenziert. Mit v1.0.0 ist der Standalone-Cut abgeschlossen: eigener Namespace `HellionChat.*`, eigene IPC-Kanäle, eigene Source-Tree-Struktur. Distribution über Custom-Repo. Selektive Cherry-Picks von Upstream-Chat-2 nach Bedarf, dokumentiert in [`docs/UPSTREAM_SYNC.md`](docs/UPSTREAM_SYNC.md).
 
 ## Acknowledgements
 
-Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Infiziert90 (Infi)** und **Anna Clemens** auf, die das Plugin über Jahre gepflegt haben bevor ich den Source-Code überhaupt gesehen habe. Die ganze Kern-Architektur, der Message-Store, die Channel-Logik, das Hook-System und vieles mehr stammt von ihnen. Wenn dir Hellion Chat hilft, dann läuft die Anerkennung dafür zu großen Teilen an Infi und Anna. Eine ausführliche Danksagung liegt in [NOTICE.md](NOTICE.md).
+Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Infiziert90 (Infi)** und **Anna Clemens** auf, die das Plugin über Jahre gepflegt haben bevor ich den Source-Code überhaupt gesehen habe. Die ganze Kern-Architektur, der Message-Store, die Channel-Logik, das Hook-System und vieles mehr stammt von ihnen. Wenn dir Hellion Chat hilft, läuft die Anerkennung dafür zu großen Teilen an Infi und Anna. Eine ausführliche Danksagung liegt in [NOTICE.md](NOTICE.md).
+
+Hellion Chat wird unter **Hellion Forge** entwickelt, der spezialisierten Modding- und Plugin-Linie von [Hellion Online Media](https://hellion-media.de).
 
 ---
 
@@ -32,7 +40,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 | Lokalisierung   | ResX (HellionStrings.resx, .de.resx; PR-basiert)     |
 | Schriftart      | Exo 2 (SIL Open Font License 1.1, gebündelt)         |
 | Toolchain       | dotnet 10 SDK, VS Code mit C# Dev Kit                |
-| Deployment      | GitHub Releases + Custom-Repo (`repo.json`)          |
+| Deployment      | GitHub Releases plus Custom-Repo (`repo.json`)       |
 
 ---
 
@@ -55,7 +63,7 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 
 ### Look & Feel
 
-- **Bilinguale UI** (Englisch + Deutsch) mit Live-Sprachwechsel. Hellion-spezifische Strings in `HellionStrings.<lang>.resx`.
+- **Bilinguale UI** (Englisch und Deutsch) mit Live-Sprachwechsel. Hellion-spezifische Strings in `HellionStrings.<lang>.resx`.
 - **Hellion-HUD-Theme** mit Cyan-Teal-Akzenten, Slate-Violet-Tabs, Bernstein-Highlights für aktive Zustände.
 - **Chat-Farben-Presets** (v0.6.0) mit sieben Built-in-Bundles in Settings → Aussehen → Chat-Farben: Klassik (Chat 2 Default), High-Contrast, Pastell, Dark-Mode-Tuned, Hellion (Brand), plus Bonus-Stimmungen Night Blue und Indigo Violet. One-Click-Apply, Battle-Channels bleiben unangetastet.
 - **Fenster-Deckkraft-Slider** für Kampf-freundliche Transparenz.
@@ -64,16 +72,13 @@ Hellion Chat baut auf [Chat 2](https://github.com/Infiziert90/ChatTwo) von **Inf
 
 #### Custom Themes (v1.1.0)
 
-HellionChat 1.1.0 bringt eine Theme-Engine mit fünf eingebauten Themes
-(Hellion Arctic, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove)
-und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und
-Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md).
+HellionChat 1.1.0 bringt eine Theme-Engine mit fünf eingebauten Themes (Hellion Arctic, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md).
 
 ### Pop-Out Convenience (v0.6.0)
 
-- **Eingabe-Bar in Pop-Out-Fenstern** als globaler Opt-In in Settings → Fenster → Fenster-Rahmen. Wenn aktiv hat jedes Pop-Out-Window unten einen kompakten Input mit kanal-farbigem Icon-Button und Text-Eingabe — kein Wechsel mehr ins Hauptfenster für eine schnelle Antwort.
+- **Eingabe-Bar in Pop-Out-Fenstern** als globaler Opt-In in Settings → Fenster → Fenster-Rahmen. Wenn aktiv, hat jedes Pop-Out-Window unten einen kompakten Input mit kanal-farbigem Icon-Button und Text-Eingabe. Kein Wechsel mehr ins Hauptfenster für eine schnelle Antwort.
 - **Pro-Pop-Out unabhängiger Text-Buffer und History-Cursor.** Channel-Wechsel im Pop-Out wirkt global wie im Hauptfenster (FFXIV-Channel-API), aber halb-getippte Eingaben kollidieren nicht zwischen Hauptfenster und Pop-Outs.
-- **Geteilte Eingabe-Historie** zwischen allen Fenstern via Singleton-Service — Up/Down-Pfeile navigieren überall durch dieselbe Liste der letzten 30 Eingaben.
+- **Geteilte Eingabe-Historie** zwischen allen Fenstern via Singleton-Service. Up/Down-Pfeile navigieren überall durch dieselbe Liste der letzten 30 Eingaben.
 
 ### Stability
 
@@ -83,7 +88,9 @@ Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORI
 
 ### Was gegenüber Chat 2 fehlt
 
-- **Webinterface** wurde in Hellion Chat 0.2.0 entfernt. Es bedient einen anderen Anwendungsfall als der Fokus dieses Forks, nämlich Remote-Zugriff auf den Chat von einem zweiten Gerät. An die kleineren Defaults dieses Forks anzupassen hätte einen erheblichen Umbau bedeutet, also ist es ersatzlos entfernt worden. Wer den vollen Funktionsumfang von Chat 2 möchte, ist mit dem Upstream-Plugin besser bedient. Hellion Chat fokussiert sich auf einen schmaleren Datenbestand und verzichtet bewusst auf Remote-Zugriffs-Features.
+Das Webinterface wurde in Hellion Chat 0.2.0 entfernt. Es bedient einen anderen Anwendungsfall als der Fokus dieses Forks, nämlich Remote-Zugriff auf den Chat von einem zweiten Gerät. Genau das kollidiert mit der Privacy-First-These dieses Forks: Ein Chat-Plugin, das einen lokalen HTTP-Server startet, ist für mein Threat-Model eine zu große Angriffsfläche. Also raus damit.
+
+Wer den vollen Funktionsumfang von Chat 2 möchte, ist mit dem Upstream-Plugin besser bedient. Hellion Chat ist bewusst der schmalere Fork.
 
 ---
 
@@ -105,7 +112,7 @@ HellionChat/
 │   └── Language*.resx           # Upstream-Lokalisierung (Crowdin)
 ├── Ui/
 │   ├── FirstRunWizard.cs        # Drei-Profile-Onboarding
-│   ├── HellionStyle.cs          # ImGui-Theme-Push (lokal + global)
+│   ├── HellionStyle.cs          # ImGui-Theme-Push (lokal und global)
 │   └── SettingsTabs/
 │       └── Privacy.cs           # Datenschutz-Tab (Filter, Retention, Cleanup, Export)
 ├── Ipc/                         # IPC-Kanäle, in v1.0.0 auf HellionChat.* migriert
@@ -118,11 +125,11 @@ HellionChat/
 
 ### Regeln
 
-- **Code-Namespace ist `HellionChat.*`** — seit v1.0.0 vollständig konsolidiert auf den Plugin-Namen, kein verbleibender `ChatTwo.*`-Bestand im Source-Tree.
-- **AssemblyName ist `HellionChat`** — eigener Slot in `pluginConfigs/`, eigenes Datei-Manifest, kein Shared State mit Chat 2. Parallel-Load mit Upstream Chat 2 wird beim Start aktiv geblockt (bilinguale Konflikt-Meldung).
-- **IPC-Kanäle sind `HellionChat.*`** — sechs Kanäle für Drittplugin-Anbindung (`Register`, `Available`, `Unregister`, `Invoke`, `GetChatInputState`, `ChatInputStateChanged`). Details in [`docs/IPC.md`](docs/IPC.md).
-- **Hellion-eigene Strings in `HellionStrings.*.resx`**, übernommene Strings aus dem Chat-2-Bestand in `Language.*.resx` — die Original-`Language.*.resx` bleibt strukturell erhalten, weil die existierenden Übersetzungen aus dem Crowdin-Bestand der Upstream-Community weiter wertvoll sind.
-- **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager` — Font-Fallback und Hellion-Font laufen zentral.
+- **Code-Namespace ist `HellionChat.*`.** Seit v1.0.0 vollständig konsolidiert auf den Plugin-Namen, kein verbleibender `ChatTwo.*`-Bestand im Source-Tree.
+- **AssemblyName ist `HellionChat`.** Eigener Slot in `pluginConfigs/`, eigenes Datei-Manifest, kein Shared State mit Chat 2. Parallel-Load mit Upstream Chat 2 wird beim Start aktiv geblockt (bilinguale Konflikt-Meldung).
+- **IPC-Kanäle sind `HellionChat.*`.** Sechs Kanäle für Drittplugin-Anbindung (`Register`, `Available`, `Unregister`, `Invoke`, `GetChatInputState`, `ChatInputStateChanged`). Details in [`docs/IPC.md`](docs/IPC.md).
+- **Hellion-eigene Strings in `HellionStrings.*.resx`,** übernommene Strings aus dem Chat-2-Bestand in `Language.*.resx`. Die Original-`Language.*.resx` bleibt strukturell erhalten, weil die existierenden Übersetzungen aus dem Crowdin-Bestand der Upstream-Community weiter wertvoll sind.
+- **Kein Direkt-Eingriff in `Plugin.Interface.UiBuilder.FontAtlas`** außerhalb von `FontManager`. Font-Fallback und Hellion-Font laufen zentral.
 
 ---
 
@@ -150,9 +157,9 @@ Pfad: `pluginConfigs/HellionChat/chat-sqlite.db`. WAL-Modus, Synchronous=NORMAL.
 
 ---
 
-## Installation (Tester)
+## Installation
 
-Hellion Chat wird während der Bootstrap-Phase über ein Dalamud-**Custom-Repository** verteilt.
+Hellion Chat wird über ein Dalamud-**Custom-Repository** verteilt.
 
 ### Frische Installation (kein Chat 2 vorher)
 
@@ -162,14 +169,14 @@ Hellion Chat wird während der Bootstrap-Phase über ein Dalamud-**Custom-Reposi
    https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/repo.json
    ```
 3. **Save**, dann in `/xlplugins` → **All Plugins** → Refresh.
-4. **Hellion Chat** taucht in der Liste auf — installieren.
+4. Hellion Chat taucht in der Liste auf, dann installieren wie jedes andere Plugin.
 
 ### Migration aus Chat 2 (mit bestehendem Verlauf)
 
 Chat 2 und Hellion Chat teilen sich die Datenbank-Datei, bis Hellion Chat sie beim ersten Start in den eigenen Pfad verschiebt. Die Reihenfolge ist wichtig:
 
 1. **Chat 2 deaktivieren** in `/xlplugins` (nicht deinstallieren, nur deaktivieren).
-2. **FFXIV komplett schließen**, damit SQLite die Datei-Sperre freigibt. Plugin-Reload allein reicht nicht.
+2. **FFXIV komplett schließen,** damit SQLite die Datei-Sperre freigibt. Plugin-Reload allein reicht nicht.
 3. Spiel neu starten.
 4. Custom-Repo wie oben hinzufügen.
 5. Hellion Chat installieren. Beim ersten Start wandert die Konfigurations-Datei und das gesamte Datenbank-Verzeichnis in das HellionChat-Layout.
@@ -200,61 +207,51 @@ Spiel starten, Hellion Chat aktivieren, Verlauf ist zurück.
 
 ### Updates
 
-Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `v0.X.Y`-Tag mit GitHub-Release publiziert ist. Keine Neu-Installation nötig.
+Updates erscheinen automatisch in der Plugin-Liste, sobald ein neuer `vX.Y.Z`-Tag mit GitHub-Release publiziert ist. Keine Neu-Installation nötig.
 
 ---
 
 ## Distribution
 
-Hellion Chat wird über ein eigenes Dalamud-Custom-Repository verteilt
-(`repo.json` im Repo-Root). Tag-Pushes auf `vX.Y.Z` lösen den
-[`release.yml`](.github/workflows/release.yml)-Workflow aus, der den
-Build-Output (`HellionChat/bin/Release/HellionChat/latest.zip`) plus den
-passenden Changelog-Block aus `HellionChat.yaml` an das GitHub-Release
-hängt. Manueller Recovery-Pfad bei verpasstem Auto-Trigger:
-`gh workflow run release.yml -f tag=vX.Y.Z`.
+Hellion Chat wird über ein eigenes Dalamud-Custom-Repository verteilt (`repo.json` im Repo-Root). Tag-Pushes auf `vX.Y.Z` lösen den [`release.yml`](.github/workflows/release.yml)-Workflow aus, der den Build-Output (`HellionChat/bin/Release/HellionChat/latest.zip`) plus den passenden Changelog-Block aus `HellionChat.yaml` an das GitHub-Release hängt. Manueller Recovery-Pfad bei verpasstem Auto-Trigger: `gh workflow run release.yml -f tag=vX.Y.Z`.
 
-Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum
-eigenen Custom-Repo) steht in der [Roadmap](docs/ROADMAP.md).
+Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum eigenen Custom-Repo) steht in der [Roadmap](docs/ROADMAP.md).
 
 ---
 
 ## Projektstatus
 
-**Version 1.0.0** — Standalone-Cut live (Stand: 2026-05-04).
+**Version 1.1.0** — Theme-Engine live, Standalone-Cut abgeschlossen (Stand: 2026-05-04).
 
-Mit v1.0.0 ist Hellion Chat ein eigenständiges Plugin, kein Fork mehr im
-Repository-Sinne. Vollständig abgeschlossen:
+Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne. Vollständig abgeschlossen:
 
 - Privacy-Filter (Whitelist, Retention, retroaktive Cleanup, Export)
 - First-Run-Wizard mit drei Profilen
 - Plugin-Identity: eigener `HellionChat`-Slot, Layout-Migration aus Chat 2, Migrate3-Recovery
-- Bilinguale UI (EN + DE) mit Live-Sprachwechsel
+- Bilinguale UI (EN und DE) mit Live-Sprachwechsel
 - Hellion-Theme, Hellion-Logo, gebündelter Exo-2-Font
 - Custom-Repo-Pipeline mit automatisierter GitHub-Release-Distribution
-- Slash-Commands auf die `/hellion`-Familie konsolidiert
+- Slash-Commands auf die `/hellionchat`-Familie konsolidiert
 - Webinterface entfernt (v0.2.0)
 - Audit-Hardening (Path-Traversal, Retention-Race, DbViewer-Konsistenz)
-- About-Tab im Hellion-Branding, EN + DE lokalisiert, mit License und Disclaimer
+- About-Tab im Hellion-Branding, EN und DE lokalisiert, mit License und Disclaimer
 - AI-Disclosure dokumentiert (siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md))
 - Standalone-Cut: Namespace `HellionChat.*`, IPC-Kanäle `HellionChat.*`, Source-Tree-Restructure, Conflict-Detection gegen Upstream Chat 2, SQLite-CVE-Härtung (3.50.3)
+- Theme-Engine mit fünf eingebauten Themes plus JSON-Authoring-Format (v1.1.0)
 
-Was als Nächstes geplant ist und welche Themen langfristig auf der Liste
-stehen, steht in [`docs/ROADMAP.md`](docs/ROADMAP.md). Konkrete
-eingeplante Items werden zusätzlich im
-[GitHub-Issue-Tracker](https://github.com/JonKazama-Hellion/HellionChat/issues)
-mit dem `roadmap`-Label geführt.
+In Arbeit: schrittweise Modernisierung des UI-Look-and-Feel über die Theme-Engine hinaus. Was als Nächstes geplant ist und welche Themen langfristig auf der Liste stehen, steht in [`docs/ROADMAP.md`](docs/ROADMAP.md). Konkrete eingeplante Items werden zusätzlich im [GitHub-Issue-Tracker](https://github.com/JonKazama-Hellion/HellionChat/issues) mit dem `roadmap`-Label geführt.
 
 ### Zur Release-Kadenz
 
-Wer den Repo zum ersten Mal sieht, bemerkt schnell viele Releases und sehr viele Commits in kurzer Zeit. Beides ist eine bewusste Entscheidung, keine KI-Slop-Symptomatik: Vorarbeit vor dem Fork (Issues und Commits gelesen, Chat 2 ingame genutzt), eine sauber strukturierte Upstream-Codebase als Fundament, atomare Commits im Stil des Upstream und AI-gestütztes Review-Sparring, das ich nicht blind übernehme. Die volle Begründung steht in [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md), Sektion "Wie ich so schnell release".
+Wer den Repo zum ersten Mal sieht, bemerkt schnell viele Releases und sehr viele Commits in kurzer Zeit. Beides ist eine bewusste Entscheidung. Die volle Begründung mit den vier Faktoren dahinter steht in [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md), Sektion "Wie ich so schnell release".
 
 ---
 
-## Community & Support
+## Community und Support
 
 - **Hellion Forge Discord** (Modding- und Plugin-Community von Hellion Online Media): https://discord.gg/X9V7Kcv5gR
 - Bug-Reports und Feature-Requests: [GitHub Issues](https://github.com/JonKazama-Hellion/HellionChat/issues)
+- Discord DM: `@j.j_kazama`
 - Weitere Kontaktwege (Security, Privacy, Quick-Questions): siehe [SUPPORT.md](SUPPORT.md)
 
 ---
@@ -268,9 +265,9 @@ EUPL-1.2 (gleiche Lizenz wie Upstream Chat 2). Volltext in [LICENSE](LICENSE), C
 
 ### Acknowledgments
 
-- **Infi & Anna (ascclemens)** — die Chat-2-Engine, ohne die dieser Fork nicht existieren würde.
-- **Dalamud-Team** — das Plugin-Framework.
-- **Chat-2-Crowdin-Community** — Übersetzungen der Upstream-Strings (siehe Settings → Info → "Chat 2 community translators").
+- **Infi und Anna (ascclemens)** für die Chat-2-Engine, ohne die dieser Fork nicht existieren würde.
+- **Dalamud-Team** für das Plugin-Framework.
+- **Chat-2-Crowdin-Community** für die Übersetzungen der Upstream-Strings (siehe Settings → Info → "Chat 2 community translators").
 
 ### FFXIV-Disclaimer
 
@@ -284,8 +281,7 @@ Siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md) für die Pair-Level-Discl
 
 ## Projekt-Dokumente
 
-Im Repo-Root liegen die Standard-Repository-Dokumente, vertiefende
-Dokumentation lebt unter [`docs/`](docs/).
+Im Repo-Root liegen die Standard-Repository-Dokumente, vertiefende Dokumentation lebt unter [`docs/`](docs/).
 
 ### Repo-Root
 
@@ -309,11 +305,11 @@ Dokumentation lebt unter [`docs/`](docs/).
 | [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md) | Tester, Übersetzer und Code-Beiträger der Hellion-Seite. |
 | [`docs/LEARNING-JOURNEY.md`](docs/LEARNING-JOURNEY.md) | Entwicklungsgeschichte, vom Web-Stack zu C# / Dalamud, was ich aus dem Fork gelernt habe. |
 | [`docs/IPC.md`](docs/IPC.md) | IPC-Kanal-Reference, Tuple-Payload-Felder, Migrations-Diff für Drittplugins. |
-| [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md) | Theme-Engine-Authoring-Guide (EN): JSON-Schema, Color-/Layout-Slots, Channel-Identity-Regeln, Validierung. |
+| [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md) | Theme-Engine-Authoring-Guide (EN): JSON-Schema, Color- und Layout-Slots, Channel-Identity-Regeln, Validierung. |
 | [`docs/UPSTREAM_SYNC.md`](docs/UPSTREAM_SYNC.md) | Cherry-Pick-Policy gegenüber Chat 2. |
 | [`docs/THIRD_PARTY_NOTICES.md`](docs/THIRD_PARTY_NOTICES.md) | NuGet-Dependencies mit Lizenzen, Bundled Assets, Network-Status pro Komponente. |
 | [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md) | Offenlegung der KI-Unterstützung im Entwicklungsprozess. |
 
 ---
 
-**Hellion Online Media** | Bad Harzburg | [hellion-media.de](https://hellion-media.de)
+Entwickelt unter **Hellion Forge**, der Modding- und Plugin-Linie von **Hellion Online Media** | Bad Harzburg | [hellion-media.de](https://hellion-media.de)
