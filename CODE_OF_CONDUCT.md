@@ -1,48 +1,98 @@
-# Code of conduct
+# Code of Conduct
 
-HellionChat is a small hobby project. The contributor base is tiny and
-the moderation overhead I can afford is equally small, so this document
-is short and direct.
+## A Note on This Project
 
-## What I expect from contributors
+HellionChat is a one-person side project developed under Hellion Forge.
+I maintain this in my spare time, which means replies can take a few
+days. Please do not escalate just because a thread is quiet.
 
-- Be respectful in issues, pull requests, discussions and any other
-  project space (Discord, email).
-- Keep feedback focused on the code, the design or the documentation.
-  Critique the work, not the person.
-- Assume good intent. People come from different backgrounds, time
-  zones and skill levels. A clarifying question is almost always a
-  better first move than an accusation.
-- Stay on topic. This project is about a Dalamud chat plugin. Off-topic
-  arguments belong elsewhere.
-- Respect that I maintain this in my spare time. Replies can take a
-  few days. Please do not escalate just because a thread is quiet.
+When in doubt, assume good intent. Contributors come from different
+backgrounds, time zones and skill levels. A clarifying question is
+almost always a better first move than an accusation.
 
-## What is not welcome
+Please also keep discussions on topic. This project is about a Dalamud
+chat plugin. Off-topic arguments belong elsewhere.
 
-- Personal attacks, slurs, doxxing, sustained disruption of threads.
-- Unsolicited private contact after I have asked someone to stop.
-- Sharing of private conversations without consent.
-- Any content that would put other contributors or end users at risk.
+---
 
-## Scope
+## Our Pledge
 
-This applies to every space the project owns or that I run on its
-behalf: the GitHub repository, GitHub Discussions, project-related
-Discord conversations and the maintainer email address listed in
-`SECURITY.md`.
+We pledge to make our community welcoming, safe, and equitable for all.
 
-It also applies when someone is identifiably representing the project
-in another space, for example posting as a HellionChat maintainer in
-the Dalamud Discord.
+We are committed to fostering an environment that respects and promotes
+the dignity, rights, and contributions of all individuals, regardless
+of characteristics including race, ethnicity, caste, color, age,
+physical characteristics, neurodiversity, disability, sex or gender,
+gender identity or expression, sexual orientation, language, philosophy
+or religion, national or social origin, socio-economic position, level
+of education, or other status. The same privileges of participation are
+extended to everyone who participates in good faith and in accordance
+with this Covenant.
+
+## Encouraged Behaviors
+
+While acknowledging differences in social norms, we all strive to meet
+our community's expectations for positive behavior. We also understand
+that our words and actions may be interpreted differently than we intend
+based on culture, background, or native language.
+
+With these considerations in mind, we agree to behave mindfully toward
+each other and act in ways that center our shared values, including:
+
+1. Respecting the **purpose of our community**, our activities, and our
+   ways of gathering.
+2. Engaging **kindly and honestly** with others.
+3. Respecting **different viewpoints** and experiences.
+4. **Taking responsibility** for our actions and contributions.
+5. Gracefully giving and accepting **constructive feedback**.
+6. Committing to **repairing harm** when it occurs.
+7. Behaving in other ways that promote and sustain the **well-being of
+   our community**.
+
+## Restricted Behaviors
+
+We agree to restrict the following behaviors in our community.
+Instances, threats, and promotion of these behaviors are violations of
+this Code of Conduct.
+
+1. **Harassment.** Violating explicitly expressed boundaries or engaging
+   in unnecessary personal attention after any clear request to stop.
+2. **Character attacks.** Making insulting, demeaning, or pejorative
+   comments directed at a community member or group of people.
+3. **Stereotyping or discrimination.** Characterizing anyone's
+   personality or behavior on the basis of immutable identities or
+   traits.
+4. **Sexualization.** Behaving in a way that would generally be
+   considered inappropriately intimate in the context or purpose of the
+   community.
+5. **Violating confidentiality.** Sharing or acting on someone's
+   personal or private information without their permission.
+6. **Endangerment.** Causing, encouraging, or threatening violence or
+   other harm toward any person or group.
+7. Behaving in other ways that **threaten the well-being** of our
+   community.
+
+### Other Restrictions
+
+1. **Misleading identity.** Impersonating someone else for any reason,
+   or pretending to be someone else to evade enforcement actions.
+2. **Failing to credit sources.** Not properly crediting the sources of
+   content you contribute.
+3. **Promotional materials.** Sharing marketing or other commercial
+   content in a way that is outside the norms of the community.
+4. **Irresponsible communication.** Failing to responsibly present
+   content which includes, links to, or describes any other restricted
+   behaviors.
 
 ## Reporting
 
 If something here is being broken, contact me directly. Do not open a
 public issue.
 
-- Email: `kontakt@hellion-media.de`
-- Discord DM: `@j.j_kazama`
+| Channel    | Address                  |
+| ---------- | ------------------------ |
+| Email      | `kontakt@hellion-media.de` |
+| Discord DM | `@j.j_kazama`            |
 
 Reports stay private. I will acknowledge within a few weekdays
 (European business hours) and tell you what I plan to do.
@@ -50,22 +100,34 @@ Reports stay private. I will acknowledge within a few weekdays
 ## Enforcement
 
 I am the sole maintainer, so enforcement is a single-person process.
-Depending on what happened and how the person responds, I will pick
-the lightest measure that resolves the issue:
+I will pick the lightest measure that actually resolves the situation:
 
 1. Private note asking the behaviour to stop.
 2. Public correction in the affected thread.
 3. Edit or removal of the offending content.
-4. Temporary block from the repository or related spaces.
-5. Permanent block.
+4. Private written warning with a cooldown period.
+5. Temporary block from the repository or related spaces.
+6. Permanent block.
 
-Severe cases skip the lower steps. I will not negotiate over
-harassment or threats.
+Severe cases skip the lower steps. I will not negotiate over harassment
+or threats.
 
-## Acknowledgement
+## Scope
 
-This document is intentionally short and project-specific rather than
-a copy of a longer template. If you need a more formal reference, the
-[Contributor Covenant](https://www.contributor-covenant.org/) is a
-widely adopted starting point and the spirit of this document is
-compatible with it.
+This Code of Conduct applies to all spaces the project owns or that I
+run on its behalf: the GitHub repository, GitHub Discussions,
+project-related Discord conversations, and the maintainer contact
+listed in [`SECURITY.md`](SECURITY.md). It also applies when someone
+is identifiably representing HellionChat elsewhere, for example when
+posting as a HellionChat maintainer in the Dalamud Discord.
+
+## Attribution
+
+This Code of Conduct is adapted from the Contributor Covenant, version
+3.0, available at
+[https://www.contributor-covenant.org/version/3/0/](https://www.contributor-covenant.org/version/3/0/).
+
+Contributor Covenant is stewarded by the Organization for Ethical
+Source and licensed under CC BY-SA 4.0. To view a copy of this
+license, visit
+[https://creativecommons.org/licenses/by-sa/4.0/](https://creativecommons.org/licenses/by-sa/4.0/).
