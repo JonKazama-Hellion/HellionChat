@@ -67,7 +67,13 @@ internal sealed class Themes : ISettingsTab
         var exportLabel = HellionStrings.ResourceManager.GetString("Settings_Themes_ExportActive") ?? "Export active...";
         if (ImGui.Button(exportLabel))
         {
-            // Export-Logik wird in Phase L (Task 21) ergänzt — Stub belassen, Button bleibt sichtbar.
+            var dir = Path.Combine(Plugin.Interface.ConfigDirectory.FullName, "themes");
+            Directory.CreateDirectory(dir);
+            var fileName = $"{active.Slug}.export.json";
+            var path = Path.Combine(dir, fileName);
+            var json = ThemeJsonWriter.Serialize(active);
+            File.WriteAllText(path, json);
+            Plugin.Log.Information($"Exported active theme '{active.Slug}' to {path}");
         }
     }
 
