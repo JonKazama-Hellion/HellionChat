@@ -88,6 +88,18 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
             View = SettingsView.Overview;
         }
 
+        // ESC im Detail-View kehrt zur Overview zurück. Window-Focus-Check ist
+        // Pflicht — sonst triggert ESC auch wenn der User ein anderes Fenster
+        // fokussiert hat und ESC fürs Game-Menü drückt (Codebase-Pattern siehe
+        // Util/SearchSelector.cs:37).
+        if (View == SettingsView.Detail
+            && ImGui.IsWindowFocused(ImGuiFocusedFlags.RootAndChildWindows)
+            && ImGui.IsKeyPressed(ImGuiKey.Escape))
+        {
+            View = SettingsView.Overview;
+            return;
+        }
+
         if (View == SettingsView.Overview)
             Overview.Draw();
         else
@@ -110,6 +122,28 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 
     private void DrawDetail()
     {
+        // Breadcrumb-Header — Akzent-Cyan, klickbar, führt zurück zur Overview
+        using (ImRaii.PushColor(ImGuiCol.Text, 0xFF00BED2u))
+        using (ImRaii.PushColor(ImGuiCol.Button, 0u))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, 0x33FFFFFFu))
+        using (ImRaii.PushColor(ImGuiCol.ButtonActive, 0x55FFFFFFu))
+        {
+            if (ImGui.SmallButton("← Settings"))
+            {
+                View = SettingsView.Overview;
+                return;
+            }
+        }
+        ImGui.SameLine();
+        ImGui.TextUnformatted("·");
+        ImGui.SameLine();
+        ImGui.TextUnformatted(Tabs[CurrentTab].Name.Split("###")[0]);
+
+        ImGui.Spacing();
+        ImGui.Separator();
+        ImGui.Spacing();
+
+        // Tab-Liste + Content (wie vorher)
         using (var table = ImRaii.Table("##chat2-settings-table", 2))
         {
             if (table.Success)
