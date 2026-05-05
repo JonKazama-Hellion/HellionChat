@@ -1477,6 +1477,23 @@ public sealed class ChatLogWindow : Window
                         clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, 32f));
                     }
 
+                    if (isCurrentTab)
+                    {
+                        // v1.2.0 — Vertikale Akzent-Pill an der linken Window-Kante.
+                        // 3 px breit, halbe Tab-Höhe, vertikal zentriert. ImGui hat keine
+                        // native Pill-API, daher direkter DrawList-Pass.
+                        var min = ImGui.GetItemRectMin();
+                        var max = ImGui.GetItemRectMax();
+                        const float pillWidth = 3f;
+                        var pillHeight = (max.Y - min.Y) * 0.5f;
+                        var pillCenterY = (min.Y + max.Y) * 0.5f;
+                        ImGui.GetWindowDrawList().AddRectFilled(
+                            new Vector2(min.X, pillCenterY - pillHeight * 0.5f),
+                            new Vector2(min.X + pillWidth, pillCenterY + pillHeight * 0.5f),
+                            ColourUtil.RgbaToAbgr(theme.Colors.Accent),
+                            1.5f); // leichter Rounding
+                    }
+
                     // Tooltip mit Tab-Name + Unread-Counter beim Hover.
                     if (ImGui.IsItemHovered())
                     {
