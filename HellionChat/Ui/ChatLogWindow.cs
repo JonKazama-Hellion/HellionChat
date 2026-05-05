@@ -1535,13 +1535,21 @@ public sealed class ChatLogWindow : Window
                         : (showGreetedAffordance && tab.IsGreeted ? theme.Colors.TextDim : theme.Colors.TextPrimary);
 
                     bool clicked;
+                    // v1.2.0 Bug-Fix — Sidebar-Buttons waren sichtbar höher als das Input-Feld.
+                    // Ursache: ImGui.GetFrameHeight() = FontSize + FramePadding.Y * 2, und unser
+                    // HellionStyle pusht eigene FramePadding-Werte. Fix: explizit FramePadding
+                    // (4, 2) für diesen Button überschreiben UND Höhe FramePadding-unabhängig
+                    // aus TextLineHeight + 4f berechnen. Berechnung BEVOR FontAwesome.Push(),
+                    // weil Icon-Glyphen größere Line-Metriken haben als der Standard-Font.
+                    var buttonHeight = ImGui.GetTextLineHeight() + 4f;
+                    using (ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new Vector2(4f, 2f)))
                     using (ImRaii.PushColor(ImGuiCol.Button, 0u))
                     using (ImRaii.PushColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(theme.Colors.SurfaceHover)))
                     using (ImRaii.PushColor(ImGuiCol.ButtonActive, ColourUtil.RgbaToAbgr(theme.Colors.Surface)))
                     using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(iconColor)))
                     using (Plugin.FontManager.FontAwesome.Push())
                     {
-                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, ImGui.GetFrameHeight()));
+                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, buttonHeight));
                     }
 
                     if (isCurrentTab)
