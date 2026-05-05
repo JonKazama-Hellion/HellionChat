@@ -1372,6 +1372,20 @@ public sealed class ChatLogWindow : Window
             if (!tabItem.Success)
                 continue;
 
+            // v1.2.0 — Active-Tab-Underline-Pill (2 px Akzent statt Background-Fill).
+            // Bewusst direkt nach TabItem-Setup; GetItemRectMin/Max referenziert noch
+            // das Tab. ImGui hat keine native Underline-API, daher direkter DrawList-Pass.
+            {
+                var theme = Plugin.ThemeRegistry.Active;
+                var min = ImGui.GetItemRectMin();
+                var max = ImGui.GetItemRectMax();
+                const float pillHeight = 2f;
+                ImGui.GetWindowDrawList().AddRectFilled(
+                    new Vector2(min.X, max.Y - pillHeight),
+                    new Vector2(max.X, max.Y),
+                    ColourUtil.RgbaToAbgr(theme.Colors.Accent));
+            }
+
             var hasTabSwitched = Plugin.LastTab != tabI;
             Plugin.LastTab = tabI;
 
