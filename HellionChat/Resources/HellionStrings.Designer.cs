@@ -230,6 +230,9 @@ internal class HellionStrings
     internal static string Settings_Themes_Custom => Get(nameof(Settings_Themes_Custom));
     internal static string Settings_Themes_OpenFolder => Get(nameof(Settings_Themes_OpenFolder));
     internal static string Settings_Themes_ExportActive => Get(nameof(Settings_Themes_ExportActive));
+    internal static string Settings_Themes_ApplyChatColors_Hint => Get(nameof(Settings_Themes_ApplyChatColors_Hint));
+    internal static string Settings_Themes_ApplyChatColors_Apply => Get(nameof(Settings_Themes_ApplyChatColors_Apply));
+    internal static string Settings_Themes_ApplyChatColors_Keep => Get(nameof(Settings_Themes_ApplyChatColors_Keep));
 
     // Hellion Chat — General-Tab section headings
     internal static string Settings_General_Input_Heading => Get(nameof(Settings_General_Input_Heading));

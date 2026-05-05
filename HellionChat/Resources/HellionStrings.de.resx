@@ -696,4 +696,13 @@
   <data name="Settings_Themes_ExportActive" xml:space="preserve">
     <value>Aktives exportieren...</value>
   </data>
+  <data name="Settings_Themes_ApplyChatColors_Hint" xml:space="preserve">
+    <value>Dieses Theme schlägt eigene Channel-Farben vor.</value>
+  </data>
+  <data name="Settings_Themes_ApplyChatColors_Apply" xml:space="preserve">
+    <value>Übernehmen</value>
+  </data>
+  <data name="Settings_Themes_ApplyChatColors_Keep" xml:space="preserve">
+    <value>Behalten</value>
+  </data>
 </root>

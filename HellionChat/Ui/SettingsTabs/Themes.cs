@@ -12,6 +12,12 @@ internal sealed class Themes : ISettingsTab
     private readonly Plugin Plugin;
     private readonly Configuration Mutable;
 
+    // Tracks ob der User die Apply-Frage für das aktive Theme bereits
+    // beantwortet hat. Banner wird nur angezeigt wenn das Theme ein
+    // ChatColors-Set hat UND noch keine Antwort vorliegt UND die aktuellen
+    // Mutable.ChatColours davon abweichen.
+    private string? _applyDismissedFor;
+
     public string Name => HellionStrings.ResourceManager.GetString("Settings_Tab_Themes") ?? "Themes" + "###tabs-themes";
 
     internal Themes(Plugin plugin, Configuration mutable)
@@ -29,6 +35,8 @@ internal sealed class Themes : ISettingsTab
         ImGui.TextUnformatted(string.Format(activeLabelTemplate, active.Name));
         using (ImRaii.PushColor(ImGuiCol.Text, 0xFF8FA3B5u))
             ImGui.TextUnformatted(active.Author);
+
+        DrawChatColorsApplyBanner(active);
 
         ImGui.Spacing();
         ImGui.Separator();
@@ -143,6 +151,73 @@ internal sealed class Themes : ISettingsTab
         {
             Mutable.Theme = theme.Slug;
             Plugin.ThemeRegistry.Switch(theme.Slug);
+            _applyDismissedFor = null;  // Banner für neues Theme wieder zeigen
         }
+    }
+
+    private void DrawChatColorsApplyBanner(Theme active)
+    {
+        // Klassik hat per Design keine ChatColors — kein Banner.
+        if (active.ChatColors is not { Channels.Count: > 0 } themeChatColors)
+            return;
+
+        // User hat die Frage bereits für genau dieses Theme beantwortet.
+        if (_applyDismissedFor == active.Slug)
+            return;
+
+        // Wenn die aktuellen Channel-Colors bereits exakt mit dem Theme-Vorschlag
+        // übereinstimmen, gibt's nichts zu tun.
+        var alreadyMatching = themeChatColors.Channels.All(kvp =>
+            Mutable.ChatColours.TryGetValue(kvp.Key, out var current) && current == kvp.Value);
+        if (alreadyMatching)
+            return;
+
+        ImGui.Spacing();
+
+        // Dezent-Akzent-Banner mit Border in Theme-Primary
+        var border = ColourUtil.RgbaToAbgr(active.Colors.Primary);
+        var bgFill = ColourUtil.RgbaToAbgr((active.Colors.Surface & 0xFFFFFF00u) | 0xCCu);
+        var origin = ImGui.GetCursorScreenPos();
+        var width = ImGui.GetContentRegionAvail().X;
+        var height = 64f;
+        var draw = ImGui.GetWindowDrawList();
+        draw.AddRectFilled(origin, origin + new Vector2(width, height), bgFill, 4f);
+        draw.AddRect(origin, origin + new Vector2(width, height), border, 4f, ImDrawFlags.None, 1f);
+
+        var hint = HellionStrings.ResourceManager.GetString("Settings_Themes_ApplyChatColors_Hint")
+                   ?? "This theme suggests its own chat channel colours.";
+        var applyLabel = HellionStrings.ResourceManager.GetString("Settings_Themes_ApplyChatColors_Apply")
+                         ?? "Apply";
+        var keepLabel = HellionStrings.ResourceManager.GetString("Settings_Themes_ApplyChatColors_Keep")
+                        ?? "Keep current";
+
+        var textColor = ColourUtil.RgbaToAbgr(active.Colors.TextPrimary);
+        draw.AddText(origin + new Vector2(12f, 10f), textColor, hint);
+
+        // Buttons als InvisibleButton + DrawList-Overlay, damit sie konsistent
+        // zum Banner-Look bleiben.
+        using (ImRaii.PushColor(ImGuiCol.Button, active.Colors.Primary))
+        using (ImRaii.PushColor(ImGuiCol.ButtonHovered, active.Colors.PrimaryLight))
+        using (ImRaii.PushColor(ImGuiCol.ButtonActive, active.Colors.PrimaryDark))
+        {
+            ImGui.SetCursorScreenPos(origin + new Vector2(12f, 32f));
+            if (ImGui.Button(applyLabel))
+            {
+                foreach (var kvp in themeChatColors.Channels)
+                    Mutable.ChatColours[kvp.Key] = kvp.Value;
+                _applyDismissedFor = active.Slug;
+            }
+        }
+
+        ImGui.SameLine();
+        if (ImGui.Button(keepLabel))
+        {
+            _applyDismissedFor = active.Slug;
+        }
+
+        // Cursor unter den Banner setzen
+        ImGui.SetCursorScreenPos(origin + new Vector2(0f, height + 8f));
+
+        ImGui.Spacing();
     }
 }
