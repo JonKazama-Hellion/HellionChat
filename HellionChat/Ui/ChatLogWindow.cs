@@ -1544,9 +1544,25 @@ public sealed class ChatLogWindow : Window
                     // Dim-Trick ab, da wir keine Selectable mehr nutzen).
                     var theme = Plugin.ThemeRegistry.Active;
                     var icon = TabIconMapping.Resolve(tab);
-                    var iconColor = isCurrentTab
-                        ? theme.Colors.Accent
-                        : (showGreetedAffordance && tab.IsGreeted ? theme.Colors.TextDim : theme.Colors.TextPrimary);
+                    uint iconColor;
+                    if (isCurrentTab)
+                    {
+                        iconColor = theme.Colors.Accent;
+                    }
+                    else if (showGreetedAffordance && tab.IsGreeted)
+                    {
+                        iconColor = theme.Colors.TextDim;
+                    }
+                    else if (tab.IsTempTab && tab.TellTarget != null && tab.TellTarget.IsSet())
+                    {
+                        // v1.2.0 — Hash-Color-Tint differenziert parallele Auto-Tell-Tabs
+                        // visuell ohne dass User pro Tab manuell ein Custom-Icon setzen muss.
+                        iconColor = AutoTellTabTint.For(tab.TellTarget.Name, tab.TellTarget.World);
+                    }
+                    else
+                    {
+                        iconColor = theme.Colors.TextPrimary;
+                    }
 
                     bool clicked;
                     using (ImRaii.PushColor(ImGuiCol.Button, 0u))
