@@ -1541,7 +1541,7 @@ public sealed class ChatLogWindow : Window
                     using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(iconColor)))
                     using (Plugin.FontManager.FontAwesome.Push())
                     {
-                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, 32f));
+                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, ImGui.GetFrameHeight()));
                     }
 
                     if (isCurrentTab)

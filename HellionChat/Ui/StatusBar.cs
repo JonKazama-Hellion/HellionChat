@@ -99,8 +99,6 @@ internal sealed class StatusBar
 
         ImGui.Dummy(new Vector2(0, 2)); // BorderTop-Spacing
 
-        using var group = ImRaii.Group();
-
         // Slot 1: Active-Channel-Indicator
         var inputCh = plugin.CurrentTab?.CurrentChannel?.Channel ?? InputChannel.Invalid;
         var hasChannel = inputCh != InputChannel.Invalid;
@@ -145,8 +143,8 @@ internal sealed class StatusBar
         // Slot 5: Version (rechtsbündig, muted)
         var versionText = $"v{Plugin.Interface.Manifest.AssemblyVersion} · Hellion";
         var versionWidth = ImGui.CalcTextSize(versionText).X;
-        var rightCursor = ImGui.GetWindowSize().X - versionWidth - ImGui.GetStyle().WindowPadding.X;
-        ImGui.SameLine(rightCursor);
+        var contentRegionMax = ImGui.GetContentRegionMax().X;
+        ImGui.SameLine(contentRegionMax - versionWidth);
         using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(theme.Colors.TextMuted)))
         {
             ImGui.TextUnformatted(versionText);
