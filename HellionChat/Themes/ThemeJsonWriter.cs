@@ -52,6 +52,14 @@ internal static class ThemeJsonWriter
             writer.WriteNumber("frameBorderSize",   theme.Layout.FrameBorderSize);
             writer.WriteEndObject();
 
+            if (theme.ChatColors is { Channels.Count: > 0 } cc)
+            {
+                writer.WriteStartObject("chatChannels");
+                foreach (var kvp in cc.Channels)
+                    writer.WriteString(kvp.Key.ToString(), $"#{kvp.Value:X8}");
+                writer.WriteEndObject();
+            }
+
             writer.WriteEndObject();
         }
 

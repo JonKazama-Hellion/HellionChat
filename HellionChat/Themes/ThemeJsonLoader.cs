@@ -32,8 +32,33 @@ internal static class ThemeJsonLoader
             var colors = ReadColors(root.GetProperty("colors"));
             var layout = ReadLayout(root.GetProperty("layout"));
 
-            return new Theme(slug, name, author, description, colors, layout, new ThemeTypography(), IsBuiltIn: false);
+            ThemeChatColors? chatColors = null;
+            if (root.TryGetProperty("chatChannels", out var ch) && ch.ValueKind == JsonValueKind.Object)
+                chatColors = ReadChatColors(ch);
+
+            return new Theme(slug, name, author, description, colors, layout, new ThemeTypography(), IsBuiltIn: false, ChatColors: chatColors);
         }
+    }
+
+    private static ThemeChatColors ReadChatColors(JsonElement el)
+    {
+        var dict = new Dictionary<HellionChat.Code.ChatType, uint>();
+        foreach (var prop in el.EnumerateObject())
+        {
+            // Property-Name ist der ChatType-Name als String (z.B. "Say", "Tell"),
+            // Value ist Hex wie bei den Theme-Colors. Unbekannte Channel-Names
+            // werden still übersprungen — Forward-Compat falls SE neue Channels
+            // einführt.
+            if (!Enum.TryParse<HellionChat.Code.ChatType>(prop.Name, ignoreCase: true, out var channel))
+                continue;
+            if (prop.Value.ValueKind != JsonValueKind.String)
+                continue;
+            var hex = prop.Value.GetString();
+            if (string.IsNullOrWhiteSpace(hex))
+                continue;
+            dict[channel] = HellionChat.Util.ColourUtil.HexToRgba(hex);
+        }
+        return new ThemeChatColors(dict);
     }
 
     public static Theme LoadFromFile(string path)

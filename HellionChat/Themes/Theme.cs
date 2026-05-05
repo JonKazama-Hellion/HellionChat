@@ -8,5 +8,6 @@ public sealed record Theme(
     ThemeColors Colors,
     ThemeLayout Layout,
     ThemeTypography Typography,
-    bool IsBuiltIn
+    bool IsBuiltIn,
+    ThemeChatColors? ChatColors = null
 );
