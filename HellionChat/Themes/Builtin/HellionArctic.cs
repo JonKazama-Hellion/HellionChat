@@ -45,6 +45,32 @@ internal static class HellionArctic
             ScrollbarRounding: 2f, WindowBorderSize: 1f, FrameBorderSize: 1f
         ),
         Typography: new ThemeTypography(),
-        IsBuiltIn: true
+        IsBuiltIn: true,
+        ChatColors: new ThemeChatColors(new Dictionary<HellionChat.Code.ChatType, uint>
+        {
+            // Hellion Arctic — FFXIV-Standard mit dezenter Cyan-Tinte in den
+            // blauen Channels (Party/FC). Channel-Identität bleibt klar.
+            [HellionChat.Code.ChatType.Say]              = ColourUtil.HexToRgba("#FFFFFF"),
+            [HellionChat.Code.ChatType.Yell]             = ColourUtil.HexToRgba("#FFE066"),
+            [HellionChat.Code.ChatType.Shout]            = ColourUtil.HexToRgba("#FFA040"),
+            [HellionChat.Code.ChatType.TellIncoming]     = ColourUtil.HexToRgba("#FF99CC"),
+            [HellionChat.Code.ChatType.TellOutgoing]     = ColourUtil.HexToRgba("#FF99CC"),
+            [HellionChat.Code.ChatType.Party]            = ColourUtil.HexToRgba("#80C0E8"),
+            [HellionChat.Code.ChatType.Alliance]         = ColourUtil.HexToRgba("#FFB870"),
+            [HellionChat.Code.ChatType.FreeCompany]      = ColourUtil.HexToRgba("#4DD9E8"),
+            [HellionChat.Code.ChatType.NoviceNetwork]    = ColourUtil.HexToRgba("#A8E060"),
+            [HellionChat.Code.ChatType.CrossParty]       = ColourUtil.HexToRgba("#80C0E8"),
+            [HellionChat.Code.ChatType.Linkshell1]       = ColourUtil.HexToRgba("#A8E060"),
+            [HellionChat.Code.ChatType.Linkshell2]       = ColourUtil.HexToRgba("#FFC080"),
+            [HellionChat.Code.ChatType.Linkshell3]       = ColourUtil.HexToRgba("#FFE066"),
+            [HellionChat.Code.ChatType.Linkshell4]       = ColourUtil.HexToRgba("#80E8A8"),
+            [HellionChat.Code.ChatType.Linkshell5]       = ColourUtil.HexToRgba("#80C0E8"),
+            [HellionChat.Code.ChatType.Linkshell6]       = ColourUtil.HexToRgba("#A8A0F0"),
+            [HellionChat.Code.ChatType.Linkshell7]       = ColourUtil.HexToRgba("#FF99CC"),
+            [HellionChat.Code.ChatType.Linkshell8]       = ColourUtil.HexToRgba("#E8B0F0"),
+            [HellionChat.Code.ChatType.CustomEmote]      = ColourUtil.HexToRgba("#E8C880"),
+            [HellionChat.Code.ChatType.StandardEmote]    = ColourUtil.HexToRgba("#E8C880"),
+            [HellionChat.Code.ChatType.Echo]             = ColourUtil.HexToRgba("#C0C0C0"),
+        })
     );
 }

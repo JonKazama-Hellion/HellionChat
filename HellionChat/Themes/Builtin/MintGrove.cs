@@ -45,6 +45,33 @@ internal static class MintGrove
             ScrollbarRounding: 3f, WindowBorderSize: 1f, FrameBorderSize: 1f
         ),
         Typography: new ThemeTypography(),
-        IsBuiltIn: true
+        IsBuiltIn: true,
+        ChatColors: new ThemeChatColors(new Dictionary<HellionChat.Code.ChatType, uint>
+        {
+            // Mint Grove — Naturthemen-Tönung: Honey-Amber in Yell-Familie,
+            // Mint-Drift in NoviceNetwork und Linkshell. Tell-Pink-Identität
+            // bleibt erhalten für Erkennbarkeit.
+            [HellionChat.Code.ChatType.Say]              = ColourUtil.HexToRgba("#E8F5EA"),
+            [HellionChat.Code.ChatType.Yell]             = ColourUtil.HexToRgba("#F9D580"),
+            [HellionChat.Code.ChatType.Shout]            = ColourUtil.HexToRgba("#F0A050"),
+            [HellionChat.Code.ChatType.TellIncoming]     = ColourUtil.HexToRgba("#F098C8"),
+            [HellionChat.Code.ChatType.TellOutgoing]     = ColourUtil.HexToRgba("#F098C8"),
+            [HellionChat.Code.ChatType.Party]            = ColourUtil.HexToRgba("#80B8D0"),
+            [HellionChat.Code.ChatType.Alliance]         = ColourUtil.HexToRgba("#F0B070"),
+            [HellionChat.Code.ChatType.FreeCompany]      = ColourUtil.HexToRgba("#80C8B0"),
+            [HellionChat.Code.ChatType.NoviceNetwork]    = ColourUtil.HexToRgba("#8FE0B8"),
+            [HellionChat.Code.ChatType.CrossParty]       = ColourUtil.HexToRgba("#80B8D0"),
+            [HellionChat.Code.ChatType.Linkshell1]       = ColourUtil.HexToRgba("#8FE0B8"),
+            [HellionChat.Code.ChatType.Linkshell2]       = ColourUtil.HexToRgba("#F0BC80"),
+            [HellionChat.Code.ChatType.Linkshell3]       = ColourUtil.HexToRgba("#F9D580"),
+            [HellionChat.Code.ChatType.Linkshell4]       = ColourUtil.HexToRgba("#80E0A0"),
+            [HellionChat.Code.ChatType.Linkshell5]       = ColourUtil.HexToRgba("#80B8D0"),
+            [HellionChat.Code.ChatType.Linkshell6]       = ColourUtil.HexToRgba("#A89DC0"),
+            [HellionChat.Code.ChatType.Linkshell7]       = ColourUtil.HexToRgba("#F098C8"),
+            [HellionChat.Code.ChatType.Linkshell8]       = ColourUtil.HexToRgba("#D0A8C8"),
+            [HellionChat.Code.ChatType.CustomEmote]      = ColourUtil.HexToRgba("#E8C088"),
+            [HellionChat.Code.ChatType.StandardEmote]    = ColourUtil.HexToRgba("#E8C088"),
+            [HellionChat.Code.ChatType.Echo]             = ColourUtil.HexToRgba("#9BB5A5"),
+        })
     );
 }
