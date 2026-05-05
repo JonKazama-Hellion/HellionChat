@@ -716,4 +716,10 @@
   <data name="Settings_Themes_ApplyChatColors_Keep" xml:space="preserve">
     <value>Keep current</value>
   </data>
+  <data name="StatusBar_Privacy_Enabled" xml:space="preserve">
+    <value>Privacy-First</value>
+  </data>
+  <data name="StatusBar_Privacy_Open" xml:space="preserve">
+    <value>Open</value>
+  </data>
 </root>

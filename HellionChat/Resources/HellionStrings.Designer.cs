@@ -315,4 +315,8 @@ internal class HellionStrings
     internal static string ChatTwoConflictTitle => Get(nameof(ChatTwoConflictTitle));
     internal static string ChatTwoConflictBody => Get(nameof(ChatTwoConflictBody));
     internal static string ChatTwoConflictAction => Get(nameof(ChatTwoConflictAction));
+
+    // Hellion Chat — v1.2.0 Bottom-Status-Bar Privacy-Badge labels
+    internal static string StatusBar_Privacy_Enabled => Get(nameof(StatusBar_Privacy_Enabled));
+    internal static string StatusBar_Privacy_Open => Get(nameof(StatusBar_Privacy_Open));
 }

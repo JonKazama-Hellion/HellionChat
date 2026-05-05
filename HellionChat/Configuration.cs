@@ -604,6 +604,20 @@ public class Tab
         }
 
         /// <summary>
+        /// Aktuelle Anzahl der gespeicherten Messages. Lock-acquire pro Read
+        /// ist OK für 1×/sec Status-Bar-Polling (v1.2.0).
+        /// </summary>
+        public int Count
+        {
+            get
+            {
+                LockSlim.Wait(-1);
+                try { return Messages.Count; }
+                finally { LockSlim.Release(); }
+            }
+        }
+
+        /// <summary>
         /// Returns an array copy of the message list for usage outside of main thread
         /// </summary>
         public async Task<Message[]> GetCopy(int millisecondsTimeout = -1)
