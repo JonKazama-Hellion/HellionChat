@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 14;
+    private const int LatestVersion = 15;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -79,19 +79,6 @@ public class Configuration : IPluginConfiguration
     // Hellion Chat first-run wizard — opens once on a fresh install. Existing
     // ChatTwo users skip it because the v6→v7 migration sets the flag.
     public bool FirstRunCompleted;
-
-    // Hellion Chat global ImGui theme — applied to every plugin window in
-    // Plugin.Draw. Default ON; users who prefer the upstream Dalamud look
-    // can flip this off in the Privacy tab.
-    [Obsolete("Replaced by Theme slug + WindowOpacity in v14")]
-    public bool HellionThemeEnabled = true;
-
-    // Window background opacity, 0.5–1.0. Lower values make the plugin
-    // panes more glass-like so the game shines through. Default 0.5
-    // matches the maintainer's daily-driver preference; users who want
-    // a less translucent look bump it up in Aussehen → Theme.
-    [Obsolete("Replaced by WindowOpacity in v14")]
-    public float HellionThemeWindowOpacity = 0.5f;
 
     // Use the bundled Exo 2 font (OFL-1.1) for the regular plugin font
     // instead of whatever GlobalFontV2.FontId points at. Default ON so a
@@ -336,10 +323,6 @@ public class Configuration : IPluginConfiguration
         RetentionLastRunAt = other.RetentionLastRunAt;
 
         FirstRunCompleted = other.FirstRunCompleted;
-#pragma warning disable CS0612, CS0618 // Obsolete-Felder bleiben bis v1.2.0 als JSON-Safety-Net erhalten
-        HellionThemeEnabled = other.HellionThemeEnabled;
-        HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
-#pragma warning restore CS0612, CS0618
         UseHellionFont = other.UseHellionFont;
 
         // v1.1.0 theme engine fields
