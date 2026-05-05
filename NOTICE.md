@@ -87,3 +87,7 @@ this file, the README). The Hellion brand is mine.
 This file is the canonical place for "is this attribution correct, is the
 maintainer reachable, is the relationship to Chat 2 documented". If
 anything in here is wrong, please open an issue or contact me directly.
+
+---
+
+Maintained under **Hellion Forge**, the modding and plugin line of **Hellion Online Media** | Bad Harzburg | [hellion-media.de](https://hellion-media.de)
