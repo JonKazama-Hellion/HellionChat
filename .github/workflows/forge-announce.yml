@@ -1,0 +1,226 @@
+name: Forge Announce
+
+# Triggered when a vX.Y.Z tag is pushed. Reads .github/forge-posts/<tag>.md
+# (Frontmatter + DE bullet body) and the matching English block from
+# HellionChat/HellionChat.yaml, builds a Discord-Webhook embed and posts
+# it to the Hellion Forge #changelog channel.
+#
+# Decoupled from release.yml: a fail here does not block the GitHub
+# release, and a fail there does not block the announce. Spec lives in
+# the Vault under "Hellion Chat Forge-Auto-Announce Spec".
+#
+# Security: the only user-controlled inputs that enter run-steps are the
+# tag name and the frontmatter values from a repo-internal markdown file.
+# Tag name is read via env: (TAG_NAME, $env:TAG_NAME) and validated against
+# ^v\d+\.\d+\.\d+$ before any string interpolation. Frontmatter values are
+# parsed by regex with explicit length caps. No webhook event payload data
+# (issue titles, PR bodies, commit messages, etc.) flows into run-steps.
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Existing tag to (re)post, e.g. v1.1.0'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  announce:
+    name: Post changelog to Hellion Forge
+    runs-on: ubuntu-latest
+    # The DISCORD_FORGE_WEBHOOK secret lives under Settings → Environments
+    # → Webhook (case-sensitive). Without this declaration the secret is
+    # not in scope for the job.
+    environment: Webhook
+    timeout-minutes: 5
+
+    steps:
+      # On push:tags github.ref points at the tag commit; on workflow_dispatch
+      # the user supplies the tag explicitly. Always check out that tag so
+      # the yaml + forge-posts file are read from the tagged tree, not main.
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd  # v6.0.2
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      # Build embed-payload as a JSON file on disk. PowerShell-Core (pwsh)
+      # ships pre-installed on ubuntu-latest so we get the same scripting
+      # patterns release.yml uses on windows-latest. Tag is read via env: to
+      # treat it as a string variable rather than inline shell text, and
+      # validated against the semver regex before any interpolation.
+      - name: Build embed payload
+        id: build
+        shell: pwsh
+        env:
+          TAG_NAME: ${{ github.event.inputs.tag || github.ref_name }}
+        run: |
+          $tag = $env:TAG_NAME
+          if ($tag -notmatch '^v\d+\.\d+\.\d+$') {
+              throw "V1: Refusing to announce non-semver tag: $tag"
+          }
+          $version = $tag.Substring(1)
+
+          # ---------- Forge-Post-Datei lesen ----------
+          $forgePath = ".github/forge-posts/$tag.md"
+          if (-not (Test-Path $forgePath)) {
+              throw "V2: Forge-Post-Datei für $tag fehlt unter .github/forge-posts/. Datei vor dem Tag anlegen, dann Tag re-pushen oder workflow_dispatch."
+          }
+          $forgeRaw = Get-Content -Path $forgePath -Raw
+
+          # Frontmatter (--- … ---) am Datei-Anfang
+          if ($forgeRaw -notmatch '(?s)\A---\s*\r?\n(.*?)\r?\n---\s*\r?\n(.*)\z') {
+              throw "V3: Frontmatter (---) fehlt oder ist defekt in $forgePath"
+          }
+          $fmText = $matches[1]
+          $deBody = $matches[2].Trim()
+
+          $subtitle = $null
+          $versionsnatur = $null
+          foreach ($line in ($fmText -split "`r?`n")) {
+              if ($line -match '^subtitle:\s*"?([^"]*)"?\s*$')      { $subtitle = $matches[1] }
+              if ($line -match '^versionsnatur:\s*"?([^"]*)"?\s*$') { $versionsnatur = $matches[1] }
+          }
+          if ([string]::IsNullOrWhiteSpace($subtitle))      { throw "V3: Frontmatter-Feld 'subtitle' fehlt in $forgePath" }
+          if ([string]::IsNullOrWhiteSpace($versionsnatur)) { throw "V3: Frontmatter-Feld 'versionsnatur' fehlt in $forgePath" }
+          if ($subtitle.Length      -gt 60) { throw "V4: Frontmatter-Feld 'subtitle' überschreitet Limit ($($subtitle.Length) Char, max 60)" }
+          if ($versionsnatur.Length -gt 40) { throw "V4: Frontmatter-Feld 'versionsnatur' überschreitet Limit ($($versionsnatur.Length) Char, max 40)" }
+          if ([string]::IsNullOrWhiteSpace($deBody)) { throw "V3: DE-Body fehlt in $forgePath" }
+
+          # ---------- EN-Block aus HellionChat.yaml ziehen ----------
+          # 1:1 Pattern aus release.yml — gleicher Header-Marker, gleiches
+          # Trailer-Verhalten. Bei Drift die zwei Workflows synchron halten.
+          $yamlPath = "HellionChat/HellionChat.yaml"
+          $raw = Get-Content -Path $yamlPath -Raw
+          $marker = "changelog: |-"
+          $idx = $raw.IndexOf($marker)
+          if ($idx -lt 0) { throw "V5: changelog-Block nicht gefunden in $yamlPath" }
+          $afterMarker = $raw.Substring($idx + $marker.Length)
+          $changelogBody = (($afterMarker -split "`r?`n") | ForEach-Object {
+              if ($_ -match '^  ') { $_.Substring(2) } else { $_ }
+          }) -join "`n"
+
+          $header = "**Hellion Chat $version"
+          $start = $changelogBody.IndexOf($header)
+          if ($start -lt 0) {
+              throw "V5: No changelog entry for version $version found in $yamlPath. Update the changelog block before tagging."
+          }
+          $rest = $changelogBody.Substring($start)
+          $nextHdr = $rest.IndexOf("`n`n**Hellion Chat ", 1)
+          $trailer = $rest.IndexOf("`n`n---")
+          if ($nextHdr -ge 0 -and ($trailer -lt 0 -or $nextHdr -lt $trailer)) {
+              $enBlock = $rest.Substring(0, $nextHdr).TrimEnd()
+          } elseif ($trailer -ge 0) {
+              $enBlock = $rest.Substring(0, $trailer).TrimEnd()
+          } else {
+              $enBlock = $rest.TrimEnd()
+          }
+
+          # ---------- Char-Cap-Check (5500 Total auf title + description + footer) ----------
+          $title = "Hellion Chat $version — $subtitle"
+          $description = "**Deutsch**`n`n$deBody`n`n**English**`n`n$enBlock"
+          $footerText = "Hellion Forge · $versionsnatur"
+          $totalChars = $title.Length + $description.Length + $footerText.Length
+          if ($totalChars -gt 5500) {
+              throw "V6: Total char count $totalChars exceeds 5500 limit. Major-Release detected — please post manually via Bot/Multi-Embed (see forge style §8). Forge-Auto-Announce stays off for this tag."
+          }
+          Write-Host "Char-Cap OK: $totalChars / 5500"
+
+          # ---------- Embed-Payload bauen ----------
+          $payload = [ordered]@{
+              username = "Hellion Communication Admin"
+              avatar_url = "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png"
+              content = "<@&1500489631555260446>"
+              allowed_mentions = [ordered]@{
+                  parse = @()
+                  roles = @("1500489631555260446")
+              }
+              embeds = @(
+                  [ordered]@{
+                      title = $title
+                      url = "https://github.com/JonKazama-Hellion/HellionChat/releases/tag/$tag"
+                      color = 12730636
+                      description = $description
+                      footer = [ordered]@{ text = $footerText }
+                      timestamp = (Get-Date).ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+                  }
+              )
+          }
+
+          $payloadJson = $payload | ConvertTo-Json -Depth 8 -Compress
+          # Ausgabe-Datei ohne trailing newline für sauberes curl --data-binary @-
+          [System.IO.File]::WriteAllText("$PWD/embed-payload.json", $payloadJson, [System.Text.UTF8Encoding]::new($false))
+
+          Write-Host "Payload size: $($payloadJson.Length) chars"
+          Write-Host "Embed title:  $title"
+          Write-Host "Embed footer: $footerText"
+
+      # POST to the Hellion Forge changelog webhook. curl from PowerShell-Core
+      # so we can pipe the payload via stdin (--data-binary @-) and keep
+      # secrets out of process arg lists. One retry on 5xx, hard fail on 4xx.
+      - name: POST to Hellion Forge webhook
+        shell: pwsh
+        env:
+          DISCORD_FORGE_WEBHOOK: ${{ secrets.DISCORD_FORGE_WEBHOOK }}
+        run: |
+          if ([string]::IsNullOrEmpty($env:DISCORD_FORGE_WEBHOOK)) {
+              throw "V7: DISCORD_FORGE_WEBHOOK secret is empty. Check Settings → Environments → Webhook."
+          }
+
+          $payloadFile = "$PWD/embed-payload.json"
+          if (-not (Test-Path $payloadFile)) {
+              throw "Embed payload file missing — previous step did not produce embed-payload.json"
+          }
+
+          $maxAttempts = 2
+          $attempt = 0
+          while ($attempt -lt $maxAttempts) {
+              $attempt++
+              Write-Host "POST attempt $attempt of $maxAttempts"
+              $tmpResp = "$PWD/.webhook-response"
+              $tmpHeaders = "$PWD/.webhook-headers"
+              # --silent suppresses progress; --show-error prints errors so
+              # the workflow log shows what happened. -w prints HTTP status
+              # to stdout for inspection. -o captures body for diagnosis,
+              # -D captures headers.
+              $rawStatus = Get-Content $payloadFile -Raw |
+                  curl --silent --show-error `
+                       --header 'Content-Type: application/json' `
+                       --data-binary '@-' `
+                       -D $tmpHeaders `
+                       -o $tmpResp `
+                       -w '%{http_code}' `
+                       "$env:DISCORD_FORGE_WEBHOOK"
+              $status = [int]$rawStatus
+              Write-Host "HTTP status: $status"
+
+              if ($status -ge 200 -and $status -lt 300) {
+                  Write-Host "Forge announce POST succeeded."
+                  exit 0
+              }
+
+              $bodySnippet = ""
+              if (Test-Path $tmpResp) {
+                  $bodySnippet = (Get-Content $tmpResp -Raw -ErrorAction SilentlyContinue)
+                  if ($bodySnippet.Length -gt 500) { $bodySnippet = $bodySnippet.Substring(0, 500) + " …" }
+              }
+
+              if ($status -ge 400 -and $status -lt 500) {
+                  # E2: 4xx is permanent — webhook revoked, channel deleted,
+                  # payload malformed. No retry.
+                  throw "E2: Discord-Webhook returned permanent $status. Body: $bodySnippet"
+              }
+
+              # E1: 5xx (or transport-level fail with status 0) — wait + retry once
+              if ($attempt -lt $maxAttempts) {
+                  Write-Host "Transient $status — sleeping 30s before retry."
+                  Start-Sleep -Seconds 30
+              } else {
+                  throw "E1: Discord-Webhook returned transient $status after $maxAttempts attempts. Body: $bodySnippet"
+              }
+          }
