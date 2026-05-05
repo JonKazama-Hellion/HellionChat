@@ -133,7 +133,7 @@ jobs:
 
           # ---------- Embed-Payload bauen ----------
           $payload = [ordered]@{
-              username = "Hellion Communication Admin"
+              username = "Forge Herald"
               avatar_url = "https://raw.githubusercontent.com/JonKazama-Hellion/HellionChat/main/HellionChat/images/icon.png"
               content = "<@&1500489631555260446>"
               allowed_mentions = [ordered]@{
