@@ -395,9 +395,8 @@ public class Tab
     public string Name = Language.Tab_DefaultName;
 
     // v1.2.0 — optionaler FontAwesome-Glyph-Name. Null bedeutet:
-    // Default-Mapping aus TabIconMapping greift (basiert auf Tab-Name
-    // oder erstem SelectedChannels-Eintrag). User können hier per
-    // Settings → Tabs einen eigenen Glyph setzen.
+    // Default-Mapping aus TabIconMapping greift (basiert auf Tab-Name).
+    // User können hier per Settings → Tabs einen eigenen Glyph setzen.
     public string? Icon = null;
 
     [Obsolete("Removed in favor of SelectedChannels")]
