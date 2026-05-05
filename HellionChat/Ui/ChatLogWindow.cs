@@ -375,6 +375,9 @@ public sealed class ChatLogWindow : Window
         // weil der Cursor schon weiter unten steht — kein eigener Abzug.
         height -= ImGui.GetFrameHeightWithSpacing();
 
+        // v1.2.0 — Status-Bar am Window-Boden reserviert 22 px + 2 px Spacing.
+        height -= StatusBar.Height + 2;
+
         return height;
     }
 
@@ -790,13 +793,17 @@ public sealed class ChatLogWindow : Window
         if (ImGui.IsWindowHovered(ImGuiHoveredFlags.ChildWindows))
             LastActivityTime = FrameTime;
 
-        if (!showNovice)
-            return;
+        if (showNovice)
+        {
+            ImGui.SameLine();
 
-        ImGui.SameLine();
+            if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
+                GameFunctions.GameFunctions.ClickNoviceNetworkButton();
+        }
 
-        if (ImGuiUtil.IconButton(FontAwesomeIcon.Leaf))
-            GameFunctions.GameFunctions.ClickNoviceNetworkButton();
+        // v1.2.0 — Bottom-Status-Bar. Letzter Render-Step in DrawChatLog,
+        // damit alle Zeilen-Operationen davor keine Layout-Sprünge auslösen.
+        Plugin.StatusBar.Draw(Plugin);
     }
 
     internal Dictionary<string, InputChannel> GetValidChannels()

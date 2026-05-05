@@ -64,6 +64,7 @@ public sealed class Plugin : IDalamudPlugin
     internal TypingIpc TypingIpc { get; }
     internal FontManager FontManager { get; }
     internal Themes.ThemeRegistry ThemeRegistry { get; private set; } = null!;
+    internal Ui.StatusBar StatusBar { get; private set; } = null!;
 
     internal int DeferredSaveFrames = -1;
 
@@ -295,6 +296,8 @@ public sealed class Plugin : IDalamudPlugin
             SeedExampleThemeIfEmpty(customThemesDir);
             ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
             ThemeRegistry.Switch(Config.Theme);
+
+            StatusBar = new Ui.StatusBar();
 
             MessageManager = new MessageManager(this); // Does it require UI?
 
