@@ -276,6 +276,11 @@ internal class HellionStrings
     internal static string Tabs_Presets_Linkshell => Get(nameof(Tabs_Presets_Linkshell));
     internal static string Tabs_Presets_Linkshell_Hint => Get(nameof(Tabs_Presets_Linkshell_Hint));
 
+    // Hellion Chat — v1.2.0 per-tab icon override
+    internal static string Tabs_Icon_Label => Get(nameof(Tabs_Icon_Label));
+    internal static string Tabs_Icon_HelpMarker => Get(nameof(Tabs_Icon_HelpMarker));
+    internal static string Tabs_Icon_DefaultOption => Get(nameof(Tabs_Icon_DefaultOption));
+
     // Hellion Chat — v0.6.0 chat colour presets (display labels)
     internal static string ChatColourPresets_Default => Get(nameof(ChatColourPresets_Default));
     internal static string ChatColourPresets_HighContrast => Get(nameof(ChatColourPresets_HighContrast));

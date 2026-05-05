@@ -561,6 +561,17 @@
   <data name="Tabs_Presets_Linkshell_Hint" xml:space="preserve">
     <value>Wenn du mehrere Linkshells benutzt, empfiehlt der Maintainer einen Tab pro Shell für eine sauberere Übersicht. Tab duplizieren und je Kopie die Kanalauswahl einschränken.</value>
   </data>
+
+  <!-- Hellion Chat — v1.2.0 per-tab icon override -->
+  <data name="Tabs_Icon_Label" xml:space="preserve">
+    <value>Tab-Icon</value>
+  </data>
+  <data name="Tabs_Icon_HelpMarker" xml:space="preserve">
+    <value>FontAwesome-Glyph für die Sidebar. Default greift auf Tab-Name oder Channel-Typ.</value>
+  </data>
+  <data name="Tabs_Icon_DefaultOption" xml:space="preserve">
+    <value>(Default-Mapping)</value>
+  </data>
   <data name="ChatColourPresets_Default" xml:space="preserve">
     <value>Klassik (Chat 2 Default)</value>
   </data>

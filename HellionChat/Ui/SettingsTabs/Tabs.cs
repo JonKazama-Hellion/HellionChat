@@ -91,6 +91,40 @@ internal sealed class Tabs : ISettingsTab
             }
 
             ImGui.InputText(Language.Options_Tabs_Name, ref tab.Name, 512, ImGuiInputTextFlags.EnterReturnsTrue);
+
+            // v1.2.0 — Per-Tab Icon-Override. Default-Mapping greift falls nichts gesetzt.
+            ImGui.TextUnformatted(HellionStrings.Tabs_Icon_Label);
+            ImGui.SameLine();
+            ImGuiUtil.HelpMarker(HellionStrings.Tabs_Icon_HelpMarker);
+
+            var iconCurrent = string.IsNullOrEmpty(tab.Icon) ? "" : tab.Icon;
+            var iconPreview = iconCurrent.Length == 0
+                ? HellionStrings.Tabs_Icon_DefaultOption
+                : iconCurrent;
+            using (var combo = ImRaii.Combo($"##icon-{i}", iconPreview))
+            {
+                if (combo.Success)
+                {
+                    // Erste Option: Default (löscht Icon, lässt Mapping greifen).
+                    if (ImGui.Selectable(HellionStrings.Tabs_Icon_DefaultOption, iconCurrent.Length == 0))
+                    {
+                        tab.Icon = null;
+                    }
+
+                    ImGui.Separator();
+
+                    // Pool-Optionen aus TabIconGlyphResolver.PickerOptions (Single-Source-of-Truth).
+                    foreach (var option in TabIconGlyphResolver.PickerOptions)
+                    {
+                        var isSelected = string.Equals(iconCurrent, option, StringComparison.OrdinalIgnoreCase);
+                        if (ImGui.Selectable(option, isSelected))
+                        {
+                            tab.Icon = option;
+                        }
+                    }
+                }
+            }
+
             ImGui.Checkbox(Language.Options_Tabs_ShowTimestamps, ref tab.DisplayTimestamp);
             ImGui.Checkbox(Language.Options_Tabs_PopOut, ref tab.PopOut);
             if (tab.PopOut)
