@@ -1360,13 +1360,7 @@ public sealed class ChatLogWindow : Window
             if (Plugin.WantedTab == tabI)
                 flags |= ImGuiTabItemFlags.SetSelected;
 
-            // v1.2.0 — Icon-Glyph als Prefix vor dem Tab-Namen.
-            // Strategy A: Codepoint einfach in den Label-String einbauen.
-            // Funktioniert wenn Dalamuds Default-Font-Atlas FontAwesome-
-            // Glyphen mit-merged. Falls nicht (Tofu-Square sichtbar),
-            // wechseln wir auf Strategy B mit separatem Icon-Render.
-            var icon = TabIconMapping.Resolve(tab);
-            using var tabItem = ImRaii.TabItem($"{icon.ToIconString()}  {tab.Name}{unread}###log-tab-{tabI}", flags);
+            using var tabItem = ImRaii.TabItem($"{tab.Name}{unread}###log-tab-{tabI}", flags);
             DrawTabContextMenu(tab, tabI);
 
             if (!tabItem.Success)
