@@ -18,8 +18,6 @@ public class FontManager
 
     internal IFontHandle FontAwesome = null!;
 
-    internal readonly byte[] GameSymFont;
-
     private ushort[] Ranges = [];
     private ushort[] JpRange = [];
 
@@ -29,32 +27,6 @@ public class FontManager
         18f, 18.4f, 20f, 23f, 34f,
         36f, 40f, 45f, 46f, 68f, 90f,
     ];
-
-    public FontManager()
-    {
-        var filePath = Path.Combine(Plugin.Interface.ConfigDirectory.FullName, "FFXIV_Lodestone_SSF.ttf");
-        if (File.Exists(filePath))
-        {
-            GameSymFont = File.ReadAllBytes(filePath);
-        }
-        else
-        {
-            // Dispose HttpClient and HttpResponseMessage to avoid socket
-            // exhaustion on repeated cold-start downloads. GetAwaiter().GetResult()
-            // unwraps AggregateException so failures surface cleanly. A full
-            // async refactor of the constructor would be cleaner but is out of
-            // scope for v1.0.0 — tracked in the backlog.
-            using var client = new HttpClient();
-            using var response = client
-                .GetAsync("https://img.finalfantasyxiv.com/lds/pc/global/fonts/FFXIV_Lodestone_SSF.ttf")
-                .GetAwaiter()
-                .GetResult();
-            response.EnsureSuccessStatusCode();
-            GameSymFont = response.Content.ReadAsByteArrayAsync().GetAwaiter().GetResult();
-
-            Dalamud.Utility.FilesystemUtil.WriteAllBytesSafe(filePath, GameSymFont);
-        }
-    }
 
     /// <summary>
     /// Backing bytes for the bundled Hellion font (Exo 2, OFL-1.1). Lazily

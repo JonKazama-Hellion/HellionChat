@@ -64,8 +64,10 @@ traffic is initiated explicitly by HellionChat's own source files
 and is documented in `PRIVACY.md` under "Outbound network calls":
 
 - `HellionChat/EmoteCache.cs` → BetterTTV API + CDN (opt-out via setting)
-- `HellionChat/FontManager.cs` → Square Enix Lodestone font CDN (one-time
-  download)
+
+The earlier Square Enix Lodestone font download (`FontManager.cs`)
+was removed in v1.0.4 — it was a leftover from upstream's removed
+webinterface feature and was no longer consumed.
 
 ---
 

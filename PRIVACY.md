@@ -23,10 +23,9 @@ Last reviewed: 2026-05-05 (HellionChat v1.0.3).
 - The plugin does not phone home. There is no telemetry, no analytics,
   no crash reporter, no usage counter, no remote update check beyond
   what Dalamud itself does.
-- Two outbound network calls exist by design: the BetterTTV emote
-  service (for chat emotes) and the Square Enix Lodestone font CDN
-  (for the in-game symbol font). Both are documented in detail below
-  and both can be reasoned about per request.
+- One outbound network call exists by design: the BetterTTV emote
+  service (for chat emotes). It is documented in detail below and
+  can be reasoned about per request.
 - You can export every message the plugin has stored, in Markdown,
   JSON or CSV, and you can wipe stored history per channel, per date
   range, or globally.
@@ -123,24 +122,22 @@ on your behalf.
 
 Source: `HellionChat/EmoteCache.cs`.
 
-### 2. Square Enix Lodestone font (`img.finalfantasyxiv.com`)
+### 2. Square Enix Lodestone font — removed in v1.0.4
 
-- **What it does:** Downloads the `FFXIV_Lodestone_SSF.ttf` font file
-  from the official Square Enix Lodestone CDN once during font setup,
-  so the plugin can render in-game special symbols (job icons, item
-  glyphs, etc.) inside ImGui.
-- **What is sent:** A single HTTPS GET request to the public Square
-  Enix font URL. Your IP address reaches Square Enix (unavoidable);
-  no character data, no plugin identifier, no message content.
-- **When it triggers:** Once per font initialisation, not per session
-  if the file is already cached locally.
-- **Cached:** Yes, by Dalamud's font subsystem.
-- **How to opt out:** This call is part of the font pipeline inherited
-  from upstream Chat 2 and not toggleable from the settings UI today.
-  If a user-facing opt-out for this would be useful for you, please
-  open a feature-request issue.
+Earlier versions of HellionChat (and upstream Chat 2) downloaded
+`FFXIV_Lodestone_SSF.ttf` from `img.finalfantasyxiv.com` once during
+font setup. That code path was a leftover from upstream's removed
+webinterface feature and was no longer consumed anywhere — the in-game
+symbol glyphs (job icons, item glyphs, status effects) come from
+Dalamud's bundled symbol-font helper, not from the downloaded TTF.
 
-Source: `HellionChat/FontManager.cs`.
+The download was removed in v1.0.4. As of that version HellionChat
+makes no automatic network call to Square Enix or to any
+`finalfantasyxiv.com` host.
+
+Cached `FFXIV_Lodestone_SSF.ttf` files left over from earlier versions
+remain in `pluginConfigs/HellionChat/` until manually deleted; they
+are no longer read.
 
 ### Links you click yourself (no automatic traffic)
 
@@ -218,14 +215,13 @@ retroactive cleanup to apply retroactively, by design.
 | Party | Why they appear | What reaches them | Their privacy policy |
 | --- | --- | --- | --- |
 | BetterTTV (NightDev LLC) | Optional emote rendering | HTTPS request for an emote ID; your IP | <https://betterttv.com/privacy> |
-| Square Enix | Lodestone font download (once) | HTTPS request for the font file; your IP | <https://www.square-enix.com/privacy> |
 | GitHub (Microsoft) | Plugin distribution via custom repo, issue tracker | Whatever GitHub sees from any HTTPS request to a public repo | <https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement> |
 | Dalamud / XIVLauncher (goatcorp) | Plugin loader, font subsystem, repo polling | Whatever Dalamud reports for itself; out of HellionChat's scope | <https://github.com/goatcorp/Dalamud> |
 
-Square Enix and GitHub are unavoidable for anyone playing FFXIV
-through Dalamud at all. BetterTTV is the only third party HellionChat
-introduces on top of the baseline that is not also part of using FFXIV
-or Dalamud, and BetterTTV is opt-out via settings.
+GitHub and the Dalamud/XIVLauncher loader are unavoidable for anyone
+playing FFXIV through Dalamud at all. BetterTTV is the only third
+party HellionChat introduces on top of that baseline, and it is
+opt-out via settings.
 
 ---
 
@@ -241,7 +237,7 @@ direct dependencies the plugin pulls in:
 - `SixLabors.ImageSharp` — image decoding (used for the BetterTTV
   emote pipeline), no network on its own.
 
-The two network calls listed under "Outbound network calls" are
+The single network call listed under "Outbound network calls" is
 written directly in HellionChat's own source, not delegated to a
 dependency.
 
