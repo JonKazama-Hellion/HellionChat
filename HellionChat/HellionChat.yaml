@@ -97,6 +97,41 @@ changelog: |-
     directly will receive the default WindowOpacity (0.85);
     re-adjust in Settings → Themes if needed.
 
+  Auto-Tell tabs:
+
+  - Each tell partner gets a hashed icon from a 7-glyph tell
+    pool (envelope/star/heart/bell/bookmark/flag/fire) plus a
+    hashed color from a 12-color palette. 84 distinct icon+
+    color combinations make parallel tells visually
+    distinguishable at a glance.
+
+  Unread indicator:
+
+  - Sidebar tabs with unread messages get a pulsing red dot in
+    the top-right corner. Subtle 2-second sine-wave pulse for
+    peripheral visibility without distraction. Respects
+    Configuration.ReduceMotion (UI toggle lands in v1.3.0).
+
+  Bug fixes from in-game testing:
+
+  - Settings save no longer wipes the in-session chat history of
+    persistent tabs (Tab.Clone preserved Identifier but not
+    Messages — Identifier-based mapping now restores the live
+    MessageList onto cloned tabs).
+  - Settings save no longer clears Auto-Tell tabs either
+    (ClearAllTabs/FilterAllTabs now skip TempTabs since their
+    messages have no DB persistence to refilter from).
+  - Sidebar buttons now align vertically with the first message
+    row (top padding mirrors the chat header toolbar height).
+  - Sidebar child window no longer paints the top padding with
+    its frame background.
+  - Status bar version slot ("vX.Y.Z · Hellion") no longer
+    clips its rightmost character.
+  - Top-tab icon prefix attempt was reverted: Dalamud's default
+    font atlas does not include FontAwesome codepoints, so
+    mixed-font in a single tab label renders as tofu. Underline
+    pill alone is the v1.2.0 visual treatment for top tabs.
+
   Polish (lerps, theme crossfade, header quick-picker) follows
   in v1.3.0. v1.2.0 is intentionally hard-switch — clean layout
   first, motion next.
