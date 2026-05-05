@@ -66,16 +66,29 @@ public static class EmoteCache
 
     public static string[] SortedCodeArray = [];
 
+    // Plugin-scoped cancellation source for in-flight emote loads. Dispose
+    // cancels every running download/texture-create so the workers don't
+    // touch a torn-down TextureProvider on plugin reload. Replaced with a
+    // fresh source on the next LoadData() call so a re-enable still works.
+    private static CancellationTokenSource Cts = new();
+    internal static CancellationToken Token => Cts.Token;
+
     public static async Task LoadData()
     {
         if (State is not LoadingState.Unloaded)
             return;
 
+        // Refresh the CTS in case Dispose was called and we're being re-enabled
+        // in the same process (Dalamud /xlplugins toggle).
+        if (Cts.IsCancellationRequested)
+            Cts = new CancellationTokenSource();
+
         State = LoadingState.Loading;
+        var ct = Cts.Token;
         try
         {
-            var global = await Client.GetAsync(GlobalEmotes);
-            var globalList = await global.Content.ReadAsStringAsync();
+            var global = await Client.GetAsync(GlobalEmotes, ct);
+            var globalList = await global.Content.ReadAsStringAsync(ct);
 
             foreach (var emote in JsonSerializer.Deserialize<Emote[]>(globalList)!)
                 if (!string.IsNullOrEmpty(emote.Code) && !NotWorking.Contains(emote.Code))
@@ -84,8 +97,8 @@ public static class EmoteCache
             var lastId = string.Empty;
             for (var i = 0; i < 15; i++)
             {
-                var top = await Client.GetAsync(Top100Emotes.Format(BetterTTV, lastId));
-                var topList = await top.Content.ReadAsStringAsync();
+                var top = await Client.GetAsync(Top100Emotes.Format(BetterTTV, lastId), ct);
+                var topList = await top.Content.ReadAsStringAsync(ct);
 
                 var jsonList = JsonSerializer.Deserialize<List<Top100>>(topList)!;
                 // BetterTTV occasionally returns entries with a null Code; the
@@ -103,6 +116,12 @@ public static class EmoteCache
             SortedCodeArray = Cache.Keys.Order().ToArray();
             State = LoadingState.Done;
         }
+        catch (OperationCanceledException)
+        {
+            // Plugin disposed while the cache was loading; leave State on
+            // Loading so a subsequent re-enable can re-issue LoadData with
+            // a fresh CTS (handled above).
+        }
         catch (Exception ex)
         {
             // Reset to Unloaded so a later trigger (e.g. the user reopening
@@ -116,6 +135,10 @@ public static class EmoteCache
 
     public static void Dispose()
     {
+        // Cancel in-flight downloads / texture creates so the async-void
+        // Load methods bail out before they touch a disposed TextureProvider.
+        Cts.Cancel();
+
         foreach (var emote in EmoteImages.Values)
             emote.InnerDispose();
     }
@@ -171,7 +194,7 @@ public static class EmoteCache
             ImGui.Image(Texture!.Handle, size);
         }
 
-        internal async Task<byte[]> LoadAsync(Emote emote)
+        internal async Task<byte[]> LoadAsync(Emote emote, CancellationToken ct)
         {
             // BetterTTV-supplied Id and ImageType are interpolated straight
             // into the filename. HTTPS protects the wire, but a compromised
@@ -188,15 +211,15 @@ public static class EmoteCache
 
             if (File.Exists(filePath))
             {
-                RawData = await File.ReadAllBytesAsync(filePath);
+                RawData = await File.ReadAllBytesAsync(filePath, ct);
             }
             else
             {
-                var content = await Client.GetAsync(EmotePath.Format(emote.Id));
-                RawData = await content.Content.ReadAsByteArrayAsync();
+                var content = await Client.GetAsync(EmotePath.Format(emote.Id), ct);
+                RawData = await content.Content.ReadAsByteArrayAsync(ct);
 
                 await using var stream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.Read);
-                stream.Write(RawData, 0, RawData.Length);
+                await stream.WriteAsync(RawData, ct);
             }
 
             return RawData;
@@ -209,20 +232,27 @@ public static class EmoteCache
     {
         public ImGuiEmote Prepare(Emote emote)
         {
-            Task.Run(() => Load(emote));
+            var ct = EmoteCache.Token;
+            Task.Run(() => Load(emote, ct), ct);
             return this;
         }
 
-        private async void Load(Emote emote)
+        private async void Load(Emote emote, CancellationToken ct)
         {
             try
             {
-                var image = await LoadAsync(emote);
+                var image = await LoadAsync(emote, ct);
                 if (image.Length <= 0)
                     return;
 
-                Texture = await Plugin.TextureProvider.CreateFromImageAsync(image);
+                ct.ThrowIfCancellationRequested();
+                Texture = await Plugin.TextureProvider.CreateFromImageAsync(image, cancellationToken: ct);
                 IsLoaded = true;
+            }
+            catch (OperationCanceledException)
+            {
+                // Plugin disposed mid-load; the EmoteImages entry is also
+                // being torn down, no extra cleanup needed.
             }
             catch (Exception ex)
             {
@@ -279,15 +309,16 @@ public static class EmoteCache
 
         public ImGuiGif Prepare(Emote emote)
         {
-            Task.Run(() => Load(emote));
+            var ct = EmoteCache.Token;
+            Task.Run(() => Load(emote, ct), ct);
             return this;
         }
 
-        private async void Load(Emote emote)
+        private async void Load(Emote emote, CancellationToken ct)
         {
             try
             {
-                var image = await LoadAsync(emote);
+                var image = await LoadAsync(emote, ct);
                 if (image.Length <= 0)
                     return;
 
@@ -299,6 +330,8 @@ public static class EmoteCache
                 var frames = new List<(IDalamudTextureWrap Tex, float Delay)>();
                 foreach (var frame in img.Frames)
                 {
+                    ct.ThrowIfCancellationRequested();
+
                     var delay = frame.Metadata.GetGifMetadata().FrameDelay / 100f;
 
                     // Follows the same pattern as browsers, anything under 0.02s delay will be rounded up to 0.1s
@@ -307,12 +340,20 @@ public static class EmoteCache
 
                     var buffer = new byte[4 * frame.Width * frame.Height];
                     frame.CopyPixelDataTo(buffer);
-                    var tex = await Plugin.TextureProvider.CreateFromRawAsync(RawImageSpecification.Rgba32(frame.Width, frame.Height), buffer);
+                    var tex = await Plugin.TextureProvider.CreateFromRawAsync(RawImageSpecification.Rgba32(frame.Width, frame.Height), buffer, cancellationToken: ct);
                     frames.Add((tex, delay));
                 }
 
                 Frames = frames;
                 IsLoaded = true;
+            }
+            catch (OperationCanceledException)
+            {
+                // Plugin disposed mid-load; partial frames are released by
+                // InnerDispose on the next dispose pass.
+                foreach (var f in Frames)
+                    f.Texture.Dispose();
+                Frames = [];
             }
             catch (Exception ex)
             {
