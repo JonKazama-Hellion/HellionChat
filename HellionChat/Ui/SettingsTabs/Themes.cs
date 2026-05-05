@@ -82,21 +82,27 @@ internal sealed class Themes : ISettingsTab
         var avail = ImGui.GetContentRegionAvail();
         var columns = avail.X >= 700f ? 3 : 2;
         var cardWidth = (avail.X - (columns - 1) * 8f) / columns;
-        var cardHeight = 140f;  // war 110f — Mockup braucht mehr Platz
-        var i = 0;
-        foreach (var theme in themes)
+        var cardHeight = 140f;  // Mockup + Name + Author brauchen den Platz
+
+        var list = themes.ToList();
+        for (var i = 0; i < list.Count; i++)
         {
-            DrawThemeCard(theme, activeSlug, cardWidth, cardHeight);
-            i++;
-            if (i % columns != 0)
+            DrawThemeCard(list[i], activeSlug, cardWidth, cardHeight);
+
+            // SameLine zwischen den Cards einer Reihe; am Spalten-Ende kein
+            // SameLine, dann beginnt automatisch eine neue Zeile.
+            if ((i + 1) % columns != 0 && i != list.Count - 1)
                 ImGui.SameLine();
-            else
-                ImGui.NewLine();
         }
     }
 
     private void DrawThemeCard(Theme theme, string activeSlug, float w, float h)
     {
+        // BeginGroup macht den Card-Bereich zu einem einzelnen ImGui-Layout-Item.
+        // Damit funktioniert SameLine() im Caller-Loop — sonst tracked ImGui die
+        // einzelnen InvisibleButton-Items separat und das Wrapping bricht.
+        ImGui.BeginGroup();
+
         var isActive = string.Equals(theme.Slug, activeSlug, StringComparison.OrdinalIgnoreCase);
         var cursorBefore = ImGui.GetCursorScreenPos();
         var clicked = ImGui.InvisibleButton($"##theme-card-{theme.Slug}", new Vector2(w, h));
@@ -117,25 +123,21 @@ internal sealed class Themes : ISettingsTab
             draw.AddRect(cursorBefore, cursorBefore + new Vector2(w, h), border, 4f, ImDrawFlags.None, 1f);
         }
 
-        // Mini-Mockup statt Akzent-Swatch — visualisiert das Theme im Mini-Chat-Window
+        // Mini-Mockup oben — DrawList-Operation, kein Cursor-Hopping
         var mockupOrigin = cursorBefore + new Vector2(12f, 12f);
         var mockupSize = new Vector2(w - 24f, 60f);
         ThemeMockup.Draw(mockupOrigin, mockupSize, theme);
 
-        // Name unter dem Mockup
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(12f, 78f));
+        // Name + Author direkt via DrawList (statt SetCursorScreenPos +
+        // TextUnformatted), damit der ImGui-Layout-Cursor stabil bleibt
+        // und die BeginGroup/EndGroup-Klammer den Card-Bereich als ein
+        // Layout-Item führt.
         var textColor = ColourUtil.RgbaToAbgr(theme.Colors.TextPrimary);
-        using (ImRaii.PushColor(ImGuiCol.Text, textColor))
-            ImGui.TextUnformatted(theme.Name);
-
-        // Author dahinter dezent
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(12f, 96f));
         var mutedColor = ColourUtil.RgbaToAbgr(theme.Colors.TextMuted);
-        using (ImRaii.PushColor(ImGuiCol.Text, mutedColor))
-            ImGui.TextUnformatted(theme.Author);
+        draw.AddText(cursorBefore + new Vector2(12f, 80f), textColor, theme.Name);
+        draw.AddText(cursorBefore + new Vector2(12f, 100f), mutedColor, theme.Author);
 
-        // Cursor unter die Card setzen
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(0f, h + 8f));
+        ImGui.EndGroup();
 
         if (clicked)
         {
