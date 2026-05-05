@@ -114,13 +114,15 @@ changelog: |-
 
   Bug fixes from in-game testing:
 
-  - Settings save no longer wipes the in-session chat history of
-    persistent tabs (Tab.Clone preserved Identifier but not
-    Messages — Identifier-based mapping now restores the live
-    MessageList onto cloned tabs).
-  - Settings save no longer clears Auto-Tell tabs either
-    (ClearAllTabs/FilterAllTabs now skip TempTabs since their
-    messages have no DB persistence to refilter from).
+  - Settings save no longer wipes chat history by default. The
+    heavy ClearAllTabs + FilterAllTabsAsync refilter cycle now
+    only runs when a filter-relevant setting actually changed
+    (Privacy filter, persisted channels, per-tab channel
+    selection). Cosmetic changes — theme, tab icons, layout
+    flags — keep the in-session chat intact. Combined with an
+    Identifier-based MessageList restore in Configuration.
+    UpdateFrom and a TempTab skip in ClearAllTabs/FilterAllTabs,
+    persistent tabs and Auto-Tell tabs both survive the save.
   - Sidebar buttons now align vertically with the first message
     row (top padding mirrors the chat header toolbar height).
   - Sidebar child window no longer paints the top padding with

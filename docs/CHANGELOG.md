@@ -29,8 +29,8 @@ und verlinkt für Details auf die Release-Pages.
 - Appearance settings cleaned: legacy theme-engine bindings replaced by Themes tab (introduced in v1.1.0)
 
 ### Fixed
-- Settings save no longer wipes the in-session chat history of persistent tabs (`Tab.Clone` preserved `Identifier` but not `Messages` — Identifier-based mapping now restores the live `MessageList` onto cloned tabs)
-- Settings save no longer clears Auto-Tell tab message history (`ClearAllTabs`/`FilterAllTabs` now skip TempTabs since their messages have no DB persistence to refilter from)
+- Settings save no longer wipes chat history by default — the heavy `ClearAllTabs + FilterAllTabsAsync` cycle now only runs when a filter-relevant setting actually changed (Privacy filter, persisted channels, per-tab channel selection). Cosmetic changes keep the in-session chat intact
+- Identifier-based `MessageList` restore in `Configuration.UpdateFrom` plus TempTab skip in `ClearAllTabs`/`FilterAllTabs` ensure persistent tabs and Auto-Tell tabs both survive the save
 - Sidebar buttons now align vertically with the first message row (top padding mirrors the chat header toolbar height)
 - Sidebar child window no longer paints the top padding area with its frame background
 - Status bar version slot (`vX.Y.Z · Hellion`) no longer clips its rightmost character
