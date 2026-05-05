@@ -452,7 +452,10 @@ internal class MessageStore : IDisposable
         // covers any future write paths e.g. webinterface backfill).
         if (!Plugin.Config.IsAllowedForStorage(message.Code.Type))
         {
-            Plugin.Log.Debug($"Privacy filter dropped message: ChatType={message.Code.Type}");
+            // Verbose-only: this fires for every dropped message, which is
+            // the common case for users with a tight privacy whitelist. Keep
+            // it for diagnostics but stay out of the default xllog stream.
+            Plugin.Log.Verbose($"Privacy filter dropped message: ChatType={message.Code.Type}");
             return;
         }
 

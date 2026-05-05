@@ -34,7 +34,10 @@ internal class MessageManager : IAsyncDisposable
     // After that, the message is enqueued in the PendingAsync queue, which will
     // be consumed in a separate thread and perform more processing (emotes,
     // URLs) as well as inserting the message into the database.
-    private Queue<PendingMessage> PendingSync { get; } = [];
+    // LinkedList instead of Queue: ContentIdResolver hits PendingSync.Last
+    // every hook call. Queue<T>.Last() is the LINQ extension and walks the
+    // whole queue (O(n)); LinkedList<T>.Last is an O(1) node reference.
+    private LinkedList<PendingMessage> PendingSync { get; } = [];
     private ConcurrentQueue<PendingMessage> PendingAsync { get; } = [];
     private readonly Thread PendingMessageThread;
     private readonly CancellationTokenSource PendingThreadCancellationToken = new();
@@ -117,8 +120,11 @@ internal class MessageManager : IAsyncDisposable
             LastContentId = contentId;
 
         // Drain the PendingSync queue into the PendingAsync queue.
-        while (PendingSync.TryDequeue(out var pending))
-            PendingAsync.Enqueue(pending);
+        while (PendingSync.First is { } first)
+        {
+            PendingSync.RemoveFirst();
+            PendingAsync.Enqueue(first.Value);
+        }
     }
 
     private void ProcessPendingMessages(CancellationToken token)
@@ -223,7 +229,7 @@ internal class MessageManager : IAsyncDisposable
         // We delay messages to be handed off to the async processing thread
         // in the next tick, otherwise we can't get the content ID from the hook
         // below.
-        PendingSync.Enqueue(pendingMessage);
+        PendingSync.AddLast(pendingMessage);
     }
 
     // This hook is called immediately after receiving a message with the
@@ -235,11 +241,11 @@ internal class MessageManager : IAsyncDisposable
         try
         {
             ContentIdResolverHook?.Original(agent, contentId, accountId, messageIndex, worldId, chatType);
-            if (PendingSync.Count == 0)
+            if (PendingSync.Last is not { } last)
                 return;
 
-            PendingSync.Last().ContentId = contentId;
-            PendingSync.Last().AccountId = accountId;
+            last.Value.ContentId = contentId;
+            last.Value.AccountId = accountId;
         }
         catch (Exception ex)
         {
