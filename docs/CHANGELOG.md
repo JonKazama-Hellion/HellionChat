@@ -12,6 +12,24 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## v1.2.0 — Layout Refresh (2026-XX-XX)
+
+### Added
+- Sidebar tab modernization: icon-only at fixed 44 px, tooltip on hover, vertical accent pill for active tab
+- Top tabs: accent underline pill replaces background fill on active tab
+- Per-tab custom icons in Settings → Tabs (15-glyph FontAwesome picker)
+- Bottom status bar (22 px): channel indicator, privacy badge, counters, tells, version — updates 1×/sec
+- Card rows as default message render: sender header in channel color, subtle border between cards
+- Compact-Density toggle in Appearance: switches back to single-line `[HH:mm] Sender: Text` layout
+
+### Changed
+- Migration v14 → v15: deprecated Configuration fields `HellionThemeEnabled` and `HellionThemeWindowOpacity` removed
+- Appearance settings cleaned: legacy theme-engine bindings replaced by Themes tab (introduced in v1.1.0)
+
+### Notes
+- Polish phase (animations, theme crossfade, header quick-picker) follows in v1.3.0
+- Top-Tab icon prefixes were considered but dropped: Dalamud's default font atlas does not include FontAwesome codepoints, so mixed-font in a single TabItem label renders as tofu. Underline pill alone is the v1.2.0 visual treatment. Resolution would require Font-Atlas merge at FontManager level — out of scope.
+
 ## [1.1.0] — 2026-05-05 — Theme Foundation
 
 Erster großer UI-Cycle nach v1.0.0. Theme-Engine, fünf Built-In-Themes,

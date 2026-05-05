@@ -55,6 +55,54 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.2.0 — Layout Refresh**
+
+  Second cycle of the UI modernisation. Tab layouts modernised in
+  both modes, a new bottom status bar surfaces five live signals,
+  and messages render as card rows by default.
+
+  Tab layouts:
+
+  - Sidebar is now icon-only at fixed 44 px width. Tab name shows
+    as tooltip on hover. Active tab marked with a vertical accent
+    pill on the left window edge.
+  - Top tabs get an accent underline pill on the active tab
+    instead of a background fill.
+  - Per-tab custom icons via Settings → Tabs (15-glyph
+    FontAwesome picker). Default mapping covers General/System/
+    FreeCompany/Group/Linkshell/Tells/Auto-Tells.
+
+  Bottom status bar (22 px):
+
+  - Active channel with color dot
+  - Privacy-First badge
+  - Tab and message counters
+  - Auto-tell counter (hidden when zero)
+  - Plugin version (right-aligned, muted)
+
+  Updates 1×/second, cached.
+
+  Message rendering:
+
+  - Card rows are the new default. Sender header in channel color,
+    body on its own line, subtle border between cards.
+  - Compact-Density toggle in Appearance switches back to the
+    classic single-line `[HH:mm] Sender: Text` layout.
+
+  Migration:
+
+  - v14 → v15: legacy Configuration fields HellionThemeEnabled
+    and HellionThemeWindowOpacity removed. All other settings
+    preserved. Users who skip versions and migrate v13 → v15
+    directly will receive the default WindowOpacity (0.85);
+    re-adjust in Settings → Themes if needed.
+
+  Polish (lerps, theme crossfade, header quick-picker) follows
+  in v1.3.0. v1.2.0 is intentionally hard-switch — clean layout
+  first, motion next.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.1.0 — Theme Foundation**
 
   First major UI cycle after the standalone v1.0.0 cut. Theme engine,
