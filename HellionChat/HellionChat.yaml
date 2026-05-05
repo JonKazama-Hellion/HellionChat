@@ -57,86 +57,59 @@ tags:
 changelog: |-
   **Hellion Chat 1.2.0 — Layout Refresh**
 
-  Second cycle of the UI modernisation. Tab layouts modernised in
-  both modes, a new bottom status bar surfaces five live signals,
-  and messages render as card rows by default.
+  Second UI cycle: tab layouts modernised in both modes, a new
+  bottom status bar, card-rows as default message render, and
+  Auto-Tell tabs that you can finally tell apart at a glance.
 
-  Tab layouts:
+  Sidebar (icon-only, fixed 44 px):
 
-  - Sidebar is now icon-only at fixed 44 px width. Tab name shows
-    as tooltip on hover. Active tab marked with a vertical accent
-    pill on the left window edge.
-  - Top tabs get an accent underline pill on the active tab
-    instead of a background fill.
-  - Per-tab custom icons via Settings → Tabs (15-glyph
-    FontAwesome picker). Default mapping covers General/System/
-    FreeCompany/Group/Linkshell/Tells/Auto-Tells.
+  - Tab name on hover-tooltip, vertical accent pill on the
+    active tab, child background no longer paints the top
+    padding area.
+  - Per-tab custom icons via Settings → Tabs.
+  - Auto-Tell tabs: each partner gets a hashed icon (envelope/
+    star/heart/bell/bookmark/flag/fire) plus hashed color
+    (12-color palette) — 84 distinct combinations.
+  - Pulsing red dot in the top-right of any tab with unread
+    messages, subtle 2-second sine pulse, respects
+    Configuration.ReduceMotion.
 
-  Bottom status bar (22 px):
+  Top tabs:
 
-  - Active channel with color dot
-  - Privacy-First badge
-  - Tab and message counters
-  - Auto-tell counter (hidden when zero)
-  - Plugin version (right-aligned, muted)
+  - Accent underline pill on the active tab instead of the old
+    background fill. Icon prefixes were attempted but reverted
+    — Dalamud's default font atlas has no FontAwesome glyphs.
 
-  Updates 1×/second, cached.
+  Bottom status bar (22 px, 1×/sec cached):
+
+  - Active channel with color dot, Privacy-First badge, tab +
+    message counters, auto-tell counter (hidden at zero),
+    plugin version (right-aligned, muted).
 
   Message rendering:
 
-  - Card rows are the new default. Sender header in channel color,
-    body on its own line, subtle border between cards.
-  - Compact-Density toggle in Appearance switches back to the
-    classic single-line `[HH:mm] Sender: Text` layout.
-
-  Migration:
-
-  - v14 → v15: legacy Configuration fields HellionThemeEnabled
-    and HellionThemeWindowOpacity removed. All other settings
-    preserved. Users who skip versions and migrate v13 → v15
-    directly will receive the default WindowOpacity (0.85);
-    re-adjust in Settings → Themes if needed.
-
-  Auto-Tell tabs:
-
-  - Each tell partner gets a hashed icon from a 7-glyph tell
-    pool (envelope/star/heart/bell/bookmark/flag/fire) plus a
-    hashed color from a 12-color palette. 84 distinct icon+
-    color combinations make parallel tells visually
-    distinguishable at a glance.
-
-  Unread indicator:
-
-  - Sidebar tabs with unread messages get a pulsing red dot in
-    the top-right corner. Subtle 2-second sine-wave pulse for
-    peripheral visibility without distraction. Respects
-    Configuration.ReduceMotion (UI toggle lands in v1.3.0).
+  - Card rows by default — sender header in channel color, body
+    on its own line, subtle border between cards.
+  - Compact-Density toggle in Appearance returns the classic
+    single-line `[HH:mm] Sender: Text` layout.
 
   Bug fixes from in-game testing:
 
-  - Settings save no longer wipes chat history by default. The
-    heavy ClearAllTabs + FilterAllTabsAsync refilter cycle now
-    only runs when a filter-relevant setting actually changed
-    (Privacy filter, persisted channels, per-tab channel
-    selection). Cosmetic changes — theme, tab icons, layout
-    flags — keep the in-session chat intact. Combined with an
-    Identifier-based MessageList restore in Configuration.
-    UpdateFrom and a TempTab skip in ClearAllTabs/FilterAllTabs,
-    persistent tabs and Auto-Tell tabs both survive the save.
-  - Sidebar buttons now align vertically with the first message
-    row (top padding mirrors the chat header toolbar height).
-  - Sidebar child window no longer paints the top padding with
-    its frame background.
-  - Status bar version slot ("vX.Y.Z · Hellion") no longer
-    clips its rightmost character.
-  - Top-tab icon prefix attempt was reverted: Dalamud's default
-    font atlas does not include FontAwesome codepoints, so
-    mixed-font in a single tab label renders as tofu. Underline
-    pill alone is the v1.2.0 visual treatment for top tabs.
+  - Settings save no longer wipes chat history. Refilter cycle
+    only runs when filter-relevant settings actually changed
+    (privacy, channel selection); cosmetic changes leave the
+    chat intact. Persistent and Auto-Tell tabs both survive.
+  - Hellion Schrift (Exo 2) no longer blocks font-size
+    adjustment — 4K users can scale up properly.
+  - Sidebar buttons align with the first message row, status
+    bar version slot is no longer clipped.
+
+  Migration v14 → v15: legacy theme fields removed
+  (HellionThemeEnabled, HellionThemeWindowOpacity). All other
+  settings preserved.
 
   Polish (lerps, theme crossfade, header quick-picker) follows
-  in v1.3.0. v1.2.0 is intentionally hard-switch — clean layout
-  first, motion next.
+  in v1.3.0.
 
   Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
 
