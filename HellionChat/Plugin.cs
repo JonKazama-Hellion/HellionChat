@@ -529,10 +529,15 @@ public sealed class Plugin : IDalamudPlugin
                 if (deleted > 0)
                 {
                     Log.Information($"Retention sweep deleted {deleted} expired messages.");
+                    // Run the clear+refilter synchronously on the framework thread.
+                    // Earlier this called FilterAllTabsAsync(), which is fire-and-forget
+                    // — the .Wait() here would return as soon as the inner Task.Run was
+                    // dispatched, racing the next sweep cycle against the still-running
+                    // filter pass. See AUDIT-2026-05-05 [QUAL-02].
                     Framework.Run(() =>
                     {
                         MessageManager.ClearAllTabs();
-                        MessageManager.FilterAllTabsAsync();
+                        MessageManager.FilterAllTabs();
                     }).Wait();
                 }
                 else

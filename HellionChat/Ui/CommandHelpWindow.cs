@@ -47,8 +47,11 @@ public class CommandHelpWindow : Window {
         Position = pos;
         SizeConstraints = new WindowSizeConstraints
         {
-            MinimumSize = new Vector2(width, 0),
-            MaximumSize = LogWindow.LastWindowSize with { X = width }
+            // Use scaledWidth here so the size constraints stay in the same
+            // coordinate space as Position above; otherwise the help window
+            // ends up the wrong width at non-100% DPI.
+            MinimumSize = new Vector2(scaledWidth, 0),
+            MaximumSize = LogWindow.LastWindowSize with { X = scaledWidth }
         };
 
         IsOpen = true;

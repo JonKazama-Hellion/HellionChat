@@ -20,10 +20,14 @@ public sealed class ExtraChat : IDisposable
 
     internal (string, uint)? ChannelOverride { get; set; }
 
-    private Dictionary<string, uint> ChannelCommandColoursInternal { get; set; } = new();
+    // Volatile reference: IPC callbacks (OnChannelCommandColours/OnChannelNames) fire on a
+    // Dalamud-dispatcher thread while the ImGui thread reads the IReadOnlyDictionary projections.
+    // Reference assignment is atomic on x64, but the JIT (especially Mono on Wine/Linux) needs
+    // the volatile barrier to guarantee visibility across threads. See AUDIT-2026-05-05 [SEC-01].
+    private volatile Dictionary<string, uint> ChannelCommandColoursInternal = new();
     internal IReadOnlyDictionary<string, uint> ChannelCommandColours => ChannelCommandColoursInternal;
 
-    private Dictionary<Guid, string> ChannelNamesInternal { get; set; } = new();
+    private volatile Dictionary<Guid, string> ChannelNamesInternal = new();
     internal IReadOnlyDictionary<Guid, string> ChannelNames => ChannelNamesInternal;
 
     internal ExtraChat()
@@ -40,9 +44,10 @@ public sealed class ExtraChat : IDisposable
             ChannelCommandColoursInternal = ChannelCommandColoursGate.InvokeFunc(null!);
             ChannelNamesInternal = ChannelNamesGate.InvokeFunc(null!);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // no-op
+            // ExtraChat is optional; missing IPC peer is normal when the plugin isn't loaded.
+            Plugin.Log.Verbose(ex, "ExtraChat IPC initial state query failed (peer not loaded?)");
         }
     }
 

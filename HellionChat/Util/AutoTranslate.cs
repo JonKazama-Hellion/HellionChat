@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Text;
 using Dalamud.Game;
 using Dalamud.Utility;
@@ -233,9 +232,6 @@ internal static class AutoTranslate
             .ToList();
     }
 
-    [DllImport("msvcrt.dll", CallingConvention = CallingConvention.Cdecl)]
-    private static extern int memcmp(byte[] b1, byte[] b2, nuint count);
-
     internal static void ReplaceWithPayload(ref byte[] bytes)
     {
         var search = "<at:"u8.ToArray();
@@ -279,7 +275,10 @@ internal static class AutoTranslate
                 start = -1;
             }
 
-            if (i + search.Length < bytes.Length && memcmp(bytes[i..], search, (nuint) search.Length) == 0)
+            // Pure managed comparison via Span avoids the msvcrt.dll P/Invoke,
+            // which is fragile under Wine and triggered an extra managed-to-
+            // unmanaged copy per check.
+            if (i + search.Length < bytes.Length && bytes.AsSpan(i, search.Length).SequenceEqual(search))
                 start = i;
         }
     }

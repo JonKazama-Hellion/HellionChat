@@ -25,6 +25,8 @@ public class ColorPayload
                 return payload;
             case 0xE9:
                 var param = stream.ReadByte();
+                if (param == -1)
+                    throw new ArgumentException("Encountered premature end of input (unexpected EOF).", nameof(stream));
                 var globalValue = (uint) GlobalParametersCache.GetValue(param - 2);
                 payload.Enabled = true;
                 payload.UnshiftedColor = globalValue;

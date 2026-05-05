@@ -252,7 +252,7 @@ internal sealed unsafe class Chat : IDisposable
         {
             playerName = SeString.Parse(agent->TellPlayerName).TextValue;
             worldId = agent->TellWorldId;
-            Plugin.Log.Debug($"Detected tell target '{playerName}'@{worldId}");
+            Plugin.Log.Debug($"Detected tell target '[redacted]'@{worldId}");
         }
 
         Plugin.CurrentTab.CurrentChannel = new UsedChannel
@@ -400,7 +400,9 @@ internal sealed unsafe class Chat : IDisposable
                 }
 
                 var idx = RotateLinkshell(currentIndex, rotate, channel == InputChannel.Linkshell1 ? ValidLinkshell : ValidCrossLinkshell);
-                return channel + idx;
+                // RotateLinkshell returns null when no valid linkshell is found within 8 iterations.
+                // Forward the null so the caller can keep the existing channel instead of crashing on nullable arithmetic.
+                return idx is null ? null : channel + idx.Value;
             }
             default:
                 return channel;

@@ -23,6 +23,8 @@ internal static class StringUtil
         var bytes = Math.Abs(byteCount);
         var place = Convert.ToInt32(Math.Floor(Math.Log(bytes, 1024)));
         var num = Math.Round(bytes / Math.Pow(1024, place), 1);
-        return (Math.Sign(byteCount) * num).ToString("N0") + suf[place];
+        // "0.#" keeps the rounded fractional digit (1.5 GB stays "1.5GB"); "N0"
+        // would truncate it back to integer.
+        return (Math.Sign(byteCount) * num).ToString("0.#") + suf[place];
     }
 }

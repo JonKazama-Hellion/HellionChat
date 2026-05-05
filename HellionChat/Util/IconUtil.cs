@@ -49,9 +49,21 @@ public readonly unsafe ref struct GfdFileView
         var entries = Entries;
         if (DirectLookup)
         {
-            if (iconId <= entries.Length)
+            // Resolve redirects on the direct-lookup path too — the binary-search
+            // path follows them, and skipping them here was inconsistent for
+            // contiguous ID sets.
+            var visited = 0;
+            while (iconId <= entries.Length)
             {
                 entry = entries[(int)(iconId - 1)];
+                if (followRedirect && entry.Redirect != 0 && entry.Redirect != iconId)
+                {
+                    if (++visited > entries.Length)
+                        break; // cycle guard
+                    iconId = entry.Redirect;
+                    continue;
+                }
+
                 return !entry.IsEmpty;
             }
 
@@ -146,12 +158,17 @@ public readonly unsafe ref struct GfdFileView
 internal static class IconUtil
 {
     private static byte[]? GfdFile;
-    public static unsafe GfdFileView GfdFileView
+    public static GfdFileView GfdFileView
     {
         get
         {
-            GfdFile ??= Plugin.DataManager.GetFile("common/font/gfdata.gfd")!.Data;
-            return new GfdFileView(new ReadOnlySpan<byte>(Unsafe.AsPointer(ref GfdFile[0]), GfdFile.Length));
+            if (GfdFile is null)
+            {
+                var file = Plugin.DataManager.GetFile("common/font/gfdata.gfd")
+                    ?? throw new FileNotFoundException("Failed to load common/font/gfdata.gfd from the game data.");
+                GfdFile = file.Data;
+            }
+            return new GfdFileView(GfdFile);
         }
     }
 

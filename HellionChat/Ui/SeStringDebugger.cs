@@ -222,7 +222,16 @@ public class SeStringDebugger : Window
                 default:
                     var payloadData = payload.Encode();
 
-                    var initialByte = payloadData.First();
+                    if (payloadData.Length == 0)
+                    {
+                        RenderMetadataDictionary("Empty Payload", new Dictionary<string, string?>
+                        {
+                            { "Type", payload.GetType().Name },
+                        });
+                        break;
+                    }
+
+                    var initialByte = payloadData[0];
                     if (initialByte != 0x02)
                     {
                         RenderMetadataDictionary("Text Payload", new Dictionary<string, string?>

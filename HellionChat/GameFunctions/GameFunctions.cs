@@ -245,7 +245,8 @@ internal unsafe class GameFunctions : IDisposable
         vf0(agent, &result, &value, 0, 0);
     }
 
-    private readonly nint PlaceholderNamePtr = Marshal.AllocHGlobal(128);
+    private const int PlaceholderBufferSize = 128;
+    private readonly nint PlaceholderNamePtr = Marshal.AllocHGlobal(PlaceholderBufferSize);
     private readonly string Placeholder = $"<{Guid.NewGuid():N}>";
     private string? ReplacementName;
 
@@ -260,6 +261,17 @@ internal unsafe class GameFunctions : IDisposable
         var placeholder = MemoryHelper.ReadStringNullTerminated((nint) placeholderText);
         if (ReplacementName == null || placeholder != Placeholder)
             return ResolveTextCommandPlaceholderHook.Original(a1, placeholderText, a3, a4);
+
+        // The fixed buffer is 128 bytes; UTF-8 + null-terminator must fit.
+        // FFXIV player names plus an @World suffix should never approach this
+        // limit, but a malformed ReplacementName must not overflow the buffer.
+        var byteCount = System.Text.Encoding.UTF8.GetByteCount(ReplacementName);
+        if (byteCount >= PlaceholderBufferSize)
+        {
+            Plugin.Log.Warning($"Replacement name too long for placeholder buffer ({byteCount} bytes >= {PlaceholderBufferSize}); falling back to original.");
+            ReplacementName = null;
+            return ResolveTextCommandPlaceholderHook.Original(a1, placeholderText, a3, a4);
+        }
 
         MemoryHelper.WriteString(PlaceholderNamePtr, ReplacementName);
         ReplacementName = null;

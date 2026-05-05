@@ -615,7 +615,7 @@ internal sealed class Privacy : ISettingsTab
         CleanupRunning = true;
         var allowed = Plugin.Config.PrivacyPersistChannels.Select(t => (int)(ushort)t).ToList();
 
-        new Thread(() =>
+        var thread = new Thread(() =>
         {
             try
             {
@@ -625,10 +625,14 @@ internal sealed class Privacy : ISettingsTab
                 // Bound the wait so a hung framework tick can't deadlock
                 // the background cleanup worker. See the matching comment in
                 // the retention path above for rationale.
+                // Note: FilterAllTabs() is called synchronously instead of
+                // FilterAllTabsAsync() — the async variant fires-and-forgets
+                // a Task.Run, so the .Wait() would return before the filter
+                // pass actually finishes. See AUDIT-2026-05-05 [QUAL-02].
                 if (!Plugin.Framework.Run(() =>
                     {
                         Plugin.MessageManager.ClearAllTabs();
-                        Plugin.MessageManager.FilterAllTabsAsync();
+                        Plugin.MessageManager.FilterAllTabs();
                     }).Wait(TimeSpan.FromSeconds(5)))
                 {
                     Plugin.Log.Warning("Privacy cleanup: framework refresh timed out after 5s.");
@@ -646,6 +650,9 @@ internal sealed class Privacy : ISettingsTab
                 CleanupRunning = false;
                 CleanupCounts = null;
             }
-        }).Start();
+        });
+        // Background thread so a still-running cleanup doesn't hold up FFXIV exit.
+        thread.IsBackground = true;
+        thread.Start();
     }
 }

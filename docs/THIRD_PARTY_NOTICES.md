@@ -4,21 +4,22 @@ HellionChat ships and depends on a number of third-party components.
 This document lists them, their licences and which of them touch the
 network. It is the inventory referenced by `PRIVACY.md`.
 
-Last reviewed: 2026-05-03 (HellionChat v0.5.4).
+Last reviewed: 2026-05-05 (HellionChat v1.0.3).
 
 ---
 
 ## Direct NuGet dependencies
 
-Pinned in `HellionChat/HellionChat.csproj`. Versions reflect the v1.0.0 build.
+Pinned in `HellionChat/HellionChat.csproj`. Versions reflect the v1.0.3 build.
 
 | Package | Version | Licence | Network | Purpose |
 | --- | --- | --- | --- | --- |
 | [MessagePack](https://github.com/MessagePack-CSharp/MessagePack-CSharp) | 3.1.4 | MIT | no | Binary serialisation for the SQLite message store. |
 | [Microsoft.Data.Sqlite](https://learn.microsoft.com/dotnet/standard/data/sqlite/) | 10.0.7 | MIT | no | Local SQLite access for the message database. |
 | [morelinq](https://github.com/morelinq/MoreLINQ) | 4.4.0 | Apache-2.0 | no | LINQ helper extensions. |
-| [Pidgin](https://github.com/benjamin-hodgson/Pidgin) | 3.3.0 | MIT | no | Parser combinator library used for chat-input parsing. |
+| [Pidgin](https://github.com/benjamin-hodgson/Pidgin) | 3.5.1 | MIT | no | Parser combinator library used for chat-input parsing. CIString Unicode fix relevant for non-ASCII channel/tab names. |
 | [SixLabors.ImageSharp](https://github.com/SixLabors/ImageSharp) | 3.1.12 | [Six Labors Split License 1.0](https://github.com/SixLabors/ImageSharp/blob/main/LICENSE) (OSI-approved; free for open-source / non-commercial use, commercial licence required for closed-source commercial use) | no | Image decoding for cached emotes. |
+| [SQLitePCLRaw.lib.e_sqlite3](https://github.com/ericsink/SQLitePCL.raw) | 3.50.3 | MIT | no | Native SQLite binary, explicitly pinned to override the transitive default for CVE-2025-6965 (memory corruption from aggregate-term overflow) and CVE-2025-7709. |
 
 Six Labors note: HellionChat is an EUPL-1.2-licensed open-source
 project distributed at no cost. Use of ImageSharp 3.x under the

@@ -21,6 +21,10 @@ internal sealed class Chat : ISettingsTab
     public string Name => HellionStrings.Settings_Tab_Chat + "###tabs-chat";
 
     private SearchSelector.SelectorPopupOptions WordPopupOptions;
+    // Snapshot of EmoteCache.State for which we last built WordPopupOptions.
+    // Without this, an empty FilteredSheet (e.g., the user blocked every emote)
+    // would trigger a refill every frame the settings tab is open.
+    private EmoteCache.LoadingState? WordPopupOptionsBuiltFor;
 
     internal Chat(Plugin plugin, Configuration mutable)
     {
@@ -28,6 +32,7 @@ internal sealed class Chat : ISettingsTab
         Mutable = mutable;
 
         WordPopupOptions = RefillSheet();
+        WordPopupOptionsBuiltFor = EmoteCache.State;
     }
 
     private SearchSelector.SelectorPopupOptions RefillSheet()
@@ -160,9 +165,12 @@ internal sealed class Chat : ISettingsTab
             ImGui.TextUnformatted(Language.Options_Emote_BlockedEmotes);
             ImGui.Spacing();
 
-            if (EmoteCache.State is EmoteCache.LoadingState.Done && WordPopupOptions.FilteredSheet.Length == 0)
+            if (EmoteCache.State is EmoteCache.LoadingState.Done
+                && WordPopupOptions.FilteredSheet.Length == 0
+                && WordPopupOptionsBuiltFor != EmoteCache.LoadingState.Done)
             {
                 WordPopupOptions = RefillSheet();
+                WordPopupOptionsBuiltFor = EmoteCache.LoadingState.Done;
             }
 
             var buttonWidth = ImGui.GetContentRegionAvail().X / 3;

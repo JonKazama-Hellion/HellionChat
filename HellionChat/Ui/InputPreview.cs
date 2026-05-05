@@ -177,7 +177,10 @@ public partial class InputPreview : Window
                 return;
 
             NextChunkIsAutoTranslate = true;
-            var payload = (AutoTranslatePayload) chunk.Link!;
+            // Malformed chunks could carry an AutoTranslateBegin icon without the matching
+            // payload; bail out instead of dereferencing a null Link.
+            if (chunk.Link is not AutoTranslatePayload payload)
+                return;
             CursorPosition += $"<at:{payload.Group},{payload.Key}>".Length;
 
             return;

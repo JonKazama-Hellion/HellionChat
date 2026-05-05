@@ -12,7 +12,7 @@ because no data ever leaves your machine on the maintainer's
 infrastructure. Independently of that, the plugin is built so that
 you can act on your own data the way the GDPR expects.
 
-Last reviewed: 2026-05-03 (HellionChat v0.5.4).
+Last reviewed: 2026-05-05 (HellionChat v1.0.3).
 
 ---
 
@@ -103,8 +103,17 @@ on your behalf.
   reaches BetterTTV (unavoidable for any HTTPS request); the request
   itself contains no identifying user data, no character name, no
   message text. Only the emote ID being looked up is in the URL path.
-- **When it triggers:** Only when an incoming message contains an
-  emote token that is on the BetterTTV emote list.
+- **When it triggers:**
+  - The emote *list* (global emotes plus the top-1500 community emotes
+    over fifteen API pages) is fetched from `api.betterttv.net` once
+    per session at plugin startup, provided the **Show emotes** option
+    is on. This first list-fetch happens before any chat message has
+    arrived; BetterTTV's edge therefore sees your IP as soon as the
+    plugin loads, not only after an emote is mentioned.
+  - The individual emote *images* on `cdn.betterttv.net` are fetched
+    on demand, only when an incoming chat message contains a token
+    matching one of the cached IDs. These are cached locally
+    (`emoteCache/`) and reused across sessions.
 - **Cached:** Yes, in `emoteCache/`. A given emote is downloaded once
   per machine and reused.
 - **How to opt out:** Turn off the **Show emotes** option in

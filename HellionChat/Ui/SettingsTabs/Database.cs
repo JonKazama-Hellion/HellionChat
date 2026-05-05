@@ -81,9 +81,11 @@ internal sealed class Database : ISettingsTab
                 {
                     try
                     {
+                        // Delete both legacy files in one click — the previous if/else
+                        // left the second file behind when both happened to exist.
                         if (old.Exists)
                             old.Delete();
-                        else
+                        if (migratedOld.Exists)
                             migratedOld.Delete();
                         WrapperUtil.AddNotification(Language.Options_Database_Old_Delete_Success, NotificationType.Success);
                     }

@@ -34,6 +34,9 @@ public sealed class ChatLogWindow : Window
 
     internal Plugin Plugin { get; }
 
+    private readonly CommandWrapper _clearHellionCommand;
+    private readonly CommandWrapper _hellionCommand;
+
     internal bool ScreenshotMode;
     private string Salt { get; }
 
@@ -110,8 +113,14 @@ public sealed class ChatLogWindow : Window
         SetUpTextCommandChannels();
         SetUpAllCommands();
 
-        Plugin.Commands.Register("/clearhellion", "Clear the Hellion Chat log").Execute += ClearLog;
-        Plugin.Commands.Register("/hellion").Execute += ToggleChat;
+        // Cache the registered wrapper instances so Dispose can detach the same
+        // event objects the constructor attached to, without going through
+        // Register() again (which would re-create the wrapper if the command
+        // happened to be missing from the dictionary).
+        _clearHellionCommand = Plugin.Commands.Register("/clearhellion", "Clear the Hellion Chat log");
+        _hellionCommand = Plugin.Commands.Register("/hellion");
+        _clearHellionCommand.Execute += ClearLog;
+        _hellionCommand.Execute += ToggleChat;
 
         Plugin.ClientState.Login += Login;
         Plugin.ClientState.Logout += Logout;
@@ -126,8 +135,8 @@ public sealed class ChatLogWindow : Window
         Plugin.AddonLifecycle.UnregisterListener(AddonEvent.PostUpdate, "ActionDetail", PayloadHandler.MoveTooltip);
         Plugin.ClientState.Logout -= Logout;
         Plugin.ClientState.Login -= Login;
-        Plugin.Commands.Register("/hellion").Execute -= ToggleChat;
-        Plugin.Commands.Register("/clearhellion").Execute -= ClearLog;
+        _hellionCommand.Execute -= ToggleChat;
+        _clearHellionCommand.Execute -= ClearLog;
     }
 
     private void Logout(int _, int __)
@@ -514,13 +523,28 @@ public sealed class ChatLogWindow : Window
         return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
+    // Tracks the style instance pushed in PreDraw so PostDraw can pop the same
+    // one even if the user toggled OverrideStyle / ChosenStyle mid-frame.
+    // Without this, a config change between PreDraw and PostDraw could either
+    // leak a Push (no matching Pop) or pop nothing while we still have a frame
+    // pushed onto the ImGui stack.
+    private StyleModel? _pushedStyle;
+
     public override void PreDraw()
     {
         if (Plugin.Config.KeepInputFocus && Activate)
             ImGui.SetWindowFocus(WindowName);
 
+        _pushedStyle = null;
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Push();
+        {
+            var style = StyleModel.GetConfiguredStyles()?.FirstOrDefault(s => s.Name == Plugin.Config.ChosenStyle);
+            if (style != null)
+            {
+                style.Push();
+                _pushedStyle = style;
+            }
+        }
     }
 
     public override void PostDraw()
@@ -532,8 +556,11 @@ public sealed class ChatLogWindow : Window
         if (Plugin.CurrentTab.InputDisabled)
             Activate = false;
 
-        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
+        if (_pushedStyle != null)
+        {
+            _pushedStyle.Pop();
+            _pushedStyle = null;
+        }
     }
 
     public override void OnClose()
@@ -597,10 +624,11 @@ public sealed class ChatLogWindow : Window
             Plugin.InputPreview.CalculatePreview();
 
         // Hellion Chat v0.6.1 — render the one-time hint banner first so it
-        // sits above the tab area / sidebar in full window width. Stash the
-        // height for GetRemainingHeightForMessageLog so the message log
-        // shrinks accordingly while the banner is visible.
-        _v061HintBannerHeight = DrawV061HintBannerIfNeeded();
+        // sits above the tab area / sidebar in full window width. ImGui's
+        // GetContentRegionAvail subtracts its height automatically because the
+        // cursor advances past it before the message log calls
+        // GetRemainingHeightForMessageLog, so we don't track the height here.
+        DrawV061HintBannerIfNeeded();
 
         if (Plugin.Config.SidebarTabView)
             DrawTabSidebar();
@@ -1540,11 +1568,14 @@ public sealed class ChatLogWindow : Window
         var startY = ImGui.GetCursorPosY();
 
         var bg = new System.Numerics.Vector4(0.16f, 0.20f, 0.28f, 1f);
-        ImGui.PushStyleColor(ImGuiCol.ChildBg, bg);
-        ImGui.PushStyleVar(ImGuiStyleVar.FrameBorderSize, 1f);
-
         var dismiss = false;
         var openSettings = false;
+        // RAII for the style stack so an early return in this block
+        // (or a later refactor that introduces one) can never leave the
+        // ImGui style stack unbalanced. Matches the convention used
+        // elsewhere in this file.
+        using (ImRaii.PushColor(ImGuiCol.ChildBg, bg))
+        using (ImRaii.PushStyle(ImGuiStyleVar.FrameBorderSize, 1f))
         using (var child = ImRaii.Child("##v061-pop-out-header-hint", new System.Numerics.Vector2(0f, 84f), true))
         {
             if (child)
@@ -1561,8 +1592,6 @@ public sealed class ChatLogWindow : Window
             }
         }
 
-        ImGui.PopStyleVar();
-        ImGui.PopStyleColor();
         ImGui.Spacing();
 
         if (dismiss)
@@ -1635,13 +1664,6 @@ public sealed class ChatLogWindow : Window
 
     internal readonly List<bool> PopOutDocked = [];
     internal readonly HashSet<Guid> PopOutWindows = [];
-
-    // Hellion Chat v0.6.1 — height the v0.6.1 hint banner consumed in the
-    // current frame, read by GetRemainingHeightForMessageLog so the message
-    // log can shrink. Unconditionally reassigned at the top of DrawChatLog
-    // (before any tab-area render) so the value is always in sync with the
-    // current frame. Returns 0 once the banner is dismissed.
-    private float _v061HintBannerHeight;
 
     // v0.6.0 — live enumeration of all active Popout windows so the
     // KeybindManager can find a focused ChatInputBar to forward tab-cycle
@@ -1745,47 +1767,55 @@ public sealed class ChatLogWindow : Window
             return;
 
         var clipper = new ImGuiListClipperPtr(ImGuiNative.ImGuiListClipper());
-
-        clipper.Begin(AutoCompleteList.Count);
-        while (clipper.Step())
+        try
         {
-            for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
+            clipper.Begin(AutoCompleteList.Count);
+            while (clipper.Step())
             {
-                var entry = AutoCompleteList[i];
-
-                var highlight = AutoCompleteSelection == i;
-                var clicked = ImGui.Selectable($"{entry.Text}##{entry.Group}/{entry.Row}", highlight) || selected == i;
-                if (i < 10)
+                for (var i = clipper.DisplayStart; i < clipper.DisplayEnd; i++)
                 {
-                    var button = (i + 1) % 10;
-                    var text = string.Format(Language.AutoTranslate_Completion_Key, button);
-                    var size = ImGui.CalcTextSize(text);
+                    var entry = AutoCompleteList[i];
 
-                    ImGui.SameLine(ImGui.GetContentRegionAvail().X - size.X);
+                    var highlight = AutoCompleteSelection == i;
+                    var clicked = ImGui.Selectable($"{entry.Text}##{entry.Group}/{entry.Row}", highlight) || selected == i;
+                    if (i < 10)
+                    {
+                        var button = (i + 1) % 10;
+                        var text = string.Format(Language.AutoTranslate_Completion_Key, button);
+                        var size = ImGui.CalcTextSize(text);
 
-                    using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int)ImGuiCol.TextDisabled]))
-                        ImGui.TextUnformatted(text);
+                        ImGui.SameLine(ImGui.GetContentRegionAvail().X - size.X);
+
+                        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetStyle().Colors[(int)ImGuiCol.TextDisabled]))
+                            ImGui.TextUnformatted(text);
+                    }
+
+                    if (!clicked)
+                        continue;
+
+                    var before = Chat[..AutoCompleteInfo.StartPos];
+                    var after = Chat[AutoCompleteInfo.EndPos..];
+                    var replacement = $"<at:{entry.Group},{entry.Row}>";
+                    Chat = $"{before}{replacement}{after}";
+                    ImGui.CloseCurrentPopup();
+                    Activate = true;
+                    ActivatePos = AutoCompleteInfo.StartPos + replacement.Length;
                 }
-
-                if (!clicked)
-                    continue;
-
-                var before = Chat[..AutoCompleteInfo.StartPos];
-                var after = Chat[AutoCompleteInfo.EndPos..];
-                var replacement = $"<at:{entry.Group},{entry.Row}>";
-                Chat = $"{before}{replacement}{after}";
-                ImGui.CloseCurrentPopup();
-                Activate = true;
-                ActivatePos = AutoCompleteInfo.StartPos + replacement.Length;
             }
+
+            if (!AutoCompleteShouldScroll)
+                return;
+
+            AutoCompleteShouldScroll = false;
+            var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (AutoCompleteSelection * 1f);
+            ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
         }
-
-        if (!AutoCompleteShouldScroll)
-            return;
-
-        AutoCompleteShouldScroll = false;
-        var selectedPos = clipper.StartPosY + clipper.ItemsHeight * (AutoCompleteSelection * 1f);
-        ImGui.SetScrollFromPosY(selectedPos - ImGui.GetWindowPos().Y);
+        finally
+        {
+            // ImGuiListClipperPtr wraps an unmanaged ImGuiListClipper allocated above.
+            // Without Destroy() the unmanaged block leaks per autocomplete render.
+            clipper.Destroy();
+        }
     }
 
     private int AutoCompleteCallback(scoped ref ImGuiInputTextCallbackData data)

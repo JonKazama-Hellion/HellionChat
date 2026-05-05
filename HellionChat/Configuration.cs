@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 12;
+    private const int LatestVersion = 13;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -279,7 +279,10 @@ public class Configuration : IPluginConfiguration
         MaxLinesToRender = other.MaxLinesToRender;
         Use24HourClock = other.Use24HourClock;
         ShowEmotes = other.ShowEmotes;
-        BlockedEmotes = other.BlockedEmotes;
+        // Deep-copy the set so the live and mutable Configuration instances don't share state
+        // — a HashSet reference assignment would cause edits in the settings window to leak
+        // into the live config before the user clicks Save.
+        BlockedEmotes = new HashSet<string>(other.BlockedEmotes);
         FontsEnabled = other.FontsEnabled;
         ItalicEnabled = other.ItalicEnabled;
         ExtraGlyphRanges = other.ExtraGlyphRanges;

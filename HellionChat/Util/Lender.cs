@@ -8,7 +8,7 @@ internal class Lender<T>
 
     internal Lender(Func<T> ctor)
     {
-        Ctor = ctor;
+        Ctor = ctor ?? throw new ArgumentNullException(nameof(ctor));
     }
 
     internal void ResetCounter()

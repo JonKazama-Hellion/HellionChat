@@ -65,10 +65,22 @@ internal class Popout : Window
         return FrameTime - lastActivityTime <= 1000 * Plugin.Config.InactivityHideTimeout;
     }
 
+    // Tracks the style instance pushed in PreDraw so PostDraw pops the same
+    // one even if config changes mid-frame. See AUDIT-2026-05-05 [CR-UI-5].
+    private StyleModel? _pushedStyle;
+
     public override void PreDraw()
     {
+        _pushedStyle = null;
         if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Push();
+        {
+            var style = StyleModel.GetConfiguredStyles()?.FirstOrDefault(s => s.Name == Plugin.Config.ChosenStyle);
+            if (style != null)
+            {
+                style.Push();
+                _pushedStyle = style;
+            }
+        }
 
         Flags = ImGuiWindowFlags.None;
         if (!Plugin.Config.ShowPopOutTitleBar)
@@ -201,8 +213,11 @@ internal class Popout : Window
         if (Idx >= 0 && Idx < ChatLogWindow.PopOutDocked.Count)
             ChatLogWindow.PopOutDocked[Idx] = ImGui.IsWindowDocked();
 
-        if (Plugin.Config is { OverrideStyle: true, ChosenStyle: not null })
-            StyleModel.GetConfiguredStyles()?.FirstOrDefault(style => style.Name == Plugin.Config.ChosenStyle)?.Pop();
+        if (_pushedStyle != null)
+        {
+            _pushedStyle.Pop();
+            _pushedStyle = null;
+        }
     }
 
     public override void OnClose()

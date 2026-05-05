@@ -66,6 +66,8 @@ internal class UriPayload(Uri uri) : Payload
     public static UriPayload ResolveUri(string rawUri)
     {
         ArgumentNullException.ThrowIfNull(rawUri);
+        if (string.IsNullOrWhiteSpace(rawUri))
+            throw new UriFormatException("URI cannot be empty or whitespace.");
 
         // Check for an expected scheme '://', if not add 'https://'
         if (ExpectedSchemes.Any(scheme => rawUri.StartsWith($"{scheme}://")))

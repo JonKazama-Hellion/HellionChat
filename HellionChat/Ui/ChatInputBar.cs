@@ -104,7 +104,7 @@ public sealed class ChatInputBar
     // window's logic but operates on _state.HistoryCursor and the shared
     // InputHistoryService. Index semantics match v0.5.x InputBacklog:
     // 0 = oldest, Count-1 = newest.
-    private unsafe int CompactCallback(scoped ref ImGuiInputTextCallbackData data)
+    private int CompactCallback(scoped ref ImGuiInputTextCallbackData data)
     {
         if (data.EventFlag != ImGuiInputTextFlags.CallbackHistory)
             return 0;

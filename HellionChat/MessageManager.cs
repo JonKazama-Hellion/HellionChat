@@ -93,6 +93,10 @@ internal class MessageManager : IAsyncDisposable
             Plugin.Log.Debug("Sleeping because PendingMessageThread thread still alive");
         }
 
+        // CancellationTokenSource owns an unmanaged WaitHandle; dispose after the
+        // worker thread has drained, otherwise it leaks across plugin reloads.
+        PendingThreadCancellationToken.Dispose();
+
         Store.Dispose();
     }
 
