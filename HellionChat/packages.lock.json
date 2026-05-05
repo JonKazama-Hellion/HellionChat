@@ -16,7 +16,7 @@
       },
       "MessagePack": {
         "type": "Direct",
-        "requested": "[3.1.4, )",
+        "requested": "[3.1.4, 4.0.0)",
         "resolved": "3.1.4",
         "contentHash": "BH0wlHWmVoZpbAPyyt2Awbq30C+ZsS3eHSkYdnyUAbqVJ22fAJDzn2xTieBeoT5QlcBzp61vHcv878YJGfi3mg==",
         "dependencies": {
@@ -44,13 +44,13 @@
       },
       "Pidgin": {
         "type": "Direct",
-        "requested": "[3.5.1, )",
+        "requested": "[3.5.1, 4.0.0)",
         "resolved": "3.5.1",
         "contentHash": "zU7tkXlF3D6d2GLTjJDomAL3nnl4AwfZvSgSz8D4b+Ry21/clqedYlxBnEAkAU/bkGfEv6uRR7QCdWZUpKrB/g=="
       },
       "SixLabors.ImageSharp": {
         "type": "Direct",
-        "requested": "[3.1.12, )",
+        "requested": "[3.1.12, 4.0.0)",
         "resolved": "3.1.12",
         "contentHash": "iAg6zifihXEFS/t7fiHhZBGAdCp3FavsF4i2ZIDp0JfeYeDVzvmlbY1CNhhIKimaIzrzSi5M/NBFcWvZT2rB/A=="
       },

@@ -18,7 +18,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="MessagePack" Version="3.1.4" />
+        <!-- Closed ranges on packages with breaking-change history block a
+             surprise major bump when the lock file is regenerated. The
+             lock file pins the exact version per build; the upper bound
+             keeps the unlock path from drifting across major lines. -->
+        <PackageReference Include="MessagePack" Version="[3.1.4, 4.0.0)" />
         <PackageReference Include="Microsoft.Data.Sqlite" Version="10.0.7" />
         <!-- Override the transitively-referenced native SQLite build to one
              that ships SQLite >= 3.50.3 (CVE-2025-6965 memory corruption,
@@ -28,8 +32,8 @@
              without a major bump on the managed wrapper. -->
         <PackageReference Include="SQLitePCLRaw.lib.e_sqlite3" Version="3.50.3" />
         <PackageReference Include="morelinq" Version="4.4.0" />
-        <PackageReference Include="Pidgin" Version="3.5.1" />
-        <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+        <PackageReference Include="Pidgin" Version="[3.5.1, 4.0.0)" />
+        <PackageReference Include="SixLabors.ImageSharp" Version="[3.1.12, 4.0.0)" />
     </ItemGroup>
 
     <ItemGroup>
