@@ -6,6 +6,7 @@
              derives from. -->
         <Version>1.0.3</Version>
         <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
         <!-- Honor packages.lock.json on restore so floating version ranges
              don't silently drift between machines or CI runs. -->
         <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
