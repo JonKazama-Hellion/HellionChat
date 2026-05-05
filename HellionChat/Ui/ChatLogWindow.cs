@@ -1466,6 +1466,14 @@ public sealed class ChatLogWindow : Window
         {
             if (child)
             {
+                // v1.2.0 — Top-Padding spiegelt die HeaderToolbar-Höhe der
+                // rechten Spalte (DrawChatHeaderToolbar wird dort als erstes
+                // gerendert, eine Frame-Zeile + ItemSpacing). Ohne diesen
+                // Padding würden die Sidebar-Buttons oben am Window-Top
+                // kleben, während die Messages erst unter der Toolbar
+                // beginnen — vertikales Mismatch.
+                ImGui.Dummy(new Vector2(0, ImGui.GetFrameHeightWithSpacing()));
+
                 var previousTab = Plugin.CurrentTab;
                 // Hellion Chat — auto-tell-tabs section divider rendered
                 // exactly once before the first temp tab, with a live unit
@@ -1535,21 +1543,13 @@ public sealed class ChatLogWindow : Window
                         : (showGreetedAffordance && tab.IsGreeted ? theme.Colors.TextDim : theme.Colors.TextPrimary);
 
                     bool clicked;
-                    // v1.2.0 Bug-Fix — Sidebar-Buttons waren sichtbar höher als das Input-Feld.
-                    // Ursache: ImGui.GetFrameHeight() = FontSize + FramePadding.Y * 2, und unser
-                    // HellionStyle pusht eigene FramePadding-Werte. Fix: explizit FramePadding
-                    // (4, 2) für diesen Button überschreiben UND Höhe FramePadding-unabhängig
-                    // aus TextLineHeight + 4f berechnen. Berechnung BEVOR FontAwesome.Push(),
-                    // weil Icon-Glyphen größere Line-Metriken haben als der Standard-Font.
-                    var buttonHeight = ImGui.GetTextLineHeight() + 4f;
-                    using (ImRaii.PushStyle(ImGuiStyleVar.FramePadding, new Vector2(4f, 2f)))
                     using (ImRaii.PushColor(ImGuiCol.Button, 0u))
                     using (ImRaii.PushColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(theme.Colors.SurfaceHover)))
                     using (ImRaii.PushColor(ImGuiCol.ButtonActive, ColourUtil.RgbaToAbgr(theme.Colors.Surface)))
                     using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(iconColor)))
                     using (Plugin.FontManager.FontAwesome.Push())
                     {
-                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, buttonHeight));
+                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, ImGui.GetFrameHeight()));
                     }
 
                     if (isCurrentTab)
