@@ -302,10 +302,33 @@ public class Configuration : IPluginConfiguration
         // never present in a disk-loaded copy. Keep the live temp tabs of
         // *this* configuration alive across an UpdateFrom so a settings
         // save (or sidebar-mode toggle) does not silently destroy the
-        // user's open tell conversations. Persistent tabs from `other`
-        // still get the regular clone-replace treatment.
+        // user's open tell conversations.
+        //
+        // For persistent tabs we go through Tab.Clone() which intentionally
+        // does NOT copy the NonSerialized Messages list (avoids shared
+        // mutable state on disk-load). On a settings save that means the
+        // chat history for every persistent tab would be wiped — bug
+        // reported by Flo 2026-05-05. We work around it by capturing the
+        // live MessageList (and LastSendUnread counter) by Identifier
+        // before the replace, then restoring it onto the freshly cloned
+        // tabs whose Identifier survives Tab.Clone(). New tabs added in
+        // settings get a fresh empty MessageList; deleted tabs lose their
+        // history (intended).
         var liveTempTabs = Tabs.Where(t => t.IsTempTab).ToList();
-        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t => t.Clone()).ToList();
+        var livePersistentSession = Tabs
+            .Where(t => !t.IsTempTab)
+            .ToDictionary(t => t.Identifier, t => (t.Messages, t.LastSendUnread));
+
+        Tabs = other.Tabs.Where(t => !t.IsTempTab).Select(t =>
+        {
+            var clone = t.Clone();
+            if (livePersistentSession.TryGetValue(clone.Identifier, out var live))
+            {
+                clone.Messages = live.Messages;
+                clone.LastSendUnread = live.LastSendUnread;
+            }
+            return clone;
+        }).ToList();
         Tabs.AddRange(liveTempTabs);
 
         OverrideStyle = other.OverrideStyle;
