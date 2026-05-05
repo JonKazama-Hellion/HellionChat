@@ -45,6 +45,7 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
         [
             new General(Plugin, Mutable),
             new Appearance(Plugin, Mutable),
+            new SettingsTabs.Themes(Plugin, Mutable),
             new SettingsTabs.Window(Plugin, Mutable),
             new Chat(Plugin, Mutable),
             new SettingsTabs.Tabs(Plugin, Mutable),

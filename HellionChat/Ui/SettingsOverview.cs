@@ -12,12 +12,12 @@ internal sealed class SettingsOverview
     private readonly SettingsWindow _window;
 
     // Card-Reihenfolge entspricht 1:1 dem Tabs-Index in SettingsWindow.
-    // Themes (Phase J) wird später als Card 2 zwischen Appearance und Window
-    // eingeschoben — dabei muss diese Liste neu gemappt werden.
+    // Themes ist Card-Index 2, eingeschoben zwischen Appearance und Window.
     private static readonly (FontAwesomeIcon Icon, string TitleKey, string SubtextKey)[] CardDefs =
     [
         (FontAwesomeIcon.SlidersH,        "Settings_Card_General_Title",     "Settings_Card_General_Subtext"),
         (FontAwesomeIcon.Palette,         "Settings_Card_Appearance_Title",  "Settings_Card_Appearance_Subtext"),
+        (FontAwesomeIcon.Swatchbook,      "Settings_Card_Themes_Title",      "Settings_Card_Themes_Subtext"),
         (FontAwesomeIcon.WindowMaximize,  "Settings_Card_Window_Title",      "Settings_Card_Window_Subtext"),
         (FontAwesomeIcon.Comments,        "Settings_Card_Chat_Title",        "Settings_Card_Chat_Subtext"),
         (FontAwesomeIcon.FolderTree,      "Settings_Card_Tabs_Title",        "Settings_Card_Tabs_Subtext"),
