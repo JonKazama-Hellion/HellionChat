@@ -9,13 +9,21 @@ using Dalamud.Bindings.ImGui;
 
 namespace HellionChat.Ui;
 
+internal enum SettingsView
+{
+    Overview,
+    Detail,
+}
+
 public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 {
-    private readonly Plugin Plugin;
+    internal readonly Plugin Plugin;
 
     private Configuration Mutable { get; }
     private List<ISettingsTab> Tabs { get; }
     private int CurrentTab;
+    private SettingsView View = SettingsView.Overview;
+    private readonly SettingsOverview Overview;
 
     internal SettingsWindow(Plugin plugin) : base($"{Language.Settings_Title.Format(Plugin.PluginName)}###chat2-settings")
     {
@@ -30,6 +38,8 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
 
         Plugin = plugin;
         Mutable = new Configuration();
+
+        Overview = new SettingsOverview(this);
 
         Tabs =
         [
@@ -72,8 +82,33 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
     public override void Draw()
     {
         if (ImGui.IsWindowAppearing())
+        {
             Initialise();
+            View = SettingsView.Overview;
+        }
 
+        if (View == SettingsView.Overview)
+            Overview.Draw();
+        else
+            DrawDetail();
+
+        ImGui.Separator();
+        DrawSaveButtons();
+    }
+
+    internal void OpenSection(int tabIndex)
+    {
+        CurrentTab = tabIndex;
+        View = SettingsView.Detail;
+    }
+
+    internal void OpenOverview()
+    {
+        View = SettingsView.Overview;
+    }
+
+    private void DrawDetail()
+    {
         using (var table = ImRaii.Table("##chat2-settings-table", 2))
         {
             if (table.Success)
@@ -103,9 +138,10 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
                     Tabs[CurrentTab].Draw(changed);
             }
         }
+    }
 
-        ImGui.Separator();
-
+    private void DrawSaveButtons()
+    {
         var save = ImGui.Button(Language.Settings_Save);
 
         ImGui.SameLine();
