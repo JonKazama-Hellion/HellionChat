@@ -45,6 +45,13 @@ internal sealed class Appearance : ISettingsTab
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
+            // v1.1.0 — Diese Settings-UI wird in Phase J durch den dedizierten
+            // Themes-Tab ersetzt. Bis dahin bleiben die alten Toggles erhalten,
+            // damit die Settings-Seite kompiliert; sie schreiben in die mit
+            // [Obsolete] markierten Felder, die bis v1.2.0 als JSON-Safety-Net
+            // bestehen bleiben. Das pragma unterdrückt die CS0612-Warnungen
+            // gezielt für diesen Übergangs-Block.
+#pragma warning disable CS0612, CS0618
             ImGui.Checkbox(HellionStrings.Theme_Enabled_Name, ref Mutable.HellionThemeEnabled);
             ImGuiUtil.HelpMarker(HellionStrings.Theme_Enabled_Description);
 
@@ -81,6 +88,7 @@ internal sealed class Appearance : ISettingsTab
             {
                 ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
             }
+#pragma warning restore CS0612, CS0618
         }
     }
 

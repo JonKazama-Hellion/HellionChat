@@ -494,9 +494,7 @@ public sealed class ChatLogWindow : Window
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
         if (LastViewport == ImGuiHelpers.MainViewport.Handle && !WasDocked)
-            BgAlpha = Plugin.Config.HellionThemeEnabled
-                ? Plugin.Config.HellionThemeWindowOpacity
-                : Plugin.Config.WindowAlpha / 100f;
+            BgAlpha = Plugin.Config.WindowOpacity;
 
         LastViewport = ImGui.GetWindowViewport().Handle;
         WasDocked = ImGui.IsWindowDocked();

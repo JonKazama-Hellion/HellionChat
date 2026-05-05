@@ -34,9 +34,22 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 13;
+    private const int LatestVersion = 14;
 
     public int Version { get; set; } = LatestVersion;
+
+    // v1.1.0 — Theme-Engine. Slug-basiert; ThemeRegistry liefert das Objekt.
+    public string Theme = "hellion-arctic";
+
+    // v1.1.0 — Globale Window-Opacity, theme-übergreifend. Migration aus
+    // HellionThemeWindowOpacity beim Bump v13 → v14.
+    public float WindowOpacity = 0.85f;
+
+    // v1.1.0 — Felder für künftige UI-Toggles (v1.2.0 / v1.3.0). Werden
+    // vorab angelegt, damit später keine Migration nötig ist.
+    public bool ReduceMotion;
+    public bool UseCompactDensity;
+    public bool ShowThemeQuickPicker;
 
     // Hellion Chat — Privacy filter (DSGVO Art. 25 Privacy by Default).
     // Master-switch defaults to true; set false to restore upstream behavior.
@@ -70,12 +83,14 @@ public class Configuration : IPluginConfiguration
     // Hellion Chat global ImGui theme — applied to every plugin window in
     // Plugin.Draw. Default ON; users who prefer the upstream Dalamud look
     // can flip this off in the Privacy tab.
+    [Obsolete("Replaced by Theme slug + WindowOpacity in v14")]
     public bool HellionThemeEnabled = true;
 
     // Window background opacity, 0.5–1.0. Lower values make the plugin
     // panes more glass-like so the game shines through. Default 0.5
     // matches the maintainer's daily-driver preference; users who want
     // a less translucent look bump it up in Aussehen → Theme.
+    [Obsolete("Replaced by WindowOpacity in v14")]
     public float HellionThemeWindowOpacity = 0.5f;
 
     // Use the bundled Exo 2 font (OFL-1.1) for the regular plugin font
@@ -321,9 +336,18 @@ public class Configuration : IPluginConfiguration
         RetentionLastRunAt = other.RetentionLastRunAt;
 
         FirstRunCompleted = other.FirstRunCompleted;
+#pragma warning disable CS0612, CS0618 // Obsolete-Felder bleiben bis v1.2.0 als JSON-Safety-Net erhalten
         HellionThemeEnabled = other.HellionThemeEnabled;
         HellionThemeWindowOpacity = other.HellionThemeWindowOpacity;
+#pragma warning restore CS0612, CS0618
         UseHellionFont = other.UseHellionFont;
+
+        // v1.1.0 theme engine fields
+        Theme = other.Theme;
+        WindowOpacity = other.WindowOpacity;
+        ReduceMotion = other.ReduceMotion;
+        UseCompactDensity = other.UseCompactDensity;
+        ShowThemeQuickPicker = other.ShowThemeQuickPicker;
 
         EnableAutoTellTabs = other.EnableAutoTellTabs;
         AutoTellTabsLimit = other.AutoTellTabsLimit;

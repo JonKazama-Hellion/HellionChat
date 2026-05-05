@@ -103,9 +103,7 @@ internal class Popout : Window
             }
             else
             {
-                BgAlpha = Plugin.Config.HellionThemeEnabled
-                    ? Plugin.Config.HellionThemeWindowOpacity
-                    : Plugin.Config.WindowAlpha / 100f;
+                BgAlpha = Plugin.Config.WindowOpacity;
             }
         }
     }
