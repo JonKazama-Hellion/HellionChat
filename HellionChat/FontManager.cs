@@ -120,7 +120,16 @@ public class FontManager
             e => e.OnPreBuild(
                 tk =>
                 {
-                    var config = new SafeFontConfig {SizePt = Plugin.Config.GlobalFontV2.SizePt, GlyphRanges = Ranges};
+                    // v1.2.0 — Bei aktiver Hellion-Schrift (Exo 2 ist Variable-Font)
+                    // wird die User-Schriftgröße aus FontSizeV2 als SizePt angewendet.
+                    // Der Bestand-Pfad nutzt weiter GlobalFontV2.SizePt aus dem
+                    // Custom-Font-Stack. Ohne diese Verzweigung war FontSizeV2 bei
+                    // UseHellionFont=true wirkungslos, was 4K-User mit größerer
+                    // Skalierung blockierte (Settings → Erscheinungsbild → Schriftarten).
+                    var basePt = Plugin.Config.UseHellionFont
+                        ? Plugin.Config.FontSizeV2
+                        : Plugin.Config.GlobalFontV2.SizePt;
+                    var config = new SafeFontConfig {SizePt = basePt, GlyphRanges = Ranges};
                     config.MergeFont = Plugin.Config.UseHellionFont
                         ? tk.AddFontFromMemory(GetHellionFontBytes(), config, "Hellion-Exo2")
                         : AddFontWithFallback(tk, Plugin.Config.GlobalFontV2.FontId, config, "global");

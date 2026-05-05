@@ -109,7 +109,22 @@ internal sealed class Appearance : ISettingsTab
             ImGuiUtil.HelpMarker(HellionStrings.Theme_UseHellionFont_Description);
             ImGui.Spacing();
 
-            using var fontDisabled = ImRaii.Disabled(Mutable.UseHellionFont);
+            // v1.2.0 — Schriftgröße muss auch bei aktiver Hellion-Schrift
+            // editierbar sein (Exo 2 ist Variable-Font, FontSizeV2 wird in
+            // FontManager als SizePt angewendet). Disabled-Wrap nur noch
+            // um den Bestand-Custom-Font-Stack (FontsEnabled-Toggle und
+            // die Font-Chooser) — der ist weiter exclusive zu HellionFont.
+            if (Mutable.UseHellionFont)
+            {
+                ImGuiUtil.FontSizeCombo(Language.Options_FontSize_Name, ref Mutable.FontSizeV2);
+                ImGui.Spacing();
+
+                ImGuiUtil.FontSizeCombo(Language.Options_SymbolsFontSize_Name, ref Mutable.SymbolsFontSizeV2);
+                ImGuiUtil.HelpMarker(Language.Options_SymbolsFontSize_Description);
+
+                ImGui.Spacing();
+                return;
+            }
 
             ImGui.Checkbox(Language.Options_FontsEnabled, ref Mutable.FontsEnabled);
             ImGui.Spacing();
