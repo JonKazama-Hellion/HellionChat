@@ -1323,17 +1323,63 @@ public sealed class ChatLogWindow : Window
                     ImGui.TableNextColumn();
 
                 var lineWidth = ImGui.GetContentRegionAvail().X;
-                if (message.Sender.Count > 0)
-                {
-                    DrawChunks(message.Sender, true, handler, lineWidth);
-                    ImGui.SameLine();
-                }
 
-                // We need to draw something otherwise the item visibility check below won't work.
-                if (message.Content.Count == 0)
-                    DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                // v1.2.0 — Card-Rows als Default, Compact-Density als Opt-Out.
+                // Card-Mode: Sender-Header in Channel-Color auf eigener Zeile,
+                // dann Body, dann subtile Border-Bottom als Card-Trenner.
+                // Compact-Mode: bisheriges Verhalten — Sender + Space + Content
+                // auf einer Zeile via SameLine.
+                var useCard = !Plugin.Config.UseCompactDensity;
+                if (useCard)
+                {
+                    if (message.Sender.Count > 0)
+                    {
+                        var theme = Plugin.ThemeRegistry.Active;
+                        var senderColor = Plugin.Functions.Chat.GetChannelColor(message.Code.Type)
+                                          ?? theme.Colors.TextPrimary;
+                        using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(senderColor)))
+                        {
+                            DrawChunks(message.Sender, true, handler, lineWidth);
+                        }
+                        // KEIN SameLine — Body landet auf eigener Zeile.
+                    }
+
+                    // We need to draw something otherwise the item visibility check below won't work.
+                    if (message.Content.Count == 0)
+                        DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                    else
+                        DrawChunks(message.Content, true, handler, lineWidth);
+
+                    // Subtile Border-Bottom als Card-Trenner. Border-Farbe mit
+                    // reduzierter Alpha (RGBA → 0x33) für dezente Trennung.
+                    {
+                        var theme = Plugin.ThemeRegistry.Active;
+                        var rowEndY = ImGui.GetCursorScreenPos().Y;
+                        var winLeft = ImGui.GetWindowPos().X;
+                        var winRight = winLeft + ImGui.GetWindowSize().X;
+                        var borderRgba = (theme.Colors.Border & 0xFFFFFF00u) | 0x33u;
+                        ImGui.GetWindowDrawList().AddLine(
+                            new Vector2(winLeft + 4, rowEndY - 1),
+                            new Vector2(winRight - 4, rowEndY - 1),
+                            ColourUtil.RgbaToAbgr(borderRgba),
+                            1f);
+                        ImGui.Dummy(new Vector2(0, 2));
+                    }
+                }
                 else
-                    DrawChunks(message.Content, true, handler, lineWidth);
+                {
+                    if (message.Sender.Count > 0)
+                    {
+                        DrawChunks(message.Sender, true, handler, lineWidth);
+                        ImGui.SameLine();
+                    }
+
+                    // We need to draw something otherwise the item visibility check below won't work.
+                    if (message.Content.Count == 0)
+                        DrawChunks([new TextChunk(ChunkSource.Content, null, " ")], true, handler, lineWidth);
+                    else
+                        DrawChunks(message.Content, true, handler, lineWidth);
+                }
 
                 message.IsVisible[tab.Identifier] = ImGui.IsItemVisible();
             }
