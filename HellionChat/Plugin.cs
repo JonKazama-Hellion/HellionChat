@@ -291,6 +291,8 @@ public sealed class Plugin : IDalamudPlugin
             // v1.1.0 — Theme-Engine init. Custom-Themes liegen in
             // pluginConfigs/HellionChat/themes/, lazy geladen beim ersten Get.
             var customThemesDir = Path.Combine(Interface.ConfigDirectory.FullName, "themes");
+            Directory.CreateDirectory(customThemesDir);
+            SeedExampleThemeIfEmpty(customThemesDir);
             ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
             ThemeRegistry.Switch(Config.Theme);
 
@@ -675,4 +677,36 @@ public sealed class Plugin : IDalamudPlugin
     public static bool InBattle => Condition[ConditionFlag.InCombat];
     public static bool GposeActive => Condition[ConditionFlag.WatchingCutscene];
     public static bool CutsceneActive => Condition[ConditionFlag.OccupiedInCutSceneEvent] || Condition[ConditionFlag.WatchingCutscene78];
+
+    // v1.1.0 — wenn der themes/-Ordner leer ist, schreiben wir die embedded
+    // example-theme.json als Vorlage rein. Bestehende User-Customs werden
+    // nicht angefasst (existing JSONs lassen den Block überspringen).
+    private static void SeedExampleThemeIfEmpty(string dir)
+    {
+        if (Directory.EnumerateFiles(dir, "*.json").Any())
+            return;
+
+        var examplePath = Path.Combine(dir, "example-theme.json");
+        var resourceStream = typeof(Plugin).Assembly.GetManifestResourceStream("HellionChat.Themes.Builtin.example-theme.json");
+        if (resourceStream is null)
+        {
+            Log.Warning("Themes example template not found in assembly resources; skipping seed.");
+            return;
+        }
+
+        try
+        {
+            using var fileStream = File.Create(examplePath);
+            resourceStream.CopyTo(fileStream);
+            Log.Information($"Seeded example-theme.json into {dir}");
+        }
+        catch (IOException ex)
+        {
+            Log.Warning(ex, "Failed to seed example-theme.json; user can create custom themes manually.");
+        }
+        finally
+        {
+            resourceStream.Dispose();
+        }
+    }
 }

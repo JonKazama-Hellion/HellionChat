@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "slug": "example-custom",
+  "name": "Example Custom",
+  "author": "You",
+  "description": "Starting template — duplicate, rename, edit colors and reload.",
+  "colors": {
+    "primaryDark":   "#0097A7",
+    "primary":       "#00BED2",
+    "primaryLight":  "#4DD9E8",
+    "primaryGlow":   "#00BED299",
+    "accentDark":    "#E85D04",
+    "accent":        "#F97316",
+    "accentLight":   "#FB923C",
+    "identity":      "#0097A7",
+    "windowBg":      "#070B12",
+    "childBg":       "#0C1220",
+    "frameBg":       "#141E30",
+    "surface":       "#1A2538",
+    "surfaceHover":  "#22303F",
+    "border":        "#00BED266",
+    "textPrimary":   "#E6F4F1",
+    "textMuted":     "#8FA3B5",
+    "textDim":       "#566273",
+    "statusSuccess": "#5CB85C",
+    "statusDanger":  "#D9534F",
+    "statusWarning": "#F0AD4E",
+    "statusInfo":    "#00BED2"
+  },
+  "layout": {
+    "windowRounding": 4,
+    "childRounding": 3,
+    "popupRounding": 3,
+    "frameRounding": 2,
+    "grabRounding": 2,
+    "tabRounding": 2,
+    "scrollbarRounding": 2,
+    "windowBorderSize": 1,
+    "frameBorderSize": 1
+  }
+}

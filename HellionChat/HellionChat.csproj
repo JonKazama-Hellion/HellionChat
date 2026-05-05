@@ -75,6 +75,9 @@
         <EmbeddedResource Include="Resources\HellionFont-OFL.txt">
             <LogicalName>HellionFont-OFL.txt</LogicalName>
         </EmbeddedResource>
+        <EmbeddedResource Include="Themes\Builtin\example-theme.json">
+            <LogicalName>HellionChat.Themes.Builtin.example-theme.json</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
 
 
