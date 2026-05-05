@@ -82,7 +82,7 @@ internal sealed class Themes : ISettingsTab
         var avail = ImGui.GetContentRegionAvail();
         var columns = avail.X >= 700f ? 3 : 2;
         var cardWidth = (avail.X - (columns - 1) * 8f) / columns;
-        var cardHeight = 110f;
+        var cardHeight = 140f;  // war 110f — Mockup braucht mehr Platz
         var i = 0;
         foreach (var theme in themes)
         {
@@ -117,29 +117,22 @@ internal sealed class Themes : ISettingsTab
             draw.AddRect(cursorBefore, cursorBefore + new Vector2(w, h), border, 4f, ImDrawFlags.None, 1f);
         }
 
-        // Akzent-Swatch links oben
-        var swatchPos = cursorBefore + new Vector2(12f, 12f);
-        var swatchSize = new Vector2(20f, 20f);
-        draw.AddRectFilled(swatchPos, swatchPos + swatchSize, ColourUtil.RgbaToAbgr(theme.Colors.Primary), 3f);
+        // Mini-Mockup statt Akzent-Swatch — visualisiert das Theme im Mini-Chat-Window
+        var mockupOrigin = cursorBefore + new Vector2(12f, 12f);
+        var mockupSize = new Vector2(w - 24f, 60f);
+        ThemeMockup.Draw(mockupOrigin, mockupSize, theme);
 
-        // Name
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(40f, 12f));
+        // Name unter dem Mockup
+        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(12f, 78f));
         var textColor = ColourUtil.RgbaToAbgr(theme.Colors.TextPrimary);
         using (ImRaii.PushColor(ImGuiCol.Text, textColor))
             ImGui.TextUnformatted(theme.Name);
 
-        // Author
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(40f, 32f));
+        // Author dahinter dezent
+        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(12f, 96f));
         var mutedColor = ColourUtil.RgbaToAbgr(theme.Colors.TextMuted);
         using (ImRaii.PushColor(ImGuiCol.Text, mutedColor))
             ImGui.TextUnformatted(theme.Author);
-
-        // Description (wrapped, falls zu lang)
-        ImGui.SetCursorScreenPos(cursorBefore + new Vector2(12f, 60f));
-        ImGui.PushTextWrapPos(cursorBefore.X + w - 12f);
-        using (ImRaii.PushColor(ImGuiCol.Text, mutedColor))
-            ImGui.TextUnformatted(theme.Description);
-        ImGui.PopTextWrapPos();
 
         // Cursor unter die Card setzen
         ImGui.SetCursorScreenPos(cursorBefore + new Vector2(0f, h + 8f));
