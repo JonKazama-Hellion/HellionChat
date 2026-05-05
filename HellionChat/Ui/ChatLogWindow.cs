@@ -1383,12 +1383,13 @@ public sealed class ChatLogWindow : Window
     private void DrawTabSidebar()
     {
         var currentTab = -1;
-        using var tabTable = ImRaii.Table("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingStretchProp | ImGuiTableFlags.Resizable);
+        // v1.2.0 — Sidebar fix 44 px, kein Resize. Mehr Platz fürs Chat-Log.
+        using var tabTable = ImRaii.Table("tabs-table", 2, ImGuiTableFlags.BordersInnerV | ImGuiTableFlags.SizingFixedFit);
         if (!tabTable.Success)
             return;
 
-        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.WidthStretch, 1);
-        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.WidthStretch, 4);
+        ImGui.TableSetupColumn("tabs", ImGuiTableColumnFlags.WidthFixed, 44f);
+        ImGui.TableSetupColumn("chat", ImGuiTableColumnFlags.WidthStretch, 1);
 
         ImGui.TableNextColumn();
 
@@ -1422,7 +1423,6 @@ public sealed class ChatLogWindow : Window
                     }
 
                     var unread = tabI == Plugin.LastTab || tab.UnreadMode == UnreadMode.None || tab.Unread == 0 ? "" : $" ({tab.Unread})";
-                    var selectableLabel = $"{tab.Name}{unread}###log-tab-{tabI}";
                     var isCurrentTab = Plugin.LastTab == tabI || Plugin.WantedTab == tabI;
 
                     var showGreetedAffordance = tab.IsTempTab && Plugin.Config.AutoTellTabsShowGreetedToggle;
@@ -1457,33 +1457,37 @@ public sealed class ChatLogWindow : Window
                         ImGui.SameLine();
                     }
 
-                    bool clicked;
-                    if (showGreetedAffordance && tab.IsGreeted)
-                    {
-                        // Dim the tab name once the user marked the partner
-                        // as greeted, so a glance at the sidebar tells them
-                        // who still needs attention. Selectable has no idle
-                        // background slot in ImGui, so the dim only applies
-                        // to the selected and hovered states — the text dim
-                        // alone signals greeted in the idle state.
-                        var headerBase = ImGui.GetColorU32(ImGuiCol.Header);
-                        var hoverBase = ImGui.GetColorU32(ImGuiCol.HeaderHovered);
-                        var dimHeader = (headerBase & 0xFF000000u) | ((headerBase & 0x00FEFEFEu) >> 1);
-                        var dimHover = (hoverBase & 0xFF000000u) | ((hoverBase & 0x00FEFEFEu) >> 1);
+                    // v1.2.0 — Icon-only Sidebar mit Tooltip beim Hover.
+                    // Active-Tab kriegt Akzent-Color am Icon, Greeted-Tabs
+                    // werden auf TextDim gedimmt (löst den alten Header-
+                    // Dim-Trick ab, da wir keine Selectable mehr nutzen).
+                    var theme = Plugin.ThemeRegistry.Active;
+                    var icon = TabIconMapping.Resolve(tab);
+                    var iconColor = isCurrentTab
+                        ? theme.Colors.Accent
+                        : (showGreetedAffordance && tab.IsGreeted ? theme.Colors.TextDim : theme.Colors.TextPrimary);
 
-                        using (ImRaii.PushColor(ImGuiCol.Text, ImGui.GetColorU32(ImGuiCol.TextDisabled)))
-                        using (ImRaii.PushColor(ImGuiCol.Header, dimHeader))
-                        using (ImRaii.PushColor(ImGuiCol.HeaderHovered, dimHover))
-                        {
-                            clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
-                        }
-                    }
-                    else
+                    bool clicked;
+                    using (ImRaii.PushColor(ImGuiCol.Button, 0u))
+                    using (ImRaii.PushColor(ImGuiCol.ButtonHovered, ColourUtil.RgbaToAbgr(theme.Colors.SurfaceHover)))
+                    using (ImRaii.PushColor(ImGuiCol.ButtonActive, ColourUtil.RgbaToAbgr(theme.Colors.Surface)))
+                    using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(iconColor)))
+                    using (Plugin.FontManager.FontAwesome.Push())
                     {
-                        clicked = ImGui.Selectable(selectableLabel, isCurrentTab);
+                        clicked = ImGui.Button($"{icon.ToIconString()}##sidebar-tab-{tabI}", new Vector2(36f, 32f));
+                    }
+
+                    // Tooltip mit Tab-Name + Unread-Counter beim Hover.
+                    if (ImGui.IsItemHovered())
+                    {
+                        using var tt = ImRaii.Tooltip();
+                        ImGui.TextUnformatted($"{tab.Name}{unread}");
                     }
 
                     DrawTabContextMenu(tab, tabI);
+
+                    if (clicked)
+                        Plugin.WantedTab = tabI;
 
                     if (!clicked && Plugin.WantedTab != tabI)
                         continue;
