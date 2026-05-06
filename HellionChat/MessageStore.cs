@@ -131,11 +131,22 @@ internal class MessageStore : IDisposable
 
     public void Dispose()
     {
+        // Order matters: Close releases the WAL/SHM files, Dispose then
+        // hands the underlying connection state back to the pool. We
+        // intentionally configure Pooling = false in Connect(), so there
+        // is no pool to clear globally, which keeps HellionChat's reload
+        // from disturbing other plugins' SQLite connections (which is
+        // what SqliteConnection.ClearAllPools() would do, since it acts
+        // provider-wide).
+        //
+        // We used to call GC.Collect() + GC.WaitForPendingFinalizers()
+        // here as a defensive flush, but with Pooling = false there is
+        // nothing left to collect that the explicit Close hasn't already
+        // released. The GC calls were heap pressure on every plugin
+        // reload and reached into other plugins' object graphs because
+        // GC.Collect is process-wide.
         Connection.Close();
         Connection.Dispose();
-        // Closing the connection doesn't immediately release the file.
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
 
     private SqliteConnection Connect()
