@@ -750,7 +750,7 @@
     <value>Integrationen</value>
   </data>
   <data name="Settings_Card_Integrations_Subtext" xml:space="preserve">
-    <value>Andere Dalamud-Plugins, mit denen HellionChat zusammenarbeitet — auto-detected, mit Vorschau auf kommende Integrationen.</value>
+    <value>Andere Dalamud-Plugins, mit denen HellionChat zusammenarbeitet. Auto-detected, mit Vorschau auf kommende Integrationen.</value>
   </data>
   <data name="Settings_ThemeAndLayout_Theme_Heading" xml:space="preserve">
     <value>Theme</value>
@@ -867,7 +867,7 @@
     <value>Idee?</value>
   </data>
   <data name="Settings_Integrations_GotAnIdea_Body" xml:space="preserve">
-    <value>Idee für eine Plugin-Integration, die nicht auf der Liste steht? Komm auf den Hellion-Forge-Discord und schreib mir — Community-Input bestimmt die Roadmap.</value>
+    <value>Idee für eine Plugin-Integration, die nicht auf der Liste steht? Komm auf den Hellion-Forge-Discord und schreib mir. Community-Input bestimmt die Roadmap.</value>
   </data>
   <data name="Settings_Integrations_GotAnIdea_LinkLabel" xml:space="preserve">
     <value>Hellion Forge öffnen</value>

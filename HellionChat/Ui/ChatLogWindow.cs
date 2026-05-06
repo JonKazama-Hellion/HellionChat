@@ -1683,7 +1683,7 @@ public sealed class ChatLogWindow : Window
     // Renders only for the active tab in the main ChatLogWindow; pop-out
     // windows have their own render path and skip this toolbar.
     //
-    // Hellion Chat v1.3.0 — also renders the optional Honorific title slot
+    // Hellion Chat v1.3.0 also renders the optional Honorific title slot
     // left of the pop-out button, when HonorificService reports an active
     // custom title and the user has ShowHonorificTitleInHeader enabled.
     private void DrawChatHeaderToolbar(Tab tab)
@@ -1708,7 +1708,7 @@ public sealed class ChatLogWindow : Window
     // Renders the Honorific custom title to the left of the pop-out button,
     // wrapped in guillemets to match how the game itself displays titles.
     // We lay out the title first, then DrawPopOutButton uses
-    // GetContentRegionAvail to anchor itself flush right — that's why the
+    // GetContentRegionAvail to anchor itself flush right, which is why the
     // call order in DrawChatHeaderToolbar matters: title first, button second.
     //
     // The slot stays on the same line as the pop-out button so the chat
@@ -1749,7 +1749,7 @@ public sealed class ChatLogWindow : Window
         }
 
         var rendered = "«" + title!.Title + "»";
-        rendered = TruncateToWidth(rendered, maxTitleWidth);
+        rendered = StringUtil.TruncateToFitWidth(rendered, maxTitleWidth);
 
         var titleColor = title.Color is { } c
             ? new Vector4(c.X, c.Y, c.Z, 1f)
@@ -1778,34 +1778,6 @@ public sealed class ChatLogWindow : Window
         }
 
         ImGui.SameLine();
-    }
-
-    private static string TruncateToWidth(string text, float maxWidth)
-    {
-        if (ImGui.CalcTextSize(text).X <= maxWidth)
-        {
-            return text;
-        }
-
-        // Binary-search the longest prefix that fits with an ellipsis.
-        const string ellipsis = "…";
-        var lo = 0;
-        var hi = text.Length;
-        while (lo < hi)
-        {
-            var mid = (lo + hi + 1) / 2;
-            var candidate = text[..mid] + ellipsis;
-            if (ImGui.CalcTextSize(candidate).X <= maxWidth)
-            {
-                lo = mid;
-            }
-            else
-            {
-                hi = mid - 1;
-            }
-        }
-
-        return lo == 0 ? ellipsis : text[..lo] + ellipsis;
     }
 
     // Hellion Chat v0.6.1 — One-Time-Hint-Banner introducing the chat header

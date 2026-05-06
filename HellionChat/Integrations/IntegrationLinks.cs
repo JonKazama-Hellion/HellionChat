@@ -7,6 +7,6 @@ namespace HellionChat.Integrations;
 // brand-links class.
 internal static class IntegrationLinks
 {
-    public const string Honorific_Repo = "https://github.com/Caraxi/Honorific";
-    public const string Honorific_Author = "https://github.com/Caraxi";
+    public const string HonorificRepo = "https://github.com/Caraxi/Honorific";
+    public const string HonorificAuthor = "https://github.com/Caraxi";
 }

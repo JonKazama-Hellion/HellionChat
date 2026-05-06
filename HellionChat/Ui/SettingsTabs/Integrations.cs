@@ -76,12 +76,12 @@ internal sealed class Integrations : ISettingsTab
         ImGui.Spacing();
         if (ImGui.Button(HellionStrings.Settings_Integrations_Honorific_LinkRepo))
         {
-            Dalamud.Utility.Util.OpenLink(IntegrationLinks.Honorific_Repo);
+            Dalamud.Utility.Util.OpenLink(IntegrationLinks.HonorificRepo);
         }
         ImGui.SameLine();
         if (ImGui.Button(HellionStrings.Settings_Integrations_Honorific_LinkAuthor))
         {
-            Dalamud.Utility.Util.OpenLink(IntegrationLinks.Honorific_Author);
+            Dalamud.Utility.Util.OpenLink(IntegrationLinks.HonorificAuthor);
         }
     }
 
@@ -104,7 +104,7 @@ internal sealed class Integrations : ISettingsTab
             ImGui.SameLine();
             ImGui.TextUnformatted(string.Format(
                 HellionStrings.Settings_Integrations_Honorific_Status_Incompatible,
-                3, incompatibleVersion.Major, incompatibleVersion.Minor));
+                HonorificService.ExpectedApiMajor, incompatibleVersion.Major, incompatibleVersion.Minor));
         }
         else
         {

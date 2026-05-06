@@ -17,6 +17,12 @@ internal sealed class HonorificService : IDisposable
 {
     private const string IpcNamespace = "Honorific";
 
+    // Major version of the Honorific IPC contract HellionChat is built against.
+    // Used both by the runtime compatibility check and by the settings tab when
+    // it tells the user which major version we expected, so the literal lives
+    // in exactly one place.
+    internal const uint ExpectedApiMajor = 3;
+
     // IPC gates we subscribe to. Keep them as fields so Dispose can
     // unsubscribe the same instances we subscribed in the constructor.
     private readonly ICallGateSubscriber<(uint, uint)> _apiVersion;
@@ -221,7 +227,7 @@ internal sealed class HonorificService : IDisposable
 
     internal static bool IsApiVersionCompatible((uint Major, uint Minor) apiVersion)
     {
-        return apiVersion.Major == 3;
+        return apiVersion.Major == ExpectedApiMajor;
     }
 
     internal static bool ShouldRenderSlot(
