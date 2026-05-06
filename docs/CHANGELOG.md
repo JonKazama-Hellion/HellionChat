@@ -12,7 +12,7 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
-## v1.2.2 — Theme Expansion (2026-05-07)
+## v1.2.3 — Theme Expansion (2026-05-06)
 
 ### Added
 - Four new built-in themes:

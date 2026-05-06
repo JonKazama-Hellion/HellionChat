@@ -12,7 +12,7 @@
   <img src="docs/images/hellion-forge.png" alt="Hellion Forge" width="180" />
 </p>
 
-**Version 1.1.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+**Version 1.2.3** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
 
 Hellion Chat ist ein Privacy-First-Plugin auf dem Chat-2-Fundament. Der größte Teil der Engine kommt aus Chat 2 (Message-Store, Channel-Logik, Hook-System), die meisten Tastenkürzel funktionieren weiterhin wie gewohnt. Was sich ändert: schärfere Privacy-Defaults von Haus aus, eigene Slash-Commands unter `/hellionchat`, kein Webinterface mehr, und mit v1.1.0 eine Theme-Engine als Schritt in Richtung eigenes UI-Look-and-Feel.
 
@@ -72,7 +72,7 @@ Hellion Chat wird unter **Hellion Forge** entwickelt, der spezialisierten Moddin
 
 #### Custom Themes (v1.1.0)
 
-HellionChat 1.1.0 bringt eine Theme-Engine mit fünf eingebauten Themes (Hellion Arctic, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md).
+HellionChat bringt eine Theme-Engine mit derzeit neun eingebauten Themes (Hellion Arctic, Hellion Spectrum, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove, Night Blue, Indigo Violet, Forge Merchantman) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md). Hellion Spectrum ist Deuteran/Protan-safe (rot-grün-Farbenblindheit) auf Basis der Wong/Okabe-Ito-Palette.
 
 ### Pop-Out Convenience (v0.6.0)
 
@@ -221,7 +221,7 @@ Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum eigenen 
 
 ## Projektstatus
 
-**Version 1.1.0** — Theme-Engine live, Standalone-Cut abgeschlossen (Stand: 2026-05-04).
+**Version 1.2.3** — Theme-Katalog auf neun Built-ins erweitert, Settings thematisch re-sortiert, Standalone-Cut abgeschlossen (Stand: 2026-05-06).
 
 Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne. Vollständig abgeschlossen:
 
@@ -237,7 +237,7 @@ Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne.
 - About-Tab im Hellion-Branding, EN und DE lokalisiert, mit License und Disclaimer
 - AI-Disclosure dokumentiert (siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md))
 - Standalone-Cut: Namespace `HellionChat.*`, IPC-Kanäle `HellionChat.*`, Source-Tree-Restructure, Conflict-Detection gegen Upstream Chat 2, SQLite-CVE-Härtung (3.50.3)
-- Theme-Engine mit fünf eingebauten Themes plus JSON-Authoring-Format (v1.1.0)
+- Theme-Engine mit neun eingebauten Themes plus JSON-Authoring-Format (Engine v1.1.0, Katalog erweitert in v1.2.3, inkl. CVD-safe Hellion Spectrum)
 
 In Arbeit: schrittweise Modernisierung des UI-Look-and-Feel über die Theme-Engine hinaus. Was als Nächstes geplant ist und welche Themen langfristig auf der Liste stehen, steht in [`docs/ROADMAP.md`](docs/ROADMAP.md). Konkrete eingeplante Items werden zusätzlich im [GitHub-Issue-Tracker](https://github.com/JonKazama-Hellion/HellionChat/issues) mit dem `roadmap`-Label geführt.
 

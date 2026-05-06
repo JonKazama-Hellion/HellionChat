@@ -20,11 +20,15 @@ mit Forest/Moss/Mint-Helligkeitsstufen).
 
 Spec wird im Brainstorming-Cycle vor Beginn der Phase ausgearbeitet.
 
-## v1.2.2 — Theme Expansion (geplant 2026-05-07)
+## v1.2.3 — Theme Expansion (released 2026-05-06)
 
 Vier neue Built-In-Themes: Night Blue, Indigo Violet, Forge
 Merchantman, Hellion Spectrum (Deuteran/Protan-safe).
 Keine Engine-Änderungen. Siehe `docs/CHANGELOG.md`.
+
+(v1.2.2 wurde verbrannt weil das `repo.json`-Manifest beim
+ersten Push nicht synchron mitgebumpt wurde — Re-Release als
+v1.2.3 mit kompletter Manifest-Synchronisation.)
 
 ## v1.2.1 — Settings Cleanup (released 2026-05-06)
 

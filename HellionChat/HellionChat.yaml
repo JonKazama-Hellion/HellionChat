@@ -36,7 +36,7 @@ description: |-
   JSON-based custom-theme authoring. Settings rebuilt around a card
   grid with section detail views. See docs/THEME-AUTHORING.md.
 
-  v1.2.2 — Theme catalogue grown to nine built-in themes:
+  v1.2.3 — Theme catalogue grown to nine built-in themes:
   Hellion Arctic, Hellion Spectrum (CVD-safe Deuteran/Protan),
   Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove,
   Night Blue, Indigo Violet, Forge Merchantman.
@@ -60,7 +60,7 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
-  **Hellion Chat 1.2.2 — Theme Expansion**
+  **Hellion Chat 1.2.3 — Theme Expansion**
 
   Four new built-in themes round out the picker. No engine changes,
   no settings touched — just more colour options.
