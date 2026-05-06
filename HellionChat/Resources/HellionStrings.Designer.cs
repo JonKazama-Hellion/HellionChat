@@ -368,6 +368,8 @@ internal class HellionStrings
     internal static string Settings_Integrations_Honorific_Status_Incompatible => Get(nameof(Settings_Integrations_Honorific_Status_Incompatible));
     internal static string Settings_Integrations_Honorific_Toggle => Get(nameof(Settings_Integrations_Honorific_Toggle));
     internal static string Settings_Integrations_Honorific_ToggleHint => Get(nameof(Settings_Integrations_Honorific_ToggleHint));
+    internal static string Settings_Integrations_Honorific_LinkRepo => Get(nameof(Settings_Integrations_Honorific_LinkRepo));
+    internal static string Settings_Integrations_Honorific_LinkAuthor => Get(nameof(Settings_Integrations_Honorific_LinkAuthor));
     internal static string Settings_Integrations_ComingSoon_SectionHeader => Get(nameof(Settings_Integrations_ComingSoon_SectionHeader));
     internal static string Settings_Integrations_ComingSoon_Intro => Get(nameof(Settings_Integrations_ComingSoon_Intro));
     internal static string Settings_Integrations_ComingSoon_ContextMenu_Title => Get(nameof(Settings_Integrations_ComingSoon_ContextMenu_Title));

@@ -821,6 +821,12 @@
   <data name="Settings_Integrations_Honorific_ToggleHint" xml:space="preserve">
     <value>Zeigt deinen Custom-Titel aus Honorific im Header über dem Chat-Log an, in der von dir gewählten Farbe.</value>
   </data>
+  <data name="Settings_Integrations_Honorific_LinkRepo" xml:space="preserve">
+    <value>Honorific auf GitHub</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_LinkAuthor" xml:space="preserve">
+    <value>von Caraxi</value>
+  </data>
   <data name="Settings_Integrations_ComingSoon_SectionHeader" xml:space="preserve">
     <value>Demnächst</value>
   </data>

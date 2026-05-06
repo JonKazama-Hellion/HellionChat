@@ -2,6 +2,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using HellionChat.Branding;
+using HellionChat.Integrations;
 using HellionChat.Resources;
 using HellionChat.Util;
 
@@ -65,6 +66,22 @@ internal sealed class Integrations : ISettingsTab
             {
                 ImGui.TextWrapped(HellionStrings.Settings_Integrations_Honorific_ToggleHint);
             }
+        }
+
+        // Maintainer attribution. Honorific has no LICENSE in its repo so we
+        // can't bundle its assets, but linking to the upstream and the
+        // author's profile is the polite minimum. Plain ImGui buttons keep
+        // the visual weight modest, the FontAwesome Brands subset is not
+        // guaranteed in Dalamud's font set so we use text labels.
+        ImGui.Spacing();
+        if (ImGui.Button(HellionStrings.Settings_Integrations_Honorific_LinkRepo))
+        {
+            Dalamud.Utility.Util.OpenLink(IntegrationLinks.Honorific_Repo);
+        }
+        ImGui.SameLine();
+        if (ImGui.Button(HellionStrings.Settings_Integrations_Honorific_LinkAuthor))
+        {
+            Dalamud.Utility.Util.OpenLink(IntegrationLinks.Honorific_Author);
         }
     }
 
