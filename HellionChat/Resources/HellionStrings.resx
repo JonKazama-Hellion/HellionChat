@@ -746,6 +746,12 @@
   <data name="Settings_Card_DataManagement_Subtext" xml:space="preserve">
     <value>What happens to stored data — retention, cleanup, export, DB stats.</value>
   </data>
+  <data name="Settings_Card_Integrations_Title" xml:space="preserve">
+    <value>Integrations</value>
+  </data>
+  <data name="Settings_Card_Integrations_Subtext" xml:space="preserve">
+    <value>Other Dalamud plugins HellionChat reacts to — auto-detected, with a "coming soon" preview of upcoming integrations.</value>
+  </data>
   <data name="Settings_ThemeAndLayout_Theme_Heading" xml:space="preserve">
     <value>Theme</value>
   </data>

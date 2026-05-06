@@ -331,6 +331,8 @@ internal class HellionStrings
     internal static string Settings_Card_FontsAndColours_Subtext => Get(nameof(Settings_Card_FontsAndColours_Subtext));
     internal static string Settings_Card_DataManagement_Title => Get(nameof(Settings_Card_DataManagement_Title));
     internal static string Settings_Card_DataManagement_Subtext => Get(nameof(Settings_Card_DataManagement_Subtext));
+    internal static string Settings_Card_Integrations_Title => Get(nameof(Settings_Card_Integrations_Title));
+    internal static string Settings_Card_Integrations_Subtext => Get(nameof(Settings_Card_Integrations_Subtext));
 
     // Hellion Chat — v1.2.1 Theme & Layout tab section headings + WindowOpacity slider
     internal static string Settings_ThemeAndLayout_Theme_Heading => Get(nameof(Settings_ThemeAndLayout_Theme_Heading));
