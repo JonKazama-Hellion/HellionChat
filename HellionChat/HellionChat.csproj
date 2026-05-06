@@ -4,7 +4,7 @@
              0.1.0 is our bootstrap release; the underlying Chat 2 base is
              called out in the yaml changelog so users can see what it
              derives from. -->
-        <Version>1.2.1</Version>
+        <Version>1.2.2</Version>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <!-- Honor packages.lock.json on restore so floating version ranges

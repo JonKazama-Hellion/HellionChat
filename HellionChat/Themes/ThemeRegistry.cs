@@ -15,11 +15,15 @@ public sealed class ThemeRegistry
     {
         _builtIns = new Dictionary<string, Theme>(StringComparer.OrdinalIgnoreCase)
         {
-            { HellionArctic.Slug, HellionArctic.Build() },
-            { Chat2Classic.Slug,  Chat2Classic.Build() },
-            { EventHorizon.Slug,  EventHorizon.Build() },
-            { MoonlitBloom.Slug,  MoonlitBloom.Build() },
-            { MintGrove.Slug,     MintGrove.Build() },
+            { HellionArctic.Slug,     HellionArctic.Build() },
+            { HellionSpectrum.Slug,   HellionSpectrum.Build() },
+            { Chat2Classic.Slug,      Chat2Classic.Build() },
+            { EventHorizon.Slug,      EventHorizon.Build() },
+            { MoonlitBloom.Slug,      MoonlitBloom.Build() },
+            { NightBlue.Slug,         NightBlue.Build() },
+            { IndigoViolet.Slug,      IndigoViolet.Build() },
+            { ForgeMerchantman.Slug,  ForgeMerchantman.Build() },
+            { MintGrove.Slug,         MintGrove.Build() },
         };
         _active = _builtIns[DefaultSlug];
         _customThemesDir = customThemesDir;
