@@ -16,6 +16,7 @@ public sealed class ThemeRegistry
         _builtIns = new Dictionary<string, Theme>(StringComparer.OrdinalIgnoreCase)
         {
             { HellionArctic.Slug,     HellionArctic.Build() },
+            { HellionSpectrum.Slug,   HellionSpectrum.Build() },
             { Chat2Classic.Slug,      Chat2Classic.Build() },
             { EventHorizon.Slug,      EventHorizon.Build() },
             { MoonlitBloom.Slug,      MoonlitBloom.Build() },
