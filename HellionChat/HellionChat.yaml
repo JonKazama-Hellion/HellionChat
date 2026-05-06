@@ -55,6 +55,51 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.2.1 — Settings Cleanup**
+
+  Re-sorted the settings menu so related options live together. Card names
+  now describe their contents in plain words — "Theme & Layout", "Fonts &
+  Colours", "Data Management" — and each card has a short subtitle so you
+  don't have to guess where a setting lives. No new features, just
+  housekeeping.
+
+  Card changes:
+
+  - Theme & Layout (new) collects the theme picker, window frame style
+    (title bar, sidebar, hide button, pop-out title bar) and the timestamp
+    style options.
+  - Fonts & Colours (new) is the new home for font choice, font size and
+    per-channel chat colours.
+  - Data Management (new) is everything you do with stored messages:
+    retention windows, cleanup, export, the database viewer and the
+    advanced shift-click tools. All previously scattered between Privacy
+    and Database.
+  - Privacy is now focused on one job: the privacy filter.
+  - Chat absorbs the Auto-Tell-Tabs history preload slider that used to
+    live under Privacy.
+  - General groups the keybind mode under Input where it belongs.
+
+  Cleanup:
+
+  - Removed legacy "Style override" option and the unused style-name field
+    — both made obsolete by the Themes system in 1.1.0.
+  - Removed the legacy WindowAlpha slider; if you had it set, the value is
+    automatically migrated to Theme & Layout → Window Style → Window
+    Transparency.
+  - Removed the unused ShowThemeQuickPicker schema field.
+
+  Migration v15 → v16:
+
+  - A backup of your previous config is written to
+    pluginConfigs/HellionChat.json.pre-v16-backup before the schema change,
+    in case you want to roll back manually.
+  - All other settings are preserved unchanged.
+  - One-time toast on first start if you previously had Style override
+    enabled — it explains the change. Users who never touched that setting
+    see no toast.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.2.0 — Layout Refresh**
 
   Second UI cycle: tab layouts modernised in both modes, a new

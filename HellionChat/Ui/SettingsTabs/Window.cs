@@ -120,7 +120,7 @@ internal sealed class Window : ISettingsTab
 
     private void DrawFrameSection()
     {
-        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Window_Frame_Heading);
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Window_Frame_Behaviour_Heading);
         if (!tree.Success)
         {
             return;
@@ -129,22 +129,11 @@ internal sealed class Window : ISettingsTab
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
             ImGui.Checkbox(Language.Options_CanMove_Name, ref Mutable.CanMove);
-
             ImGui.Checkbox(Language.Options_CanResize_Name, ref Mutable.CanResize);
-
-            ImGui.Checkbox(Language.Options_ShowTitleBar_Name, ref Mutable.ShowTitleBar);
-
-            ImGui.Checkbox(Language.Options_ShowPopOutTitleBar_Name, ref Mutable.ShowPopOutTitleBar);
 
             // v0.6.0 — global master switch for the pop-out input bar.
             ImGui.Checkbox(HellionStrings.Settings_Window_PopOutInputEnabled_Name, ref Mutable.PopOutInputEnabled);
             ImGuiUtil.HelpMarker(HellionStrings.Settings_Window_PopOutInputEnabled_Description);
-
-            ImGui.Checkbox(Language.Options_ShowHideButton_Name, ref Mutable.ShowHideButton);
-            ImGuiUtil.HelpMarker(Language.Options_ShowHideButton_Description);
-
-            ImGui.Checkbox(Language.Options_SidebarTabView_Name, ref Mutable.SidebarTabView);
-            ImGuiUtil.HelpMarker(string.Format(Language.Options_SidebarTabView_Description, Plugin.PluginName));
 
             ImGui.Spacing();
 

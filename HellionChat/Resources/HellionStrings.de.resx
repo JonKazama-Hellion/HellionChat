@@ -639,7 +639,7 @@
     <value>Allgemein</value>
   </data>
   <data name="Settings_Card_General_Subtext" xml:space="preserve">
-    <value>Sprache und grundlegendes Verhalten</value>
+    <value>Plugin-globale Einstellungen — Sprache, Eingabe, Audio, Performance.</value>
   </data>
   <data name="Settings_Card_Appearance_Title" xml:space="preserve">
     <value>Erscheinungsbild</value>
@@ -657,25 +657,25 @@
     <value>Fenster</value>
   </data>
   <data name="Settings_Card_Window_Subtext" xml:space="preserve">
-    <value>Fensterposition, Rahmen, Hide-Zustände</value>
+    <value>Verhalten des Fensters — wann es da ist, ob es bewegt werden kann.</value>
   </data>
   <data name="Settings_Card_Chat_Title" xml:space="preserve">
     <value>Chat</value>
   </data>
   <data name="Settings_Card_Chat_Subtext" xml:space="preserve">
-    <value>Chat-Verhalten, Emotes, Auto-Tells</value>
+    <value>Wie Nachrichten angezeigt werden — Tells, Vorschau, Verhalten, Emotes.</value>
   </data>
   <data name="Settings_Card_Tabs_Title" xml:space="preserve">
     <value>Tabs</value>
   </data>
   <data name="Settings_Card_Tabs_Subtext" xml:space="preserve">
-    <value>Tab-Layout, Kanäle, eigene Tabs</value>
+    <value>Tab-Verwaltung — eigene Chat-Tabs anlegen und konfigurieren.</value>
   </data>
   <data name="Settings_Card_Privacy_Title" xml:space="preserve">
     <value>Datenschutz</value>
   </data>
   <data name="Settings_Card_Privacy_Subtext" xml:space="preserve">
-    <value>Filter, Aufbewahrung, Bereinigung, Export</value>
+    <value>Was darf gespeichert werden — Privacy-Filter pro Channel.</value>
   </data>
   <data name="Settings_Card_Database_Title" xml:space="preserve">
     <value>Datenbank</value>
@@ -687,7 +687,7 @@
     <value>Information</value>
   </data>
   <data name="Settings_Card_Information_Subtext" xml:space="preserve">
-    <value>Über, Mitwirkende, Support</value>
+    <value>Über das Plugin — Version, Mission, Lizenz, Changelog.</value>
   </data>
   <data name="Settings_Tab_Themes" xml:space="preserve">
     <value>Themes</value>
@@ -727,5 +727,68 @@
   </data>
   <data name="Appearance_UseCompactDensity_Description" xml:space="preserve">
     <value>Schaltet das Message-Layout vom Card-Row-Default zurück auf einzeilige `[HH:mm] Sender: Text` Zeilen.</value>
+  </data>
+  <data name="Settings_Card_ThemeAndLayout_Title" xml:space="preserve">
+    <value>Theme &amp; Layout</value>
+  </data>
+  <data name="Settings_Card_ThemeAndLayout_Subtext" xml:space="preserve">
+    <value>Wie das Fenster aussieht — Theme, Rahmen, Zeitstempel-Style.</value>
+  </data>
+  <data name="Settings_Card_FontsAndColours_Title" xml:space="preserve">
+    <value>Schriften &amp; Farben</value>
+  </data>
+  <data name="Settings_Card_FontsAndColours_Subtext" xml:space="preserve">
+    <value>Lesbarkeit — Schriftart, Schriftgröße, Chat-Farben pro Channel.</value>
+  </data>
+  <data name="Settings_Card_DataManagement_Title" xml:space="preserve">
+    <value>Daten-Verwaltung</value>
+  </data>
+  <data name="Settings_Card_DataManagement_Subtext" xml:space="preserve">
+    <value>Was passiert mit gespeicherten Daten — Aufbewahrung, Aufräumen, Export, DB-Stats.</value>
+  </data>
+  <data name="Settings_ThemeAndLayout_Theme_Heading" xml:space="preserve">
+    <value>Theme</value>
+  </data>
+  <data name="Settings_ThemeAndLayout_WindowStyle_Heading" xml:space="preserve">
+    <value>Fenster-Style</value>
+  </data>
+  <data name="Settings_ThemeAndLayout_TimestampStyle_Heading" xml:space="preserve">
+    <value>Zeitstempel-Style</value>
+  </data>
+  <data name="Settings_ThemeAndLayout_WindowOpacity_Name" xml:space="preserve">
+    <value>Fenster-Transparenz</value>
+  </data>
+  <data name="Settings_ThemeAndLayout_WindowOpacity_Description" xml:space="preserve">
+    <value>Wie durchsichtig der Fensterhintergrund ist. Niedrigere Werte lassen mehr vom Spiel durchscheinen. Tipp: Dalamud's Per-Window-Menü (Hamburger in der Titelleiste) bietet pro Fenster eigene Overrides für Deckkraft, Hintergrund-Blur, Durchklick und Anpinnen — die haben Vorrang über diesen Slider für das jeweilige Fenster.</value>
+  </data>
+  <data name="Settings_FontsAndColours_Fonts_Heading" xml:space="preserve">
+    <value>Schriftarten</value>
+  </data>
+  <data name="Settings_FontsAndColours_Colours_Heading" xml:space="preserve">
+    <value>Chat-Farben</value>
+  </data>
+  <data name="Settings_DataManagement_Storage_Heading" xml:space="preserve">
+    <value>Speicherung</value>
+  </data>
+  <data name="Settings_DataManagement_Retention_Heading" xml:space="preserve">
+    <value>Aufbewahrung</value>
+  </data>
+  <data name="Settings_DataManagement_Cleanup_Heading" xml:space="preserve">
+    <value>Cleanup</value>
+  </data>
+  <data name="Settings_DataManagement_Export_Heading" xml:space="preserve">
+    <value>Export</value>
+  </data>
+  <data name="Settings_DataManagement_DbViewer_Heading" xml:space="preserve">
+    <value>Datenbank-Viewer</value>
+  </data>
+  <data name="Settings_DataManagement_Advanced_Heading" xml:space="preserve">
+    <value>Erweitert (Shift+Klick zum Öffnen)</value>
+  </data>
+  <data name="Settings_Window_Frame_Behaviour_Heading" xml:space="preserve">
+    <value>Verhalten</value>
+  </data>
+  <data name="Migration_v16_OverrideStyle_Toast" xml:space="preserve">
+    <value>Hellion Chat 1.2.1 hat das Settings-Menü neu sortiert und die alte „Stilüberschreiben"-Option entfernt (überholt durch das Theme-System aus 1.1.0). Deine restlichen Einstellungen bleiben unverändert. Die Fenster-Transparenz ist nach „Theme &amp; Layout" migriert. Ein Backup der vorherigen Config liegt unter pluginConfigs/HellionChat.json.pre-v16-backup neben der aktiven HellionChat.json.</value>
   </data>
 </root>

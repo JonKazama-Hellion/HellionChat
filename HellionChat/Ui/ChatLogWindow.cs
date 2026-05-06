@@ -106,6 +106,9 @@ public sealed class ChatLogWindow : Window
         IsOpen = true;
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
+        // AllowBackgroundBlur wird nach AddWindow zentral in Plugin.Setup
+        // für alle registrierten Windows gesetzt — keine Per-Window-Logik
+        // hier nötig.
 
         PayloadHandler = new PayloadHandler(this);
         HandlerLender = new Lender<PayloadHandler>(() => new PayloadHandler(this));
@@ -496,6 +499,12 @@ public sealed class ChatLogWindow : Window
         if (!Plugin.Config.ShowTitleBar)
             Flags |= ImGuiWindowFlags.NoTitleBar;
 
+        // BgAlpha wird auf den Style-WindowBg-Alpha aus HellionStyle.PushGlobal
+        // multipliziert (HellionStyle pusht eine voll-deckende Theme-Color, der
+        // tatsächliche transparent-Effekt entsteht über BgAlpha). Wenn der User
+        // im Dalamud-Pinning-Menü (Hamburger oben rechts) eine eigene
+        // Window-Deckkraft eingestellt hat, hat dieses Per-Window-Override
+        // Vorrang über unseren Slider — wir dokumentieren das im HelpMarker.
         if (LastViewport == ImGuiHelpers.MainViewport.Handle && !WasDocked)
             BgAlpha = Plugin.Config.WindowOpacity;
 

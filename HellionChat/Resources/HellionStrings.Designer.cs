@@ -323,4 +323,37 @@ internal class HellionStrings
     // Hellion Chat — v1.2.0 Appearance / Compact-Density toggle
     internal static string Appearance_UseCompactDensity_Name => Get(nameof(Appearance_UseCompactDensity_Name));
     internal static string Appearance_UseCompactDensity_Description => Get(nameof(Appearance_UseCompactDensity_Description));
+
+    // Hellion Chat — v1.2.1 Settings Cleanup: new card titles + subtexts
+    internal static string Settings_Card_ThemeAndLayout_Title => Get(nameof(Settings_Card_ThemeAndLayout_Title));
+    internal static string Settings_Card_ThemeAndLayout_Subtext => Get(nameof(Settings_Card_ThemeAndLayout_Subtext));
+    internal static string Settings_Card_FontsAndColours_Title => Get(nameof(Settings_Card_FontsAndColours_Title));
+    internal static string Settings_Card_FontsAndColours_Subtext => Get(nameof(Settings_Card_FontsAndColours_Subtext));
+    internal static string Settings_Card_DataManagement_Title => Get(nameof(Settings_Card_DataManagement_Title));
+    internal static string Settings_Card_DataManagement_Subtext => Get(nameof(Settings_Card_DataManagement_Subtext));
+
+    // Hellion Chat — v1.2.1 Theme & Layout tab section headings + WindowOpacity slider
+    internal static string Settings_ThemeAndLayout_Theme_Heading => Get(nameof(Settings_ThemeAndLayout_Theme_Heading));
+    internal static string Settings_ThemeAndLayout_WindowStyle_Heading => Get(nameof(Settings_ThemeAndLayout_WindowStyle_Heading));
+    internal static string Settings_ThemeAndLayout_TimestampStyle_Heading => Get(nameof(Settings_ThemeAndLayout_TimestampStyle_Heading));
+    internal static string Settings_ThemeAndLayout_WindowOpacity_Name => Get(nameof(Settings_ThemeAndLayout_WindowOpacity_Name));
+    internal static string Settings_ThemeAndLayout_WindowOpacity_Description => Get(nameof(Settings_ThemeAndLayout_WindowOpacity_Description));
+
+    // Hellion Chat — v1.2.1 Fonts & Colours tab section headings
+    internal static string Settings_FontsAndColours_Fonts_Heading => Get(nameof(Settings_FontsAndColours_Fonts_Heading));
+    internal static string Settings_FontsAndColours_Colours_Heading => Get(nameof(Settings_FontsAndColours_Colours_Heading));
+
+    // Hellion Chat — v1.2.1 Data Management tab section headings
+    internal static string Settings_DataManagement_Storage_Heading => Get(nameof(Settings_DataManagement_Storage_Heading));
+    internal static string Settings_DataManagement_Retention_Heading => Get(nameof(Settings_DataManagement_Retention_Heading));
+    internal static string Settings_DataManagement_Cleanup_Heading => Get(nameof(Settings_DataManagement_Cleanup_Heading));
+    internal static string Settings_DataManagement_Export_Heading => Get(nameof(Settings_DataManagement_Export_Heading));
+    internal static string Settings_DataManagement_DbViewer_Heading => Get(nameof(Settings_DataManagement_DbViewer_Heading));
+    internal static string Settings_DataManagement_Advanced_Heading => Get(nameof(Settings_DataManagement_Advanced_Heading));
+
+    // Hellion Chat — v1.2.1 Window-tab Behaviour heading (replaces Frame heading)
+    internal static string Settings_Window_Frame_Behaviour_Heading => Get(nameof(Settings_Window_Frame_Behaviour_Heading));
+
+    // Hellion Chat — v1.2.1 Migration v15 → v16 toast
+    internal static string Migration_v16_OverrideStyle_Toast => Get(nameof(Migration_v16_OverrideStyle_Toast));
 }

@@ -4,21 +4,20 @@ using HellionChat.Util;
 using Dalamud;
 using Dalamud.Interface;
 using Dalamud.Interface.FontIdentifier;
-using Dalamud.Interface.Style;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 using Dalamud.Bindings.ImGui;
 
 namespace HellionChat.Ui.SettingsTabs;
 
-internal sealed class Appearance : ISettingsTab
+internal sealed class FontsAndColours : ISettingsTab
 {
     private Plugin Plugin { get; }
     private Configuration Mutable { get; }
 
-    public string Name => HellionStrings.Settings_Tab_Appearance + "###tabs-appearance";
+    public string Name => HellionStrings.Settings_Card_FontsAndColours_Title + "###tabs-fontsandcolours";
 
-    internal Appearance(Plugin plugin, Configuration mutable)
+    internal FontsAndColours(Plugin plugin, Configuration mutable)
     {
         Plugin = plugin;
         Mutable = mutable;
@@ -26,94 +25,27 @@ internal sealed class Appearance : ISettingsTab
 
     public void Draw(bool changed)
     {
-        DrawThemeSection();
-        ImGui.Spacing();
         DrawFontsSection();
         ImGui.Spacing();
         DrawColoursSection();
-        ImGui.Spacing();
-        DrawTimestampsSection();
-    }
-
-    private void DrawThemeSection()
-    {
-        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Appearance_Theme_Heading);
-        if (!tree.Success)
-        {
-            return;
-        }
-
-        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
-        {
-            // v1.2.0 — Legacy HellionThemeEnabled/HellionThemeWindowOpacity-Bindings
-            // entfernt. Theme-Auswahl + globale Window-Opacity leben jetzt in
-            // Settings → Themes (eingeführt mit v1.1.0). Hier verbleibt nur der
-            // klassische OverrideStyle-Toggle plus der Bestand-WindowAlpha-Slider
-            // für das Chat-Log-Fenster.
-            ImGui.Checkbox(Language.Options_OverrideStyle_Name, ref Mutable.OverrideStyle);
-            ImGuiUtil.HelpMarker(Language.Options_OverrideStyle_Name_Desc);
-
-            if (Mutable.OverrideStyle)
-            {
-                DrawStyleCombo();
-            }
-
-            ImGuiUtil.DragFloatVertical(Language.Options_WindowOpacity_Name, ref Mutable.WindowAlpha, .25f, 0f, 100f, $"{Mutable.WindowAlpha:N2}%%", ImGuiSliderFlags.AlwaysClamp);
-        }
-    }
-
-    private void DrawStyleCombo()
-    {
-        var styles = StyleModel.GetConfiguredStyles();
-        if (styles == null)
-        {
-            ImGui.TextUnformatted(Language.Options_OverrideStyle_NotAvailable);
-            return;
-        }
-
-        var currentStyle = Mutable.ChosenStyle ?? Language.Options_OverrideStyle_NotSelected;
-        using var combo = ImRaii.Combo(Language.Options_OverrideStyleDropdown_Name, currentStyle);
-        if (!combo)
-        {
-            return;
-        }
-
-        foreach (var style in styles)
-        {
-            if (ImGui.Selectable(style.Name, Mutable.ChosenStyle == style.Name))
-            {
-                Mutable.ChosenStyle = style.Name;
-            }
-        }
     }
 
     private void DrawFontsSection()
     {
-        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Appearance_Fonts_Heading);
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_FontsAndColours_Fonts_Heading);
         if (!tree.Success)
-        {
             return;
-        }
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
             if (ImGui.Checkbox(HellionStrings.Theme_UseHellionFont_Name, ref Mutable.UseHellionFont))
             {
-                // Mutex with the Bestand custom-font stack. Leaving FontsEnabled
-                // checked alongside UseHellionFont made both checkboxes look
-                // active even though the lower stack was greyed out, which
-                // confused the user during the v0.5.0 walkthrough.
                 if (Mutable.UseHellionFont)
                     Mutable.FontsEnabled = false;
             }
             ImGuiUtil.HelpMarker(HellionStrings.Theme_UseHellionFont_Description);
             ImGui.Spacing();
 
-            // v1.2.0 — Schriftgröße muss auch bei aktiver Hellion-Schrift
-            // editierbar sein (Exo 2 ist Variable-Font, FontSizeV2 wird in
-            // FontManager als SizePt angewendet). Disabled-Wrap nur noch
-            // um den Bestand-Custom-Font-Stack (FontsEnabled-Toggle und
-            // die Font-Chooser) — der ist weiter exclusive zu HellionFont.
             if (Mutable.UseHellionFont)
             {
                 ImGuiUtil.FontSizeCombo(Language.Options_FontSize_Name, ref Mutable.FontSizeV2);
@@ -154,7 +86,6 @@ internal sealed class Appearance : ISettingsTab
                 ImGuiUtil.WarningText(Language.Options_Font_Warning);
                 ImGui.Spacing();
 
-                // LocaleNames being null means it is likely a game font which all support JP symbols.
                 var japaneseChooser = ImGuiUtil.FontChooser(Language.Options_JapaneseFont_Name, Mutable.JapaneseFontV2, false, ref unused, id => !id.LocaleNames?.ContainsKey("ja-jp") ?? false, "いろはにほへと   ちりぬるを");
                 japaneseChooser?.ResultTask.ContinueWith(r =>
                 {
@@ -215,11 +146,9 @@ internal sealed class Appearance : ISettingsTab
 
     private void DrawColoursSection()
     {
-        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Appearance_Colours_Heading);
+        using var tree = ImRaii.TreeNode(HellionStrings.Settings_FontsAndColours_Colours_Heading);
         if (!tree.Success)
-        {
             return;
-        }
 
         using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
         {
@@ -266,9 +195,6 @@ internal sealed class Appearance : ISettingsTab
         }
     }
 
-    // Hellion Chat — v0.6.0 preset-buttons row above the per-channel colour
-    // editors. Apply is immediate and overwrites every channel covered by
-    // the preset; channels not in the preset keep their current colour.
     private void DrawColourPresetButtons()
     {
         var first = true;
@@ -282,7 +208,6 @@ internal sealed class Appearance : ISettingsTab
 
             if (preset.IsBrandPreset)
             {
-                // Hellion-Brand visuell hervorheben — blau-violetter Frame-Akzent
                 var border = ColourUtil.RgbaToVector3(ColourUtil.ComponentsToRgba(255, 128, 200));
                 var btn = ColourUtil.RgbaToVector3(ColourUtil.ComponentsToRgba(74, 42, 106));
                 ImGui.PushStyleColor(ImGuiCol.Border, new System.Numerics.Vector4(border.X, border.Y, border.Z, 1f));
@@ -303,9 +228,6 @@ internal sealed class Appearance : ISettingsTab
         }
     }
 
-    // Localized label for a preset; falls back to DisplayName if the i18n
-    // key is missing (defensive — the resource manager returns the key
-    // string itself when a lookup fails).
     private static string GetPresetLabel(ChatColourPreset preset)
     {
         var localized = HellionStrings.ResourceManager.GetString(preset.LocalizationKey, HellionStrings.Culture);
@@ -321,37 +243,5 @@ internal sealed class Appearance : ISettingsTab
         Plugin.SaveConfig();
         GlobalParametersCache.Refresh();
         Plugin.Log.Debug($"Applied chat colour preset: {preset.DisplayName}");
-    }
-
-    private void DrawTimestampsSection()
-    {
-        using var tree = ImRaii.TreeNode(HellionStrings.Settings_Appearance_Timestamps_Heading);
-        if (!tree.Success)
-        {
-            return;
-        }
-
-        using (ImRaii.PushIndent(ImGui.GetStyle().IndentSpacing, false))
-        {
-            ImGui.Checkbox(Language.Options_PrettierTimestamps_Name, ref Mutable.PrettierTimestamps);
-            ImGuiUtil.HelpMarker(Language.Options_PrettierTimestamps_Description);
-
-            if (Mutable.PrettierTimestamps)
-            {
-                ImGui.Checkbox(Language.Options_MoreCompactPretty_Name, ref Mutable.MoreCompactPretty);
-                ImGuiUtil.HelpMarker(Language.Options_MoreCompactPretty_Description);
-
-                // v1.2.0 — Card-Rows als Default. Compact-Density schaltet auf den
-                // klassischen Single-Line-Mode `[HH:mm] Sender: Text` zurück.
-                ImGui.Checkbox(HellionStrings.Appearance_UseCompactDensity_Name, ref Mutable.UseCompactDensity);
-                ImGuiUtil.HelpMarker(HellionStrings.Appearance_UseCompactDensity_Description);
-
-                ImGui.Checkbox(Language.Options_HideSameTimestamps_Name, ref Mutable.HideSameTimestamps);
-                ImGuiUtil.HelpMarker(Language.Options_HideSameTimestamps_Description);
-            }
-
-            ImGui.Checkbox(Language.Options_Use24HourClock_Name, ref Mutable.Use24HourClock);
-            ImGuiUtil.HelpMarker(Language.Options_Use24HourClock_Description);
-        }
     }
 }

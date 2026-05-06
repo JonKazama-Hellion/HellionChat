@@ -51,6 +51,28 @@ internal sealed class General : ISettingsTab
             ImGui.TextUnformatted(Language.Options_ChatTabBackwardKeybind_Name);
             ImGui.SetNextItemWidth(-1);
             ImGuiUtil.KeybindInput("ChatTabBackwardKeybind", ref Mutable.ChatTabBackward);
+
+            ImGui.Spacing();
+
+            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_KeybindMode_Name, Mutable.KeybindMode.Name()))
+            {
+                if (combo.Success)
+                {
+                    foreach (var mode in Enum.GetValues<KeybindMode>())
+                    {
+                        if (ImGui.Selectable(mode.Name(), Mutable.KeybindMode == mode))
+                        {
+                            Mutable.KeybindMode = mode;
+                        }
+
+                        if (ImGui.IsItemHovered())
+                        {
+                            ImGuiUtil.Tooltip(mode.Tooltip() ?? "");
+                        }
+                    }
+                }
+            }
+            ImGuiUtil.HelpMarker(string.Format(Language.Options_KeybindMode_Description, Plugin.PluginName));
         }
     }
 
@@ -131,27 +153,6 @@ internal sealed class General : ISettingsTab
                 }
             }
             ImGuiUtil.HelpMarker(string.Format(Language.Options_CommandHelpSide_Description, Plugin.PluginName));
-            ImGui.Spacing();
-
-            using (var combo = ImGuiUtil.BeginComboVertical(Language.Options_KeybindMode_Name, Mutable.KeybindMode.Name()))
-            {
-                if (combo.Success)
-                {
-                    foreach (var mode in Enum.GetValues<KeybindMode>())
-                    {
-                        if (ImGui.Selectable(mode.Name(), Mutable.KeybindMode == mode))
-                        {
-                            Mutable.KeybindMode = mode;
-                        }
-
-                        if (ImGui.IsItemHovered())
-                        {
-                            ImGuiUtil.Tooltip(mode.Tooltip() ?? "");
-                        }
-                    }
-                }
-            }
-            ImGuiUtil.HelpMarker(string.Format(Language.Options_KeybindMode_Description, Plugin.PluginName));
             ImGui.Spacing();
 
             ImGui.Checkbox(Language.Options_SortAutoTranslate_Name, ref Mutable.SortAutoTranslate);

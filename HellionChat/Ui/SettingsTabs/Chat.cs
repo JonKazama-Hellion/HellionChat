@@ -89,6 +89,21 @@ internal sealed class Chat : ISettingsTab
 
             ImGui.Spacing();
             ImGuiUtil.WarningText(HellionStrings.ChatLog_AutoTellTabs_ConflictHint);
+
+            ImGui.Spacing();
+            ImGui.Separator();
+            ImGui.Spacing();
+
+            var preload = Mutable.AutoTellTabsHistoryPreload;
+            ImGui.SetNextItemWidth(200f * ImGuiHelpers.GlobalScale);
+            if (ImGui.SliderInt(HellionStrings.Privacy_AutoTellTabs_Preload_Name, ref preload, 0, 100))
+            {
+                Mutable.AutoTellTabsHistoryPreload = preload;
+            }
+            ImGuiUtil.HelpMarker(HellionStrings.Privacy_AutoTellTabs_Preload_Description);
+
+            ImGui.Spacing();
+            ImGuiUtil.HelpText(HellionStrings.Privacy_AutoTellTabs_Preload_Hint);
         }
     }
 
