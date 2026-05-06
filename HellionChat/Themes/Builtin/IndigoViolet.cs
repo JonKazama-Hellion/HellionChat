@@ -9,7 +9,7 @@ internal static class IndigoViolet
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Indigo Violet",
-        Author: "Florian Wathling",
+        Author: "Julia Moon",
         Description: "Royal Violet auf Deep Indigo — Glitter-Galaxy mit Türkis-Mint-Aurora.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#6B3AB0"),

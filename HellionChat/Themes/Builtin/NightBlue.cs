@@ -9,7 +9,7 @@ internal static class NightBlue
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Night Blue",
-        Author: "Florian Wathling",
+        Author: "Julia Moon",
         Description: "Royal Blue auf Marineblau — kühles Tech-Dashboard-Mood.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#3576C0"),
