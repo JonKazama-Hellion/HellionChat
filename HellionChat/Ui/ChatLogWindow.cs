@@ -6,6 +6,7 @@ using System.Text;
 using HellionChat.Code;
 using HellionChat.GameFunctions;
 using HellionChat.GameFunctions.Types;
+using HellionChat.Integrations;
 using HellionChat.Resources;
 using HellionChat.Util;
 using Dalamud.Game.Addon.Lifecycle;
@@ -1681,7 +1682,17 @@ public sealed class ChatLogWindow : Window
     // log so users discover the feature without having to right-click the tab.
     // Renders only for the active tab in the main ChatLogWindow; pop-out
     // windows have their own render path and skip this toolbar.
+    //
+    // Hellion Chat v1.3.0 — also renders the optional Honorific title slot
+    // left of the pop-out button, when HonorificService reports an active
+    // custom title and the user has ShowHonorificTitleInHeader enabled.
     private void DrawChatHeaderToolbar(Tab tab)
+    {
+        DrawHonorificTitleSlot();
+        DrawPopOutButton(tab);
+    }
+
+    private void DrawPopOutButton(Tab tab)
     {
         var avail = ImGui.GetContentRegionAvail().X;
         var iconWidth = ImGui.GetFrameHeight();
@@ -1692,6 +1703,82 @@ public sealed class ChatLogWindow : Window
             tab.PopOut = true;
             Plugin.SaveConfig();
         }
+    }
+
+    // Renders the Honorific custom title to the left of the pop-out button,
+    // wrapped in guillemets to match how the game itself displays titles.
+    // We lay out the title first, then DrawPopOutButton uses
+    // GetContentRegionAvail to anchor itself flush right — that's why the
+    // call order in DrawChatHeaderToolbar matters: title first, button second.
+    //
+    // The slot stays on the same line as the pop-out button so the chat
+    // log doesn't lose vertical space; we use ImGui.SameLine after our
+    // text so the cursor X is still on the toolbar row when the pop-out
+    // button takes over.
+    private void DrawHonorificTitleSlot()
+    {
+        var service = Plugin.HonorificService;
+        var title = service.CurrentTitle;
+        if (!HonorificService.ShouldRenderSlot(
+                Plugin.Config.ShowHonorificTitleInHeader,
+                service.IsAvailable,
+                title))
+        {
+            return;
+        }
+
+        // Truncate with ellipsis when the title would overlap the pop-out
+        // button. We reserve the icon width plus a small gap so the title
+        // never touches the button edge — readability over information density.
+        const float gapPx = 8f;
+        var avail = ImGui.GetContentRegionAvail().X;
+        var iconWidth = ImGui.GetFrameHeight();
+        var maxTitleWidth = avail - iconWidth - gapPx;
+        if (maxTitleWidth <= 0)
+        {
+            return;
+        }
+
+        var rendered = "«" + title!.Title + "»";
+        rendered = TruncateToWidth(rendered, maxTitleWidth);
+
+        var color = title.Color is { } c
+            ? new Vector4(c.X, c.Y, c.Z, 1f)
+            : ImGui.GetStyle().Colors[(int)ImGuiCol.Text];
+
+        using (ImRaii.PushColor(ImGuiCol.Text, color))
+        {
+            ImGui.TextUnformatted(rendered);
+        }
+        ImGui.SameLine();
+    }
+
+    private static string TruncateToWidth(string text, float maxWidth)
+    {
+        if (ImGui.CalcTextSize(text).X <= maxWidth)
+        {
+            return text;
+        }
+
+        // Binary-search the longest prefix that fits with an ellipsis.
+        const string ellipsis = "…";
+        var lo = 0;
+        var hi = text.Length;
+        while (lo < hi)
+        {
+            var mid = (lo + hi + 1) / 2;
+            var candidate = text[..mid] + ellipsis;
+            if (ImGui.CalcTextSize(candidate).X <= maxWidth)
+            {
+                lo = mid;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+
+        return lo == 0 ? ellipsis : text[..lo] + ellipsis;
     }
 
     // Hellion Chat v0.6.1 — One-Time-Hint-Banner introducing the chat header
