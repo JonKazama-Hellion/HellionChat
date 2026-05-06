@@ -251,7 +251,6 @@ public sealed class Plugin : IDalamudPlugin
                 // User die direkt v13 → v15 springen bekommen den Default 0.85.
                 Config.ReduceMotion = false;
                 Config.UseCompactDensity = false;
-                Config.ShowThemeQuickPicker = false;
                 Config.Version = 14;
                 SaveConfig();
                 Log.Information(
@@ -271,6 +270,100 @@ public sealed class Plugin : IDalamudPlugin
                 Log.Information(
                     "Migrated config v14 → v15: legacy theme fields removed " +
                     "(HellionThemeEnabled, HellionThemeWindowOpacity)");
+            }
+
+            // Hellion Chat v15 → v16 — Settings Cleanup. Re-Sortierung der
+            // Tabs auf der UI-Seite (datenneutral). 4 tote Felder verfallen
+            // beim System.Text.Json-Deserialize (OverrideStyle, ChosenStyle,
+            // WindowAlpha, ShowThemeQuickPicker — sind alle nicht mehr im
+            // Configuration-Schema definiert). WindowAlpha wird zuvor auf
+            // WindowOpacity gemappt damit User die ihn gesetzt hatten ihre
+            // Transparenz-Einstellung behalten.
+            if (Config.Version < 16)
+            {
+                var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+                var liveConfigPath = pluginConfigsDir is not null
+                    ? Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json")
+                    : null;
+
+                // Backup-Datei neben der live Config — Pattern aus v13 Branch.
+                if (pluginConfigsDir is not null && liveConfigPath is not null)
+                {
+                    var backupPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json.pre-v16-backup");
+                    try
+                    {
+                        if (File.Exists(liveConfigPath))
+                            File.Copy(liveConfigPath, backupPath, overwrite: true);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "HellionChat: pre-v16 config backup failed");
+                    }
+                }
+
+                // Pre-v16 Felder einmalig roh aus dem JSON lesen, da sie nicht
+                // mehr im Configuration-Schema sind (und damit aus Config nicht
+                // mehr abrufbar). WindowAlpha → WindowOpacity Mapping nur wenn
+                // User WindowOpacity noch nicht selbst angefasst hat (Default
+                // 0.85), sonst gewinnt der User-Wert.
+                float oldWindowAlpha = 100f;
+                bool oldOverrideStyle = false;
+                if (liveConfigPath is not null)
+                {
+                    try
+                    {
+                        if (File.Exists(liveConfigPath))
+                        {
+                            var rawJson = File.ReadAllText(liveConfigPath);
+                            using var doc = System.Text.Json.JsonDocument.Parse(rawJson);
+                            if (doc.RootElement.TryGetProperty("WindowAlpha", out var alphaProp)
+                                && alphaProp.ValueKind == System.Text.Json.JsonValueKind.Number)
+                            {
+                                oldWindowAlpha = alphaProp.GetSingle();
+                            }
+                            if (doc.RootElement.TryGetProperty("OverrideStyle", out var ovProp)
+                                && ovProp.ValueKind is System.Text.Json.JsonValueKind.True)
+                            {
+                                oldOverrideStyle = true;
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Warning(ex, "HellionChat: pre-v16 legacy-field lookup failed, defaults assumed");
+                    }
+                }
+
+                if (oldWindowAlpha != 100f
+                    && Math.Abs(Config.WindowOpacity - 0.85f) < 0.001f)
+                {
+                    Config.WindowOpacity = Math.Clamp(oldWindowAlpha / 100f, 0.5f, 1.0f);
+                    Log.Information(
+                        $"Migrated WindowAlpha {oldWindowAlpha} to WindowOpacity {Config.WindowOpacity}");
+                }
+                else if (oldWindowAlpha != 100f)
+                {
+                    Log.Information(
+                        $"Skipped WindowAlpha→WindowOpacity migration: WindowOpacity already user-set " +
+                        $"({Config.WindowOpacity}), legacy WindowAlpha value {oldWindowAlpha} dropped.");
+                }
+
+                if (oldOverrideStyle)
+                {
+                    Notification.AddNotification(new Dalamud.Interface.ImGuiNotification.Notification
+                    {
+                        Title = "Hellion Chat 1.2.1",
+                        Content = HellionStrings.Migration_v16_OverrideStyle_Toast,
+                        Type = Dalamud.Interface.ImGuiNotification.NotificationType.Info,
+                        InitialDuration = TimeSpan.FromSeconds(25),
+                    });
+                }
+
+                Config.Version = 16;
+                SaveConfig();
+                Log.Information(
+                    "Migrated config v15 → v16: settings cleanup, " +
+                    "OverrideStyle/ChosenStyle/WindowAlpha/ShowThemeQuickPicker dropped from schema");
             }
 
             // Hellion v1.0.0 default tab layout. Five thematically separated

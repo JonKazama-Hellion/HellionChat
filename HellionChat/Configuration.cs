@@ -34,7 +34,7 @@ public class ConfigKeyBind
 [Serializable]
 public class Configuration : IPluginConfiguration
 {
-    private const int LatestVersion = 15;
+    private const int LatestVersion = 16;
 
     public int Version { get; set; } = LatestVersion;
 
@@ -49,7 +49,6 @@ public class Configuration : IPluginConfiguration
     // vorab angelegt, damit später keine Migration nötig ist.
     public bool ReduceMotion;
     public bool UseCompactDensity;
-    public bool ShowThemeQuickPicker;
 
     // Hellion Chat — Privacy filter (DSGVO Art. 25 Privacy by Default).
     // Master-switch defaults to true; set false to restore upstream behavior.
@@ -222,13 +221,9 @@ public class Configuration : IPluginConfiguration
     };
 
     public float TooltipOffset;
-    public float WindowAlpha = 100f;
     public Dictionary<ChatType, uint> ChatColours = new();
     public bool ColorSelectedInputChannelButton = true;
     public List<Tab> Tabs = [];
-
-    public bool OverrideStyle;
-    public string? ChosenStyle;
 
     public ConfigKeyBind? ChatTabForward;
     public ConfigKeyBind? ChatTabBackward;
@@ -294,7 +289,6 @@ public class Configuration : IPluginConfiguration
         ItalicFontV2 = other.ItalicFontV2;
         SymbolsFontSizeV2 = other.SymbolsFontSizeV2;
         TooltipOffset = other.TooltipOffset;
-        WindowAlpha = other.WindowAlpha;
         ChatColours = other.ChatColours.ToDictionary(entry => entry.Key, entry => entry.Value);
         ColorSelectedInputChannelButton = other.ColorSelectedInputChannelButton;
 
@@ -331,8 +325,6 @@ public class Configuration : IPluginConfiguration
         }).ToList();
         Tabs.AddRange(liveTempTabs);
 
-        OverrideStyle = other.OverrideStyle;
-        ChosenStyle = other.ChosenStyle;
         ChatTabForward = other.ChatTabForward;
         ChatTabBackward = other.ChatTabBackward;
 
@@ -353,7 +345,6 @@ public class Configuration : IPluginConfiguration
         WindowOpacity = other.WindowOpacity;
         ReduceMotion = other.ReduceMotion;
         UseCompactDensity = other.UseCompactDensity;
-        ShowThemeQuickPicker = other.ShowThemeQuickPicker;
 
         EnableAutoTellTabs = other.EnableAutoTellTabs;
         AutoTellTabsLimit = other.AutoTellTabsLimit;

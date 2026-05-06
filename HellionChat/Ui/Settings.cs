@@ -44,13 +44,13 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
         Tabs =
         [
             new General(Plugin, Mutable),
-            new Appearance(Plugin, Mutable),
-            new SettingsTabs.Themes(Plugin, Mutable),
+            new ThemeAndLayout(Plugin, Mutable),
+            new FontsAndColours(Plugin, Mutable),
             new SettingsTabs.Window(Plugin, Mutable),
             new Chat(Plugin, Mutable),
             new SettingsTabs.Tabs(Plugin, Mutable),
             new SettingsTabs.Privacy(Plugin, Mutable),
-            new Database(Plugin, Mutable),
+            new DataManagement(Plugin, Mutable),
             new Information(Mutable),
         ];
 
