@@ -12,7 +12,7 @@
   <img src="docs/images/hellion-forge.png" alt="Hellion Forge" width="180" />
 </p>
 
-**Version 1.2.3** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+**Version 1.3.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
 
 Hellion Chat ist ein Privacy-First-Plugin auf dem Chat-2-Fundament. Der größte Teil der Engine kommt aus Chat 2 (Message-Store, Channel-Logik, Hook-System), die meisten Tastenkürzel funktionieren weiterhin wie gewohnt. Was sich ändert: schärfere Privacy-Defaults von Haus aus, eigene Slash-Commands unter `/hellionchat`, kein Webinterface mehr, und mit v1.1.0 eine Theme-Engine als Schritt in Richtung eigenes UI-Look-and-Feel.
 
@@ -73,6 +73,10 @@ Hellion Chat wird unter **Hellion Forge** entwickelt, der spezialisierten Moddin
 #### Custom Themes (v1.1.0)
 
 HellionChat bringt eine Theme-Engine mit derzeit neun eingebauten Themes (Hellion Arctic, Hellion Spectrum, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove, Night Blue, Indigo Violet, Forge Merchantman) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md). Hellion Spectrum ist Deuteran/Protan-safe (rot-grün-Farbenblindheit) auf Basis der Wong/Okabe-Ito-Palette.
+
+#### Plugin-Integrationen (v1.3.0)
+
+- **Honorific Custom-Titles im Chat-Header.** Wenn das Honorific-Plugin aktiv ist und ein Custom-Title gesetzt ist, wird er im Chat-Header über dem Message-Log angezeigt. Auto-Detect mit silent Fallback: ohne Honorific ist der Slot unsichtbar. Toggle in Settings, Integrationen, Honorific. Erste Cycle einer mehrstufigen Plugin-Integrations-Roadmap (Context-Menu, NotificationMaster, RP-Status, ExtraChat und XIVIM folgen).
 
 ### Pop-Out Convenience (v0.6.0)
 
@@ -221,7 +225,7 @@ Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum eigenen 
 
 ## Projektstatus
 
-**Version 1.2.3** — Theme-Katalog auf neun Built-ins erweitert, Settings thematisch re-sortiert, Standalone-Cut abgeschlossen (Stand: 2026-05-06).
+**Version 1.3.0** — Erster Plugin-Integrations-Cycle live (Honorific Custom-Titles im Chat-Header), Theme-Katalog auf neun Built-ins, Settings thematisch re-sortiert, Standalone-Cut abgeschlossen (Stand: 2026-05-06).
 
 Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne. Vollständig abgeschlossen:
 

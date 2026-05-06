@@ -41,6 +41,10 @@ description: |-
   Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove,
   Night Blue, Indigo Violet, Forge Merchantman.
 
+  v1.3.0 First plugin integration cycle. Honorific custom titles
+  are shown in the chat header above the message log, with auto-detect
+  and silent fallback when Honorific is not installed.
+
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
   Modding & support: join the Hellion Forge Discord at
@@ -60,6 +64,26 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.3.0 - Plugin Integrations: Honorific**
+
+  First step on the plugin-integration roadmap. HellionChat now
+  listens to Honorific and shows your custom title in the chat
+  header. The slot auto-hides when Honorific is not installed,
+  when no custom title is active, or when you are using the
+  original FFXIV title.
+
+  - New "Integrations" settings tab
+  - Honorific integration with auto-detection and live updates
+  - "Coming soon" preview of the next five planned integrations:
+    context menu actions, smart notifications, RP status block,
+    ExtraChat channels, and quick DM compose
+  - Maintainer attribution buttons for Honorific repo and Caraxi
+  - New service-class pattern under HellionChat/Integrations/
+
+  Modding and support: join Hellion Forge - https://discord.gg/X9V7Kcv5gR
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.2.3 — Theme Expansion**
 
   Four new built-in themes round out the picker. No engine changes,
