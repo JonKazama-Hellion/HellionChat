@@ -331,6 +331,8 @@ internal class HellionStrings
     internal static string Settings_Card_FontsAndColours_Subtext => Get(nameof(Settings_Card_FontsAndColours_Subtext));
     internal static string Settings_Card_DataManagement_Title => Get(nameof(Settings_Card_DataManagement_Title));
     internal static string Settings_Card_DataManagement_Subtext => Get(nameof(Settings_Card_DataManagement_Subtext));
+    internal static string Settings_Card_Integrations_Title => Get(nameof(Settings_Card_Integrations_Title));
+    internal static string Settings_Card_Integrations_Subtext => Get(nameof(Settings_Card_Integrations_Subtext));
 
     // Hellion Chat — v1.2.1 Theme & Layout tab section headings + WindowOpacity slider
     internal static string Settings_ThemeAndLayout_Theme_Heading => Get(nameof(Settings_ThemeAndLayout_Theme_Heading));
@@ -356,4 +358,34 @@ internal class HellionStrings
 
     // Hellion Chat — v1.2.1 Migration v15 → v16 toast
     internal static string Migration_v16_OverrideStyle_Toast => Get(nameof(Migration_v16_OverrideStyle_Toast));
+
+    // Hellion Chat — v1.3.0 Integrations tab (Honorific + Coming-Soon roadmap)
+    internal static string Settings_Tab_Integrations => Get(nameof(Settings_Tab_Integrations));
+    internal static string Settings_Integrations_Intro => Get(nameof(Settings_Integrations_Intro));
+    internal static string Settings_Integrations_Honorific_SectionHeader => Get(nameof(Settings_Integrations_Honorific_SectionHeader));
+    internal static string Settings_Integrations_Honorific_Status_Detected => Get(nameof(Settings_Integrations_Honorific_Status_Detected));
+    internal static string Settings_Integrations_Honorific_Status_NotInstalled => Get(nameof(Settings_Integrations_Honorific_Status_NotInstalled));
+    internal static string Settings_Integrations_Honorific_Status_Incompatible => Get(nameof(Settings_Integrations_Honorific_Status_Incompatible));
+    internal static string Settings_Integrations_Honorific_Toggle => Get(nameof(Settings_Integrations_Honorific_Toggle));
+    internal static string Settings_Integrations_Honorific_ToggleHint => Get(nameof(Settings_Integrations_Honorific_ToggleHint));
+    internal static string Settings_Integrations_Honorific_LinkRepo => Get(nameof(Settings_Integrations_Honorific_LinkRepo));
+    internal static string Settings_Integrations_Honorific_LinkAuthor => Get(nameof(Settings_Integrations_Honorific_LinkAuthor));
+    internal static string Settings_Integrations_ComingSoon_SectionHeader => Get(nameof(Settings_Integrations_ComingSoon_SectionHeader));
+    internal static string Settings_Integrations_ComingSoon_Intro => Get(nameof(Settings_Integrations_ComingSoon_Intro));
+    internal static string Settings_Integrations_ComingSoon_ContextMenu_Title => Get(nameof(Settings_Integrations_ComingSoon_ContextMenu_Title));
+    internal static string Settings_Integrations_ComingSoon_ContextMenu_Description => Get(nameof(Settings_Integrations_ComingSoon_ContextMenu_Description));
+    internal static string Settings_Integrations_ComingSoon_Notifications_Title => Get(nameof(Settings_Integrations_ComingSoon_Notifications_Title));
+    internal static string Settings_Integrations_ComingSoon_Notifications_Description => Get(nameof(Settings_Integrations_ComingSoon_Notifications_Description));
+    internal static string Settings_Integrations_ComingSoon_RPStatus_Title => Get(nameof(Settings_Integrations_ComingSoon_RPStatus_Title));
+    internal static string Settings_Integrations_ComingSoon_RPStatus_Description => Get(nameof(Settings_Integrations_ComingSoon_RPStatus_Description));
+    internal static string Settings_Integrations_ComingSoon_ExtraChat_Title => Get(nameof(Settings_Integrations_ComingSoon_ExtraChat_Title));
+    internal static string Settings_Integrations_ComingSoon_ExtraChat_Description => Get(nameof(Settings_Integrations_ComingSoon_ExtraChat_Description));
+    internal static string Settings_Integrations_ComingSoon_QuickDM_Title => Get(nameof(Settings_Integrations_ComingSoon_QuickDM_Title));
+    internal static string Settings_Integrations_ComingSoon_QuickDM_Description => Get(nameof(Settings_Integrations_ComingSoon_QuickDM_Description));
+    internal static string Settings_Integrations_GotAnIdea_SectionHeader => Get(nameof(Settings_Integrations_GotAnIdea_SectionHeader));
+    internal static string Settings_Integrations_GotAnIdea_Body => Get(nameof(Settings_Integrations_GotAnIdea_Body));
+    internal static string Settings_Integrations_GotAnIdea_LinkLabel => Get(nameof(Settings_Integrations_GotAnIdea_LinkLabel));
+
+    // Hellion Chat — v1.3.0 Honorific title slot tooltip
+    internal static string ChatHeader_HonorificTitle_Tooltip => Get(nameof(ChatHeader_HonorificTitle_Tooltip));
 }

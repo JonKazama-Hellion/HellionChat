@@ -1,5 +1,6 @@
 using System.Globalization;
 using System.Text;
+using Dalamud.Bindings.ImGui;
 
 namespace HellionChat.Util;
 
@@ -28,5 +29,37 @@ internal static class StringUtil
         // would truncate it back to integer. InvariantCulture pins the decimal
         // separator to '.' so a German locale doesn't render "1,5GB".
         return (Math.Sign(byteCount) * num).ToString("0.#", CultureInfo.InvariantCulture) + suf[place];
+    }
+
+    // Returns the text unchanged when it already fits the width budget,
+    // otherwise the longest prefix plus a horizontal-ellipsis character that
+    // still fits. Used by the chat header Honorific title slot and reused by
+    // the chat-line truncation path in later cycles.
+    public static string TruncateToFitWidth(string text, float maxWidth)
+    {
+        if (ImGui.CalcTextSize(text).X <= maxWidth)
+        {
+            return text;
+        }
+
+        // Binary-search the longest prefix that fits with an ellipsis.
+        const string ellipsis = "…";
+        var lo = 0;
+        var hi = text.Length;
+        while (lo < hi)
+        {
+            var mid = (lo + hi + 1) / 2;
+            var candidate = text[..mid] + ellipsis;
+            if (ImGui.CalcTextSize(candidate).X <= maxWidth)
+            {
+                lo = mid;
+            }
+            else
+            {
+                hi = mid - 1;
+            }
+        }
+
+        return lo == 0 ? ellipsis : text[..lo] + ellipsis;
     }
 }

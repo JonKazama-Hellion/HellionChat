@@ -26,6 +26,7 @@ internal sealed class SettingsOverview
         (FontAwesomeIcon.FolderTree,      "Settings_Card_Tabs_Title",            "Settings_Card_Tabs_Subtext"),
         (FontAwesomeIcon.ShieldAlt,       "Settings_Card_Privacy_Title",         "Settings_Card_Privacy_Subtext"),
         (FontAwesomeIcon.Database,        "Settings_Card_DataManagement_Title",  "Settings_Card_DataManagement_Subtext"),
+        (FontAwesomeIcon.Plug,            "Settings_Card_Integrations_Title",    "Settings_Card_Integrations_Subtext"),
         (FontAwesomeIcon.InfoCircle,      "Settings_Card_Information_Title",     "Settings_Card_Information_Subtext"),
     ];
 

@@ -6,6 +6,7 @@ using System.Text;
 using HellionChat.Code;
 using HellionChat.GameFunctions;
 using HellionChat.GameFunctions.Types;
+using HellionChat.Integrations;
 using HellionChat.Resources;
 using HellionChat.Util;
 using Dalamud.Game.Addon.Lifecycle;
@@ -1681,7 +1682,17 @@ public sealed class ChatLogWindow : Window
     // log so users discover the feature without having to right-click the tab.
     // Renders only for the active tab in the main ChatLogWindow; pop-out
     // windows have their own render path and skip this toolbar.
+    //
+    // Hellion Chat v1.3.0 also renders the optional Honorific title slot
+    // left of the pop-out button, when HonorificService reports an active
+    // custom title and the user has ShowHonorificTitleInHeader enabled.
     private void DrawChatHeaderToolbar(Tab tab)
+    {
+        DrawHonorificTitleSlot();
+        DrawPopOutButton(tab);
+    }
+
+    private void DrawPopOutButton(Tab tab)
     {
         var avail = ImGui.GetContentRegionAvail().X;
         var iconWidth = ImGui.GetFrameHeight();
@@ -1692,6 +1703,81 @@ public sealed class ChatLogWindow : Window
             tab.PopOut = true;
             Plugin.SaveConfig();
         }
+    }
+
+    // Renders the Honorific custom title to the left of the pop-out button,
+    // wrapped in guillemets to match how the game itself displays titles.
+    // We lay out the title first, then DrawPopOutButton uses
+    // GetContentRegionAvail to anchor itself flush right, which is why the
+    // call order in DrawChatHeaderToolbar matters: title first, button second.
+    //
+    // The slot stays on the same line as the pop-out button so the chat
+    // log doesn't lose vertical space; we use ImGui.SameLine after our
+    // text so the cursor X is still on the toolbar row when the pop-out
+    // button takes over.
+    private void DrawHonorificTitleSlot()
+    {
+        var service = Plugin.HonorificService;
+        var title = service.CurrentTitle;
+        if (!HonorificService.ShouldRenderSlot(
+                Plugin.Config.ShowHonorificTitleInHeader,
+                service.IsAvailable,
+                title))
+        {
+            return;
+        }
+
+        // Reserve space for the crown icon plus a small gap before the title,
+        // then the title itself, then the gap-to-pop-out-button. We measure the
+        // crown width inside the FontAwesome font push because FontAwesome
+        // glyphs render in a different font than the regular ImGui text.
+        const float gapAfterCrown = 4f;
+        const float gapBeforeButton = 8f;
+        var avail = ImGui.GetContentRegionAvail().X;
+        var iconWidth = ImGui.GetFrameHeight();
+
+        float crownWidth;
+        using (Plugin.FontManager.FontAwesome.Push())
+        {
+            crownWidth = ImGui.CalcTextSize(FontAwesomeIcon.Crown.ToIconString()).X;
+        }
+
+        var maxTitleWidth = avail - iconWidth - gapBeforeButton - crownWidth - gapAfterCrown;
+        if (maxTitleWidth <= 0)
+        {
+            return;
+        }
+
+        var rendered = "«" + title!.Title + "»";
+        rendered = StringUtil.TruncateToFitWidth(rendered, maxTitleWidth);
+
+        var titleColor = title.Color is { } c
+            ? new Vector4(c.X, c.Y, c.Z, 1f)
+            : ImGui.GetStyle().Colors[(int)ImGuiCol.Text];
+
+        var theme = Plugin.ThemeRegistry.Active;
+
+        // Group so the tooltip's IsItemHovered check fires for hover anywhere
+        // on the crown-plus-title pair, not just one of the two.
+        ImGui.BeginGroup();
+        using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(theme.Colors.TextMuted)))
+        using (Plugin.FontManager.FontAwesome.Push())
+        {
+            ImGui.TextUnformatted(FontAwesomeIcon.Crown.ToIconString());
+        }
+        ImGui.SameLine(0f, gapAfterCrown);
+        using (ImRaii.PushColor(ImGuiCol.Text, titleColor))
+        {
+            ImGui.TextUnformatted(rendered);
+        }
+        ImGui.EndGroup();
+
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip(HellionStrings.ChatHeader_HonorificTitle_Tooltip);
+        }
+
+        ImGui.SameLine();
     }
 
     // Hellion Chat v0.6.1 — One-Time-Hint-Banner introducing the chat header

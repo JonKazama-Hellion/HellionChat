@@ -746,6 +746,12 @@
   <data name="Settings_Card_DataManagement_Subtext" xml:space="preserve">
     <value>Was passiert mit gespeicherten Daten — Aufbewahrung, Aufräumen, Export, DB-Stats.</value>
   </data>
+  <data name="Settings_Card_Integrations_Title" xml:space="preserve">
+    <value>Integrationen</value>
+  </data>
+  <data name="Settings_Card_Integrations_Subtext" xml:space="preserve">
+    <value>Andere Dalamud-Plugins, mit denen HellionChat zusammenarbeitet. Auto-detected, mit Vorschau auf kommende Integrationen.</value>
+  </data>
   <data name="Settings_ThemeAndLayout_Theme_Heading" xml:space="preserve">
     <value>Theme</value>
   </data>
@@ -790,5 +796,83 @@
   </data>
   <data name="Migration_v16_OverrideStyle_Toast" xml:space="preserve">
     <value>Hellion Chat 1.2.1 hat das Settings-Menü neu sortiert und die alte „Stilüberschreiben"-Option entfernt (überholt durch das Theme-System aus 1.1.0). Deine restlichen Einstellungen bleiben unverändert. Die Fenster-Transparenz ist nach „Theme &amp; Layout" migriert. Ein Backup der vorherigen Config liegt unter pluginConfigs/HellionChat.json.pre-v16-backup neben der aktiven HellionChat.json.</value>
+  </data>
+  <data name="Settings_Tab_Integrations" xml:space="preserve">
+    <value>Integrationen</value>
+  </data>
+  <data name="Settings_Integrations_Intro" xml:space="preserve">
+    <value>Plugin-Integrationen lassen HellionChat mit anderen installierten Dalamud-Plugins zusammenarbeiten. Jede Integration erkennt ihr Ziel automatisch und deaktiviert sich still, wenn das Ziel-Plugin fehlt.</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_SectionHeader" xml:space="preserve">
+    <value>Honorific</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_Detected" xml:space="preserve">
+    <value>Erkannt (v{0}.{1})</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_NotInstalled" xml:space="preserve">
+    <value>Nicht installiert</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_Incompatible" xml:space="preserve">
+    <value>Inkompatible API-Version ({0} erwartet, {1}.{2} gefunden)</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Toggle" xml:space="preserve">
+    <value>Honorific-Titel im Chat-Header anzeigen</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_ToggleHint" xml:space="preserve">
+    <value>Zeigt deinen Custom-Titel aus Honorific im Header über dem Chat-Log an, in der von dir gewählten Farbe.</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_LinkRepo" xml:space="preserve">
+    <value>Honorific auf GitHub</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_LinkAuthor" xml:space="preserve">
+    <value>von Caraxi</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_SectionHeader" xml:space="preserve">
+    <value>Demnächst</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Intro" xml:space="preserve">
+    <value>Diese Integrationen sind auf der Roadmap. Die Einstellungen erscheinen automatisch, sobald das jeweilige Plugin angebunden ist.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ContextMenu_Title" xml:space="preserve">
+    <value>Kontextmenü-Aktionen</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ContextMenu_Description" xml:space="preserve">
+    <value>Rechtsklick auf einen Namen im Chat: zu PlayerTrack springen, Lodestone-Profil öffnen oder mit einem Klick eine DM verfassen.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Notifications_Title" xml:space="preserve">
+    <value>Smart Notifications (NotificationMaster)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Notifications_Description" xml:space="preserve">
+    <value>Mentions und DMs über NotificationMaster: System-Toasts, Taskbar-Flash und Sounds pro Channel.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_RPStatus_Title" xml:space="preserve">
+    <value>RP-Status-Block (Moodles · LightlessClient)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_RPStatus_Description" xml:space="preserve">
+    <value>Moodles-Status-Icons und Pair-Badges direkt neben den Chat-Namen anzeigen, für mehr Roleplay-Kontext.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ExtraChat_Title" xml:space="preserve">
+    <value>ExtraChat-Channels</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ExtraChat_Description" xml:space="preserve">
+    <value>End-to-End-verschlüsselte Cross-Datacenter-Linkshells nativ in HellionChat hosten.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_QuickDM_Title" xml:space="preserve">
+    <value>Quick-DM-Button (XIVInstantMessenger)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_QuickDM_Description" xml:space="preserve">
+    <value>DM-Schnellzugriff direkt aus dem Chat-Fenster, ein Klick.</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_SectionHeader" xml:space="preserve">
+    <value>Idee?</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_Body" xml:space="preserve">
+    <value>Idee für eine Plugin-Integration, die nicht auf der Liste steht? Komm auf den Hellion-Forge-Discord und schreib mir. Community-Input bestimmt die Roadmap.</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_LinkLabel" xml:space="preserve">
+    <value>Hellion Forge öffnen</value>
+  </data>
+  <data name="ChatHeader_HonorificTitle_Tooltip" xml:space="preserve">
+    <value>Custom-Titel von Honorific</value>
   </data>
 </root>

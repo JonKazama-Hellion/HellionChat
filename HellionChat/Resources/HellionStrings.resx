@@ -746,6 +746,12 @@
   <data name="Settings_Card_DataManagement_Subtext" xml:space="preserve">
     <value>What happens to stored data — retention, cleanup, export, DB stats.</value>
   </data>
+  <data name="Settings_Card_Integrations_Title" xml:space="preserve">
+    <value>Integrations</value>
+  </data>
+  <data name="Settings_Card_Integrations_Subtext" xml:space="preserve">
+    <value>Other Dalamud plugins HellionChat reacts to. Auto-detected, with a "coming soon" preview of upcoming integrations.</value>
+  </data>
   <data name="Settings_ThemeAndLayout_Theme_Heading" xml:space="preserve">
     <value>Theme</value>
   </data>
@@ -790,5 +796,83 @@
   </data>
   <data name="Migration_v16_OverrideStyle_Toast" xml:space="preserve">
     <value>Hellion Chat 1.2.1 reorganised the Settings menu and removed the legacy "Style override" option (made obsolete by the Themes system in 1.1.0). Your other settings are unchanged. Window opacity was migrated to Theme &amp; Layout. A backup of your previous config is at pluginConfigs/HellionChat.json.pre-v16-backup next to the live HellionChat.json.</value>
+  </data>
+  <data name="Settings_Tab_Integrations" xml:space="preserve">
+    <value>Integrations</value>
+  </data>
+  <data name="Settings_Integrations_Intro" xml:space="preserve">
+    <value>Plugin integrations let HellionChat react to other installed Dalamud plugins. Each integration auto-detects its target and silently disables itself when the target plugin is not present.</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_SectionHeader" xml:space="preserve">
+    <value>Honorific</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_Detected" xml:space="preserve">
+    <value>Detected (v{0}.{1})</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_NotInstalled" xml:space="preserve">
+    <value>Not installed</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Status_Incompatible" xml:space="preserve">
+    <value>Incompatible API version ({0} expected, {1}.{2} detected)</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_Toggle" xml:space="preserve">
+    <value>Show Honorific title in chat header</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_ToggleHint" xml:space="preserve">
+    <value>Displays your custom title from Honorific in the header above the chat log, in your chosen colour.</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_LinkRepo" xml:space="preserve">
+    <value>Honorific on GitHub</value>
+  </data>
+  <data name="Settings_Integrations_Honorific_LinkAuthor" xml:space="preserve">
+    <value>by Caraxi</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_SectionHeader" xml:space="preserve">
+    <value>Coming soon</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Intro" xml:space="preserve">
+    <value>These integrations are on the roadmap. The settings for each appear automatically once the underlying plugin is wired up.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ContextMenu_Title" xml:space="preserve">
+    <value>Context menu actions</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ContextMenu_Description" xml:space="preserve">
+    <value>Right-click a name in chat to jump to PlayerTrack, open the Lodestone profile, or compose a DM in one click.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Notifications_Title" xml:space="preserve">
+    <value>Smart notifications (NotificationMaster)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_Notifications_Description" xml:space="preserve">
+    <value>Route mentions and DMs through NotificationMaster for system toasts, taskbar flash, and per-channel sounds.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_RPStatus_Title" xml:space="preserve">
+    <value>RP status block (Moodles · LightlessClient)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_RPStatus_Description" xml:space="preserve">
+    <value>Show Moodles status icons and pair-badges inline next to chat names for richer roleplay context.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ExtraChat_Title" xml:space="preserve">
+    <value>ExtraChat channels</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_ExtraChat_Description" xml:space="preserve">
+    <value>Host end-to-end-encrypted cross-datacenter linkshells natively in HellionChat.</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_QuickDM_Title" xml:space="preserve">
+    <value>Quick DM button (XIVInstantMessenger)</value>
+  </data>
+  <data name="Settings_Integrations_ComingSoon_QuickDM_Description" xml:space="preserve">
+    <value>One-click DM compose without leaving the chat window.</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_SectionHeader" xml:space="preserve">
+    <value>Got an idea?</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_Body" xml:space="preserve">
+    <value>Got an idea for a plugin integration that's not on this list? Hop on the Hellion Forge Discord and tell me. Community input drives the roadmap.</value>
+  </data>
+  <data name="Settings_Integrations_GotAnIdea_LinkLabel" xml:space="preserve">
+    <value>Open Hellion Forge</value>
+  </data>
+  <data name="ChatHeader_HonorificTitle_Tooltip" xml:space="preserve">
+    <value>Honorific custom title</value>
   </data>
 </root>

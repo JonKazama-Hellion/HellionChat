@@ -12,13 +12,23 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.3.0)
+## Nächster Cycle (v1.4.0)
 
-**Polish & Motion** — Theme-Crossfade, Header-Quick-Picker,
+**Polish & Motion** - Theme-Crossfade, Header-Quick-Picker,
 Lerp-Animationen, ggf. Theme-Family-Picker (Carls Grün-Familie
 mit Forest/Moss/Mint-Helligkeitsstufen).
 
 Spec wird im Brainstorming-Cycle vor Beginn der Phase ausgearbeitet.
+
+## v1.3.0 - Plugin Integrations: Honorific (geplant <Datum>)
+
+Erster Cycle der Plugin-Integrations-Roadmap. Honorific-Custom-
+Titles werden im Chat-Header angezeigt, mit Auto-Detect und
+silent Fallback. Neuer Integrations-Settings-Tab. Pattern-
+Etablierer für die fünf folgenden Cycles (Context-Menu,
+NotificationMaster, RP-Status-Block, ExtraChat, XIVIM).
+
+Spec: [Plugin-Integrationen-Übersicht](../Hellion%20Chat%20Plugin-Integrationen.md)
 
 ## v1.2.3 — Theme Expansion (released 2026-05-06)
 
@@ -50,8 +60,13 @@ Aus dem ursprünglichen v1.1.0-Plan (Ad-Block / Spam-Filter, Receive-
 Suppressed-Tells-Toggle) wurden zugunsten der Theme-Engine zurück­
 gestellt — beide Items leben weiter im Mittelfrist-Block.
 
-## Mittelfristig (v1.2.x – v1.3.0)
+## Mittelfristig (v1.3.x – v1.4.0)
 
+- **Plugin-Integrations-Roadmap (Cycles 2-6)** - sechs Plugin-
+  Integrationen geplant, Honorific (Cycle 1) ist live, danach folgen
+  Context-Menu, NotificationMaster, RP-Status-Block, ExtraChat und
+  XIVIM in eigenen Cycles. Spec und Cycle-Reihenfolge in
+  [Plugin-Integrationen-Übersicht](../Hellion%20Chat%20Plugin-Integrationen.md).
 - **Ad-Block / Spam-Filter** — Hybrid-Konzept aus eigenem Light-Filter und
   optionaler `NoSoliciting`-IPC-Integration. Adressiert Werbe-Spam in
   öffentlichen Channels und Tells. Aus dem v1.1.0-Plan zurückgestellt.
