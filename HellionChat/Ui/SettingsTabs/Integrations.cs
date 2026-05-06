@@ -174,22 +174,9 @@ internal sealed class Integrations : ISettingsTab
         ImGui.TextWrapped(HellionStrings.Settings_Integrations_GotAnIdea_Body);
         ImGui.Spacing();
 
-        var theme = Plugin.ThemeRegistry.Active;
-        using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(theme.Colors.Primary)))
+        if (ImGui.Button(HellionStrings.Settings_Integrations_GotAnIdea_LinkLabel))
         {
-            // Selectable so the whole "→ link label" line is clickable and
-            // shows a hover state, matching the affordance users expect from
-            // hyperlinks in ImGui-driven plugins. Fully-qualified
-            // Dalamud.Utility.Util.OpenLink because HellionChat.Util is in
-            // scope here and an unqualified Util would clash.
-            if (ImGui.Selectable("→ " + HellionStrings.Settings_Integrations_GotAnIdea_LinkLabel))
-            {
-                Dalamud.Utility.Util.OpenLink(BrandingLinks.HellionForgeDiscordInvite);
-            }
-        }
-        if (ImGui.IsItemHovered())
-        {
-            ImGui.SetMouseCursor(ImGuiMouseCursor.Hand);
+            Dalamud.Utility.Util.OpenLink(BrandingLinks.HellionForgeDiscordInvite);
         }
     }
 

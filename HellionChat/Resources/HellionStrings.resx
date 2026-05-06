@@ -870,7 +870,7 @@
     <value>Got an idea for a plugin integration that's not on this list? Hop on the Hellion Forge Discord and tell me — community input drives the roadmap.</value>
   </data>
   <data name="Settings_Integrations_GotAnIdea_LinkLabel" xml:space="preserve">
-    <value>discord.gg/X9V7Kcv5gR</value>
+    <value>Open Hellion Forge</value>
   </data>
   <data name="ChatHeader_HonorificTitle_Tooltip" xml:space="preserve">
     <value>Honorific custom title</value>
