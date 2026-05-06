@@ -20,6 +20,7 @@ public sealed class ThemeRegistry
             { EventHorizon.Slug,      EventHorizon.Build() },
             { MoonlitBloom.Slug,      MoonlitBloom.Build() },
             { NightBlue.Slug,         NightBlue.Build() },
+            { IndigoViolet.Slug,      IndigoViolet.Build() },
             { MintGrove.Slug,         MintGrove.Build() },
         };
         _active = _builtIns[DefaultSlug];
