@@ -443,7 +443,7 @@ public sealed class Plugin : IDalamudPlugin
             // Ready/Disposing events from the target plugins are caught from
             // the very first frame, even if the user's Honorific reloads
             // mid-session. See HellionChat/Integrations/HonorificService.cs.
-            HonorificService = new Integrations.HonorificService(Interface, Log);
+            HonorificService = new Integrations.HonorificService(Interface, Log, Framework);
 
             StatusBar = new Ui.StatusBar();
 

@@ -26,14 +26,16 @@ internal sealed class HonorificService : IDisposable
     private readonly ICallGateSubscriber<object> _disposing;
 
     private readonly IPluginLog _log;
+    private readonly IFramework _framework;
     private bool _versionWarningLogged;
 
     public HonorificTitleData? CurrentTitle { get; private set; }
     public bool IsAvailable { get; private set; }
     public (uint Major, uint Minor)? DetectedApiVersion { get; private set; }
 
-    public HonorificService(IDalamudPluginInterface pluginInterface, IPluginLog log)
+    public HonorificService(IDalamudPluginInterface pluginInterface, IPluginLog log, IFramework framework)
     {
+        _framework = framework;
         _log = log;
 
         // Dalamud caches gate objects per-name for the lifetime of the
@@ -41,6 +43,18 @@ internal sealed class HonorificService : IDisposable
         // Honorific isn't loaded yet — the gate just won't fire. Calling
         // InvokeFunc before Honorific is up will throw, which is why the
         // initial pull below is wrapped in try-catch.
+        //
+        // Thread-context: plugin constructors run on Dalamud's plugin-loader
+        // thread, NOT the framework thread. Honorific's IPC handlers read
+        // ObjectTable.LocalPlayer (Honorific IpcProvider.cs:61), which throws
+        // "Not on main thread!" outside the framework thread. If Honorific is
+        // already loaded when HellionChat starts, a synchronous InvokeFunc
+        // here would surface that exception, the broad catch below would
+        // mark IsAvailable=false, and OnTitleChanged's `if (!IsAvailable)`
+        // gate would block every subsequent title update. We therefore
+        // schedule the initial pull onto the framework thread via
+        // IFramework.RunOnFrameworkThread so the IPC call sees the right
+        // thread context.
         _apiVersion = pluginInterface
             .GetIpcSubscriber<(uint, uint)>($"{IpcNamespace}.ApiVersion");
         _getLocalCharacterTitle = pluginInterface
@@ -56,7 +70,7 @@ internal sealed class HonorificService : IDisposable
         _ready.Subscribe(OnReady);
         _disposing.Subscribe(OnDisposing);
 
-        TryInitialPull();
+        _framework.RunOnFrameworkThread(TryInitialPull);
     }
 
     public void Dispose()
@@ -131,7 +145,12 @@ internal sealed class HonorificService : IDisposable
         // Honorific loaded after HellionChat; redo the version check and
         // initial pull. Idempotent on purpose — Honorific can fire Ready
         // more than once across reloads.
-        TryInitialPull();
+        //
+        // Honorific's NotifyReady may dispatch from any thread, and
+        // TryInitialPull eventually calls IPC handlers that read
+        // ObjectTable.LocalPlayer — same "Not on main thread!" hazard as
+        // the constructor path. Schedule onto the framework thread.
+        _framework.RunOnFrameworkThread(TryInitialPull);
     }
 
     private void OnDisposing()
@@ -164,9 +183,19 @@ internal sealed class HonorificService : IDisposable
 
     // Threading note: Dalamud fires IPC events on the framework thread and
     // ImGui renders on the framework thread, so OnTitleChanged and the
-    // render path that reads CurrentTitle never race. If a future change
-    // moves either side onto a worker thread, switch to volatile/Interlocked
-    // for the CurrentTitle field.
+    // render path that reads CurrentTitle never race — OnTitleChanged is
+    // safe to keep direct (no RunOnFrameworkThread wrap needed) because
+    // LocalCharacterTitleChanged delivery is framework-thread by Dalamud
+    // contract. If a future change moves either side onto a worker thread,
+    // switch to volatile/Interlocked for the CurrentTitle field.
+    //
+    // The constructor's initial pull and OnReady, on the other hand, are
+    // explicitly scheduled via IFramework.RunOnFrameworkThread because
+    // they run outside that contract: the constructor executes on the
+    // plugin-loader thread, and Honorific's NotifyReady can dispatch from
+    // any thread. Both call paths eventually invoke IPC handlers that read
+    // ObjectTable.LocalPlayer, which throws "Not on main thread!" off the
+    // framework thread — see the constructor comment block for context.
     //
     // Divergence from ChatTwo/Ipc/ExtraChat.cs: that file uses `volatile`
     // on its state fields out of caution. We don't, because the framework-
