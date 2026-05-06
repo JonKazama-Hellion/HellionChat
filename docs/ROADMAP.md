@@ -12,20 +12,29 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.2.0)
+## Nächster Cycle (v1.3.0)
 
-**Layout Refresh** — sichtbare Modernisierung des Chat-Windows selbst.
+**Polish & Motion** — Theme-Crossfade, Header-Quick-Picker,
+Lerp-Animationen, ggf. Theme-Family-Picker (Carls Grün-Familie
+mit Forest/Moss/Mint-Helligkeitsstufen).
 
-- Top-Tabs-Refresh mit Akzent-Pill-Underline statt Background-Fill
-- Sidebar-Tabs (existing) bekommen Icons + vertikale Pill am Window-Rand
-- Bottom-Status-Bar (Channel-Indikator, Privacy-Badge, Tab-Count,
-  Tells, Version)
-- Card-Rows als Default-Message-Rendering, mit Compact-Density-Toggle
-- Per-Tab Custom-Icons im Tabs-Settings-Dialog
-- Removal des deprecated `HellionThemeEnabled`/`HellionThemeWindowOpacity`
-  Configuration-Felder
+Spec wird im Brainstorming-Cycle vor Beginn der Phase ausgearbeitet.
 
-Spec liegt in [[Hellion Chat UI Modernisierung Spec]] (Vault).
+## v1.2.2 — Theme Expansion (geplant 2026-05-07)
+
+Vier neue Built-In-Themes: Night Blue, Indigo Violet, Forge
+Merchantman, Hellion Spectrum (Deuteran/Protan-safe).
+Keine Engine-Änderungen. Siehe `docs/CHANGELOG.md`.
+
+## v1.2.1 — Settings Cleanup (released 2026-05-06)
+
+Re-sortierte Settings (9 Cards thematisch), 4 tote Settings entfernt,
+Auto-Migration v15 → v16 ohne Daten-Verlust.
+
+## v1.2.0 — Layout Refresh (released 2026-05-05)
+
+Top-Tabs-Refresh, Sidebar-Tab-Icons, Bottom-Status-Bar, Card-Rows als
+Default-Message-Render, Auto-Tell-Tab-Hashing.
 
 ## v1.1.0 — Theme Foundation (released 2026-05-05)
 
