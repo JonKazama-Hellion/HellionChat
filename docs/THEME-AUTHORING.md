@@ -4,7 +4,7 @@
 
 # Theme Authoring Guide
 
-> Built by **Hellion Forge** — the plugin workshop arm of [Hellion Online Media](https://hellion-media.de). HellionChat ships with five built-in themes; this guide walks you through writing your own.
+> Built by **Hellion Forge** — the plugin workshop arm of [Hellion Online Media](https://hellion-media.de). HellionChat ships with nine built-in themes; this guide walks you through writing your own.
 
 ## TL;DR
 
@@ -135,7 +135,7 @@ The user is asked **once per theme switch** whether to apply these colors — ne
 
 A theme can tint these toward its brand family (e.g., a purple theme can shift Tell from `#FF99CC` to `#E090FF`), but **don't** flip them (Tell suddenly green, Yell suddenly cyan). RP groups and combat-spec setups depend on the visual hierarchy.
 
-The four colored built-in themes (Hellion Arctic, Event Horizon, Moonlit Bloom, Mint Grove) all follow this rule — read their JSON for reference. Chat 2 Klassik intentionally ships without `chatChannels` so the user keeps their existing picks.
+The eight colored built-in themes (Hellion Arctic, Hellion Spectrum, Event Horizon, Moonlit Bloom, Mint Grove, Night Blue, Indigo Violet, Forge Merchantman) all follow this rule — read their source for reference. Chat 2 Klassik intentionally ships without `chatChannels` so the user keeps their existing picks.
 
 ## Theme families
 
