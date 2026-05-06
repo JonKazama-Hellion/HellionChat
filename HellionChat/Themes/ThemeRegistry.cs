@@ -21,6 +21,7 @@ public sealed class ThemeRegistry
             { MoonlitBloom.Slug,      MoonlitBloom.Build() },
             { NightBlue.Slug,         NightBlue.Build() },
             { IndigoViolet.Slug,      IndigoViolet.Build() },
+            { ForgeMerchantman.Slug,  ForgeMerchantman.Build() },
             { MintGrove.Slug,         MintGrove.Build() },
         };
         _active = _builtIns[DefaultSlug];
