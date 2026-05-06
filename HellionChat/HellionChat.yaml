@@ -36,6 +36,11 @@ description: |-
   JSON-based custom-theme authoring. Settings rebuilt around a card
   grid with section detail views. See docs/THEME-AUTHORING.md.
 
+  v1.2.2 — Theme catalogue grown to nine built-in themes:
+  Hellion Arctic, Hellion Spectrum (CVD-safe Deuteran/Protan),
+  Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove,
+  Night Blue, Indigo Violet, Forge Merchantman.
+
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
   Modding & support: join the Hellion Forge Discord at
@@ -55,6 +60,32 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.2.2 — Theme Expansion**
+
+  Four new built-in themes round out the picker. No engine changes,
+  no settings touched — just more colour options.
+
+  - **Night Blue** — Royal Blue on deep marine. Cool tech-dashboard
+    mood, distinct from the brand themes.
+  - **Indigo Violet** — Royal Violet on deep indigo with a turquoise-
+    mint counter for an aurora glitter feel. Sister to Event Horizon
+    but darker and denser; the turquoise accent keeps the two
+    distinguishable.
+  - **Forge Merchantman** — Patina bronze on workshop slate, warm
+    amber counter. Hellion Forge given a theme of its own — sister
+    to Hellion Arctic but greener and warmer instead of cold cyan.
+  - **Hellion Spectrum** — Deuteran/Protan-safe channel colours
+    using Wong/Okabe-Ito palette tones. Channel identity (Tell pink,
+    Yell yellow, Shout orange, Party blue, FC green) is preserved;
+    tones are chosen so each channel stays distinguishable under
+    red-green colour vision deficiency. Covers the ~99% of CVD cases
+    that are red-green.
+
+  No schema bump, no migration. Default theme is unchanged (Hellion
+  Arctic). Existing custom themes keep working.
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.2.1 — Settings Cleanup**
 
   Re-sorted the settings menu so related options live together. Card names
