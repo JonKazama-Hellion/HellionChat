@@ -1,4 +1,5 @@
 using Dalamud.Bindings.ImGui;
+using Dalamud.Interface;
 using Dalamud.Interface.Utility.Raii;
 using HellionChat.Branding;
 using HellionChat.Resources;
@@ -134,8 +135,9 @@ internal sealed class Integrations : ISettingsTab
     {
         var theme = Plugin.ThemeRegistry.Active;
         using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(theme.Colors.TextMuted)))
+        using (Plugin.FontManager.FontAwesome.Push())
         {
-            ImGui.TextUnformatted("◌");
+            ImGui.TextUnformatted(FontAwesomeIcon.Hourglass.ToIconString());
         }
         ImGui.SameLine();
         ImGui.TextUnformatted(title);
