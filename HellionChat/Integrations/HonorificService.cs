@@ -93,6 +93,7 @@ internal sealed class HonorificService : IDisposable
             }
 
             IsAvailable = true;
+            _versionWarningLogged = false;
             // Pull the current title once at startup; from here on we rely
             // on LocalCharacterTitleChanged events.
             var json = _getLocalCharacterTitle.InvokeFunc();
@@ -117,6 +118,11 @@ internal sealed class HonorificService : IDisposable
     // so the stale-title window between logout and login isn't user-visible.
     private void OnTitleChanged(string json)
     {
+        // Don't update cached state when we've already decided we can't trust
+        // Honorific (e.g. version mismatch). Subscription stays live in case a
+        // compatible Honorific reloads, in which case Ready triggers TryInitialPull
+        // and sets IsAvailable back to true.
+        if (!IsAvailable) return;
         CurrentTitle = ParseTitleJson(json);
     }
 
@@ -133,6 +139,12 @@ internal sealed class HonorificService : IDisposable
         // Honorific is unloading. Drop our cached state so the header
         // hides on the next frame; subscriptions stay registered because
         // the gates may come back later (Honorific reload).
+        //
+        // Race-note: Honorific's NotifyDisposing calls ChangedLocalCharacterTitle(null)
+        // BEFORE SendMessage on the Disposing gate (IpcProvider.cs:109-111),
+        // so OnTitleChanged is expected to fire first and already null out
+        // CurrentTitle. We re-clear here as belt-and-braces; should the
+        // ordering ever flip, ShouldRenderSlot would still gate on IsAvailable.
         CurrentTitle = null;
         IsAvailable = false;
         DetectedApiVersion = null;
@@ -155,6 +167,11 @@ internal sealed class HonorificService : IDisposable
     // render path that reads CurrentTitle never race. If a future change
     // moves either side onto a worker thread, switch to volatile/Interlocked
     // for the CurrentTitle field.
+    //
+    // Divergence from ChatTwo/Ipc/ExtraChat.cs: that file uses `volatile`
+    // on its state fields out of caution. We don't, because the framework-
+    // thread delivery is the documented Dalamud contract. If the two files
+    // ever need to share a threading audit, this is the place to revisit.
 
     // --- Pure-logic helpers below; tested via HellionChat.Tests/Integrations. ---
 
