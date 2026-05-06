@@ -691,6 +691,11 @@ public sealed class Plugin : IDalamudPlugin
             policy[(int)(ushort)type] = days;
         var defaultDays = Config.RetentionDefaultDays;
 
+        // IsBackground = true for the same reason as PendingMessageThread:
+        // a stuck sweep must never block plugin unload. RunRetentionSweepIfDue
+        // guards the run-frequency, and the sweep itself uses the framework's
+        // cooperative cancellation pattern. The background flag is the safety
+        // net if the sweep ever takes longer than expected.
         new Thread(() =>
         {
             // Bail out cheaply if a manual sweep is already in flight; the

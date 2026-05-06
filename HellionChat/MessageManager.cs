@@ -66,7 +66,15 @@ internal class MessageManager : IAsyncDisposable
 
         Store = new MessageStore(DatabasePath());
 
-        PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
+        // IsBackground = true so a stuck worker never blocks plugin unload.
+        // The worker has its own cancellation path via PendingThreadCancellationToken,
+        // and DisposeAsync waits up to 10s for cooperative shutdown. The
+        // background flag is the safety net for the case where cooperative
+        // shutdown fails to drain the queue in time.
+        PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token))
+        {
+            IsBackground = true,
+        };
         PendingMessageThread.Start();
 
         ContentIdResolverHook = Plugin.GameInteropProvider.HookFromAddress<RaptureLogModule.Delegates.AddMsgSourceEntry>(RaptureLogModule.MemberFunctionPointers.AddMsgSourceEntry, ContentIdResolver);
