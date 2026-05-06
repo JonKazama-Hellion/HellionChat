@@ -51,6 +51,7 @@ public sealed class SettingsWindow : Dalamud.Interface.Windowing.Window
             new SettingsTabs.Tabs(Plugin, Mutable),
             new SettingsTabs.Privacy(Plugin, Mutable),
             new DataManagement(Plugin, Mutable),
+            new SettingsTabs.Integrations(Plugin, Mutable),
             new Information(Mutable),
         ];
 
