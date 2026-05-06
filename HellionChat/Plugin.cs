@@ -65,6 +65,7 @@ public sealed class Plugin : IDalamudPlugin
     internal FontManager FontManager { get; }
     internal Themes.ThemeRegistry ThemeRegistry { get; private set; } = null!;
     internal Ui.StatusBar StatusBar { get; private set; } = null!;
+    internal Integrations.HonorificService HonorificService { get; private set; } = null!;
 
     internal int DeferredSaveFrames = -1;
 
@@ -438,6 +439,12 @@ public sealed class Plugin : IDalamudPlugin
             ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
             ThemeRegistry.Switch(Config.Theme);
 
+            // Plugin integrations register their IPC subscribers up-front so
+            // Ready/Disposing events from the target plugins are caught from
+            // the very first frame, even if the user's Honorific reloads
+            // mid-session. See HellionChat/Integrations/HonorificService.cs.
+            HonorificService = new Integrations.HonorificService(Interface, Log);
+
             StatusBar = new Ui.StatusBar();
 
             MessageManager = new MessageManager(this); // Does it require UI?
@@ -528,6 +535,8 @@ public sealed class Plugin : IDalamudPlugin
         Interface.UiBuilder.Draw -= Draw;
         Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
+
+        HonorificService?.Dispose();
 
         WindowSystem?.RemoveAllWindows();
         ChatLogWindow?.Dispose();
