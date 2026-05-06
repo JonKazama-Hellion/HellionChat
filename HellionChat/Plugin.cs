@@ -359,6 +359,41 @@ public sealed class Plugin : IDalamudPlugin
                     });
                 }
 
+                // v1.2.1 Default-Bumps für UX-Verbesserungen. Pattern: nur
+                // migrieren wenn der User noch auf dem alten Default ist.
+                // Bei bool-Werten ist die Erkennung pragmatisch — wer den
+                // alten Default aktiv ausgeschaltet hatte, erlebt das als
+                // Regression und stellt es einmal in den Settings zurück.
+                // Der Trade-Off ist akzeptabel weil die alten Defaults in
+                // v1.2.0 erst neu eingeführt wurden und kaum jemand aktiv
+                // umgeschaltet hat.
+                if (!Config.UseCompactDensity)
+                {
+                    Config.UseCompactDensity = true;
+                    Log.Information("v16 default-bump: UseCompactDensity false → true");
+                }
+                if (!Config.HideInNewGamePlusMenu)
+                {
+                    Config.HideInNewGamePlusMenu = true;
+                    Log.Information("v16 default-bump: HideInNewGamePlusMenu false → true");
+                }
+                if (!Config.HideSameTimestamps)
+                {
+                    Config.HideSameTimestamps = true;
+                    Log.Information("v16 default-bump: HideSameTimestamps false → true");
+                }
+                if (Config.MaxLinesToRender == 5000)
+                {
+                    Config.MaxLinesToRender = 2500;
+                    Log.Information("v16 default-bump: MaxLinesToRender 5000 → 2500");
+                }
+                if (Config.ChatColours.Count == 0)
+                {
+                    foreach (var (channel, colour) in Resources.ChatColourPresets.All["Hellion"].Colours)
+                        Config.ChatColours[channel] = colour;
+                    Log.Information("v16 default-bump: ChatColours empty → Hellion brand preset");
+                }
+
                 Config.Version = 16;
                 SaveConfig();
                 Log.Information(

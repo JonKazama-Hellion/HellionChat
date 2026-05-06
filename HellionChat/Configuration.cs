@@ -45,10 +45,17 @@ public class Configuration : IPluginConfiguration
     // HellionThemeWindowOpacity beim Bump v13 → v14.
     public float WindowOpacity = 0.85f;
 
+
     // v1.1.0 — Felder für künftige UI-Toggles (v1.2.0 / v1.3.0). Werden
     // vorab angelegt, damit später keine Migration nötig ist.
     public bool ReduceMotion;
-    public bool UseCompactDensity;
+    // v1.2.1 — Default geflippt von false → true. Card-Rows-Layout aus
+    // v1.2.0 wurde als zu dicht empfunden; Single-Line `[HH:mm] Sender:
+    // Text` ist besser lesbar und platzsparender. Bestand-User mit aktiv
+    // false werden durch die v15→v16-Migration auf den neuen Default
+    // gehoben (Heuristik: wer in v1.2.0 false hatte, hatte den damals
+    // neu eingeführten Default — kaum jemand hat aktiv abgeschaltet).
+    public bool UseCompactDensity = true;
 
     // Hellion Chat — Privacy filter (DSGVO Art. 25 Privacy by Default).
     // Master-switch defaults to true; set false to restore upstream behavior.
@@ -146,7 +153,11 @@ public class Configuration : IPluginConfiguration
     public bool HideWhenUiHidden = true;
     public bool HideInLoadingScreens;
     public bool HideInBattle;
-    public bool HideInNewGamePlusMenu;
+    // v1.2.1 — Default geflippt false → true. Hellion-UI im NG+-Menü
+    // versteckt zu halten ist konsistent mit den anderen Hide-Defaults
+    // (Cutscenes, Logged-out, UI-Hidden) — UI-out-of-the-way bei Story-
+    // Sequenzen.
+    public bool HideInNewGamePlusMenu = true;
     public bool HideWhenInactive;
     public int InactivityHideTimeout = 10;
     public bool InactivityHideActiveDuringBattle = true;
@@ -161,7 +172,10 @@ public class Configuration : IPluginConfiguration
     public bool NativeItemTooltips = true;
     public bool PrettierTimestamps = true;
     public bool MoreCompactPretty;
-    public bool HideSameTimestamps;
+    // v1.2.1 — Default geflippt false → true. Wiederholte Zeitstempel
+    // innerhalb derselben Minute lesen sich als Rauschen; ein einziger
+    // Timestamp pro Minute reicht aus um die Konversation zu verorten.
+    public bool HideSameTimestamps = true;
     public bool ShowNoviceNetwork;
     // Hellion Chat — vertical sidebar tab layout reads better than the
     // horizontal tab strip in the company of Auto-Tell-Tabs (a club
@@ -188,7 +202,11 @@ public class Configuration : IPluginConfiguration
     public bool CollapseKeepUniqueLinks;
     public bool PlaySounds = true;
     public bool KeepInputFocus = true;
-    public int MaxLinesToRender = 5_000; // 1-10000
+    // v1.2.1 — Default gesenkt 5000 → 2500. 5000 ist auf Mid-Range-
+    // Hardware bei langen Sessions spürbar langsamer (Card-Layout
+    // re-Layout pro Frame), 2500 deckt eine typische Stunde Chat ab
+    // und bleibt smooth. User die mehr brauchen können bis 10000 hoch.
+    public int MaxLinesToRender = 2_500; // 1-10000
     // Default ON to match a German / European 24h locale. The
     // ChatLogWindow.cs format-flip in v0.5.1 honours this strictly via
     // CultureInfo.InvariantCulture so the result is consistent across
@@ -221,7 +239,22 @@ public class Configuration : IPluginConfiguration
     };
 
     public float TooltipOffset;
-    public Dictionary<ChatType, uint> ChatColours = new();
+    // v1.2.1 — Default-Chat-Farben sind das Hellion-Brand-Preset. Der
+    // First-Run-Wizard bietet keine Theme-/Preset-Wahl an, daher kriegen
+    // neue User die Hellion-Brand-Farben out-of-the-box (Cyan-Familie für
+    // Standard/Tell, Ember/Warning für laute Channels). Bestand-User mit
+    // leerem ChatColours-Dict werden durch die v15→v16-Migration auf das
+    // Preset gehoben; User die bereits Custom-Farben haben, bleiben.
+    public Dictionary<ChatType, uint> ChatColours = BuildDefaultChatColours();
+
+    private static Dictionary<ChatType, uint> BuildDefaultChatColours()
+    {
+        var defaults = new Dictionary<ChatType, uint>();
+        foreach (var (channel, colour) in HellionChat.Resources.ChatColourPresets.All["Hellion"].Colours)
+            defaults[channel] = colour;
+        return defaults;
+    }
+
     public bool ColorSelectedInputChannelButton = true;
     public List<Tab> Tabs = [];
 

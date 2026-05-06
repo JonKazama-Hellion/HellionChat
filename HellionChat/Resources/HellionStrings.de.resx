@@ -759,7 +759,7 @@
     <value>Fenster-Transparenz</value>
   </data>
   <data name="Settings_ThemeAndLayout_WindowOpacity_Description" xml:space="preserve">
-    <value>Wie durchsichtig der Fensterhintergrund ist. Niedrigere Werte lassen mehr vom Spiel durchscheinen.</value>
+    <value>Wie durchsichtig der Fensterhintergrund ist. Niedrigere Werte lassen mehr vom Spiel durchscheinen. Tipp: Dalamud's Per-Window-Menü (Hamburger in der Titelleiste) bietet pro Fenster eigene Overrides für Deckkraft, Hintergrund-Blur, Durchklick und Anpinnen — die haben Vorrang über diesen Slider für das jeweilige Fenster.</value>
   </data>
   <data name="Settings_FontsAndColours_Fonts_Heading" xml:space="preserve">
     <value>Schriftarten</value>

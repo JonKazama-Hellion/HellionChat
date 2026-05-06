@@ -39,7 +39,10 @@ internal sealed class SettingsOverview
         var avail = ImGui.GetContentRegionAvail();
         var columns = avail.X >= 700f ? 3 : 2;
         var cardWidth = (avail.X - (columns - 1) * 8f) / columns;
-        var cardHeight = 96f;
+        // v1.2.1 — Subtexte wrappen jetzt auf zwei Zeilen, daher 110f statt der
+        // v1.1.0-Höhe 96f. Wrap-Breite + Y-Position der Subtext-Zeile sind in
+        // DrawCard auf den Card-Innenrand abgestimmt.
+        var cardHeight = 110f;
 
         for (var i = 0; i < CardDefs.Length; i++)
         {
@@ -68,10 +71,9 @@ internal sealed class SettingsOverview
         var draw = ImGui.GetWindowDrawList();
         draw.AddRectFilled(cursorBefore, cursorBefore + new Vector2(w, h), bgColor, 4f);
 
-        // Inhalts-Overlay: Icon + Title + Subtext direkt mit DrawList in den
-        // Card-Bereich zeichnen, statt Cursor-Hopping mit SetCursorScreenPos.
-        // DrawList-Overlays ändern den Cursor nicht, BeginGroup/EndGroup
-        // hält den Layout-Anker stabil für SameLine.
+        // Inhalts-Overlay: Icon + Title via DrawList (kein Wrap nötig). Subtext
+        // läuft über ImGui-Cursor + PushTextWrapPos damit der Text bei
+        // Card-Innenbreite umbricht statt rechts geclippt zu werden.
         var iconPos = cursorBefore + new Vector2(16f, 12f);
         var titlePos = cursorBefore + new Vector2(16f, 40f);
         var subtextPos = cursorBefore + new Vector2(16f, 62f);
@@ -79,14 +81,19 @@ internal sealed class SettingsOverview
         var titleColor = ColourUtil.RgbaToAbgr(0xE6F4F1FFu);
         var subtextColor = ColourUtil.RgbaToAbgr(0x8FA3B5FFu);
 
-        // Icon via FontAwesome — temporär den Font pushen, mit DrawList zeichnen
         using (_window.Plugin.FontManager.FontAwesome.Push())
         {
             draw.AddText(iconPos, titleColor, icon.ToIconString());
         }
 
         draw.AddText(titlePos, titleColor, title);
-        draw.AddText(subtextPos, subtextColor, subtext);
+
+        // Subtext mit Wrap auf Card-Innenbreite (16 px Padding links + rechts).
+        // Cursor-basiertes TextUnformatted würde die ImGui-Group-Bounds
+        // erweitern und das SameLine-Wrapping in der Card-Reihe brechen, daher
+        // bleibt der Subtext bewusst beim DrawList-Overlay-Pattern.
+        var subtextWrapWidth = w - 32f;
+        draw.AddText(ImGui.GetFont(), ImGui.GetFontSize(), subtextPos, subtextColor, subtext, subtextWrapWidth);
 
         ImGui.EndGroup();
 

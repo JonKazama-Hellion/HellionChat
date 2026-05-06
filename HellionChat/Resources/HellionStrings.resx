@@ -759,7 +759,7 @@
     <value>Window Transparency</value>
   </data>
   <data name="Settings_ThemeAndLayout_WindowOpacity_Description" xml:space="preserve">
-    <value>How transparent the window background is. Lower values let the game show through more.</value>
+    <value>How transparent the window background is. Lower values let the game show through more. Tip: Dalamud's per-window menu (Hamburger in the title bar) gives you per-window overrides for opacity, background blur, click-through and pinning — those override this slider for that window.</value>
   </data>
   <data name="Settings_FontsAndColours_Fonts_Heading" xml:space="preserve">
     <value>Fonts</value>

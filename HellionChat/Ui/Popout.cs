@@ -39,6 +39,12 @@ internal class Popout : Window
         IsOpen = true;
         RespectCloseHotkey = false;
         DisableWindowSounds = true;
+        // v1.2.1 — KEIN AllowBackgroundBlur. Pop-Outs werden vom User häufig
+        // im Dalamud-Tab-Container mit anderen Plugin-Windows kombiniert; in
+        // dem Render-Pfad blurt Dalamud den gesamten Container, nicht nur
+        // das Pop-Out — würde die Tab-Bar oben und benachbarte Plugins
+        // mitziehen. Wer Blur in Pop-Outs will, kann ihn via Dalamud-
+        // Hamburger-Menü pro Window selbst aktivieren.
     }
 
     public override void PreOpenCheck()

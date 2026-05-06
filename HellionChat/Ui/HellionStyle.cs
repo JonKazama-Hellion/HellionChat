@@ -52,7 +52,18 @@ internal static class HellionStyle
 
         var alphaByte = (uint)Math.Clamp((int)(windowOpacity * 255f), 0x55, 0xFF);
         var windowBgWithAlpha = (c.WindowBg & 0xFFFFFF00u) | alphaByte;
-        var childBgWithAlpha  = (c.ChildBg  & 0xFFFFFF00u) | alphaByte;
+
+        // ChildBg-Alpha: Sub-Bereiche (Tab-Sidebar, Message-Area, Input-Bar)
+        // werden im ChatLog-Window als BeginChild gezeichnet. Würde der ChildBg
+        // mit dem gleichen Alpha wie WindowBg gerendert, multiplizieren sich
+        // die Layer (1 - (1-α)² Deckung), und 50 % WindowOpacity kommt mit
+        // 75 % Deckung im Child-Bereich an — das Fenster wirkt solider als der
+        // Slider verspricht. Bei voller Opacity bleibt der Theme-Akzent
+        // erhalten (Theme-eigene Alpha-Komponente, i.d.R. FF); sobald der User
+        // Transparenz zieht, wird ChildBg vollständig durchsichtig damit nur
+        // der WindowBg-Layer die finale Deckung bestimmt.
+        var childBgAlpha = windowOpacity >= 0.999f ? (c.ChildBg & 0xFFu) : 0u;
+        var childBgWithAlpha = (c.ChildBg & 0xFFFFFF00u) | childBgAlpha;
 
         // Layout
         stack.PushStyleVar(ImGuiStyleVar.WindowRounding,    l.WindowRounding);
