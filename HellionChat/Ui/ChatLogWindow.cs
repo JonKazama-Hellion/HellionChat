@@ -1727,13 +1727,22 @@ public sealed class ChatLogWindow : Window
             return;
         }
 
-        // Truncate with ellipsis when the title would overlap the pop-out
-        // button. We reserve the icon width plus a small gap so the title
-        // never touches the button edge — readability over information density.
-        const float gapPx = 8f;
+        // Reserve space for the crown icon plus a small gap before the title,
+        // then the title itself, then the gap-to-pop-out-button. We measure the
+        // crown width inside the FontAwesome font push because FontAwesome
+        // glyphs render in a different font than the regular ImGui text.
+        const float gapAfterCrown = 4f;
+        const float gapBeforeButton = 8f;
         var avail = ImGui.GetContentRegionAvail().X;
         var iconWidth = ImGui.GetFrameHeight();
-        var maxTitleWidth = avail - iconWidth - gapPx;
+
+        float crownWidth;
+        using (Plugin.FontManager.FontAwesome.Push())
+        {
+            crownWidth = ImGui.CalcTextSize(FontAwesomeIcon.Crown.ToIconString()).X;
+        }
+
+        var maxTitleWidth = avail - iconWidth - gapBeforeButton - crownWidth - gapAfterCrown;
         if (maxTitleWidth <= 0)
         {
             return;
@@ -1742,14 +1751,32 @@ public sealed class ChatLogWindow : Window
         var rendered = "«" + title!.Title + "»";
         rendered = TruncateToWidth(rendered, maxTitleWidth);
 
-        var color = title.Color is { } c
+        var titleColor = title.Color is { } c
             ? new Vector4(c.X, c.Y, c.Z, 1f)
             : ImGui.GetStyle().Colors[(int)ImGuiCol.Text];
 
-        using (ImRaii.PushColor(ImGuiCol.Text, color))
+        var theme = Plugin.ThemeRegistry.Active;
+
+        // Group so the tooltip's IsItemHovered check fires for hover anywhere
+        // on the crown-plus-title pair, not just one of the two.
+        ImGui.BeginGroup();
+        using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(theme.Colors.TextMuted)))
+        using (Plugin.FontManager.FontAwesome.Push())
+        {
+            ImGui.TextUnformatted(FontAwesomeIcon.Crown.ToIconString());
+        }
+        ImGui.SameLine(0f, gapAfterCrown);
+        using (ImRaii.PushColor(ImGuiCol.Text, titleColor))
         {
             ImGui.TextUnformatted(rendered);
         }
+        ImGui.EndGroup();
+
+        if (ImGui.IsItemHovered())
+        {
+            ImGui.SetTooltip(HellionStrings.ChatHeader_HonorificTitle_Tooltip);
+        }
+
         ImGui.SameLine();
     }
 

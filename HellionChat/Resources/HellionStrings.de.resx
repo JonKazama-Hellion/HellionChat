@@ -866,4 +866,7 @@
   <data name="Settings_Integrations_GotAnIdea_LinkLabel" xml:space="preserve">
     <value>discord.gg/X9V7Kcv5gR</value>
   </data>
+  <data name="ChatHeader_HonorificTitle_Tooltip" xml:space="preserve">
+    <value>Custom-Titel von Honorific</value>
+  </data>
 </root>

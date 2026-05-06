@@ -383,4 +383,7 @@ internal class HellionStrings
     internal static string Settings_Integrations_GotAnIdea_SectionHeader => Get(nameof(Settings_Integrations_GotAnIdea_SectionHeader));
     internal static string Settings_Integrations_GotAnIdea_Body => Get(nameof(Settings_Integrations_GotAnIdea_Body));
     internal static string Settings_Integrations_GotAnIdea_LinkLabel => Get(nameof(Settings_Integrations_GotAnIdea_LinkLabel));
+
+    // Hellion Chat — v1.3.0 Honorific title slot tooltip
+    internal static string ChatHeader_HonorificTitle_Tooltip => Get(nameof(ChatHeader_HonorificTitle_Tooltip));
 }
