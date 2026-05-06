@@ -92,6 +92,13 @@ public class Configuration : IPluginConfiguration
     // to fall back to the user's chosen system or Dalamud font.
     public bool UseHellionFont = true;
 
+    // Cycle 1 of the plugin-integration roadmap. When Honorific is installed
+    // and reports a custom title, render it in the chat header above the
+    // message log. Auto-hides regardless when Honorific is missing or the
+    // active title is original/empty, so leaving this on is safe even for
+    // users who don't run Honorific.
+    public bool ShowHonorificTitleInHeader = true;
+
     // Hellion Chat — Auto-Tell-Tabs. When enabled, an incoming or outgoing
     // /tell spawns a session-only tab dedicated to that conversation
     // partner. See spec: Hellion Chat Auto-Tell-Tabs Spec (Obsidian).
@@ -372,6 +379,7 @@ public class Configuration : IPluginConfiguration
 
         FirstRunCompleted = other.FirstRunCompleted;
         UseHellionFont = other.UseHellionFont;
+        ShowHonorificTitleInHeader = other.ShowHonorificTitleInHeader;
 
         // v1.1.0 theme engine fields
         Theme = other.Theme;
