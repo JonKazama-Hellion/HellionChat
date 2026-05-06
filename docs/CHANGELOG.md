@@ -12,6 +12,46 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## v1.2.2 — Theme Expansion (2026-05-07)
+
+### Added
+- Four new built-in themes:
+  - **Night Blue** — Royal Blue on deep marine, cool tech-dashboard mood
+  - **Indigo Violet** — Royal Violet on deep indigo with a turquoise-mint counter (aurora glitter feel)
+  - **Forge Merchantman** — Patina bronze on workshop slate with warm amber counter (Hellion Forge identity)
+  - **Hellion Spectrum** — Deuteran/Protan-safe channel colours using Wong/Okabe-Ito palette tones; channel identity (Tell pink, Yell yellow, Shout orange, Party blue, FC green) preserved while keeping every channel separable under red-green colour vision deficiency
+- Built-in theme catalogue grown from five to nine
+
+### Notes
+- No engine changes, no settings touched, no migration
+- Default theme unchanged (Hellion Arctic). Existing custom themes keep working.
+- Hellion Spectrum covers the ~99 % of CVD cases that are red-green; a Tritan-safe variant could follow in a later cycle if there is demand.
+
+---
+
+## v1.2.1 — Settings Cleanup (2026-05-06)
+
+### Changed
+- Settings cards re-sorted thematically: 9 cards remain, each card has one clear job and a one-line subtitle.
+- **Theme & Layout** (new) collects the theme picker, window frame style (title bar, sidebar, hide button, pop-out title bar) and the timestamp style options.
+- **Fonts & Colours** (new) houses font choice, font size and per-channel chat colours.
+- **Data Management** (new) collects retention windows, cleanup, export, the database viewer and the shift-click advanced tools.
+- **Privacy** is now focused on the privacy filter alone.
+- **Chat** absorbs the Auto-Tell-Tabs history-preload slider that used to live under Privacy.
+- **General** groups the keybind mode under Input.
+
+### Removed
+- Legacy "Style override" option and the unused style-name field — both obsolete since the v1.1.0 themes engine.
+- Legacy `WindowAlpha` slider — if you had it set, the value is auto-migrated to Theme & Layout → Window Style → Window Transparency.
+- Unused `ShowThemeQuickPicker` schema field.
+
+### Migration
+- v15 → v16 with backup at `pluginConfigs/HellionChat.json.pre-v16-backup`.
+- All other settings preserved unchanged.
+- One-time toast on first start if Style override was previously active.
+
+---
+
 ## v1.2.0 — Layout Refresh (2026-05-05)
 
 ### Added
