@@ -66,11 +66,8 @@ internal class MessageManager : IAsyncDisposable
 
         Store = new MessageStore(DatabasePath());
 
-        // IsBackground = true so a stuck worker never blocks plugin unload.
-        // The worker has its own cancellation path via PendingThreadCancellationToken,
-        // and DisposeAsync waits up to 10s for cooperative shutdown. The
-        // background flag is the safety net for the case where cooperative
-        // shutdown fails to drain the queue in time.
+        // IsBackground so a stuck worker never blocks plugin unload.
+        // Cooperative cancel via PendingThreadCancellationToken first, background flag is the safety net.
         PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token))
         {
             IsBackground = true,
