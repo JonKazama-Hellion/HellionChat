@@ -28,4 +28,35 @@ internal sealed class HonorificService
             return null;
         }
     }
+
+    // Honorific has been on major version 3 since the IPC was introduced.
+    // We treat anything else as incompatible because a major bump from
+    // upstream signals a breaking IPC contract change, and rendering a
+    // title against the wrong shape is worse than rendering nothing.
+    // If Honorific later ships a non-breaking 4.x major, we relax this
+    // by extending the accepted-major set rather than removing the check.
+    internal static bool IsApiVersionCompatible((uint Major, uint Minor) apiVersion)
+    {
+        return apiVersion.Major == 3;
+    }
+
+    // Single source of truth for whether the chat header should draw the
+    // Honorific slot in the current frame. Returning a single bool keeps
+    // the render call branch-free; all skip conditions are evaluated here.
+    // The IsOriginal short-circuit means: when the user has Honorific
+    // installed but is using the original FFXIV title, we render nothing —
+    // matches the design decision in the spec ("Empty-State A: silent
+    // auto-hide").
+    internal static bool ShouldRenderSlot(
+        bool toggleEnabled,
+        bool isAvailable,
+        HonorificTitleData? title)
+    {
+        if (!toggleEnabled) return false;
+        if (!isAvailable) return false;
+        if (title is null) return false;
+        if (title.IsOriginal) return false;
+        if (string.IsNullOrEmpty(title.Title)) return false;
+        return true;
+    }
 }
