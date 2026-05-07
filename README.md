@@ -12,7 +12,7 @@
   <img src="docs/images/hellion-forge.png" alt="Hellion Forge" width="180" />
 </p>
 
-**Version 1.3.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+**Version 1.4.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
 
 Hellion Chat ist ein Privacy-First-Plugin auf dem Chat-2-Fundament. Der größte Teil der Engine kommt aus Chat 2 (Message-Store, Channel-Logik, Hook-System), die meisten Tastenkürzel funktionieren weiterhin wie gewohnt. Was sich ändert: schärfere Privacy-Defaults von Haus aus, eigene Slash-Commands unter `/hellionchat`, kein Webinterface mehr, und mit v1.1.0 eine Theme-Engine als Schritt in Richtung eigenes UI-Look-and-Feel.
 
@@ -225,7 +225,7 @@ Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum eigenen 
 
 ## Projektstatus
 
-**Version 1.3.0** — Erster Plugin-Integrations-Cycle live (Honorific Custom-Titles im Chat-Header), Theme-Katalog auf neun Built-ins, Settings thematisch re-sortiert, Standalone-Cut abgeschlossen (Stand: 2026-05-06).
+**Version 1.4.0** — Critical Lifecycle Fixes: sieben Race- und Lifecycle-Bugs aus Audit-Pass-3 und Pass-4 abgearbeitet (GC.Collect aus SQLite-Dispose raus, Worker-Threads explizit IsBackground, EmoteCache async-void → async Task, DeferredSave-Race geschlossen, Pre-v13-Backup-Lookup für WindowOpacity-Migration). Erster Sub-Patch der v1.4.x Polish-Sweep-Serie (Stand: 2026-05-07).
 
 Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne. Vollständig abgeschlossen:
 
