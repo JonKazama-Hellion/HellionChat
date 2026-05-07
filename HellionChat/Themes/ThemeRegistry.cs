@@ -50,7 +50,14 @@ public sealed class ThemeRegistry
 
     public IEnumerable<Theme> AllCustom() => RefreshCustomCache();
 
-    public void Switch(string slug) => _active = Get(slug);
+    public void Switch(string slug)
+    {
+        var theme = Get(slug);
+        // Defensive — idempotent and cheap, so any future theme source
+        // that forgets the cache fill still ends up with a populated one.
+        theme.RecomputeAbgrCache();
+        _active = theme;
+    }
 
     // 0x80070020 = SHARING_VIOLATION, 0x80070021 = LOCK_VIOLATION. Other
     // IO failures are permanent and get the theme dropped instead of retried.
