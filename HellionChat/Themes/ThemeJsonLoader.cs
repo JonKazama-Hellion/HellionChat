@@ -63,7 +63,11 @@ internal static class ThemeJsonLoader
 
     public static Theme LoadFromFile(string path)
     {
-        var json = File.ReadAllText(path);
+        // FileShare.Read lets concurrent readers and well-behaved editors share
+        // the handle; atomic-replace editors still raise IOException, caught upstream.
+        using var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read);
+        using var reader = new StreamReader(stream);
+        var json = reader.ReadToEnd();
         return LoadFromString(json);
     }
 
