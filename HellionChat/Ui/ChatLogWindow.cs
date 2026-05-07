@@ -1203,6 +1203,15 @@ public sealed class ChatLogWindow : Window
 
             var maxLines = Plugin.Config.MaxLinesToRender;
             var startLine = messages.Count > maxLines ? messages.Count - maxLines : 0;
+
+            // Card-mode pre-loop hoist: theme/drawList/winLeft/winRight/border
+            // are invariant per DrawMessages call; only cursorY moves per row.
+            var theme = Plugin.ThemeRegistry.Active;
+            var drawList = ImGui.GetWindowDrawList();
+            var winLeft = ImGui.GetWindowPos().X;
+            var winRight = winLeft + ImGui.GetWindowSize().X;
+            var borderColorAbgr = ColourUtil.RgbaToAbgr((theme.Colors.Border & 0xFFFFFF00u) | 0x33u);
+
             for (var i = startLine; i < messages.Count; i++)
             {
                 var message = messages[i];
@@ -1344,7 +1353,6 @@ public sealed class ChatLogWindow : Window
                 {
                     if (message.Sender.Count > 0)
                     {
-                        var theme = Plugin.ThemeRegistry.Active;
                         var senderColor = Plugin.Functions.Chat.GetChannelColor(message.Code.Type)
                                           ?? theme.Colors.TextPrimary;
                         using (ImRaii.PushColor(ImGuiCol.Text, ColourUtil.RgbaToAbgr(senderColor)))
@@ -1363,15 +1371,11 @@ public sealed class ChatLogWindow : Window
                     // Subtile Border-Bottom als Card-Trenner. Border-Farbe mit
                     // reduzierter Alpha (RGBA → 0x33) für dezente Trennung.
                     {
-                        var theme = Plugin.ThemeRegistry.Active;
                         var rowEndY = ImGui.GetCursorScreenPos().Y;
-                        var winLeft = ImGui.GetWindowPos().X;
-                        var winRight = winLeft + ImGui.GetWindowSize().X;
-                        var borderRgba = (theme.Colors.Border & 0xFFFFFF00u) | 0x33u;
-                        ImGui.GetWindowDrawList().AddLine(
+                        drawList.AddLine(
                             new Vector2(winLeft + 4, rowEndY - 1),
                             new Vector2(winRight - 4, rowEndY - 1),
-                            ColourUtil.RgbaToAbgr(borderRgba),
+                            borderColorAbgr,
                             1f);
                         ImGui.Dummy(new Vector2(0, 2));
                     }
