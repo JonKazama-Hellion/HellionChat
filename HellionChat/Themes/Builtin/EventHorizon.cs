@@ -9,7 +9,7 @@ internal static class EventHorizon
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Event Horizon",
-        Author: "Hellion Online Media",
+        Author: "Hellion Forge",
         Description: "Cosmic Purple auf Near-Black. Deep-Space-Stimmung.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#7B3FCF"),

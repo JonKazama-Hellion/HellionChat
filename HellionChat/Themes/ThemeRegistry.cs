@@ -24,9 +24,10 @@ public sealed class ThemeRegistry
             { IndigoViolet.Slug,      IndigoViolet.Build() },
             { ForgeMerchantman.Slug,  ForgeMerchantman.Build() },
             { MintGrove.Slug,         MintGrove.Build() },
+            { SynthwaveSunset.Slug,   SynthwaveSunset.Build() },
         };
 
-        // Centralised so the nine .Build() factories stay free of cache plumbing.
+        // Centralised so the ten .Build() factories stay free of cache plumbing.
         foreach (var theme in _builtIns.Values)
             theme.RecomputeAbgrCache();
 

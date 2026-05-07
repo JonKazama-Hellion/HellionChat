@@ -9,7 +9,7 @@ internal static class MintGrove
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Mint Grove",
-        Author: "Hellion Online Media",
+        Author: "Carla Beleandis",
         Description: "Mint Green + Honey Amber auf Deep Forest. Naturthemen-tauglich.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#3CB371"),
