@@ -52,6 +52,19 @@ internal sealed class StatusBar
         return $"{count} {(count == 1 ? "tell" : "tells")}";
     }
 
+    // Single-pass replacement for the LINQ Sum+Count pair in Draw. Pure
+    // helper so a future LINQ regression gets pinned by xUnit.
+    internal static (int messages, int tells) AggregateForStatusBar(IList<Tab> tabs)
+    {
+        int messages = 0, tells = 0;
+        foreach (var t in tabs)
+        {
+            messages += t.Messages.Count;
+            if (t.IsTempTab) tells++;
+        }
+        return (messages, tells);
+    }
+
     /// <summary>
     /// Test-Hook: Cache-Logic ohne reale Time-Source verifizieren.
     /// Nicht für Production-Render.
@@ -80,12 +93,13 @@ internal sealed class StatusBar
         var theme = plugin.ThemeRegistry.Active;
         var now = Environment.TickCount64;
 
-        // Counts pro Frame berechnen ist günstig (List<>.Count, kleine
-        // Sums); Format-String wird gecached.
-        var tabs = Plugin.Config.Tabs.Count;
-        var messages = Plugin.Config.Tabs.Sum(t => t.Messages.Count);
-        var tells = Plugin.Config.Tabs.Count(t => t.IsTempTab);
-        UpdateCacheIfDue(now, tabs, messages, tells);
+        // Outer gate keeps the foreach out of the hot path 99% of frames.
+        // UpdateCacheIfDue runs the same check internally — idempotent.
+        if (now - _lastUpdateMs >= UpdateIntervalMs)
+        {
+            var (messages, tells) = AggregateForStatusBar(Plugin.Config.Tabs);
+            UpdateCacheIfDue(now, Plugin.Config.Tabs.Count, messages, tells);
+        }
 
         // BorderTop als Trenner — DrawList-Line, ImGui-Separator hat zu viel Padding.
         var cursorY = ImGui.GetCursorScreenPos().Y;
