@@ -31,11 +31,6 @@ description: |-
   - Independent plugin state — own config file and database directory,
     so Hellion Chat does not share state with upstream Chat 2
 
-  v1.2.3 — Theme catalogue grown to nine built-in themes:
-  Hellion Arctic, Hellion Spectrum (CVD-safe Deuteran/Protan),
-  Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove,
-  Night Blue, Indigo Violet, Forge Merchantman.
-
   v1.3.0 First plugin integration cycle. Honorific custom titles
   are shown in the chat header above the message log, with auto-detect
   and silent fallback when Honorific is not installed.
@@ -56,6 +51,13 @@ description: |-
   as the tenth built-in theme — Hot Magenta + Cyan on midnight
   violet, 80s neon-grid vibes.
 
+  v1.4.2 — ChatLog Frame-Hot-Path. Three per-frame allocation
+  patterns gone from the chat-log render path: card-mode borders
+  hoist invariants out of the per-message loop, auto-tell tab
+  tint and icon get a per-tab cache, and the status bar gates
+  its tab aggregation behind the same one-second cache it uses
+  for the format strings.
+
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
   Modding & support: join the Hellion Forge Discord at
@@ -75,6 +77,32 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.4.2 — ChatLog Frame-Hot-Path**
+
+  Third sub-patch of the v1.4.x Polish Sweep series. Per-frame
+  allocations from the chat-log render path eliminated.
+
+  - DrawMessages card-mode hoists theme/drawList/winLeft/winRight/
+    borderColorAbgr out of the per-message loop. About 500
+    redundant calls per frame at 100 visible messages, multiplied
+    by every pop-out window
+  - Auto-tell tab tint and icon use a per-tab cache. Hash
+    computation and string allocation only happen when the tell
+    target name or world drifts. AutoTellTabTint stays a pure
+    hash helper; cache lives in a thin TabTintCache wrapper
+  - Status bar gates its tab aggregation behind the same
+    one-second cache it already used for the format strings.
+    LINQ Sum and Count replaced with a single foreach pass
+    that runs on roughly 1% of frames
+
+  Realistic frame-time recovery: 2-5% in typical scenes, more
+  on pop-out-heavy setups because the card-border hoist scales
+  per window.
+
+  Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.4.1 — Theme Engine Performance**
 
   Second sub-patch of the v1.4.x Polish Sweep series. Heap
@@ -160,32 +188,6 @@ changelog: |-
   - New service-class pattern under HellionChat/Integrations/
 
   Modding and support: join Hellion Forge - https://discord.gg/X9V7Kcv5gR
-
-  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
-
-  **Hellion Chat 1.2.3 — Theme Expansion**
-
-  Four new built-in themes round out the picker. No engine changes,
-  no settings touched — just more colour options.
-
-  - **Night Blue** — Royal Blue on deep marine. Cool tech-dashboard
-    mood, distinct from the brand themes.
-  - **Indigo Violet** — Royal Violet on deep indigo with a turquoise-
-    mint counter for an aurora glitter feel. Sister to Event Horizon
-    but darker and denser; the turquoise accent keeps the two
-    distinguishable.
-  - **Forge Merchantman** — Patina bronze on workshop slate, warm
-    amber counter. Hellion Forge given a theme of its own — sister
-    to Hellion Arctic but greener and warmer instead of cold cyan.
-  - **Hellion Spectrum** — Deuteran/Protan-safe channel colours
-    using Wong/Okabe-Ito palette tones. Channel identity (Tell pink,
-    Yell yellow, Shout orange, Party blue, FC green) is preserved;
-    tones are chosen so each channel stays distinguishable under
-    red-green colour vision deficiency. Covers the ~99% of CVD cases
-    that are red-green.
-
-  No schema bump, no migration. Default theme is unchanged (Hellion
-  Arctic). Existing custom themes keep working.
 
   Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
 

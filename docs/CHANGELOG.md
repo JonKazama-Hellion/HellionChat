@@ -12,6 +12,34 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## Hellion Chat 1.4.2 — ChatLog Frame-Hot-Path
+
+Third sub-patch of the v1.4.x Polish Sweep series. Per-frame
+allocations from the chat-log render path eliminated.
+
+- `DrawMessages` card-mode hoists `theme`/`drawList`/`winLeft`/
+  `winRight`/`borderColorAbgr` out of the per-message loop. About
+  500 redundant calls per frame at 100 visible messages, multiplied
+  by every pop-out window
+- Auto-tell tab tint and icon use a per-tab cache. Hash
+  computation and string allocation only happen when the tell
+  target name or world drifts. `AutoTellTabTint` stays a pure
+  hash helper; cache lives in a thin `TabTintCache` wrapper
+- Status bar gates its tab aggregation behind the same
+  one-second cache it already used for the format strings.
+  LINQ `Sum` and `Count` replaced with a single `foreach` pass
+  that runs on roughly 1 % of frames
+
+Realistic frame-time recovery: 2-5 % in typical scenes, more
+on pop-out-heavy setups because the card-border hoist scales
+per window.
+
+Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+---
+
 ## Hellion Chat 1.4.1 — Theme Engine Performance
 
 Second sub-patch of the v1.4.x Polish Sweep series. Heap

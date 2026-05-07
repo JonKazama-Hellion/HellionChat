@@ -12,13 +12,23 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.4.2)
+## Nächster Cycle (v1.4.3)
 
-**ChatLog Frame-Hot-Path** — Card-Mode Border-Loop in
-ChatLogWindow vom Per-Message GetWindowDrawList befreien,
-AutoTellTabTint Per-Tab-Cache mit Tell-Target-Invalidierung,
-StatusBar LINQ Sum/Count durch klassische for-Loops mit
-TickCount64-Cache-Gate ersetzen. Direkter FPS-Impact.
+**Plugin-Load Async-Init** — IAsyncDalamudPlugin-Migration
+und FontManager-async, Plugin-Konstruktor von 3.16 Sek auf
+unter 500 ms perceived load time. Größter und riskantester
+Patch der Serie, kommt nach drei stabilen Vorläufer-Patches.
+
+## v1.4.2 — ChatLog Frame-Hot-Path (released <Datum>)
+
+Dritter Sub-Patch der v1.4.x Polish-Sweep-Serie. Per-Frame-
+Allokationen aus dem ChatLogWindow-Render-Pfad und der
+Settings-StatusBar eliminiert. Card-Mode-Border-Loop in
+DrawMessages hebt fünf Invarianten in einen Pre-Loop-Hoist,
+AutoTellTabTint bekommt einen Per-Tab-Cache via TabTintCache
+(separate Validation-Keys pro Cache, kein Cross-Invalidation),
+StatusBar zieht den Cache-Gate-Check vor die Aggregations
+und ersetzt LINQ Sum+Count durch eine Single-Pass-Foreach.
 
 ## v1.4.1 — Theme Engine Performance (released <Datum>)
 
