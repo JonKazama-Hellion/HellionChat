@@ -1571,7 +1571,7 @@ public sealed class ChatLogWindow : Window
                     {
                         // v1.2.0 — Hash-Color-Tint differenziert parallele Auto-Tell-Tabs
                         // visuell ohne dass User pro Tab manuell ein Custom-Icon setzen muss.
-                        iconColor = AutoTellTabTint.For(tab.TellTarget.Name, tab.TellTarget.World);
+                        iconColor = TabTintCache.GetTint(tab);
                     }
                     else
                     {

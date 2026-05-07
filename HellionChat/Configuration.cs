@@ -482,6 +482,16 @@ public class Tab
     // session. NonSerialized because the temp tab itself is session-only.
     [NonSerialized] public bool IsGreeted;
 
+    // v1.4.2 — TabTintCache uses separate validation keys per cache so a
+    // TellTarget change picked up by GetTint can't strand GetIcon (or vice
+    // versa) with a stale entry that looks fresh on the shared key.
+    [NonSerialized] internal string? _cachedTintTellName;
+    [NonSerialized] internal uint _cachedTintTellWorld;
+    [NonSerialized] internal uint _cachedTellTint;
+    [NonSerialized] internal string? _cachedIconTellName;
+    [NonSerialized] internal uint _cachedIconTellWorld;
+    [NonSerialized] internal string? _cachedTellIcon;
+
     public bool Matches(Message message)
     {
         if (!message.Matches(SelectedChannels, ExtraChatAll, ExtraChatChannels))

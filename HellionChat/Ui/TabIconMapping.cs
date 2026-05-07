@@ -61,7 +61,7 @@ internal static class TabIconMapping
         string? autoTellGlyph = null;
         if (tab.IsTempTab && tab.TellTarget != null && tab.TellTarget.IsSet())
         {
-            autoTellGlyph = AutoTellTabTint.IconFor(tab.TellTarget.Name, tab.TellTarget.World);
+            autoTellGlyph = TabTintCache.GetIcon(tab);
         }
 
         var glyph = TabIconGlyphResolver.ResolveGlyphName(tab, autoTellGlyph);
