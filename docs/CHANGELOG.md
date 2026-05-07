@@ -12,6 +12,45 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## Hellion Chat 1.4.1 — Theme Engine Performance
+
+Second sub-patch of the v1.4.x Polish Sweep series. Heap
+pressure from the theme engine's per-frame render path
+removed, plus a tenth built-in theme and hardening for
+the custom-theme hot-reload.
+
+- Theme records carry a pre-computed ABGR-packed cache
+  for every color slot; cache is filled when the theme
+  is registered and refreshed defensively on every
+  `Switch()`
+- `HellionStyle.PushGlobal` reads ABGR values from the
+  cache instead of calling `ColourUtil.RgbaToAbgr` per
+  slot per frame; ~13 % render-time recovery measured
+  in typical scenes (plan estimate was 2–6 %, real
+  ~10–15 %)
+- `ThemeRegistry` custom-theme reload distinguishes a
+  recoverable file lock (editor mid-save) from a
+  permanent IO failure; locked themes keep their
+  last-known-good snapshot and retry on the next
+  lookup instead of dropping out of the picker
+- New built-in: **Synthwave Sunset** — Hot Magenta + Cyan
+  on midnight violet, 80s neon-grid vibes; tenth theme
+  in the picker
+- Author credits refreshed: brand themes are credited
+  as "Hellion Forge"; **Mint Grove** and **Forge
+  Merchantman** now credited to **Carla Beleandis** as
+  a community thanks
+
+No schema bump, no user-visible behaviour change other
+than smoother frames on GC-sensitive setups and one
+additional colour option.
+
+Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+---
+
 ## Hellion Chat 1.4.0 — Critical Lifecycle Fixes
 
 First sub-patch of the v1.4.x Polish Sweep series. Seven

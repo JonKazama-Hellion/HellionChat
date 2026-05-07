@@ -31,11 +31,6 @@ description: |-
   - Independent plugin state — own config file and database directory,
     so Hellion Chat does not share state with upstream Chat 2
 
-  v1.1.0 — Theme engine with five built-in themes (Hellion Arctic,
-  Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove) plus
-  JSON-based custom-theme authoring. Settings rebuilt around a card
-  grid with section detail views. See docs/THEME-AUTHORING.md.
-
   v1.2.3 — Theme catalogue grown to nine built-in themes:
   Hellion Arctic, Hellion Spectrum (CVD-safe Deuteran/Protan),
   Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove,
@@ -51,6 +46,15 @@ description: |-
   config saves no longer get lost mid-disable, and pre-v13 config
   backups carry the user's custom theme opacity into the v14 schema
   instead of falling back to the default.
+
+  v1.4.1 — Theme Engine Performance plus a tenth built-in.
+  HellionStyle.PushGlobal reads pre-computed ABGR values from a
+  per-theme cache instead of converting RGBA per slot per frame
+  (~13 % render-time recovery in typical scenes). Custom-theme
+  hot-reload survives transient file locks (editor mid-save
+  keeps the last-known-good snapshot). Synthwave Sunset joins
+  as the tenth built-in theme — Hot Magenta + Cyan on midnight
+  violet, 80s neon-grid vibes.
 
   Based on Chat 2 by Infi and Anna, licensed under EUPL-1.2.
 
@@ -71,6 +75,42 @@ tags:
   - Replacement
   - Privacy
 changelog: |-
+  **Hellion Chat 1.4.1 — Theme Engine Performance**
+
+  Second sub-patch of the v1.4.x Polish Sweep series. Heap
+  pressure from the theme engine's per-frame render path
+  removed, plus a tenth built-in theme and hardening for
+  the custom-theme hot-reload.
+
+  - Theme records carry a pre-computed ABGR-packed cache
+    for every color slot; cache is filled when the theme
+    is registered and refreshed defensively on every
+    Switch()
+  - HellionStyle.PushGlobal reads ABGR values from the
+    cache instead of calling ColourUtil.RgbaToAbgr per
+    slot per frame; ~13 % render-time recovery measured
+    in typical scenes (plan estimate was 2–6 %, real
+    ~10–15 %)
+  - ThemeRegistry custom-theme reload distinguishes a
+    recoverable file lock (editor mid-save) from a
+    permanent IO failure; locked themes keep their
+    last-known-good snapshot and retry on the next
+    lookup instead of dropping out of the picker
+  - New built-in: Synthwave Sunset — Hot Magenta + Cyan
+    on midnight violet, 80s neon-grid vibes; tenth theme
+    in the picker
+  - Author credits refreshed: brand themes are credited
+    as "Hellion Forge"; Mint Grove and Forge Merchantman
+    now credited to Carla Beleandis as a community thanks
+
+  No schema bump, no user-visible behaviour change other
+  than smoother frames on GC-sensitive setups and one
+  additional colour option.
+
+  Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+  Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
   **Hellion Chat 1.4.0 — Critical Lifecycle Fixes**
 
   First sub-patch of the v1.4.x Polish Sweep series. Seven
