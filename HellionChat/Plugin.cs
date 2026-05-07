@@ -536,6 +536,14 @@ public sealed class Plugin : IDalamudPlugin
         Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
+        // FrameworkUpdate would have fired the pending save in N frames,
+        // but we just unsubscribed it. -1 is the idle sentinel.
+        if (DeferredSaveFrames >= 0)
+        {
+            SaveConfig();
+            DeferredSaveFrames = -1;
+        }
+
         HonorificService?.Dispose();
 
         WindowSystem?.RemoveAllWindows();
