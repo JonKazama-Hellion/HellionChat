@@ -25,6 +25,11 @@ public sealed class ThemeRegistry
             { ForgeMerchantman.Slug,  ForgeMerchantman.Build() },
             { MintGrove.Slug,         MintGrove.Build() },
         };
+
+        // Centralised so the nine .Build() factories stay free of cache plumbing.
+        foreach (var theme in _builtIns.Values)
+            theme.RecomputeAbgrCache();
+
         _active = _builtIns[DefaultSlug];
         _customThemesDir = customThemesDir;
     }
@@ -81,6 +86,7 @@ public sealed class ThemeRegistry
                 try
                 {
                     theme = ThemeJsonLoader.LoadFromFile(path);
+                    theme.RecomputeAbgrCache();
                     _customCache[key] = (theme, stamp);
                 }
                 catch (Exception ex)
