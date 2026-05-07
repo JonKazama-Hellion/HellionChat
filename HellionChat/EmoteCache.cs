@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Concurrent;
+using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Dalamud.Interface.Textures;
@@ -73,6 +74,19 @@ public static class EmoteCache
     private static CancellationTokenSource Cts = new();
     internal static CancellationToken Token => Cts.Token;
 
+    // Drain target for in-flight loads on Dispose; without this an orphan
+    // continuation could still write to a torn-down Texture/Frames field.
+    private static readonly ConcurrentBag<Task> PendingLoads = new();
+
+    internal static void TrackLoad(Task loadTask, string emoteCode)
+    {
+        PendingLoads.Add(loadTask.ContinueWith(t =>
+        {
+            if (t.IsFaulted)
+                Plugin.Log.Error(t.Exception!, $"EmoteCache load failed for {emoteCode}");
+        }, TaskScheduler.Default));
+    }
+
     public static async Task LoadData()
     {
         if (State is not LoadingState.Unloaded)
@@ -135,9 +149,19 @@ public static class EmoteCache
 
     public static void Dispose()
     {
-        // Cancel in-flight downloads / texture creates so the async-void
-        // Load methods bail out before they touch a disposed TextureProvider.
         Cts.Cancel();
+
+        // 5s upper bound; anything still running gets abandoned.
+        try
+        {
+            Task.WaitAll(PendingLoads.ToArray(), TimeSpan.FromSeconds(5));
+        }
+        catch (AggregateException)
+        {
+            // Faults already logged in TrackLoad.
+        }
+
+        while (PendingLoads.TryTake(out _)) { }
 
         foreach (var emote in EmoteImages.Values)
             emote.InnerDispose();
@@ -233,11 +257,12 @@ public static class EmoteCache
         public ImGuiEmote Prepare(Emote emote)
         {
             var ct = EmoteCache.Token;
-            Task.Run(() => Load(emote, ct), ct);
+            // Task.Run keeps the sync prefix off the ImGui render thread.
+            EmoteCache.TrackLoad(Task.Run(() => LoadAsyncTracked(emote, ct), ct), emote.Code);
             return this;
         }
 
-        private async void Load(Emote emote, CancellationToken ct)
+        private async Task LoadAsyncTracked(Emote emote, CancellationToken ct)
         {
             try
             {
@@ -251,8 +276,6 @@ public static class EmoteCache
             }
             catch (OperationCanceledException)
             {
-                // Plugin disposed mid-load; the EmoteImages entry is also
-                // being torn down, no extra cleanup needed.
             }
             catch (Exception ex)
             {
@@ -310,11 +333,11 @@ public static class EmoteCache
         public ImGuiGif Prepare(Emote emote)
         {
             var ct = EmoteCache.Token;
-            Task.Run(() => Load(emote, ct), ct);
+            EmoteCache.TrackLoad(Task.Run(() => LoadAsyncTracked(emote, ct), ct), emote.Code);
             return this;
         }
 
-        private async void Load(Emote emote, CancellationToken ct)
+        private async Task LoadAsyncTracked(Emote emote, CancellationToken ct)
         {
             try
             {

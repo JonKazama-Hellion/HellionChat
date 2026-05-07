@@ -131,11 +131,12 @@ internal class MessageStore : IDisposable
 
     public void Dispose()
     {
+        // Pooling=false (set in Connect) avoids ClearAllPools, which is
+        // provider-wide and would touch other plugins' SQLite connections.
+        // GC.Collect was here as a defensive flush; removed because explicit
+        // Close already releases everything we hold.
         Connection.Close();
         Connection.Dispose();
-        // Closing the connection doesn't immediately release the file.
-        GC.Collect();
-        GC.WaitForPendingFinalizers();
     }
 
     private SqliteConnection Connect()

@@ -245,11 +245,24 @@ public sealed class Plugin : IDalamudPlugin
             // HellionThemeEnabled-Flag wird deprecated und nur noch ein Release
             // als Safety-Net im JSON behalten. Window-Opacity wandert von
             // HellionThemeWindowOpacity in das neue WindowOpacity-Feld.
+            //
+            // v1.4.0 (F5.4): Pre-v13-Backup wird gelesen, HellionThemeWindowOpacity
+            // ins neue Feld gezogen. Override nur wenn WindowOpacity noch beim
+            // Default sitzt — sonst hat der User in der Zwischenzeit (z.B. via
+            // WindowAlpha → WindowOpacity in v15→v16) explizit etwas gesetzt.
             if (Config.Version < 14)
             {
                 Config.Theme = "hellion-arctic";
-                // v1.2.0: alter Opacity-Wert wird nicht mehr migriert (Field entfernt).
-                // User die direkt v13 → v15 springen bekommen den Default 0.85.
+
+                var oldThemeOpacity = TryReadPreV13ThemeOpacity();
+                if (oldThemeOpacity is { } legacy
+                    && Math.Abs(Config.WindowOpacity - 0.85f) < 0.001f)
+                {
+                    Config.WindowOpacity = Math.Clamp(legacy, 0.5f, 1.0f);
+                    Log.Information(
+                        $"Migrated pre-v13 HellionThemeWindowOpacity {legacy} to WindowOpacity {Config.WindowOpacity}");
+                }
+
                 Config.ReduceMotion = false;
                 Config.UseCompactDensity = false;
                 Config.Version = 14;
@@ -536,6 +549,14 @@ public sealed class Plugin : IDalamudPlugin
         Framework.Update -= FrameworkUpdate;
         GameFunctions.GameFunctions.SetChatInteractable(true);
 
+        // FrameworkUpdate would have fired the pending save in N frames,
+        // but we just unsubscribed it. -1 is the idle sentinel.
+        if (DeferredSaveFrames >= 0)
+        {
+            SaveConfig();
+            DeferredSaveFrames = -1;
+        }
+
         HonorificService?.Dispose();
 
         WindowSystem?.RemoveAllWindows();
@@ -558,6 +579,40 @@ public sealed class Plugin : IDalamudPlugin
         Commands?.Dispose();
 
         EmoteCache.Dispose();
+    }
+
+    // Reads HellionThemeWindowOpacity from the pre-v13 backup the v12→v13
+    // block writes alongside the live config. Null when absent, unreadable,
+    // or schema-incompatible — all valid steady states (fresh install,
+    // backup pruned, pre-v12 config). Errors log at Warning so a corrupted
+    // backup stays visible in /xllog without breaking the migration.
+    private static float? TryReadPreV13ThemeOpacity()
+    {
+        var pluginConfigsDir = Interface.ConfigDirectory.Parent?.FullName;
+        if (pluginConfigsDir is null)
+            return null;
+
+        var backupPath = Path.Combine(pluginConfigsDir, $"{Interface.InternalName}.json.pre-v13-backup");
+        if (!File.Exists(backupPath))
+            return null;
+
+        try
+        {
+            using var stream = File.OpenRead(backupPath);
+            using var doc = System.Text.Json.JsonDocument.Parse(stream);
+            if (doc.RootElement.TryGetProperty("HellionThemeWindowOpacity", out var prop)
+                && prop.ValueKind == System.Text.Json.JsonValueKind.Number
+                && prop.TryGetSingle(out var value))
+            {
+                return value;
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+            Log.Warning(ex, "HellionChat: pre-v13 backup lookup failed, defaulting WindowOpacity");
+            return null;
+        }
     }
 
     private static void MigrateFromChatTwoLayout()
@@ -691,6 +746,11 @@ public sealed class Plugin : IDalamudPlugin
             policy[(int)(ushort)type] = days;
         var defaultDays = Config.RetentionDefaultDays;
 
+        // IsBackground = true for the same reason as PendingMessageThread:
+        // a stuck sweep must never block plugin unload. RunRetentionSweepIfDue
+        // guards the run-frequency, and the sweep itself uses the framework's
+        // cooperative cancellation pattern. The background flag is the safety
+        // net if the sweep ever takes longer than expected.
         new Thread(() =>
         {
             // Bail out cheaply if a manual sweep is already in flight; the

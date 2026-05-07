@@ -66,7 +66,12 @@ internal class MessageManager : IAsyncDisposable
 
         Store = new MessageStore(DatabasePath());
 
-        PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token));
+        // IsBackground so a stuck worker never blocks plugin unload.
+        // Cooperative cancel via PendingThreadCancellationToken first, background flag is the safety net.
+        PendingMessageThread = new Thread(() => ProcessPendingMessages(PendingThreadCancellationToken.Token))
+        {
+            IsBackground = true,
+        };
         PendingMessageThread.Start();
 
         ContentIdResolverHook = Plugin.GameInteropProvider.HookFromAddress<RaptureLogModule.Delegates.AddMsgSourceEntry>(RaptureLogModule.MemberFunctionPointers.AddMsgSourceEntry, ContentIdResolver);
@@ -85,19 +90,22 @@ internal class MessageManager : IAsyncDisposable
         Plugin.ChatGui.ChatMessageUnhandled -= ChatMessage;
 
         await PendingThreadCancellationToken.CancelAsync();
-        var timeout = 10_000; // 10s
-        while (timeout > 0)
-        {
-            if (!PendingMessageThread.IsAlive)
-                break;
 
-            timeout -= 100;
+        // 10s cooperative window; Thread.Abort is gone since .NET 5, so a
+        // stuck worker has to ride out the next AppDomain unload.
+        var deadline = TimeSpan.FromSeconds(10);
+        var stopwatch = Stopwatch.StartNew();
+        while (stopwatch.Elapsed < deadline && PendingMessageThread.IsAlive)
             await Task.Delay(100);
-            Plugin.Log.Debug("Sleeping because PendingMessageThread thread still alive");
-        }
 
-        // CancellationTokenSource owns an unmanaged WaitHandle; dispose after the
-        // worker thread has drained, otherwise it leaks across plugin reloads.
+        if (PendingMessageThread.IsAlive)
+            Plugin.Log.Warning(
+                "PendingMessageThread did not observe cancellation within 10s. " +
+                "Worker remains on a background thread; next plugin reload releases it. " +
+                "If this recurs, file a bug with /xllog after the previous reload.");
+
+        // CTS owns an unmanaged WaitHandle; dispose even if the worker is
+        // alive — it checks IsCancellationRequested via the linked token.
         PendingThreadCancellationToken.Dispose();
 
         Store.Dispose();

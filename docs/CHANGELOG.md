@@ -12,6 +12,40 @@ und verlinkt für Details auf die Release-Pages.
 
 ---
 
+## Hellion Chat 1.4.0 — Critical Lifecycle Fixes
+
+First sub-patch of the v1.4.x Polish Sweep series. Seven
+known lifecycle and race bugs eliminated before any
+performance refactor sits on top.
+
+- MessageStore disposal no longer triggers GC.Collect
+  globally; Pooling=false on the SQLite connection means
+  there's nothing left to clean up by hand
+- PendingMessage and RetentionSweep worker threads are
+  explicitly marked IsBackground=true so the plugin domain
+  can unload during XIVLauncher reload without waiting
+  for them
+- EmoteCache image and gif loaders moved from async-void
+  to async Task with a shared task tracker, draining
+  on Dispose so an in-flight load can no longer write
+  to a disposed EmoteImages entry
+- DisposeAsync 10s timeout now warns loudly instead of
+  silently leaving the worker behind
+- Plugin.Dispose flushes any pending DeferredSaveFrames
+  before tearing services down, so settings changes
+  made in the last few frames before disable are no
+  longer lost
+- The v13→v14 config migration now reads the pre-v13
+  backup and carries HellionThemeWindowOpacity into the
+  new WindowOpacity field instead of falling back to
+  the default 0.85
+
+Modding & support: join Hellion Forge — https://discord.gg/X9V7Kcv5gR
+
+Based on Chat 2 1.35.3 (upstream Infiziert90/ChatTwo, EUPL-1.2).
+
+---
+
 ## Hellion Chat 1.3.0 - Plugin Integrations: Honorific
 
 First step on the plugin-integration roadmap. HellionChat now

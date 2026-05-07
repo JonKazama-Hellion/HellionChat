@@ -12,15 +12,24 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.4.0)
+## Nächster Cycle (v1.4.1)
 
-**Polish & Motion** - Theme-Crossfade, Header-Quick-Picker,
-Lerp-Animationen, ggf. Theme-Family-Picker (Carls Grün-Familie
-mit Forest/Moss/Mint-Helligkeitsstufen).
+**Theme Engine Performance** — HellionStyle Heap-Pressure
+eliminieren (StackHandle-Cache, ABGR-Cache auf Theme-Object,
+spart 47 Heap-Allocs pro Frame), ThemeRegistry File-Lock-
+Härtung beim Custom-Theme-Load.
 
-Spec wird im Brainstorming-Cycle vor Beginn der Phase ausgearbeitet.
+## v1.4.0 — Critical Lifecycle Fixes (released <Datum>)
 
-## v1.3.0 - Plugin Integrations: Honorific (geplant <Datum>)
+Erster Sub-Patch der v1.4.x Polish-Sweep-Serie. Sieben P0-
+Findings aus Audit-Pass-3 und Pass-4 abgearbeitet:
+async-void-Loads, fehlende IsBackground-Flags, GC.Collect
+in Dispose, DeferredSave-Race und Pre-v13-Backup-Lookup für
+WindowOpacity. Keine Schema-Bumps, keine Funktions-
+Änderungen für den User außer dass Reload und Shutdown
+spürbar sauberer laufen.
+
+## v1.3.0 - Plugin Integrations: Honorific (released 2026-05-07)
 
 Erster Cycle der Plugin-Integrations-Roadmap. Honorific-Custom-
 Titles werden im Chat-Header angezeigt, mit Auto-Detect und
