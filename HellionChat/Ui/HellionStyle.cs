@@ -19,21 +19,21 @@ internal static class HellionStyle
     /// </summary>
     internal static IDisposable Push(Theme theme)
     {
-        var c = theme.Colors;
+        var a = theme.AbgrCache;
         var stack = new StackHandle();
-        stack.PushColor(ImGuiCol.Button,           c.Primary);
-        stack.PushColor(ImGuiCol.ButtonHovered,    c.PrimaryLight);
-        stack.PushColor(ImGuiCol.ButtonActive,     c.PrimaryDark);
-        stack.PushColor(ImGuiCol.FrameBg,          c.FrameBg);
-        stack.PushColor(ImGuiCol.FrameBgHovered,   c.SurfaceHover);
-        stack.PushColor(ImGuiCol.FrameBgActive,    c.Surface);
-        stack.PushColor(ImGuiCol.Border,           c.Border);
-        stack.PushColor(ImGuiCol.Header,           c.Surface);
-        stack.PushColor(ImGuiCol.HeaderHovered,    c.SurfaceHover);
-        stack.PushColor(ImGuiCol.HeaderActive,     c.Identity);
-        stack.PushColor(ImGuiCol.CheckMark,        c.Primary);
-        stack.PushColor(ImGuiCol.SliderGrab,       c.Primary);
-        stack.PushColor(ImGuiCol.SliderGrabActive, c.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.Button,           a.Primary);
+        stack.PushColorAbgr(ImGuiCol.ButtonHovered,    a.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.ButtonActive,     a.PrimaryDark);
+        stack.PushColorAbgr(ImGuiCol.FrameBg,          a.FrameBg);
+        stack.PushColorAbgr(ImGuiCol.FrameBgHovered,   a.SurfaceHover);
+        stack.PushColorAbgr(ImGuiCol.FrameBgActive,    a.Surface);
+        stack.PushColorAbgr(ImGuiCol.Border,           a.Border);
+        stack.PushColorAbgr(ImGuiCol.Header,           a.Surface);
+        stack.PushColorAbgr(ImGuiCol.HeaderHovered,    a.SurfaceHover);
+        stack.PushColorAbgr(ImGuiCol.HeaderActive,     a.Identity);
+        stack.PushColorAbgr(ImGuiCol.CheckMark,        a.Primary);
+        stack.PushColorAbgr(ImGuiCol.SliderGrab,       a.Primary);
+        stack.PushColorAbgr(ImGuiCol.SliderGrabActive, a.PrimaryLight);
         return stack;
     }
 
@@ -48,6 +48,7 @@ internal static class HellionStyle
     {
         var c = theme.Colors;
         var l = theme.Layout;
+        var a = theme.AbgrCache;
         var stack = new StackHandle();
 
         var alphaByte = (uint)Math.Clamp((int)(windowOpacity * 255f), 0x55, 0xFF);
@@ -76,60 +77,61 @@ internal static class HellionStyle
         stack.PushStyleVar(ImGuiStyleVar.WindowBorderSize,  l.WindowBorderSize);
         stack.PushStyleVar(ImGuiStyleVar.FrameBorderSize,   l.FrameBorderSize);
 
-        // Surfaces
-        stack.PushColor(ImGuiCol.WindowBg,    windowBgWithAlpha);
-        stack.PushColor(ImGuiCol.ChildBg,     childBgWithAlpha);
-        stack.PushColor(ImGuiCol.PopupBg,     c.ChildBg);
-        stack.PushColor(ImGuiCol.Border,      c.Border);
-        stack.PushColor(ImGuiCol.BorderShadow, 0u);
+        // Surfaces — WindowBg/ChildBg use the per-push opacity-modulated value,
+        // so they go through the RGBA path; everything else reads from cache.
+        stack.PushColor(ImGuiCol.WindowBg,         windowBgWithAlpha);
+        stack.PushColor(ImGuiCol.ChildBg,          childBgWithAlpha);
+        stack.PushColorAbgr(ImGuiCol.PopupBg,      a.ChildBg);
+        stack.PushColorAbgr(ImGuiCol.Border,       a.Border);
+        stack.PushColorAbgr(ImGuiCol.BorderShadow, 0u);
 
         // Frames
-        stack.PushColor(ImGuiCol.FrameBg,        c.FrameBg);
-        stack.PushColor(ImGuiCol.FrameBgHovered, c.SurfaceHover);
-        stack.PushColor(ImGuiCol.FrameBgActive,  c.Surface);
+        stack.PushColorAbgr(ImGuiCol.FrameBg,        a.FrameBg);
+        stack.PushColorAbgr(ImGuiCol.FrameBgHovered, a.SurfaceHover);
+        stack.PushColorAbgr(ImGuiCol.FrameBgActive,  a.Surface);
 
         // Title bars
-        stack.PushColor(ImGuiCol.TitleBg,          c.WindowBg);
-        stack.PushColor(ImGuiCol.TitleBgActive,    c.Identity);
-        stack.PushColor(ImGuiCol.TitleBgCollapsed, c.WindowBg);
+        stack.PushColorAbgr(ImGuiCol.TitleBg,          a.WindowBg);
+        stack.PushColorAbgr(ImGuiCol.TitleBgActive,    a.Identity);
+        stack.PushColorAbgr(ImGuiCol.TitleBgCollapsed, a.WindowBg);
 
         // Buttons
-        stack.PushColor(ImGuiCol.Button,        c.Primary);
-        stack.PushColor(ImGuiCol.ButtonHovered, c.PrimaryLight);
-        stack.PushColor(ImGuiCol.ButtonActive,  c.PrimaryDark);
+        stack.PushColorAbgr(ImGuiCol.Button,        a.Primary);
+        stack.PushColorAbgr(ImGuiCol.ButtonHovered, a.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.ButtonActive,  a.PrimaryDark);
 
         // Headers / selectables
-        stack.PushColor(ImGuiCol.Header,        c.Surface);
-        stack.PushColor(ImGuiCol.HeaderHovered, c.SurfaceHover);
-        stack.PushColor(ImGuiCol.HeaderActive,  c.Identity);
+        stack.PushColorAbgr(ImGuiCol.Header,        a.Surface);
+        stack.PushColorAbgr(ImGuiCol.HeaderHovered, a.SurfaceHover);
+        stack.PushColorAbgr(ImGuiCol.HeaderActive,  a.Identity);
 
         // Tabs
-        stack.PushColor(ImGuiCol.Tab,                c.FrameBg);
-        stack.PushColor(ImGuiCol.TabHovered,         c.PrimaryLight);
-        stack.PushColor(ImGuiCol.TabActive,          c.Identity);
-        stack.PushColor(ImGuiCol.TabUnfocused,       c.ChildBg);
-        stack.PushColor(ImGuiCol.TabUnfocusedActive, c.PrimaryDark);
+        stack.PushColorAbgr(ImGuiCol.Tab,                a.FrameBg);
+        stack.PushColorAbgr(ImGuiCol.TabHovered,         a.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.TabActive,          a.Identity);
+        stack.PushColorAbgr(ImGuiCol.TabUnfocused,       a.ChildBg);
+        stack.PushColorAbgr(ImGuiCol.TabUnfocusedActive, a.PrimaryDark);
 
         // Scrollbar
-        stack.PushColor(ImGuiCol.ScrollbarBg,          c.WindowBg);
-        stack.PushColor(ImGuiCol.ScrollbarGrab,        c.Surface);
-        stack.PushColor(ImGuiCol.ScrollbarGrabHovered, c.AccentLight);
-        stack.PushColor(ImGuiCol.ScrollbarGrabActive,  c.Accent);
+        stack.PushColorAbgr(ImGuiCol.ScrollbarBg,          a.WindowBg);
+        stack.PushColorAbgr(ImGuiCol.ScrollbarGrab,        a.Surface);
+        stack.PushColorAbgr(ImGuiCol.ScrollbarGrabHovered, a.AccentLight);
+        stack.PushColorAbgr(ImGuiCol.ScrollbarGrabActive,  a.Accent);
 
         // Resize grip
-        stack.PushColor(ImGuiCol.ResizeGrip,        c.FrameBg);
-        stack.PushColor(ImGuiCol.ResizeGripHovered, c.AccentLight);
-        stack.PushColor(ImGuiCol.ResizeGripActive,  c.Accent);
+        stack.PushColorAbgr(ImGuiCol.ResizeGrip,        a.FrameBg);
+        stack.PushColorAbgr(ImGuiCol.ResizeGripHovered, a.AccentLight);
+        stack.PushColorAbgr(ImGuiCol.ResizeGripActive,  a.Accent);
 
         // Check mark + slider grab
-        stack.PushColor(ImGuiCol.CheckMark,         c.Primary);
-        stack.PushColor(ImGuiCol.SliderGrab,        c.Primary);
-        stack.PushColor(ImGuiCol.SliderGrabActive,  c.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.CheckMark,         a.Primary);
+        stack.PushColorAbgr(ImGuiCol.SliderGrab,        a.Primary);
+        stack.PushColorAbgr(ImGuiCol.SliderGrabActive,  a.PrimaryLight);
 
         // Separator
-        stack.PushColor(ImGuiCol.Separator,         c.Border);
-        stack.PushColor(ImGuiCol.SeparatorHovered,  c.PrimaryLight);
-        stack.PushColor(ImGuiCol.SeparatorActive,   c.Primary);
+        stack.PushColorAbgr(ImGuiCol.Separator,         a.Border);
+        stack.PushColorAbgr(ImGuiCol.SeparatorHovered,  a.PrimaryLight);
+        stack.PushColorAbgr(ImGuiCol.SeparatorActive,   a.Primary);
 
         return stack;
     }
@@ -140,6 +142,9 @@ internal static class HellionStyle
 
         internal void PushColor(ImGuiCol slot, uint rgba)
             => _items.Add(ImRaii.PushColor(slot, ColourUtil.RgbaToAbgr(rgba)));
+
+        internal void PushColorAbgr(ImGuiCol slot, uint abgr)
+            => _items.Add(ImRaii.PushColor(slot, abgr));
 
         internal void PushStyleVar(ImGuiStyleVar var, float value)
             => _items.Add(ImRaii.PushStyle(var, value));
