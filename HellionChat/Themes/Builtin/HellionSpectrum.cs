@@ -15,7 +15,7 @@ internal static class HellionSpectrum
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Hellion Spectrum",
-        Author: "Hellion Online Media",
+        Author: "Hellion Forge",
         Description: "Deuteran/Protan-safe channels — Wong palette tones, channel identity preserved.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#005983"),

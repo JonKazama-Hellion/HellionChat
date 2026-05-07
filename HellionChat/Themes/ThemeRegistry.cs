@@ -24,7 +24,13 @@ public sealed class ThemeRegistry
             { IndigoViolet.Slug,      IndigoViolet.Build() },
             { ForgeMerchantman.Slug,  ForgeMerchantman.Build() },
             { MintGrove.Slug,         MintGrove.Build() },
+            { SynthwaveSunset.Slug,   SynthwaveSunset.Build() },
         };
+
+        // Centralised so the ten .Build() factories stay free of cache plumbing.
+        foreach (var theme in _builtIns.Values)
+            theme.RecomputeAbgrCache();
+
         _active = _builtIns[DefaultSlug];
         _customThemesDir = customThemesDir;
     }
@@ -45,7 +51,24 @@ public sealed class ThemeRegistry
 
     public IEnumerable<Theme> AllCustom() => RefreshCustomCache();
 
-    public void Switch(string slug) => _active = Get(slug);
+    public void Switch(string slug)
+    {
+        var theme = Get(slug);
+        // Defensive — idempotent and cheap, so any future theme source
+        // that forgets the cache fill still ends up with a populated one.
+        theme.RecomputeAbgrCache();
+        _active = theme;
+    }
+
+    // 0x80070020 = SHARING_VIOLATION, 0x80070021 = LOCK_VIOLATION. Other
+    // IO failures are permanent and get the theme dropped instead of retried.
+    internal static bool IsRecoverableFileLock(Exception? ex)
+    {
+        if (ex is not IOException io)
+            return false;
+        var code = (uint)io.HResult;
+        return code == 0x80070020u || code == 0x80070021u;
+    }
 
     // Custom-Themes werden lazy aus dem Verzeichnis geladen, Cache mit
     // LastWriteTime-Token. Eine geänderte JSON wird beim nächsten Lookup
@@ -81,14 +104,19 @@ public sealed class ThemeRegistry
                 try
                 {
                     theme = ThemeJsonLoader.LoadFromFile(path);
+                    theme.RecomputeAbgrCache();
                     _customCache[key] = (theme, stamp);
                 }
-                catch (Exception ex)
+                catch (Exception ex) when (IsRecoverableFileLock(ex))
                 {
-                    // Logging passiert in Plugin.cs durch den Aufrufer; hier still
-                    // ignorieren, damit ein einzelnes kaputtes JSON nicht alle
-                    // Custom-Themes blockt.
-                    _ = ex;
+                    // Editor mid-save: keep the cached snapshot, leave the stamp
+                    // alone so the next refresh retries automatically.
+                    Plugin.Log.Debug($"Custom theme {Path.GetFileName(path)} is locked, keeping last known good");
+                    if (cached.Theme is not null)
+                        theme = cached.Theme;
+                }
+                catch (Exception)
+                {
                     continue;
                 }
             }

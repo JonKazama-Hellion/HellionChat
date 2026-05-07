@@ -9,7 +9,7 @@ internal static class MoonlitBloom
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Moonlit Bloom",
-        Author: "Hellion Online Media",
+        Author: "Hellion Forge",
         Description: "Bloom Magenta + Soft Sage auf Deep Violet Night.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#C957D0"),

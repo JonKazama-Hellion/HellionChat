@@ -12,7 +12,7 @@
   <img src="docs/images/hellion-forge.png" alt="Hellion Forge" width="180" />
 </p>
 
-**Version 1.4.0** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
+**Version 1.4.1** — Privacy-First-Chat-Plugin für FINAL FANTASY XIV / Dalamud, basierend auf [Chat 2](https://github.com/Infiziert90/ChatTwo) (EUPL-1.2).
 
 Hellion Chat ist ein Privacy-First-Plugin auf dem Chat-2-Fundament. Der größte Teil der Engine kommt aus Chat 2 (Message-Store, Channel-Logik, Hook-System), die meisten Tastenkürzel funktionieren weiterhin wie gewohnt. Was sich ändert: schärfere Privacy-Defaults von Haus aus, eigene Slash-Commands unter `/hellionchat`, kein Webinterface mehr, und mit v1.1.0 eine Theme-Engine als Schritt in Richtung eigenes UI-Look-and-Feel.
 
@@ -72,7 +72,7 @@ Hellion Chat wird unter **Hellion Forge** entwickelt, der spezialisierten Moddin
 
 #### Custom Themes (v1.1.0)
 
-HellionChat bringt eine Theme-Engine mit derzeit neun eingebauten Themes (Hellion Arctic, Hellion Spectrum, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove, Night Blue, Indigo Violet, Forge Merchantman) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md). Hellion Spectrum ist Deuteran/Protan-safe (rot-grün-Farbenblindheit) auf Basis der Wong/Okabe-Ito-Palette.
+HellionChat bringt eine Theme-Engine mit derzeit zehn eingebauten Themes (Hellion Arctic, Hellion Spectrum, Chat 2 Klassik, Event Horizon, Moonlit Bloom, Mint Grove, Night Blue, Indigo Violet, Forge Merchantman, Synthwave Sunset) und ein JSON-basiertes Authoring-Format für eigene Themes. Schema und Schritt-für-Schritt-Anleitung in [`docs/THEME-AUTHORING.md`](docs/THEME-AUTHORING.md). Hellion Spectrum ist Deuteran/Protan-safe (rot-grün-Farbenblindheit) auf Basis der Wong/Okabe-Ito-Palette.
 
 #### Plugin-Integrationen (v1.3.0)
 
@@ -225,7 +225,7 @@ Eine optionale Submission ans Dalamud-Main-Plugin-Repo (zusätzlich zum eigenen 
 
 ## Projektstatus
 
-**Version 1.4.0** — Critical Lifecycle Fixes: sieben Race- und Lifecycle-Bugs aus Audit-Pass-3 und Pass-4 abgearbeitet (GC.Collect aus SQLite-Dispose raus, Worker-Threads explizit IsBackground, EmoteCache async-void → async Task, DeferredSave-Race geschlossen, Pre-v13-Backup-Lookup für WindowOpacity-Migration). Erster Sub-Patch der v1.4.x Polish-Sweep-Serie (Stand: 2026-05-07).
+**Version 1.4.1** — Theme Engine Performance: ABGR-Cache auf den Theme-Records pre-computed, HellionStyle.PushGlobal liest aus dem Cache statt pro Slot pro Frame zu konvertieren (~13 % Render-Time-Recovery im Smoke-Test). Custom-Theme-Hot-Reload überlebt transient File-Locks via Last-Known-Good-Snapshot. Plus: Synthwave Sunset als zehnter Built-In, Author-Credits konsolidiert. Zweiter Sub-Patch der v1.4.x Polish-Sweep-Serie (Stand: 2026-05-07).
 
 Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne. Vollständig abgeschlossen:
 
@@ -241,7 +241,8 @@ Hellion Chat ist ein eigenständiges Plugin, kein Fork mehr im Repository-Sinne.
 - About-Tab im Hellion-Branding, EN und DE lokalisiert, mit License und Disclaimer
 - AI-Disclosure dokumentiert (siehe [`docs/AI_DISCLOSURE.md`](docs/AI_DISCLOSURE.md))
 - Standalone-Cut: Namespace `HellionChat.*`, IPC-Kanäle `HellionChat.*`, Source-Tree-Restructure, Conflict-Detection gegen Upstream Chat 2, SQLite-CVE-Härtung (3.50.3)
-- Theme-Engine mit neun eingebauten Themes plus JSON-Authoring-Format (Engine v1.1.0, Katalog erweitert in v1.2.3, inkl. CVD-safe Hellion Spectrum)
+- Theme-Engine mit zehn eingebauten Themes plus JSON-Authoring-Format (Engine v1.1.0, Katalog erweitert in v1.2.3, inkl. CVD-safe Hellion Spectrum; Synthwave Sunset in v1.4.1)
+- ABGR-Cache auf den Theme-Records: HellionStyle.PushGlobal liest pre-computed ABGR statt RGBA→ABGR pro Slot pro Frame (v1.4.1, ~13 % Render-Time-Recovery)
 
 In Arbeit: schrittweise Modernisierung des UI-Look-and-Feel über die Theme-Engine hinaus. Was als Nächstes geplant ist und welche Themen langfristig auf der Liste stehen, steht in [`docs/ROADMAP.md`](docs/ROADMAP.md). Konkrete eingeplante Items werden zusätzlich im [GitHub-Issue-Tracker](https://github.com/JonKazama-Hellion/HellionChat/issues) mit dem `roadmap`-Label geführt.
 

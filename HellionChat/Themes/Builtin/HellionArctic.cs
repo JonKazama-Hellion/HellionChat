@@ -9,7 +9,7 @@ internal static class HellionArctic
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Hellion Arctic",
-        Author: "Hellion Online Media",
+        Author: "Hellion Forge",
         Description: "Arctic Cyan + Ember Glow on industrial slate. Plugin default.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#0097A7"),

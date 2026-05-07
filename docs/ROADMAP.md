@@ -12,14 +12,27 @@ Privacy-First-Schnittmenge des Plugins erweisen.
 
 ---
 
-## Nächster Cycle (v1.4.1)
+## Nächster Cycle (v1.4.2)
 
-**Theme Engine Performance** — HellionStyle Heap-Pressure
-eliminieren (StackHandle-Cache, ABGR-Cache auf Theme-Object,
-spart 47 Heap-Allocs pro Frame), ThemeRegistry File-Lock-
-Härtung beim Custom-Theme-Load.
+**ChatLog Frame-Hot-Path** — Card-Mode Border-Loop in
+ChatLogWindow vom Per-Message GetWindowDrawList befreien,
+AutoTellTabTint Per-Tab-Cache mit Tell-Target-Invalidierung,
+StatusBar LINQ Sum/Count durch klassische for-Loops mit
+TickCount64-Cache-Gate ersetzen. Direkter FPS-Impact.
 
-## v1.4.0 — Critical Lifecycle Fixes (released <Datum>)
+## v1.4.1 — Theme Engine Performance (released <Datum>)
+
+Zweiter Sub-Patch der v1.4.x Polish-Sweep-Serie. ABGR-Cache
+auf den Theme-Records pre-computed, HellionStyle.PushGlobal
+liest aus dem Cache statt pro Slot pro Frame zu konvertieren.
+**~13 % Render-Time-Recovery** im Smoke-Test (Plan-Erwartung
+2-6 % war konservativ, real ~10-15 %). Custom-Theme-Hot-Reload
+überlebt transient File-Locks via Last-Known-Good-Snapshot.
+Plus: Synthwave Sunset als zehnter Built-In, Author-Credits
+auf Hellion Forge konsolidiert, Mint Grove + Forge Merchantman
+auf Carla Beleandis als Community-Thanks.
+
+## v1.4.0 — Critical Lifecycle Fixes (released 2026-05-07)
 
 Erster Sub-Patch der v1.4.x Polish-Sweep-Serie. Sieben P0-
 Findings aus Audit-Pass-3 und Pass-4 abgearbeitet:
@@ -69,7 +82,7 @@ Aus dem ursprünglichen v1.1.0-Plan (Ad-Block / Spam-Filter, Receive-
 Suppressed-Tells-Toggle) wurden zugunsten der Theme-Engine zurück­
 gestellt — beide Items leben weiter im Mittelfrist-Block.
 
-## Mittelfristig (v1.3.x – v1.4.0)
+## Mittelfristig (v1.4.x+)
 
 - **Plugin-Integrations-Roadmap (Cycles 2-6)** - sechs Plugin-
   Integrationen geplant, Honorific (Cycle 1) ist live, danach folgen

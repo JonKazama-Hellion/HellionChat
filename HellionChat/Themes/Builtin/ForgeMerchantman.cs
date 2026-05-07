@@ -9,7 +9,7 @@ internal static class ForgeMerchantman
     public static Theme Build() => new(
         Slug: Slug,
         Name: "Forge Merchantman",
-        Author: "Hellion Online Media",
+        Author: "Carla Beleandis",
         Description: "Patina Bronze auf Workshop-Slate — Hellion Forge im Plugin.",
         Colors: new ThemeColors(
             PrimaryDark:    ColourUtil.HexToRgba("#1F8A82"),
