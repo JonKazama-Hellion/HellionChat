@@ -2,7 +2,7 @@ using Dalamud.Bindings.ImGui;
 using Dalamud.Plugin.SelfTest;
 using HellionChat.Themes;
 
-namespace HellionChat.SelfTest;
+namespace HellionChat.SelfTests;
 
 // Validates the runtime theme-switch contract from the user side. The
 // caller toggles the active theme via Settings -> Theme & Layout, the

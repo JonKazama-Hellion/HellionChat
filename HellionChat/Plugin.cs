@@ -456,7 +456,7 @@ public sealed class Plugin : IDalamudPlugin
             // SelfTest hooks live alongside the live registry — the steps
             // poll Active per frame and need the registry already wired.
             SelfTestRegistry.RegisterTestSteps([
-                new SelfTest.ThemeSwitchSelfTestStep(this),
+                new SelfTests.ThemeSwitchSelfTestStep(this),
             ]);
 
             // Plugin integrations register their IPC subscribers up-front so
