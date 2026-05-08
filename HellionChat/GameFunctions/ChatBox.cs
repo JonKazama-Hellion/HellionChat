@@ -17,6 +17,18 @@ public unsafe class ChatBox
 
     public static void SendMessage(string message)
     {
+        var bytes = ValidateMessage(message);
+        SendMessageUnsafe(bytes);
+    }
+
+    // Validation split out so the deterministic checks (UTF-8 length, sanitise
+    // round-trip) can run in xUnit without ClientStructs game memory. The
+    // sanitiser is injectable so tests can pin throw behaviour without invoking
+    // Utf8String->SanitizeString, which only resolves in-process. Returns the
+    // already-encoded bytes so SendMessage doesn't pay GetBytes twice.
+    // TEST-MIRROR: ../../../Hellion Build test/GameFunctions/ChatBoxTests.cs
+    internal static byte[] ValidateMessage(string message, Func<string, string>? sanitiserOverride = null)
+    {
         var bytes = Encoding.UTF8.GetBytes(message);
         if (bytes.Length == 0)
             throw new ArgumentException(Language.ChatBox_Error_Empty, nameof(message));
@@ -24,10 +36,11 @@ public unsafe class ChatBox
         if (bytes.Length > 500)
             throw new ArgumentException(Language.ChatBox_Error_Too_Long, nameof(message));
 
-        if (message.Length != SanitiseText(message).Length)
+        var sanitiser = sanitiserOverride ?? SanitiseText;
+        if (message.Length != sanitiser(message).Length)
             throw new ArgumentException(Language.ChatBox_Error_Invalid, nameof(message));
 
-        SendMessageUnsafe(bytes);
+        return bytes;
     }
 
     private static string SanitiseText(string text)

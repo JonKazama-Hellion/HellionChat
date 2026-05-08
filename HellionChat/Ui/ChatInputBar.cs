@@ -1,5 +1,6 @@
 using System;
 using System.Numerics;
+using HellionChat._Helpers;
 using HellionChat.Code;
 using HellionChat.Util;
 using Dalamud.Bindings.ImGui;
@@ -89,60 +90,42 @@ public sealed class ChatInputBar
         }
     }
 
-    private void SubmitCompact(Tab tab)
-    {
-        if (string.IsNullOrWhiteSpace(_state.Buffer))
-            return;
+    // TEST-MIRROR: ../_Helpers/CompactInputSubmitter.cs
+    private void SubmitCompact(Tab tab) =>
+        CompactInputSubmitter.TrySubmit(_state, tab, _host.SendChatBoxFromExternal);
 
-        var text = _state.Buffer;
-        _state.Buffer = string.Empty;
-        _state.HistoryCursor = -1;
-        _host.SendChatBoxFromExternal(tab, text);
-    }
-
-    // History-navigation callback for the compact input. Mirrors the main
-    // window's logic but operates on _state.HistoryCursor and the shared
-    // InputHistoryService. Index semantics match v0.5.x InputBacklog:
-    // 0 = oldest, Count-1 = newest.
+    // History-navigation callback for the compact input. Cursor math is
+    // delegated to CompactInputHistoryNavigator; only the ImGui buffer
+    // splice stays here because it needs the live callback data.
+    // TEST-MIRROR: ../_Helpers/CompactInputHistoryNavigator.cs
     private int CompactCallback(scoped ref ImGuiInputTextCallbackData data)
     {
         if (data.EventFlag != ImGuiInputTextFlags.CallbackHistory)
             return 0;
 
-        var prev = _state.HistoryCursor;
-        switch (data.EventKey)
+        var direction = data.EventKey switch
         {
-            case ImGuiKey.UpArrow:
-                switch (_state.HistoryCursor)
-                {
-                    case -1:
-                        var offset = 0;
-                        if (!string.IsNullOrWhiteSpace(_state.Buffer))
-                        {
-                            InputHistoryService.Push(_state.Buffer);
-                            offset = 1;
-                        }
-                        _state.HistoryCursor = InputHistoryService.Count - 1 - offset;
-                        break;
-                    case > 0:
-                        _state.HistoryCursor--;
-                        break;
-                }
-                break;
-            case ImGuiKey.DownArrow:
-                if (_state.HistoryCursor != -1)
-                    if (++_state.HistoryCursor >= InputHistoryService.Count)
-                        _state.HistoryCursor = -1;
-                break;
-        }
-
-        if (prev == _state.HistoryCursor)
+            ImGuiKey.UpArrow => CompactInputHistoryNavigator.Direction.Up,
+            ImGuiKey.DownArrow => CompactInputHistoryNavigator.Direction.Down,
+            _ => (CompactInputHistoryNavigator.Direction?)null,
+        };
+        if (direction is null)
             return 0;
 
-        var historyStr = InputHistoryService.GetByCursor(_state.HistoryCursor) ?? string.Empty;
-        data.DeleteChars(0, data.BufTextLen);
-        data.InsertChars(0, historyStr);
+        var (cursor, replacement) = CompactInputHistoryNavigator.Navigate(
+            direction.Value,
+            _state.HistoryCursor,
+            _state.Buffer,
+            () => InputHistoryService.Count,
+            InputHistoryService.Push,
+            InputHistoryService.GetByCursor);
 
+        _state.HistoryCursor = cursor;
+        if (replacement is null)
+            return 0;
+
+        data.DeleteChars(0, data.BufTextLen);
+        data.InsertChars(0, replacement);
         return 0;
     }
 
