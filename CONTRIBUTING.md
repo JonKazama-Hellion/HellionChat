@@ -145,3 +145,19 @@ I respond on weekdays during European business hours and take weekends
 and FFXIV patch days off. A pull request that sits for a few days has
 not been ignored. Pinging once after a week is fine; please do not
 ping daily.
+
+## First-time setup
+
+After cloning, run once:
+
+```bash
+./scripts/setup-hooks.sh
+```
+
+This wires `core.hooksPath` to `.githooks/`. The pre-push hook runs preflight
+(versions/manifest/changelog/build).
+
+### Test suite
+
+The plugin's test suite lives in a separate local repository and is not part of
+this codebase. If you need access for development, contact the maintainer.

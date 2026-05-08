@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+# .githooks/pre-push — invokes preflight.sh (A/B/C/D=build).
+exec scripts/preflight.sh
