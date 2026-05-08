@@ -41,6 +41,7 @@ public sealed class Plugin : IDalamudPlugin
     [PluginService] public static IAddonLifecycle AddonLifecycle { get; private set; } = null!;
     [PluginService] public static IPlayerState PlayerState { get; private set; } = null!;
     [PluginService] public static ISeStringEvaluator Evaluator { get; private set; } = null!;
+    [PluginService] public static ISelfTestRegistry SelfTestRegistry { get; private set; } = null!;
 
     public static Configuration Config = null!;
     public static FileDialogManager FileDialogManager { get; private set; } = null!;
@@ -451,6 +452,12 @@ public sealed class Plugin : IDalamudPlugin
             SeedExampleThemeIfEmpty(customThemesDir);
             ThemeRegistry = new Themes.ThemeRegistry(customThemesDir);
             ThemeRegistry.Switch(Config.Theme);
+
+            // SelfTest hooks live alongside the live registry — the steps
+            // poll Active per frame and need the registry already wired.
+            SelfTestRegistry.RegisterTestSteps([
+                new SelfTest.ThemeSwitchSelfTestStep(this),
+            ]);
 
             // Plugin integrations register their IPC subscribers up-front so
             // Ready/Disposing events from the target plugins are caught from
